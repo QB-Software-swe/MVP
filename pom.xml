@@ -101,6 +101,48 @@
           <artifactId>maven-project-info-reports-plugin</artifactId>
           <version>3.5.0</version>
         </plugin>
+         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-pmd-plugin</artifactId>
+          <version>3.21.2</version>
+          <configuration>
+              <verbose>true</verbose>
+          </configuration>
+          <executions>
+              <execution>
+                  <id>pmd-check</id>
+                  <goals>
+                      <goal>check</goal>
+                  </goals>
+                  <phase>validate</phase>
+              </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-enforcer-plugin</artifactId>
+          <version>3.4.1</version>
+          <configuration>
+              <rules>
+                  <dependencyConvergence/>
+                  <reactorModuleConvergence/>
+                  <requireSameVersions>
+                      <dependencies>
+                          <dependency>${project.groupId}</dependency>
+                      </dependencies>
+                  </requireSameVersions>
+              </rules>
+          </configuration>
+          <executions>
+              <execution>
+                  <id>enforce</id>
+                  <goals>
+                      <goal>enforce</goal>
+                  </goals>
+                  <phase>validate</phase>
+              </execution>
+          </executions>
+        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
@@ -120,6 +162,15 @@
             </execution>
           </executions>
         </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-enforcer-plugin</artifactId>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-pmd-plugin</artifactId>
+        </plugin>
+        
     </plugins>
   </build>
 </project>
