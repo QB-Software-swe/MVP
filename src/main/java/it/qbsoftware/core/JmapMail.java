@@ -15,6 +15,7 @@ import rs.ltt.jmap.common.method.MethodCall;
 import rs.ltt.jmap.common.method.MethodResponse;
 import rs.ltt.jmap.common.method.call.core.EchoMethodCall;
 import rs.ltt.jmap.common.method.error.UnknownMethodMethodErrorResponse;
+import rs.ltt.jmap.common.method.response.core.EchoMethodResponse;
 import rs.ltt.jmap.gson.JmapAdapters;
 
 public class JmapMail {
@@ -67,12 +68,19 @@ public class JmapMail {
             final ListMultimap<String, Response.Invocation> previousResponses) {
         return switch (methodCall) {
             case EchoMethodCall echoCall -> {
-                yield new MethodResponse[] { new UnknownMethodMethodErrorResponse() };
+                yield execute(echoCall, previousResponses);
             }
 
             default -> {
                 yield new MethodResponse[] { new UnknownMethodMethodErrorResponse() };
             }
+        };
+    }
+
+    private MethodResponse[] execute(EchoMethodCall methodCall,
+            ListMultimap<String, Response.Invocation> previousResponses) {
+        return new MethodResponse[] {
+                EchoMethodResponse.builder().libraryName(methodCall.getLibraryName()).build()
         };
     }
 }
