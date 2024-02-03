@@ -37,8 +37,21 @@ public class JmapMail {
     }
 
     public RequestResponse request(String JsonRequestJmap) {
-        Request request = gson.fromJson(JsonRequestJmap, Request.class);
-        return new RequestResponse(gson.toJson(computeResponse(request)), 200);
+        RequestResponse requestResponse;
+        Request request = null;
+
+        //FIXME: find a better solution
+        try {
+            request = gson.fromJson(JsonRequestJmap, Request.class);
+        } catch (Exception e) {
+            request = null;
+        }
+
+        if(request != null) {
+            return new RequestResponse(gson.toJson(computeResponse(request)), 200);
+        } else {
+            return requestResponse = new RequestResponse("", 500);
+        }
     }
     // -------------------------
 
@@ -80,7 +93,7 @@ public class JmapMail {
     private MethodResponse[] execute(EchoMethodCall methodCall,
             ListMultimap<String, Response.Invocation> previousResponses) {
         return new MethodResponse[] {
-                EchoMethodResponse.builder().libraryName(methodCall.getLibraryName()).build()
+                EchoMethodResponse.builder().libraryName(methodCall.getLibraryName()).b\uild()
         };
     }
 }
