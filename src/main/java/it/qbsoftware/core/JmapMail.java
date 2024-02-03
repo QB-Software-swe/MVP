@@ -93,7 +93,7 @@ public class JmapMail {
     private MethodResponse[] execute(EchoMethodCall methodCall,
             ListMultimap<String, Response.Invocation> previousResponses) {
         return new MethodResponse[] {
-                EchoMethodResponse.builder().libraryName(methodCall.getLibraryName()).b\uild()
+                EchoMethodResponse.builder().libraryName(methodCall.getLibraryName()).build()
         };
     }
 }
