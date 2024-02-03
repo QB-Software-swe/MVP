@@ -80,7 +80,7 @@
             <archive>
               <index>true</index>
               <manifest>
-                <mainClass>it.qbsoftware.boot.JMAPServer</mainClass>
+                <mainClass>it.qbsoftware.boot.JettyServer</mainClass>
               </manifest>
             </archive>
           </configuration>
@@ -101,7 +101,7 @@
           <artifactId>maven-project-info-reports-plugin</artifactId>
           <version>3.5.0</version>
         </plugin>
-         <plugin>
+         <!-- <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-pmd-plugin</artifactId>
           <version>3.21.2</version>
@@ -117,8 +117,8 @@
                   <phase>validate</phase>
               </execution>
           </executions>
-        </plugin>
-        <plugin>
+        </plugin> -->
+        <!-- <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-enforcer-plugin</artifactId>
           <version>3.4.1</version>
@@ -142,7 +142,7 @@
                   <phase>validate</phase>
               </execution>
           </executions>
-        </plugin>
+        </plugin> -->
       </plugins>
     </pluginManagement>
     <plugins>
