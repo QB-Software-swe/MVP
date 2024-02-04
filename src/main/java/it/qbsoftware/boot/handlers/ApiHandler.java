@@ -9,7 +9,7 @@ import org.eclipse.jetty.util.Callback;
 import it.qbsoftware.core.RequestResponse;
 import it.qbsoftware.core.SingletonJmap;
 
-public class apiHandler extends Handler.Abstract {
+public class ApiHandler extends Handler.Abstract {
     public static final String HANDLER_ENDPOINT_NAME = "/api";
 
     @Override

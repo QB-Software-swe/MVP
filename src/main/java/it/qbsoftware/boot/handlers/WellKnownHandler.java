@@ -10,12 +10,11 @@ import org.eclipse.jetty.util.Callback;
 import it.qbsoftware.core.RequestResponse;
 import it.qbsoftware.core.SingletonJmap;
 
-public class wellKnownHandler extends Handler.Abstract {
+public class WellKnownHandler extends Handler.Abstract {
     public static final String HANDLER_ENDPOINT_NAME = "/.well-known/jmap";
 
     @Override
     public boolean handle(Request request, Response response, Callback callback) throws Exception {
-        String requestPayload = Content.Source.asString(request);
         response.getHeaders().put(HttpHeader.CONTENT_TYPE, "application/json; charset=UTF-8");
 
         RequestResponse jmapResponse = SingletonJmap.INSTANCE.getJmap().requestSession(request.getHeaders().get(HttpHeader.AUTHORIZATION));
