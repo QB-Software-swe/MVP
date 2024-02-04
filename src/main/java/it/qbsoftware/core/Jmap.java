@@ -8,6 +8,7 @@ import com.google.common.collect.ListMultimap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import it.qbsoftware.core.utils.RequestResponse;
 import rs.ltt.jmap.common.GenericResponse;
 import rs.ltt.jmap.common.Request;
 import rs.ltt.jmap.common.Response;
@@ -18,7 +19,7 @@ import rs.ltt.jmap.common.method.error.UnknownMethodMethodErrorResponse;
 import rs.ltt.jmap.common.method.response.core.EchoMethodResponse;
 import rs.ltt.jmap.gson.JmapAdapters;
 
-public class JmapMail {
+public class Jmap {
     private static final Gson gson;
 
     static {

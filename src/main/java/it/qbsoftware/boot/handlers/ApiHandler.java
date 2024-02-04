@@ -6,8 +6,9 @@ import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Response;
 import org.eclipse.jetty.util.Callback;
-import it.qbsoftware.core.RequestResponse;
+
 import it.qbsoftware.core.SingletonJmap;
+import it.qbsoftware.core.utils.RequestResponse;
 
 public class ApiHandler extends Handler.Abstract {
     public static final String HANDLER_ENDPOINT_NAME = "/api";
