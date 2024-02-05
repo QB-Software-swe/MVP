@@ -3,9 +3,9 @@ package it.qbsoftware.core;
 public enum SingletonJmap {
     INSTANCE;
     
-    JmapMail jmap = new JmapMail();
+    Jmap jmap = new Jmap();
 
-    public JmapMail getJmap() {
+    public Jmap getJmap() {
         return jmap;
     }
 }

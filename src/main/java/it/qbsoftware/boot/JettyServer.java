@@ -6,8 +6,10 @@ import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 
-import it.qbsoftware.boot.handlers.apiHandler;
-import it.qbsoftware.boot.handlers.wellKnownHandler;
+import it.qbsoftware.boot.handlers.ApiHandler;
+import it.qbsoftware.boot.handlers.DownloadHandler;
+import it.qbsoftware.boot.handlers.UploadHandler;
+import it.qbsoftware.boot.handlers.WellKnownHandler;
 
 /**
  * JMAPServer
@@ -26,12 +28,20 @@ public class JettyServer {
         // Server end points
         ContextHandlerCollection contextHandlerCollection = new ContextHandlerCollection();
         contextHandlerCollection.addHandler(new ContextHandler(
-            new wellKnownHandler(),
-            wellKnownHandler.HANDLER_ENDPOINT_NAME
+            new WellKnownHandler(),
+            WellKnownHandler.HANDLER_ENDPOINT_NAME
         ));
         contextHandlerCollection.addHandler(new ContextHandler(
-            new apiHandler(),
-            apiHandler.HANDLER_ENDPOINT_NAME
+            new ApiHandler(),
+            ApiHandler.HANDLER_ENDPOINT_NAME
+        ));
+        contextHandlerCollection.addHandler(new ContextHandler(
+            new UploadHandler(),
+            UploadHandler.HANDLER_ENDPOINT_NAME
+        ));
+        contextHandlerCollection.addHandler(new ContextHandler(
+            new DownloadHandler(),
+            DownloadHandler.HANDLER_ENDPOINT_NAME
         ));
         server.setHandler(contextHandlerCollection);
 

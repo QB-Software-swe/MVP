@@ -8,6 +8,7 @@ import com.google.common.collect.ListMultimap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import it.qbsoftware.core.utils.RequestResponse;
 import rs.ltt.jmap.common.GenericResponse;
 import rs.ltt.jmap.common.Request;
 import rs.ltt.jmap.common.Response;
@@ -18,7 +19,7 @@ import rs.ltt.jmap.common.method.error.UnknownMethodMethodErrorResponse;
 import rs.ltt.jmap.common.method.response.core.EchoMethodResponse;
 import rs.ltt.jmap.gson.JmapAdapters;
 
-public class JmapMail {
+public class Jmap {
     private static final Gson gson;
 
     static {
@@ -27,30 +28,33 @@ public class JmapMail {
         gson = gsonBuilder.create();
     }
 
+    // * TMP */
+    JmapSession jmapSession = new JmapSession();
+    // * --- */
+
     // -------------------------
     public RequestResponse requestSession(String authentication) {
         /*
          * TODO: implement authentication logic (check only if name exist)
          */
 
-        return new RequestResponse("", 404);
+        return new RequestResponse(gson.toJson(jmapSession.sessionResources()), 200);
     }
 
     public RequestResponse request(String JsonRequestJmap) {
-        RequestResponse requestResponse;
         Request request = null;
 
-        //FIXME: find a better solution
+        // FIXME: find a better solution
         try {
             request = gson.fromJson(JsonRequestJmap, Request.class);
         } catch (Exception e) {
             request = null;
         }
 
-        if(request != null) {
+        if (request != null) {
             return new RequestResponse(gson.toJson(computeResponse(request)), 200);
         } else {
-            return requestResponse = new RequestResponse("", 500);
+            return new RequestResponse("", 500);
         }
     }
     // -------------------------
