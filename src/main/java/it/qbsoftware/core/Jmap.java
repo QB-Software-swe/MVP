@@ -12,11 +12,14 @@ import it.qbsoftware.core.utils.RequestResponse;
 import rs.ltt.jmap.common.GenericResponse;
 import rs.ltt.jmap.common.Request;
 import rs.ltt.jmap.common.Response;
+import rs.ltt.jmap.common.entity.Identity;
 import rs.ltt.jmap.common.method.MethodCall;
+import rs.ltt.jmap.common.method.call.identity.GetIdentityMethodCall;
 import rs.ltt.jmap.common.method.MethodResponse;
 import rs.ltt.jmap.common.method.call.core.EchoMethodCall;
 import rs.ltt.jmap.common.method.error.UnknownMethodMethodErrorResponse;
 import rs.ltt.jmap.common.method.response.core.EchoMethodResponse;
+import rs.ltt.jmap.common.method.response.identity.GetIdentityMethodResponse;
 import rs.ltt.jmap.gson.JmapAdapters;
 
 public class Jmap {
@@ -88,6 +91,10 @@ public class Jmap {
                 yield execute(echoCall, previousResponses);
             }
 
+            case GetIdentityMethodCall getIdentityMethodCall -> {
+                yield execute(getIdentityMethodCall, previousResponses);
+            }
+
             default -> {
                 yield new MethodResponse[] { new UnknownMethodMethodErrorResponse() };
             }
@@ -98,6 +105,22 @@ public class Jmap {
             ListMultimap<String, Response.Invocation> previousResponses) {
         return new MethodResponse[] {
                 EchoMethodResponse.builder().libraryName(methodCall.getLibraryName()).build()
+        };
+    }
+
+    private MethodResponse[] execute(GetIdentityMethodCall getIdentityMethodCall,
+            ListMultimap<String, Response.Invocation> previousResponses) {
+        return new MethodResponse[] {
+                GetIdentityMethodResponse.builder()
+                        .list(
+                                new Identity[] {
+                                        Identity.builder()
+                                                .id("0")
+                                                .email("examplemail")
+                                                .name("example")
+                                                .build()
+                                })
+                        .build()
         };
     }
 }
