@@ -1,11 +1,10 @@
-package it.qbsoftware.core;
+package it.qbsoftware.core.util;
 
 import com.google.common.collect.ImmutableMap;
 
 import it.qbsoftware.boot.handlers.ApiHandler;
 import it.qbsoftware.boot.handlers.DownloadHandler;
 import it.qbsoftware.boot.handlers.UploadHandler;
-import it.qbsoftware.core.utils.MemoryUnit;
 import rs.ltt.jmap.common.SessionResource;
 import rs.ltt.jmap.common.SessionResource.SessionResourceBuilder;
 import rs.ltt.jmap.common.entity.Account;
@@ -20,7 +19,7 @@ public class JmapSession {
     static final String UPLOAD_ENDPOINT = UploadHandler.HANDLER_ENDPOINT_NAME;
     static final String DOWNLOAD_ENDPOINT = DownloadHandler.HANDLER_ENDPOINT_NAME;
 
-    static final long maxServerSizeUpload = 100 * MemoryUnit.MB;
+    static final long maxServerSizeUpload = 100 * 1024 * 1024L;
     static final long maxServerObjectInGet = 4096;
 
     long maxSizeAttachmentsPerEmail;

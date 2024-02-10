@@ -1,6 +1,8 @@
-package it.qbsoftware.core;
+package it.qbsoftware.core.util;
 
-public enum SingletonJmap {
+import it.qbsoftware.core.Jmap;
+
+public enum JmapSingleton {
     INSTANCE;
     
     Jmap jmap = new Jmap();
