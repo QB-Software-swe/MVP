@@ -15,9 +15,9 @@ import rs.ltt.jmap.common.entity.capability.MailCapability;
 
 @SuppressWarnings("null")
 public class JmapSession {
-    static final String API_ENDPOINT = ApiHandler.HANDLER_ENDPOINT_NAME;;
-    static final String UPLOAD_ENDPOINT = UploadHandler.HANDLER_ENDPOINT_NAME;
-    static final String DOWNLOAD_ENDPOINT = DownloadHandler.HANDLER_ENDPOINT_NAME;
+    static final String API_ENDPOINT = ApiHandler.HANDLER_ENDPOINT_NAME + "/";
+    static final String UPLOAD_ENDPOINT = UploadHandler.HANDLER_ENDPOINT_NAME + "/";
+    static final String DOWNLOAD_ENDPOINT = DownloadHandler.HANDLER_ENDPOINT_NAME + "/";
 
     static final long maxServerSizeUpload = 100 * 1024 * 1024L;
     static final long maxServerObjectInGet = 4096;
@@ -54,7 +54,7 @@ public class JmapSession {
         sessionResourceBuilder.account(
                 "0",
                 Account.builder()
-                        .name("AccountExample")
+                        .name("QB Software")
                         .accountCapabilities(
                                 ImmutableMap.of(
                                         MailAccountCapability.class,

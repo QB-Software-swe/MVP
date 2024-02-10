@@ -5,7 +5,7 @@ import java.util.List;
 import it.qbsoftware.core.util.MailboxInfo;
 
 public class MailboxInfoImp implements MailboxInfoDao {
-    static final String TABLE = "MailboxInfo";
+    static final String COLLECTION = "MailboxInfo";
 
     @Override
     public List<MailboxInfo> getAllMailboxesInfo() {

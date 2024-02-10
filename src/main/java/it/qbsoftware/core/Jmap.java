@@ -1,25 +1,22 @@
 package it.qbsoftware.core;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+
+import org.joda.time.DateTime;
+
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoDatabase;
-
 import it.qbsoftware.core.util.JmapSession;
-import it.qbsoftware.core.util.MailboxInfo;
 import it.qbsoftware.core.util.RequestResponse;
+import it.qbsoftware.persistence.IdentityDao;
+import it.qbsoftware.persistence.IdentityImp;
 import rs.ltt.jmap.common.GenericResponse;
 import rs.ltt.jmap.common.Request;
 import rs.ltt.jmap.common.Response;
 import rs.ltt.jmap.common.entity.Identity;
-import rs.ltt.jmap.common.entity.Role;
 import rs.ltt.jmap.common.method.MethodCall;
 import rs.ltt.jmap.common.method.call.identity.GetIdentityMethodCall;
 import rs.ltt.jmap.common.method.MethodResponse;
@@ -38,30 +35,28 @@ public class Jmap {
         GSON = gsonBuilder.create();
     }
 
-    public MailboxInfo[] generateMailboxesInfo() {
-        return new MailboxInfo[] {
-            new MailboxInfo("0", "Inbox", Role.INBOX),
-            new MailboxInfo("1", "Importanti", Role.IMPORTANT)
-        };
-    }
-
     public RequestResponse requestSession(String authentication) {
         JmapSession jmapSession = new JmapSession();
         return new RequestResponse(GSON.toJson(jmapSession.sessionResources()), 200);
     }
 
     public RequestResponse request(String JsonRequestJmap) {
+        System.out.println("\n---------\n" + DateTime.now().toString() + " - Richiesta:\n" + JsonRequestJmap);
         Request request = null;
 
         try {
             request = GSON.fromJson(JsonRequestJmap, Request.class);
         } catch (Exception e) {
+            System.out.println("\n\n" + DateTime.now().toString() + " - Risposta ERRORE!!!");
             request = null;
         }
 
         if (request != null) {
-            return new RequestResponse(GSON.toJson(computeResponse(request)), 200);
+            String responseJson = GSON.toJson(computeResponse(request));
+            System.out.println("\n\n" + DateTime.now().toString() + " - Risposta:\n" + responseJson);
+            return new RequestResponse(responseJson, 200);
         } else {
+            System.out.println("\n\n" + DateTime.now().toString() + " - Risposta ERRORE500!!!");
             return new RequestResponse("", 500);
         }
     }
@@ -111,15 +106,16 @@ public class Jmap {
 
     private MethodResponse[] execute(GetIdentityMethodCall getIdentityMethodCall,
             ListMultimap<String, Response.Invocation> previousResponses) {
+
+        IdentityDao identityDao = new IdentityImp();
+
         return new MethodResponse[] {
                 GetIdentityMethodResponse.builder()
                         .list(
                                 new Identity[] {
-                                        Identity.builder()
-                                                .id("0")
-                                                .email("examplemail")
-                                                .name("example")
-                                                .build()
+                                        identityDao
+                                                .getIdentity(getIdentityMethodCall.getAccountId())
+                                                .get()
                                 })
                         .build()
         };

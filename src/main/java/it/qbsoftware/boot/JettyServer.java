@@ -10,12 +10,15 @@ import it.qbsoftware.boot.handlers.ApiHandler;
 import it.qbsoftware.boot.handlers.DownloadHandler;
 import it.qbsoftware.boot.handlers.UploadHandler;
 import it.qbsoftware.boot.handlers.WellKnownHandler;
+import it.qbsoftware.core.util.GenPocData;
 
 /**
  * JMAPServer
  */
 public class JettyServer {
     public static void main(String[] args) {
+        GenPocData.generate();
+
         QueuedThreadPool queuedThreadPool = new QueuedThreadPool();
         queuedThreadPool.setName("JMAPServer");
 
