@@ -7,8 +7,8 @@ import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Response;
 import org.eclipse.jetty.util.Callback;
 
-import it.qbsoftware.core.SingletonJmap;
-import it.qbsoftware.core.utils.RequestResponse;
+import it.qbsoftware.core.util.RequestResponse;
+import it.qbsoftware.core.util.JmapSingleton;
 
 public class ApiHandler extends Handler.Abstract {
     public static final String HANDLER_ENDPOINT_NAME = "/api";
@@ -18,7 +18,7 @@ public class ApiHandler extends Handler.Abstract {
         String requestPayload = Content.Source.asString(request);
         response.getHeaders().put(HttpHeader.CONTENT_TYPE, "application/json; charset=UTF-8");
         
-        RequestResponse jmapResponse = SingletonJmap.INSTANCE.getJmap().request(requestPayload);
+        RequestResponse jmapResponse = JmapSingleton.INSTANCE.getJmap().request(requestPayload);
         response.setStatus(jmapResponse.responseCode());
         
         Content.Sink.write(response, true, jmapResponse.payload(), callback);
