@@ -1,5 +1,25 @@
 package it.qbsoftware.core;
 
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.joda.time.DateTime;
+
+import com.google.common.base.Splitter;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableMap;
@@ -8,7 +28,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
-import com.mongodb.internal.client.model.FindOptions;
 
 import it.qbsoftware.core.util.JmapSession;
 import it.qbsoftware.core.util.MailboxInfo;
@@ -20,33 +39,24 @@ import it.qbsoftware.persistence.IdentityImp;
 import it.qbsoftware.persistence.MailboxInfoDao;
 import it.qbsoftware.persistence.MailboxInfoImp;
 import it.qbsoftware.persistence.MongoConnectionSingleton;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import org.joda.time.DateTime;
+import okhttp3.HttpUrl;
 import rs.ltt.jmap.common.GenericResponse;
 import rs.ltt.jmap.common.Request;
 import rs.ltt.jmap.common.Response;
-import rs.ltt.jmap.common.SessionResource;
-import rs.ltt.jmap.common.SessionResource.SessionResourceBuilder;
 import rs.ltt.jmap.common.Response.Invocation;
-import rs.ltt.jmap.common.entity.Capability;
+import rs.ltt.jmap.common.entity.AbstractIdentifiableEntity;
+import rs.ltt.jmap.common.entity.Attachment;
 import rs.ltt.jmap.common.entity.Email;
+import rs.ltt.jmap.common.entity.EmailBodyPart;
+import rs.ltt.jmap.common.entity.EmailBodyValue;
 import rs.ltt.jmap.common.entity.Identity;
-import rs.ltt.jmap.common.entity.Keyword;
 import rs.ltt.jmap.common.entity.Mailbox;
+import rs.ltt.jmap.common.entity.PushSubscription;
+import rs.ltt.jmap.common.entity.Role;
+import rs.ltt.jmap.common.entity.SetError;
+import rs.ltt.jmap.common.entity.SetErrorType;
+import rs.ltt.jmap.common.entity.StateChange;
+import rs.ltt.jmap.common.entity.Thread;
 import rs.ltt.jmap.common.entity.filter.EmailFilterCondition;
 import rs.ltt.jmap.common.entity.filter.Filter;
 import rs.ltt.jmap.common.method.MethodCall;
@@ -56,32 +66,36 @@ import rs.ltt.jmap.common.method.call.email.ChangesEmailMethodCall;
 import rs.ltt.jmap.common.method.call.email.GetEmailMethodCall;
 import rs.ltt.jmap.common.method.call.email.QueryChangesEmailMethodCall;
 import rs.ltt.jmap.common.method.call.email.QueryEmailMethodCall;
+import rs.ltt.jmap.common.method.call.email.SetEmailMethodCall;
 import rs.ltt.jmap.common.method.call.identity.GetIdentityMethodCall;
 import rs.ltt.jmap.common.method.call.mailbox.ChangesMailboxMethodCall;
 import rs.ltt.jmap.common.method.call.mailbox.GetMailboxMethodCall;
-import rs.ltt.jmap.common.method.call.thread.*;
+import rs.ltt.jmap.common.method.call.thread.ChangesThreadMethodCall;
+import rs.ltt.jmap.common.method.call.thread.GetThreadMethodCall;
 import rs.ltt.jmap.common.method.error.AnchorNotFoundMethodErrorResponse;
 import rs.ltt.jmap.common.method.error.CannotCalculateChangesMethodErrorResponse;
 import rs.ltt.jmap.common.method.error.InvalidResultReferenceMethodErrorResponse;
+import rs.ltt.jmap.common.method.error.StateMismatchMethodErrorResponse;
 import rs.ltt.jmap.common.method.error.UnknownMethodMethodErrorResponse;
 import rs.ltt.jmap.common.method.response.core.EchoMethodResponse;
 import rs.ltt.jmap.common.method.response.email.ChangesEmailMethodResponse;
 import rs.ltt.jmap.common.method.response.email.GetEmailMethodResponse;
 import rs.ltt.jmap.common.method.response.email.QueryChangesEmailMethodResponse;
 import rs.ltt.jmap.common.method.response.email.QueryEmailMethodResponse;
+import rs.ltt.jmap.common.method.response.email.SetEmailMethodResponse;
 import rs.ltt.jmap.common.method.response.identity.GetIdentityMethodResponse;
 import rs.ltt.jmap.common.method.response.mailbox.ChangesMailboxMethodResponse;
 import rs.ltt.jmap.common.method.response.mailbox.GetMailboxMethodResponse;
 import rs.ltt.jmap.common.method.response.thread.ChangesThreadMethodResponse;
 import rs.ltt.jmap.common.method.response.thread.GetThreadMethodResponse;
+import rs.ltt.jmap.common.websocket.StateChangeWebSocketMessage;
 import rs.ltt.jmap.gson.JmapAdapters;
 import rs.ltt.jmap.mock.server.Changes;
+import rs.ltt.jmap.mock.server.CreationIdResolver;
+import rs.ltt.jmap.mock.server.Pusher;
 import rs.ltt.jmap.mock.server.ResultReferenceResolver;
 import rs.ltt.jmap.mock.server.Update;
-import rs.ltt.jmap.common.entity.Thread;
-import rs.ltt.jmap.common.entity.capability.CoreCapability;
-import rs.ltt.jmap.common.entity.capability.MailAccountCapability;
-import rs.ltt.jmap.common.entity.capability.MailCapability;
+import rs.ltt.jmap.mock.server.util.FuzzyRoleParser;
 
 public class Jmap {
   static final Gson GSON;
@@ -184,6 +198,10 @@ public class Jmap {
         yield execute(changesThreadMethodCall, previousResponses);
       }
 
+      case SetEmailMethodCall setEmailMethodCall -> {
+        yield execute(setEmailMethodCall, previousResponses);
+      }
+
       default -> {
         System.out.println(
             "................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................");
@@ -192,7 +210,61 @@ public class Jmap {
     };
   }
 
-  protected MethodResponse[] execute(
+  private MethodResponse[] execute(
+      SetEmailMethodCall methodCall,
+      ListMultimap<String, Response.Invocation> previousResponses) {
+    EmailDao emailDao = new EmailImp();
+    Map<String, Email> emails = new HashMap<String, Email>();
+    for (Email email : emailDao.getAllEmails()) {
+      emails.put(email.getId(), email);
+    }
+    final String ifInState = methodCall.getIfInState();
+    final Map<String, Map<String, Object>> update = methodCall.getUpdate();
+    final Map<String, Email> create = methodCall.getCreate();
+    final String[] destroy = methodCall.getDestroy();
+    if (destroy != null && destroy.length > 0) {
+      throw new IllegalStateException("MockMailServer does not know how to destroy");
+    }
+    final SetEmailMethodResponse.SetEmailMethodResponseBuilder responseBuilder = SetEmailMethodResponse.builder();
+    final String oldState = getState();
+    if (ifInState != null) {
+      if (!ifInState.equals(oldState)) {
+        return new MethodResponse[] { new StateMismatchMethodErrorResponse() };
+      }
+    }
+    if (update != null) {
+      final List<Email> modifiedEmails = new ArrayList<>();
+      for (final Map.Entry<String, Map<String, Object>> entry : update.entrySet()) {
+        final String id = entry.getKey();
+        try {
+          final Email modifiedEmail = patchEmail(id, entry.getValue(), previousResponses);
+          modifiedEmails.add(modifiedEmail);
+          responseBuilder.updated(id, modifiedEmail);
+        } catch (final IllegalArgumentException e) {
+          responseBuilder.notUpdated(
+              id, new SetError(SetErrorType.INVALID_PROPERTIES, e.getMessage()));
+        }
+      }
+      for (final Email email : modifiedEmails) {
+        emails.put(email.getId(), email);
+      }
+      increaseState();
+      final String newState = getState();
+      HashMap<String, MailboxInfo> mInfo = new HashMap<>();
+      for (var x : new MailboxInfoImp().getMailboxsInfo()) {
+        mInfo.put(x.getId(), x);
+      }
+
+      updates.put(
+          oldState, Update.updated(modifiedEmails, mInfo.keySet(), newState));
+    }
+    if (create != null && create.size() > 0) {
+      processCreateEmail(create, responseBuilder, previousResponses);
+    }
+    return new MethodResponse[] { responseBuilder.build() };
+  }
+
+  private MethodResponse[] execute(
       ChangesEmailMethodCall methodCall,
       ListMultimap<String, Response.Invocation> previousResponses) {
     final String since = methodCall.getSinceState();
@@ -549,5 +621,131 @@ public class Jmap {
         .getConnection().getDatabase().getCollection(
             "Account")
         .updateOne(Filters.eq("_id", "0"), Updates.set("state", String.valueOf(Integer.valueOf(getState()) + 1)));
+  }
+
+  private MailboxInfo patchMailbox(
+      final String id,
+      final Map<String, Object> patches,
+      ListMultimap<String, Response.Invocation> previousResponses) {
+    final MailboxInfo currentMailbox = new MailboxInfoImp().getMailboxInfo(id).get(); // FIXME: Questo è un Optional
+    for (final Map.Entry<String, Object> patch : patches.entrySet()) {
+      final String fullPath = patch.getKey();
+      final Object modification = patch.getValue();
+      final List<String> pathParts = Splitter.on('/').splitToList(fullPath);
+      final String parameter = pathParts.get(0);
+      if ("role".equals(parameter)) {
+        final Role role = FuzzyRoleParser.parse((String) modification);
+        return new MailboxInfo(currentMailbox.getId(), currentMailbox.getName(), role);
+      } else {
+        throw new IllegalArgumentException("Unable to patch " + fullPath);
+      }
+    }
+    return currentMailbox;
+  }
+
+  private Email patchEmail(
+      final String id,
+      final Map<String, Object> patches,
+      ListMultimap<String, Response.Invocation> previousResponses) {
+    EmailDao emailDao = new EmailImp();
+    Map<String, Email> emails = new HashMap<String, Email>();
+    for (Email email : emailDao.getAllEmails()) {
+      emails.put(email.getId(), email);
+    }
+    final Email.EmailBuilder emailBuilder = emails.get(id).toBuilder();
+    for (final Map.Entry<String, Object> patch : patches.entrySet()) {
+      final String fullPath = patch.getKey();
+      final Object modification = patch.getValue();
+      final List<String> pathParts = Splitter.on('/').splitToList(fullPath);
+      final String parameter = pathParts.get(0);
+      if (parameter.equals("keywords")) {
+        if (pathParts.size() == 2 && modification instanceof Boolean) {
+          final String keyword = pathParts.get(1);
+          final Boolean value = (Boolean) modification;
+          emailBuilder.keyword(keyword, value);
+        } else {
+          throw new IllegalArgumentException(
+              "Keyword modification was not split into two parts");
+        }
+      } else if (parameter.equals("mailboxIds")) {
+        if (pathParts.size() == 2 && modification instanceof Boolean) {
+          final String mailboxId = pathParts.get(1);
+          final Boolean value = (Boolean) modification;
+          emailBuilder.mailboxId(mailboxId, value);
+        } else if (modification instanceof Map) {
+          final Map<String, Boolean> mailboxMap = (Map<String, Boolean>) modification;
+          emailBuilder.clearMailboxIds();
+          for (Map.Entry<String, Boolean> mailboxEntry : mailboxMap.entrySet()) {
+            final String mailboxId = CreationIdResolver.resolveIfNecessary(
+                mailboxEntry.getKey(), previousResponses);
+            emailBuilder.mailboxId(mailboxId, mailboxEntry.getValue());
+          }
+        } else {
+          throw new IllegalArgumentException("Unknown patch object for path " + fullPath);
+        }
+      } else {
+        throw new IllegalArgumentException("Unable to patch " + fullPath);
+      }
+    }
+    return emailBuilder.build();
+  }
+
+  private void processCreateEmail(
+      Map<String, Email> create,
+      SetEmailMethodResponse.SetEmailMethodResponseBuilder responseBuilder,
+      ListMultimap<String, Response.Invocation> previousResponses) {
+    for (final Map.Entry<String, Email> entry : create.entrySet()) {
+      final String createId = entry.getKey();
+      final String id = UUID.randomUUID().toString();
+      final String threadId = UUID.randomUUID().toString();
+      final Email userSuppliedEmail = entry.getValue();
+      final Map<String, Boolean> mailboxMap = userSuppliedEmail.getMailboxIds();
+      final Email.EmailBuilder emailBuilder = userSuppliedEmail.toBuilder()
+          .id(id)
+          .threadId(threadId)
+          .receivedAt(Instant.now());
+      emailBuilder.clearMailboxIds();
+      for (Map.Entry<String, Boolean> mailboxEntry : mailboxMap.entrySet()) {
+        final String mailboxId = CreationIdResolver.resolveIfNecessary(
+            mailboxEntry.getKey(), previousResponses);
+        emailBuilder.mailboxId(mailboxId, mailboxEntry.getValue());
+      }
+      final List<EmailBodyPart> attachments = userSuppliedEmail.getAttachments();
+      emailBuilder.clearAttachments();
+      if (attachments != null) {
+        for (final EmailBodyPart attachment : attachments) {
+          final String partId = attachment.getPartId();
+          final EmailBodyValue value = partId == null ? null : userSuppliedEmail.getBodyValues().get(partId);
+          if (value != null) {
+            final EmailBodyPart emailBodyPart = injectId(attachment);
+            emailBuilder.attachment(emailBodyPart);
+          } else {
+            emailBuilder.attachment(attachment);
+          }
+        }
+      }
+      final Email email = emailBuilder.build();
+
+      createEmail(email);
+      responseBuilder.created(createId, email);
+    }
+  }
+
+  private void createEmail(final Email email) {
+    EmailDao emailDao = new EmailImp();
+    //final String oldVersion = getState();
+    emailDao.saveEmail(email);
+    increaseState();
+    //final String newVersion = getState();
+    //this.pushUpdate(oldVersion, Update.created(email, newVersion));
+  }
+  private static EmailBodyPart injectId(final Attachment attachment) {
+    return EmailBodyPart.builder()
+        .blobId(UUID.randomUUID().toString())
+        .charset(attachment.getCharset())
+        .type(attachment.getType())
+        .name(attachment.getName())
+        .size(attachment.getSize())
+        .build();
   }
 }
