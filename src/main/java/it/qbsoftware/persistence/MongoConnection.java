@@ -5,15 +5,15 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 
 public class MongoConnection {
-    MongoClient mongoClient;
-    MongoDatabase mongoDatabase;
+  MongoClient mongoClient;
+  MongoDatabase mongoDatabase;
 
-    public MongoConnection() {
-        mongoClient = MongoClients.create("mongodb://rootuser:rootpass@localhost:27017/");
-        mongoDatabase = mongoClient.getDatabase("jmap");
-    }
+  public MongoConnection() {
+    mongoClient = MongoClients.create("mongodb://rootuser:rootpass@localhost:27017/");
+    mongoDatabase = mongoClient.getDatabase("jmap");
+  }
 
-    public MongoDatabase getDatabase() {
-        return mongoDatabase;
-    }
+  public MongoDatabase getDatabase() {
+    return mongoDatabase;
+  }
 }

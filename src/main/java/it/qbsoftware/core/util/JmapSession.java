@@ -1,7 +1,6 @@
 package it.qbsoftware.core.util;
 
 import com.google.common.collect.ImmutableMap;
-
 import it.qbsoftware.boot.handlers.ApiHandler;
 import it.qbsoftware.boot.handlers.DownloadHandler;
 import it.qbsoftware.boot.handlers.UploadHandler;
@@ -15,56 +14,60 @@ import rs.ltt.jmap.common.entity.capability.MailCapability;
 
 @SuppressWarnings("null")
 public class JmapSession {
-    static final String API_ENDPOINT = ApiHandler.HANDLER_ENDPOINT_NAME + "/";
-    static final String UPLOAD_ENDPOINT = UploadHandler.HANDLER_ENDPOINT_NAME + "/";
-    static final String DOWNLOAD_ENDPOINT = DownloadHandler.HANDLER_ENDPOINT_NAME + "/";
+  static final String API_ENDPOINT = ApiHandler.HANDLER_ENDPOINT_NAME + "/";
+  static final String UPLOAD_ENDPOINT = UploadHandler.HANDLER_ENDPOINT_NAME + "/";
+  static final String DOWNLOAD_ENDPOINT = DownloadHandler.HANDLER_ENDPOINT_NAME + "/";
 
-    static final long maxServerSizeUpload = 100 * 1024 * 1024L;
-    static final long maxServerObjectInGet = 4096;
+  static final long maxServerSizeUpload = 100 * 1024 * 1024L;
+  static final long maxServerObjectInGet = 4096;
 
-    long maxSizeAttachmentsPerEmail;
-    String state;
+  long maxSizeAttachmentsPerEmail;
+  String state;
 
-    static ImmutableMap.Builder<Class<? extends Capability>, Capability> serverCapability;
+  static ImmutableMap.Builder<Class<? extends Capability>, Capability> serverCapability;
 
-    static {
-        serverCapability = ImmutableMap.builder();
-        serverCapability.put(
-                CoreCapability.class,
-                CoreCapability.builder().maxSizeUpload(maxServerSizeUpload).maxObjectsInGet(maxServerObjectInGet)
-                        .build());
-        serverCapability.put(MailCapability.class, MailCapability.builder().build());
-    }
+  static {
+    serverCapability = ImmutableMap.builder();
+    serverCapability.put(
+        CoreCapability.class,
+        CoreCapability.builder()
+            .maxSizeUpload(maxServerSizeUpload)
+            .maxObjectsInGet(maxServerObjectInGet)
+            .build());
+    serverCapability.put(MailCapability.class, MailCapability.builder().build());
+  }
 
-    public JmapSession() {
-        maxSizeAttachmentsPerEmail = 0;
-        state = "0";
-    }
+  public JmapSession() {
+    maxSizeAttachmentsPerEmail = 0;
+    state = "0";
+  }
 
-    public SessionResource sessionResources() {
-        SessionResourceBuilder sessionResourceBuilder = SessionResource.builder();
+  public SessionResource sessionResources() {
+    SessionResourceBuilder sessionResourceBuilder = SessionResource.builder();
 
-        sessionResourceBuilder
-                .apiUrl(API_ENDPOINT)
-                .uploadUrl(UPLOAD_ENDPOINT)
-                .downloadUrl(DOWNLOAD_ENDPOINT)
-                .state(state);
+    sessionResourceBuilder
+        .apiUrl(API_ENDPOINT)
+        .uploadUrl(UPLOAD_ENDPOINT)
+        .downloadUrl(DOWNLOAD_ENDPOINT)
+        .state(state);
 
-        // Example
-        sessionResourceBuilder.account(
-                "0",
-                Account.builder()
-                        .name("QB Software")
-                        .accountCapabilities(
-                                ImmutableMap.of(
-                                        MailAccountCapability.class,
-                                        MailAccountCapability.builder()
-                                                .maxSizeAttachmentsPerEmail(maxSizeAttachmentsPerEmail).build()))
-                        .build())
-                .capabilities(serverCapability.build())
-                .primaryAccounts(ImmutableMap.of(MailAccountCapability.class, "0"))
-                .build();
+    // Example
+    sessionResourceBuilder
+        .account(
+            "0",
+            Account.builder()
+                .name("QB Software")
+                .accountCapabilities(
+                    ImmutableMap.of(
+                        MailAccountCapability.class,
+                        MailAccountCapability.builder()
+                            .maxSizeAttachmentsPerEmail(maxSizeAttachmentsPerEmail)
+                            .build()))
+                .build())
+        .capabilities(serverCapability.build())
+        .primaryAccounts(ImmutableMap.of(MailAccountCapability.class, "0"))
+        .build();
 
-        return sessionResourceBuilder.build();
-    }
+    return sessionResourceBuilder.build();
+  }
 }

@@ -63,6 +63,11 @@
       <artifactId>mongodb-driver-sync</artifactId>
       <version>4.11.1</version>
     </dependency>
+    <dependency>
+    <groupId>com.diffplug.spotless</groupId>
+    <artifactId>spotless-maven-plugin</artifactId>
+    <version>2.43.0</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -158,6 +163,34 @@
               </execution>
           </executions>
         </plugin> -->
+        <plugin>
+          <groupId>com.diffplug.spotless</groupId>
+          <artifactId>spotless-maven-plugin</artifactId>
+          <version>2.43.0</version>
+          <executions>
+            <execution>
+              <id>spotless-check</id>
+              <phase>verify</phase>
+              <goals>
+                <goal>check</goal>
+              </goals>
+            </execution>
+            <execution>
+              <id>spotless-apply</id>
+                <phase>process-sources</phase>
+                <goals>
+                  <goal>apply</goal>
+                </goals>
+            </execution>
+          </executions>
+          <configuration>
+            <java>
+              <googleJavaFormat>
+                <version>1.19.2</version>
+              </googleJavaFormat>
+            </java>
+          </configuration>
+        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
@@ -185,7 +218,11 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-pmd-plugin</artifactId>
         </plugin>
-        
+        <plugin>
+          <groupId>com.diffplug.spotless</groupId>
+          <artifactId>spotless-maven-plugin</artifactId>
+          <version>2.43.0</version>
+        </plugin>
     </plugins>
   </build>
 </project>
