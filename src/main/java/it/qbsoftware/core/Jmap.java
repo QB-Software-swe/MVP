@@ -17,7 +17,9 @@ import it.qbsoftware.persistence.MailboxInfoImp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import org.joda.time.DateTime;
 import rs.ltt.jmap.common.GenericResponse;
 import rs.ltt.jmap.common.Request;
@@ -31,6 +33,7 @@ import rs.ltt.jmap.common.method.MethodResponse;
 import rs.ltt.jmap.common.method.call.core.EchoMethodCall;
 import rs.ltt.jmap.common.method.call.email.QueryChangesEmailMethodCall;
 import rs.ltt.jmap.common.method.call.identity.GetIdentityMethodCall;
+import rs.ltt.jmap.common.method.call.mailbox.ChangesMailboxMethodCall;
 import rs.ltt.jmap.common.method.call.mailbox.GetMailboxMethodCall;
 import rs.ltt.jmap.common.method.error.CannotCalculateChangesMethodErrorResponse;
 import rs.ltt.jmap.common.method.error.InvalidResultReferenceMethodErrorResponse;
@@ -38,12 +41,16 @@ import rs.ltt.jmap.common.method.error.UnknownMethodMethodErrorResponse;
 import rs.ltt.jmap.common.method.response.core.EchoMethodResponse;
 import rs.ltt.jmap.common.method.response.email.QueryChangesEmailMethodResponse;
 import rs.ltt.jmap.common.method.response.identity.GetIdentityMethodResponse;
+import rs.ltt.jmap.common.method.response.mailbox.ChangesMailboxMethodResponse;
 import rs.ltt.jmap.common.method.response.mailbox.GetMailboxMethodResponse;
 import rs.ltt.jmap.gson.JmapAdapters;
+import rs.ltt.jmap.mock.server.Changes;
 import rs.ltt.jmap.mock.server.ResultReferenceResolver;
+import rs.ltt.jmap.mock.server.Update;
 
 public class Jmap {
   static final Gson GSON;
+  final LinkedHashMap<String, Update> updates = new LinkedHashMap<>();
 
   static {
     GsonBuilder gsonBuilder = new GsonBuilder();
@@ -114,6 +121,10 @@ public class Jmap {
 
       case GetMailboxMethodCall getMailboxMethodCall -> {
         yield execute(getMailboxMethodCall, previousResponses);
+      }
+
+      case ChangesMailboxMethodCall changesMailboxMethodCall -> {
+        yield execute(changesMailboxMethodCall, previousResponses);
       }
 
       case QueryChangesEmailMethodCall queryChangesEmailMethodCall -> {
@@ -198,6 +209,41 @@ public class Jmap {
     }
   }
 
+  private MethodResponse[] execute(
+      ChangesMailboxMethodCall methodCall,
+      ListMultimap<String, Response.Invocation> previousResponses) {
+    final String since = methodCall.getSinceState();
+    if (since != null && since.equals("0")) {
+      return new MethodResponse[] {
+        ChangesMailboxMethodResponse.builder()
+            .oldState("0")
+            .newState("0")
+            .updated(new String[0])
+            .created(new String[0])
+            .destroyed(new String[0])
+            .updatedProperties(new String[0])
+            .build()
+      };
+    } else {
+      final Update update = getAccumulatedUpdateSince(since);
+      if (update == null) {
+        return new MethodResponse[] {new CannotCalculateChangesMethodErrorResponse()};
+      } else {
+        final Changes changes = update.getChangesFor(Mailbox.class);
+        return new MethodResponse[] {
+          ChangesMailboxMethodResponse.builder()
+              .oldState(since)
+              .newState(update.getNewVersion())
+              .updated(changes.updated)
+              .created(changes.created)
+              .destroyed(new String[0])
+              .hasMoreChanges(!update.getNewVersion().equals("0"))
+              .build()
+        };
+      }
+    }
+  }
+
   private Mailbox toMailbox(MailboxInfo mailboxInfo) {
     EmailDao emailDao = new EmailImp();
     ArrayList<Email> emailsInMailbox = emailDao.getEmailsInMailboxs(mailboxInfo.getId());
@@ -216,5 +262,18 @@ public class Jmap {
                 .count())
         .unreadThreads(0L)
         .build();
+  }
+
+  private Update getAccumulatedUpdateSince(final String oldVersion) {
+    final ArrayList<Update> updates = new ArrayList<>();
+    for (Map.Entry<String, Update> updateEntry : this.updates.entrySet()) {
+      if (updateEntry.getKey().equals(oldVersion) || updates.size() > 0) {
+        updates.add(updateEntry.getValue());
+      }
+    }
+    if (updates.isEmpty()) {
+      return null;
+    }
+    return Update.merge(updates);
   }
 }
