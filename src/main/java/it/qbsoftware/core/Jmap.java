@@ -1,20 +1,26 @@
 package it.qbsoftware.core;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.joda.time.DateTime;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ListMultimap;
-import com.google.common.collect.Streams;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 import it.qbsoftware.core.util.JmapSession;
 import it.qbsoftware.core.util.MailboxInfo;
 import it.qbsoftware.core.util.RequestResponse;
+import it.qbsoftware.persistence.EmailDao;
+import it.qbsoftware.persistence.EmailImp;
 import it.qbsoftware.persistence.IdentityDao;
 import it.qbsoftware.persistence.IdentityImp;
 import it.qbsoftware.persistence.MailboxInfoDao;
@@ -22,16 +28,21 @@ import it.qbsoftware.persistence.MailboxInfoImp;
 import rs.ltt.jmap.common.GenericResponse;
 import rs.ltt.jmap.common.Request;
 import rs.ltt.jmap.common.Response;
+import rs.ltt.jmap.common.entity.Email;
 import rs.ltt.jmap.common.entity.Identity;
+import rs.ltt.jmap.common.entity.Keyword;
 import rs.ltt.jmap.common.entity.Mailbox;
 import rs.ltt.jmap.common.method.MethodCall;
-import rs.ltt.jmap.common.method.call.identity.GetIdentityMethodCall;
 import rs.ltt.jmap.common.method.MethodResponse;
-import rs.ltt.jmap.common.method.call.mailbox.GetMailboxMethodCall;
 import rs.ltt.jmap.common.method.call.core.EchoMethodCall;
+import rs.ltt.jmap.common.method.call.email.QueryChangesEmailMethodCall;
+import rs.ltt.jmap.common.method.call.identity.GetIdentityMethodCall;
+import rs.ltt.jmap.common.method.call.mailbox.GetMailboxMethodCall;
+import rs.ltt.jmap.common.method.error.CannotCalculateChangesMethodErrorResponse;
 import rs.ltt.jmap.common.method.error.InvalidResultReferenceMethodErrorResponse;
 import rs.ltt.jmap.common.method.error.UnknownMethodMethodErrorResponse;
 import rs.ltt.jmap.common.method.response.core.EchoMethodResponse;
+import rs.ltt.jmap.common.method.response.email.QueryChangesEmailMethodResponse;
 import rs.ltt.jmap.common.method.response.identity.GetIdentityMethodResponse;
 import rs.ltt.jmap.common.method.response.mailbox.GetMailboxMethodResponse;
 import rs.ltt.jmap.gson.JmapAdapters;
@@ -106,6 +117,10 @@ public class Jmap {
                 yield execute(getMailboxMethodCall, previousResponses);
             }
 
+            case QueryChangesEmailMethodCall queryChangesEmailMethodCall -> {
+                yield execute(queryChangesEmailMethodCall, previousResponses);
+            }
+
             default -> {
                 yield new MethodResponse[] { new UnknownMethodMethodErrorResponse() };
             }
@@ -156,27 +171,52 @@ public class Jmap {
         }
 
         MailboxInfoDao mailboxInfoDao = new MailboxInfoImp();
-        Stream<Mailbox> mailboxStream = mailboxInfoDao.getMailboxsInfo().stream().map(this::toMailbox);
+        ArrayList<MailboxInfo> mailboxs = mailboxInfoDao.getMailboxsInfo();
+
         return new MethodResponse[] {
                 GetMailboxMethodResponse.builder()
                         .list(
-                                mailboxStream
+                                mailboxs
+                                        .stream()
+                                        .map(this::toMailbox)
                                         .filter(m -> ids == null || ids.contains(m.getId()))
                                         .toArray(Mailbox[]::new))
                         .state("0") // FIXME: Get STATE
                         .build()
         };
+
+    }
+
+    private MethodResponse[] execute(QueryChangesEmailMethodCall queryChangesEmailMethodCall,
+            ListMultimap<String, Response.Invocation> previousResponses) {
+        final String since = queryChangesEmailMethodCall.getSinceQueryState();
+        if (since != null && since.equals("0")) {
+            return new MethodResponse[] {
+                    QueryChangesEmailMethodResponse.builder()
+                            .oldQueryState("0")
+                            .newQueryState("0")
+                            .added(Collections.emptyList())
+                            .removed(new String[0])
+                            .build()
+            };
+        } else {
+            return new MethodResponse[] { new CannotCalculateChangesMethodErrorResponse() };
+        }
     }
 
     private Mailbox toMailbox(MailboxInfo mailboxInfo) {
+        EmailDao emailDao = new EmailImp();
+        ArrayList<Email> emailsInMailbox = emailDao.getEmailsInMailboxs(mailboxInfo.getId());
+
         // TODO: implementare conteggio e-mail
         return Mailbox.builder()
                 .id(mailboxInfo.getId())
                 .name(mailboxInfo.getName())
                 .role(mailboxInfo.getRole())
-                .totalEmails(0L)
+                .totalEmails(emailsInMailbox.stream().count())
                 .totalThreads(0L)
-                .unreadEmails(0L)
+                .unreadEmails(emailsInMailbox.stream().filter(e -> e.getKeywords() != null)
+                        .filter(e -> !e.getKeywords().containsKey(Keyword.SEEN)).count())
                 .unreadThreads(0L)
                 .build();
     }

@@ -34,7 +34,7 @@ public class MailboxInfoImp implements MailboxInfoDao {
         ArrayList<MailboxInfo> mailboxsInfo = new ArrayList<MailboxInfo>();
 
         for (Document documentResult : documentResults) {
-            mailboxsInfo.add(GSON.fromJson(documentResult.toJson(), MailboxInfo.class));
+            mailboxsInfo.add(GSON.fromJson(documentResult.toJson().replace("_id", "id"), MailboxInfo.class));
         }
 
         return mailboxsInfo;
