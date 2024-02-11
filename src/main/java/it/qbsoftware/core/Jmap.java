@@ -215,7 +215,6 @@ public class Jmap {
         };
     }
 
-    // MY
     private MethodResponse[] execute(
             final QueryMailboxMethodCall queryMailboxMethodCall,
             ListMultimap<String, Response.Invocation> previousResponses) {
@@ -269,7 +268,7 @@ public class Jmap {
         final Map<String, Email> create = methodCall.getCreate();
         final String[] destroy = methodCall.getDestroy();
         if (destroy != null && destroy.length > 0) {
-            throw new IllegalStateException("MockMailServer does not know how to destroy");
+            throw new IllegalStateException("");
         }
         final SetEmailMethodResponse.SetEmailMethodResponseBuilder responseBuilder =
                 SetEmailMethodResponse.builder();
@@ -833,11 +832,8 @@ public class Jmap {
 
     private void createEmail(final Email email) {
         EmailDao emailDao = new EmailImp();
-        // final String oldVersion = getState();
         emailDao.write(email);
         increaseState();
-        // final String newVersion = getState();
-        // this.pushUpdate(oldVersion, Update.created(email, newVersion));
     }
 
     private static EmailBodyPart injectId(final Attachment attachment) {
