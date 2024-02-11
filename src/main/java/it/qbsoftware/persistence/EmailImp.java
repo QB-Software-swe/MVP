@@ -45,4 +45,19 @@ public class EmailImp implements EmailDao {
         .getCollection(COLLECTION)
         .insertOne(Document.parse(GSON.toJson(email, Email.class).replace("id", "_id")));
   }
+
+  @Override
+  public ArrayList<Email> getAllEmails() {
+    MongoCollection<Document> identityCollection =
+        MongoConnectionSingleton.INSTANCE.getConnection().mongoDatabase.getCollection(COLLECTION);
+    FindIterable<Document> documentResults = identityCollection.find();
+
+    ArrayList<Email> emails = new ArrayList<Email>();
+
+    for (Document document : documentResults) {
+      emails.add(GSON.fromJson(document.toJson(), Email.class));
+    }
+
+    return emails;
+  }
 }

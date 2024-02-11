@@ -17,13 +17,16 @@ import it.qbsoftware.persistence.MailboxInfoImp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 import org.joda.time.DateTime;
 import rs.ltt.jmap.common.GenericResponse;
 import rs.ltt.jmap.common.Request;
 import rs.ltt.jmap.common.Response;
+import rs.ltt.jmap.common.Response.Invocation;
 import rs.ltt.jmap.common.entity.Email;
 import rs.ltt.jmap.common.entity.Identity;
 import rs.ltt.jmap.common.entity.Keyword;
@@ -31,6 +34,7 @@ import rs.ltt.jmap.common.entity.Mailbox;
 import rs.ltt.jmap.common.method.MethodCall;
 import rs.ltt.jmap.common.method.MethodResponse;
 import rs.ltt.jmap.common.method.call.core.EchoMethodCall;
+import rs.ltt.jmap.common.method.call.email.GetEmailMethodCall;
 import rs.ltt.jmap.common.method.call.email.QueryChangesEmailMethodCall;
 import rs.ltt.jmap.common.method.call.identity.GetIdentityMethodCall;
 import rs.ltt.jmap.common.method.call.mailbox.ChangesMailboxMethodCall;
@@ -39,6 +43,7 @@ import rs.ltt.jmap.common.method.error.CannotCalculateChangesMethodErrorResponse
 import rs.ltt.jmap.common.method.error.InvalidResultReferenceMethodErrorResponse;
 import rs.ltt.jmap.common.method.error.UnknownMethodMethodErrorResponse;
 import rs.ltt.jmap.common.method.response.core.EchoMethodResponse;
+import rs.ltt.jmap.common.method.response.email.GetEmailMethodResponse;
 import rs.ltt.jmap.common.method.response.email.QueryChangesEmailMethodResponse;
 import rs.ltt.jmap.common.method.response.identity.GetIdentityMethodResponse;
 import rs.ltt.jmap.common.method.response.mailbox.ChangesMailboxMethodResponse;
@@ -131,9 +136,52 @@ public class Jmap {
         yield execute(queryChangesEmailMethodCall, previousResponses);
       }
 
+      case GetEmailMethodCall getEmailMethodCall -> {
+        yield execute(getEmailMethodCall, previousResponses);
+      }
+
       default -> {
         yield new MethodResponse[] {new UnknownMethodMethodErrorResponse()};
       }
+    };
+  }
+
+  private MethodResponse[] execute(
+      GetEmailMethodCall getEmailMethodCall, ListMultimap<String, Invocation> previousResponses) {
+    final Request.Invocation.ResultReference idsReference = getEmailMethodCall.getIdsReference();
+    final List<String> ids;
+    if (idsReference != null) {
+      try {
+        ids = Arrays.asList(ResultReferenceResolver.resolve(idsReference, previousResponses));
+      } catch (final IllegalArgumentException e) {
+        return new MethodResponse[] {new InvalidResultReferenceMethodErrorResponse()};
+      }
+    } else {
+      ids = Arrays.asList(getEmailMethodCall.getIds());
+    }
+    EmailDao emailDao = new EmailImp();
+    Map<String, Email> emails = new HashMap<String, Email>();
+    for (Email email : emailDao.getAllEmails()) {
+      emails.put(email.getId(), email);
+    }
+    final String[] properties = getEmailMethodCall.getProperties();
+    Stream<Email> emailStream = ids.stream().map(emails::get);
+    if (Arrays.equals(properties, Email.Properties.THREAD_ID)) {
+      emailStream =
+          emailStream.map(
+              email -> Email.builder().id(email.getId()).threadId(email.getThreadId()).build());
+    } else if (Arrays.equals(properties, Email.Properties.MUTABLE)) {
+      emailStream =
+          emailStream.map(
+              email ->
+                  Email.builder()
+                      .id(email.getId())
+                      .keywords(email.getKeywords())
+                      .mailboxIds(email.getMailboxIds())
+                      .build());
+    }
+    return new MethodResponse[] {
+      GetEmailMethodResponse.builder().list(emailStream.toArray(Email[]::new)).state("0").build()
     };
   }
 
