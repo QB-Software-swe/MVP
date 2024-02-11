@@ -10,19 +10,25 @@ import org.eclipse.jetty.server.Response;
 import org.eclipse.jetty.util.Callback;
 
 public class WellKnownHandler extends Handler.Abstract {
-  public static final String HANDLER_ENDPOINT_NAME = "/.well-known/jmap";
+    public static final String HANDLER_CONTEXT_PATH = "/.well-known";
+    public static final String HANDLER_ENDPOINT = "/jmap";
 
-  @Override
-  public boolean handle(Request request, Response response, Callback callback) throws Exception {
-    response.getHeaders().put(HttpHeader.CONTENT_TYPE, "application/json; charset=UTF-8");
+    @Override
+    public boolean handle(Request request, Response response, Callback callback) throws Exception {
+        if (!(request.getMethod().equals("GET")
+                && Request.getPathInContext(request).equals(HANDLER_ENDPOINT))) {
+            return false;
+        }
 
-    RequestResponse jmapResponse =
-        JmapSingleton.INSTANCE
-            .getJmap()
-            .requestSession(request.getHeaders().get(HttpHeader.AUTHORIZATION));
-    response.setStatus(jmapResponse.responseCode());
+        response.getHeaders().put(HttpHeader.CONTENT_TYPE, "application/json; charset=UTF-8");
 
-    Content.Sink.write(response, true, jmapResponse.payload(), callback);
-    return true;
-  }
+        RequestResponse jmapResponse =
+                JmapSingleton.INSTANCE
+                        .getJmap()
+                        .requestSession(request.getHeaders().get(HttpHeader.AUTHORIZATION));
+        response.setStatus(jmapResponse.responseCode());
+
+        Content.Sink.write(response, true, jmapResponse.payload(), callback);
+        return true;
+    }
 }

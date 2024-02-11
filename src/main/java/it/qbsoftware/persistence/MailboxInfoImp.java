@@ -13,54 +13,64 @@ import org.bson.conversions.Bson;
 import rs.ltt.jmap.gson.JmapAdapters;
 
 public class MailboxInfoImp implements MailboxInfoDao {
-  static final String COLLECTION = "MailboxInfo";
-  static final Gson GSON;
+    static final String COLLECTION = "MailboxInfo";
+    static final Gson GSON;
 
-  static {
-    GsonBuilder gsonBuilder = new GsonBuilder();
-    JmapAdapters.register(gsonBuilder);
-    GSON = gsonBuilder.create();
-  }
-
-  @Override
-  public ArrayList<MailboxInfo> getMailboxsInfo() {
-    MongoCollection<Document> identityCollection =
-        MongoConnectionSingleton.INSTANCE.getConnection().mongoDatabase.getCollection(COLLECTION);
-    FindIterable<Document> documentResults = identityCollection.find();
-
-    ArrayList<MailboxInfo> mailboxsInfo = new ArrayList<MailboxInfo>();
-
-    for (Document documentResult : documentResults) {
-      mailboxsInfo.add(
-          GSON.fromJson(documentResult.toJson().replace("_id", "id"), MailboxInfo.class));
+    static {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        JmapAdapters.register(gsonBuilder);
+        GSON = gsonBuilder.create();
     }
 
-    return mailboxsInfo;
-  }
+    @Override
+    public ArrayList<MailboxInfo> readAll() {
+        MongoCollection<Document> identityCollection =
+                MongoConnectionSingleton.INSTANCE
+                        .getConnection()
+                        .mongoDatabase
+                        .getCollection(COLLECTION);
+        FindIterable<Document> documentResults = identityCollection.find();
 
-  @Override
-  public Optional<MailboxInfo> getMailboxInfo(String id) {
-    Bson filterById = Filters.eq("_id", id);
+        ArrayList<MailboxInfo> mailboxsInfo = new ArrayList<MailboxInfo>();
 
-    MongoCollection<Document> identityCollection =
-        MongoConnectionSingleton.INSTANCE.getConnection().mongoDatabase.getCollection(COLLECTION);
-    FindIterable<Document> documentResults = identityCollection.find(filterById);
+        for (Document documentResult : documentResults) {
+            mailboxsInfo.add(
+                    GSON.fromJson(documentResult.toJson().replace("_id", "id"), MailboxInfo.class));
+        }
 
-    Document doc = documentResults.first();
-
-    if (doc == null) {
-      return Optional.empty();
-    } else {
-      return Optional.of(GSON.fromJson(doc.toJson().replace("_id", "id"), MailboxInfo.class));
+        return mailboxsInfo;
     }
-  }
 
-  @Override
-  public void saveMailboxInfo(MailboxInfo mailboxInfo) {
-    Document doc = Document.parse(GSON.toJson(mailboxInfo, MailboxInfo.class).replace("id", "_id"));
-    MongoCollection<Document> identityCollection =
-        MongoConnectionSingleton.INSTANCE.getConnection().mongoDatabase.getCollection(COLLECTION);
+    @Override
+    public Optional<MailboxInfo> read(String id) {
+        Bson filterById = Filters.eq("_id", id);
 
-    identityCollection.insertOne(doc);
-  }
+        MongoCollection<Document> identityCollection =
+                MongoConnectionSingleton.INSTANCE
+                        .getConnection()
+                        .mongoDatabase
+                        .getCollection(COLLECTION);
+        FindIterable<Document> documentResults = identityCollection.find(filterById);
+
+        Document doc = documentResults.first();
+
+        if (doc == null) {
+            return Optional.empty();
+        } else {
+            return Optional.of(GSON.fromJson(doc.toJson().replace("_id", "id"), MailboxInfo.class));
+        }
+    }
+
+    @Override
+    public void write(MailboxInfo mailboxInfo) {
+        Document doc =
+                Document.parse(GSON.toJson(mailboxInfo, MailboxInfo.class).replace("id", "_id"));
+        MongoCollection<Document> identityCollection =
+                MongoConnectionSingleton.INSTANCE
+                        .getConnection()
+                        .mongoDatabase
+                        .getCollection(COLLECTION);
+
+        identityCollection.insertOne(doc);
+    }
 }

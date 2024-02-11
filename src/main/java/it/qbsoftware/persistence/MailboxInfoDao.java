@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 public interface MailboxInfoDao {
-  public ArrayList<MailboxInfo> getMailboxsInfo();
+    public ArrayList<MailboxInfo> readAll();
 
-  Optional<MailboxInfo> getMailboxInfo(String id);
+    Optional<MailboxInfo> read(String id);
 
-  void saveMailboxInfo(MailboxInfo mailboxInfo);
+    void write(MailboxInfo mailboxInfo);
 }

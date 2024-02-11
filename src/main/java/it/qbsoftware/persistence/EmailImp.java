@@ -13,55 +13,62 @@ import rs.ltt.jmap.common.entity.Email;
 import rs.ltt.jmap.gson.JmapAdapters;
 
 public class EmailImp implements EmailDao {
-  static final String COLLECTION = "Email";
-  static final Gson GSON;
+    static final String COLLECTION = "Email";
+    static final Gson GSON;
 
-  static {
-    GsonBuilder gsonBuilder = new GsonBuilder();
-    JmapAdapters.register(gsonBuilder);
-    GSON = gsonBuilder.create();
-  }
-
-  @Override
-  public ArrayList<Email> getEmailsInMailboxs(String mailboxsId) {
-    MongoCollection<Document> identityCollection =
-        MongoConnectionSingleton.INSTANCE.getConnection().mongoDatabase.getCollection(COLLECTION);
-    FindIterable<Document> documentResults = identityCollection.find();
-
-    ArrayList<Email> emails = new ArrayList<Email>();
-
-    for (Document document : documentResults) {
-      emails.add(GSON.fromJson(document.toJson(), Email.class));
+    static {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        JmapAdapters.register(gsonBuilder);
+        GSON = gsonBuilder.create();
     }
 
-    return emails.stream()
-        .filter(e -> e.getMailboxIds().containsKey(mailboxsId))
-        .collect(Collectors.toCollection(ArrayList::new));
-  }
+    @Override
+    public ArrayList<Email> readFromMailbox(String mailboxsId) {
+        MongoCollection<Document> identityCollection =
+                MongoConnectionSingleton.INSTANCE
+                        .getConnection()
+                        .mongoDatabase
+                        .getCollection(COLLECTION);
+        FindIterable<Document> documentResults = identityCollection.find();
 
-  @Override
-  public void saveEmail(Email email) {
-    Document doc = Document.parse(GSON.toJson(email, Email.class));
-    doc.put("_id", email.getId());
-    MongoConnectionSingleton.INSTANCE
-        .getConnection()
-        .mongoDatabase
-        .getCollection(COLLECTION)
-        .replaceOne(Filters.eq("_id", email.getId()), doc, new ReplaceOptions().upsert(true));
-  }
+        ArrayList<Email> emails = new ArrayList<Email>();
 
-  @Override
-  public ArrayList<Email> getAllEmails() {
-    MongoCollection<Document> identityCollection =
-        MongoConnectionSingleton.INSTANCE.getConnection().mongoDatabase.getCollection(COLLECTION);
-    FindIterable<Document> documentResults = identityCollection.find();
+        for (Document document : documentResults) {
+            emails.add(GSON.fromJson(document.toJson(), Email.class));
+        }
 
-    ArrayList<Email> emails = new ArrayList<Email>();
-
-    for (Document document : documentResults) {
-      emails.add(GSON.fromJson(document.toJson(), Email.class));
+        return emails.stream()
+                .filter(e -> e.getMailboxIds().containsKey(mailboxsId))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
-    return emails;
-  }
+    @Override
+    public void write(Email email) {
+        Document doc = Document.parse(GSON.toJson(email, Email.class));
+        doc.put("_id", email.getId());
+        MongoConnectionSingleton.INSTANCE
+                .getConnection()
+                .mongoDatabase
+                .getCollection(COLLECTION)
+                .replaceOne(
+                        Filters.eq("_id", email.getId()), doc, new ReplaceOptions().upsert(true));
+    }
+
+    @Override
+    public ArrayList<Email> getAll() {
+        MongoCollection<Document> identityCollection =
+                MongoConnectionSingleton.INSTANCE
+                        .getConnection()
+                        .mongoDatabase
+                        .getCollection(COLLECTION);
+        FindIterable<Document> documentResults = identityCollection.find();
+
+        ArrayList<Email> emails = new ArrayList<Email>();
+
+        for (Document document : documentResults) {
+            emails.add(GSON.fromJson(document.toJson(), Email.class));
+        }
+
+        return emails;
+    }
 }

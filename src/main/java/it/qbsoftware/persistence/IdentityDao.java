@@ -4,7 +4,7 @@ import java.util.Optional;
 import rs.ltt.jmap.common.entity.Identity;
 
 public interface IdentityDao {
-  Optional<Identity> getIdentity(String id);
+    Optional<Identity> read(String id);
 
-  void saveIdentity(Identity identity);
+    void write(Identity identity);
 }

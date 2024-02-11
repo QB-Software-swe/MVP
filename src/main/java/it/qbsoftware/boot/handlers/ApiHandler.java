@@ -10,17 +10,23 @@ import org.eclipse.jetty.server.Response;
 import org.eclipse.jetty.util.Callback;
 
 public class ApiHandler extends Handler.Abstract {
-  public static final String HANDLER_ENDPOINT_NAME = "/api";
+    public static final String HANDLER_ENDPOINT = "/api";
+    public static final String HANDLER_CONTEXT_PATH = "/";
 
-  @Override
-  public boolean handle(Request request, Response response, Callback callback) throws Exception {
-    String requestPayload = Content.Source.asString(request);
-    response.getHeaders().put(HttpHeader.CONTENT_TYPE, "application/json; charset=UTF-8");
+    @Override
+    public boolean handle(Request request, Response response, Callback callback) throws Exception {
+        if (!(request.getMethod().equals("POST")
+                && Request.getPathInContext(request).equals(HANDLER_ENDPOINT))) {
+            return false;
+        }
 
-    RequestResponse jmapResponse = JmapSingleton.INSTANCE.getJmap().request(requestPayload);
-    response.setStatus(jmapResponse.responseCode());
+        String requestPayload = Content.Source.asString(request);
+        response.getHeaders().put(HttpHeader.CONTENT_TYPE, "application/json; charset=UTF-8");
 
-    Content.Sink.write(response, true, jmapResponse.payload(), callback);
-    return true;
-  }
+        RequestResponse jmapResponse = JmapSingleton.INSTANCE.getJmap().request(requestPayload);
+        response.setStatus(jmapResponse.responseCode());
+
+        Content.Sink.write(response, true, jmapResponse.payload(), callback);
+        return true;
+    }
 }

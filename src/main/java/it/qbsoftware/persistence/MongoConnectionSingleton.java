@@ -1,11 +1,11 @@
 package it.qbsoftware.persistence;
 
 public enum MongoConnectionSingleton {
-  INSTANCE;
+    INSTANCE;
 
-  MongoConnection mongoConnection = new MongoConnection();
+    MongoConnection mongoConnection = new MongoConnection();
 
-  public MongoConnection getConnection() {
-    return mongoConnection;
-  }
+    public MongoConnection getConnection() {
+        return mongoConnection;
+    }
 }

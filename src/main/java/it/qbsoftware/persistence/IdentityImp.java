@@ -12,40 +12,47 @@ import rs.ltt.jmap.common.entity.Identity;
 import rs.ltt.jmap.gson.JmapAdapters;
 
 public class IdentityImp implements IdentityDao {
-  static final String COLLECTION = "Identity";
-  static final Gson GSON;
+    static final String COLLECTION = "Identity";
+    static final Gson GSON;
 
-  static {
-    GsonBuilder gsonBuilder = new GsonBuilder();
-    JmapAdapters.register(gsonBuilder);
-    GSON = gsonBuilder.create();
-  }
-
-  @Override
-  public Optional<Identity> getIdentity(String id) {
-    Bson filterById = Filters.eq("_id", id);
-
-    MongoCollection<Document> identityCollection =
-        MongoConnectionSingleton.INSTANCE.getConnection().mongoDatabase.getCollection(COLLECTION);
-    FindIterable<Document> documentResults = identityCollection.find(filterById);
-
-    Document doc = documentResults.first();
-
-    if (doc == null) {
-      return Optional.empty();
-    } else {
-      return Optional.of(GSON.fromJson(doc.toJson().replace("_id", "id"), Identity.class));
+    static {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        JmapAdapters.register(gsonBuilder);
+        GSON = gsonBuilder.create();
     }
-  }
 
-  @Override
-  public void saveIdentity(Identity identity) {
-    Document doc =
-        Document.parse(GSON.toJson(identity, Identity.class).toString().replace("id", "_id"));
+    @Override
+    public Optional<Identity> read(String id) {
+        Bson filterById = Filters.eq("_id", id);
 
-    MongoCollection<Document> identityCollection =
-        MongoConnectionSingleton.INSTANCE.getConnection().mongoDatabase.getCollection(COLLECTION);
+        MongoCollection<Document> identityCollection =
+                MongoConnectionSingleton.INSTANCE
+                        .getConnection()
+                        .mongoDatabase
+                        .getCollection(COLLECTION);
+        FindIterable<Document> documentResults = identityCollection.find(filterById);
 
-    identityCollection.insertOne(doc);
-  }
+        Document doc = documentResults.first();
+
+        if (doc == null) {
+            return Optional.empty();
+        } else {
+            return Optional.of(GSON.fromJson(doc.toJson().replace("_id", "id"), Identity.class));
+        }
+    }
+
+    @Override
+    public void write(Identity identity) {
+        Document doc =
+                Document.parse(
+                        GSON.toJson(identity, Identity.class).toString().replace("id", "_id"));
+
+        MongoCollection<Document> identityCollection =
+                MongoConnectionSingleton.INSTANCE
+                        .getConnection()
+                        .mongoDatabase
+                        .getCollection(COLLECTION);
+
+        identityCollection.insertOne(doc);
+    }
 }
