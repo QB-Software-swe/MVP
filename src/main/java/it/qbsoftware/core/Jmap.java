@@ -17,10 +17,16 @@ import it.qbsoftware.persistence.MailboxInfoImp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.joda.time.DateTime;
 import rs.ltt.jmap.common.GenericResponse;
@@ -31,20 +37,25 @@ import rs.ltt.jmap.common.entity.Email;
 import rs.ltt.jmap.common.entity.Identity;
 import rs.ltt.jmap.common.entity.Keyword;
 import rs.ltt.jmap.common.entity.Mailbox;
+import rs.ltt.jmap.common.entity.filter.EmailFilterCondition;
+import rs.ltt.jmap.common.entity.filter.Filter;
 import rs.ltt.jmap.common.method.MethodCall;
 import rs.ltt.jmap.common.method.MethodResponse;
 import rs.ltt.jmap.common.method.call.core.EchoMethodCall;
 import rs.ltt.jmap.common.method.call.email.GetEmailMethodCall;
 import rs.ltt.jmap.common.method.call.email.QueryChangesEmailMethodCall;
+import rs.ltt.jmap.common.method.call.email.QueryEmailMethodCall;
 import rs.ltt.jmap.common.method.call.identity.GetIdentityMethodCall;
 import rs.ltt.jmap.common.method.call.mailbox.ChangesMailboxMethodCall;
 import rs.ltt.jmap.common.method.call.mailbox.GetMailboxMethodCall;
+import rs.ltt.jmap.common.method.error.AnchorNotFoundMethodErrorResponse;
 import rs.ltt.jmap.common.method.error.CannotCalculateChangesMethodErrorResponse;
 import rs.ltt.jmap.common.method.error.InvalidResultReferenceMethodErrorResponse;
 import rs.ltt.jmap.common.method.error.UnknownMethodMethodErrorResponse;
 import rs.ltt.jmap.common.method.response.core.EchoMethodResponse;
 import rs.ltt.jmap.common.method.response.email.GetEmailMethodResponse;
 import rs.ltt.jmap.common.method.response.email.QueryChangesEmailMethodResponse;
+import rs.ltt.jmap.common.method.response.email.QueryEmailMethodResponse;
 import rs.ltt.jmap.common.method.response.identity.GetIdentityMethodResponse;
 import rs.ltt.jmap.common.method.response.mailbox.ChangesMailboxMethodResponse;
 import rs.ltt.jmap.common.method.response.mailbox.GetMailboxMethodResponse;
@@ -58,7 +69,7 @@ public class Jmap {
   final LinkedHashMap<String, Update> updates = new LinkedHashMap<>();
 
   static {
-    GsonBuilder gsonBuilder = new GsonBuilder();
+    GsonBuilder gsonBuilder = new GsonBuilder().setPrettyPrinting();
     JmapAdapters.register(gsonBuilder);
     GSON = gsonBuilder.create();
   }
@@ -140,9 +151,64 @@ public class Jmap {
         yield execute(getEmailMethodCall, previousResponses);
       }
 
+      case QueryEmailMethodCall queryEmailMethodCall -> {
+        yield execute(queryEmailMethodCall, previousResponses);
+      }
+
       default -> {
         yield new MethodResponse[] {new UnknownMethodMethodErrorResponse()};
       }
+    };
+  }
+
+  private MethodResponse[] execute(
+      QueryEmailMethodCall queryEmailMethodCall,
+      ListMultimap<String, Invocation> previousResponses) {
+    final Filter<Email> filter = queryEmailMethodCall.getFilter();
+    EmailDao emailDao = new EmailImp();
+    Map<String, Email> emails = new HashMap<String, Email>();
+    for (Email email : emailDao.getAllEmails()) {
+      emails.put(email.getId(), email);
+    }
+    Stream<Email> emailStream = emails.values().stream();
+    emailStream = applyFilter(filter, emailStream);
+    emailStream = emailStream.sorted(Comparator.comparing(Email::getReceivedAt).reversed());
+
+    if (Boolean.TRUE.equals(queryEmailMethodCall.getCollapseThreads())) {
+      emailStream = emailStream.filter(distinctByKey(Email::getThreadId));
+    }
+
+    final List<String> ids = emailStream.map(Email::getId).collect(Collectors.toList());
+    final String anchor = queryEmailMethodCall.getAnchor();
+    final int position;
+    if (anchor != null) {
+      final Long anchorOffset = queryEmailMethodCall.getAnchorOffset();
+      final int anchorPosition = ids.indexOf(anchor);
+      if (anchorPosition == -1) {
+        return new MethodResponse[] {new AnchorNotFoundMethodErrorResponse()};
+      }
+      position = Math.toIntExact(anchorPosition + (anchorOffset == null ? 0 : anchorOffset));
+    } else {
+      position =
+          Math.toIntExact(
+              queryEmailMethodCall.getPosition() == null ? 0 : queryEmailMethodCall.getPosition());
+    }
+    final int limit =
+        Math.toIntExact(
+            queryEmailMethodCall.getLimit() == null ? 40 : queryEmailMethodCall.getLimit());
+    final int endPosition = Math.min(position + limit, ids.size());
+    final String[] page = ids.subList(position, endPosition).toArray(new String[0]);
+    final Long total =
+        Boolean.TRUE.equals(queryEmailMethodCall.getCalculateTotal()) ? (long) ids.size() : null;
+
+    return new MethodResponse[] {
+      QueryEmailMethodResponse.builder()
+          .canCalculateChanges(false) // Non implementato
+          .queryState("0")
+          .total(total)
+          .ids(page)
+          .position((long) position)
+          .build()
     };
   }
 
@@ -323,5 +389,26 @@ public class Jmap {
       return null;
     }
     return Update.merge(updates);
+  }
+
+  private static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+    final Set<Object> seen = ConcurrentHashMap.newKeySet();
+    return t -> seen.add(keyExtractor.apply(t));
+  }
+
+  private static Stream<Email> applyFilter(final Filter<Email> filter, Stream<Email> emailStream) {
+    if (filter instanceof EmailFilterCondition) {
+      final EmailFilterCondition emailFilterCondition = (EmailFilterCondition) filter;
+      final String inMailbox = emailFilterCondition.getInMailbox();
+      if (inMailbox != null) {
+        emailStream = emailStream.filter(email -> email.getMailboxIds().containsKey(inMailbox));
+      }
+      final String[] header = emailFilterCondition.getHeader();
+      if (header != null && header.length == 2 && header[0].equals("Autocrypt-Setup-Message")) {
+        emailStream =
+            emailStream.filter(email -> header[1].equals(email.getAutocryptSetupMessage()));
+      }
+    }
+    return emailStream;
   }
 }

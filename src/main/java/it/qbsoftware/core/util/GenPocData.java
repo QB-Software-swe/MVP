@@ -13,6 +13,7 @@ import rs.ltt.jmap.common.entity.EmailAddress;
 import rs.ltt.jmap.common.entity.EmailBodyValue;
 import rs.ltt.jmap.common.entity.Identity;
 import rs.ltt.jmap.common.entity.Role;
+import rs.ltt.jmap.mock.server.EmailGenerator;
 
 public class GenPocData {
 
@@ -68,7 +69,18 @@ public class GenPocData {
         };
 
     EmailDao emailDao = new EmailImp();
-    for (Email email : emails) {
+    /*
+     * for (Email email : emails) {
+     * emailDao.saveEmail(email);
+     * }
+     */
+
+    int j = 1;
+    for (int i = 0; i < 30; i++) {
+      Email email =
+          EmailGenerator.get(
+              EmailAddress.builder().email("coso").name("coso name").build(), "0", i, j, 0, 1);
+      j++;
       emailDao.saveEmail(email);
     }
   }
