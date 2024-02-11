@@ -6,13 +6,10 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
-import com.mongodb.client.model.UpdateOptions;
-
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 import org.bson.Document;
 import rs.ltt.jmap.common.entity.Email;
-import rs.ltt.jmap.common.entity.filter.Filter;
 import rs.ltt.jmap.gson.JmapAdapters;
 
 public class EmailImp implements EmailDao {

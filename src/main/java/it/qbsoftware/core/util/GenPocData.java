@@ -6,49 +6,27 @@ import it.qbsoftware.persistence.IdentityImp;
 import it.qbsoftware.persistence.MailboxInfoDao;
 import it.qbsoftware.persistence.MailboxInfoImp;
 import it.qbsoftware.persistence.MongoConnectionSingleton;
-
 import java.time.Instant;
 import java.time.ZoneOffset;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import org.bson.Document;
 
-import com.google.common.collect.ImmutableMap;
-import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.Updates;
+import java.util.HashMap;
 
-import rs.ltt.jmap.common.SessionResource;
-import rs.ltt.jmap.common.SessionResource.SessionResourceBuilder;
-import rs.ltt.jmap.common.entity.Account;
-import rs.ltt.jmap.common.entity.Capability;
 import rs.ltt.jmap.common.entity.Email;
 import rs.ltt.jmap.common.entity.EmailAddress;
 import rs.ltt.jmap.common.entity.EmailBodyPart;
 import rs.ltt.jmap.common.entity.EmailBodyValue;
 import rs.ltt.jmap.common.entity.Identity;
 import rs.ltt.jmap.common.entity.Role;
-import rs.ltt.jmap.common.entity.capability.CoreCapability;
-import rs.ltt.jmap.common.entity.capability.MailAccountCapability;
-import rs.ltt.jmap.common.entity.capability.MailCapability;
-import rs.ltt.jmap.mock.server.EmailGenerator;
-import rs.ltt.jmap.mock.server.MockMailServer;
 
 public class GenPocData {
 
   public static void generate() {
     MongoConnectionSingleton.INSTANCE.getConnection().getDatabase().drop();
-    DELETEME deleteme = new DELETEME(0);
     generateAccount();
     generateMail();
     generateIdentity();
     generateMailboxInfo();
-    EmailDao emailDao = new EmailImp();
-    for (var x : deleteme.getEmails().values().toArray(new Email[0])) {
-      emailDao.saveEmail(x);
-       JmapSingleton.INSTANCE.getJmap().increaseState();
-     }
-    // generateMail();
   }
 
   static void generateAccount() {
@@ -56,8 +34,9 @@ public class GenPocData {
     doc.put("_id", "0");
     doc.put("state", "0");
     MongoConnectionSingleton.INSTANCE
-        .getConnection().getDatabase().getCollection(
-            "Account")
+        .getConnection()
+        .getDatabase()
+        .getCollection("Account")
         .insertOne(doc);
   }
 
@@ -81,12 +60,22 @@ public class GenPocData {
   }
 
   static void generateMail() {
+
+    HashMap<String, Boolean> mx = new HashMap<String, Boolean>();
+    mx.put("0", true);
+    mx.put("1",true);
+
+
     Email[] emails = new Email[] {
         Email.builder()
             .id("0")
             .threadId("0")
             .sentAt(Instant.now().atOffset(ZoneOffset.ofHours(1)))
             .receivedAt(Instant.now())
+            .to(EmailAddress.builder()
+                .email("team@qbsoftware.org")
+                .name("QB Software")
+                .build())
             .mailboxId("0", true)
             .from(
                 EmailAddress.builder()
@@ -103,29 +92,40 @@ public class GenPocData {
                     .build())
             .textBody(EmailBodyPart.builder().partId("0").type("text/plain").build())
             .keyword("a", false)
+            .build(),
+
+        Email.builder()
+            .id("1")
+            .threadId("1")
+            .sentAt(Instant.now().atOffset(ZoneOffset.ofHours(1)))
+            .receivedAt(Instant.now())
+            .mailboxIds(mx)
+            .from(
+                EmailAddress.builder()
+                    .email("team@qbsoftware.org")
+                    .name("QB Software Team")
+                    .build())
+            .to(EmailAddress.builder()
+                .email("team@qbsoftware.org")
+                .name("QB Software Team")
+                .build())
+            .subject("Candidatura per la revisione RTB")
+            .preview("Candidatura RTB")
+            .bodyStructure(EmailBodyPart.builder().partId("0").type("text/plain").build())
+            .bodyValue(
+                "0",
+                EmailBodyValue.builder()
+                    .value("Gentile prof. X.")
+                    .build())
+            .textBody(EmailBodyPart.builder().partId("0").type("text/plain").build())
+            .keyword("a", false)
             .build()
     };
 
     EmailDao emailDao = new EmailImp();
-    
-      for (Email email : emails) {
+
+    for (Email email : emails) {
       emailDao.saveEmail(email);
-      }
-     
-  }
-}
-
-class DELETEME extends MockMailServer {
-
-  public DELETEME(int numThreads) {
-    super(numThreads);
-  }
-
-  public Map<String, Email> getEmails() {
-    return emails;
-  }
-
-  public Map<String, MailboxInfo> getMailboxInfo() {
-    return mailboxes;
+    }
   }
 }

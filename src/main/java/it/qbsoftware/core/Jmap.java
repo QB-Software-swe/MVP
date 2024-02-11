@@ -22,7 +22,6 @@ import org.joda.time.DateTime;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableListMultimap;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ListMultimap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -39,23 +38,19 @@ import it.qbsoftware.persistence.IdentityImp;
 import it.qbsoftware.persistence.MailboxInfoDao;
 import it.qbsoftware.persistence.MailboxInfoImp;
 import it.qbsoftware.persistence.MongoConnectionSingleton;
-import okhttp3.HttpUrl;
 import rs.ltt.jmap.common.GenericResponse;
 import rs.ltt.jmap.common.Request;
 import rs.ltt.jmap.common.Response;
 import rs.ltt.jmap.common.Response.Invocation;
-import rs.ltt.jmap.common.entity.AbstractIdentifiableEntity;
 import rs.ltt.jmap.common.entity.Attachment;
 import rs.ltt.jmap.common.entity.Email;
 import rs.ltt.jmap.common.entity.EmailBodyPart;
 import rs.ltt.jmap.common.entity.EmailBodyValue;
 import rs.ltt.jmap.common.entity.Identity;
 import rs.ltt.jmap.common.entity.Mailbox;
-import rs.ltt.jmap.common.entity.PushSubscription;
 import rs.ltt.jmap.common.entity.Role;
 import rs.ltt.jmap.common.entity.SetError;
 import rs.ltt.jmap.common.entity.SetErrorType;
-import rs.ltt.jmap.common.entity.StateChange;
 import rs.ltt.jmap.common.entity.Thread;
 import rs.ltt.jmap.common.entity.filter.EmailFilterCondition;
 import rs.ltt.jmap.common.entity.filter.Filter;
@@ -70,6 +65,7 @@ import rs.ltt.jmap.common.method.call.email.SetEmailMethodCall;
 import rs.ltt.jmap.common.method.call.identity.GetIdentityMethodCall;
 import rs.ltt.jmap.common.method.call.mailbox.ChangesMailboxMethodCall;
 import rs.ltt.jmap.common.method.call.mailbox.GetMailboxMethodCall;
+import rs.ltt.jmap.common.method.call.mailbox.SetMailboxMethodCall;
 import rs.ltt.jmap.common.method.call.thread.ChangesThreadMethodCall;
 import rs.ltt.jmap.common.method.call.thread.GetThreadMethodCall;
 import rs.ltt.jmap.common.method.error.AnchorNotFoundMethodErrorResponse;
@@ -86,13 +82,12 @@ import rs.ltt.jmap.common.method.response.email.SetEmailMethodResponse;
 import rs.ltt.jmap.common.method.response.identity.GetIdentityMethodResponse;
 import rs.ltt.jmap.common.method.response.mailbox.ChangesMailboxMethodResponse;
 import rs.ltt.jmap.common.method.response.mailbox.GetMailboxMethodResponse;
+import rs.ltt.jmap.common.method.response.mailbox.SetMailboxMethodResponse;
 import rs.ltt.jmap.common.method.response.thread.ChangesThreadMethodResponse;
 import rs.ltt.jmap.common.method.response.thread.GetThreadMethodResponse;
-import rs.ltt.jmap.common.websocket.StateChangeWebSocketMessage;
 import rs.ltt.jmap.gson.JmapAdapters;
 import rs.ltt.jmap.mock.server.Changes;
 import rs.ltt.jmap.mock.server.CreationIdResolver;
-import rs.ltt.jmap.mock.server.Pusher;
 import rs.ltt.jmap.mock.server.ResultReferenceResolver;
 import rs.ltt.jmap.mock.server.Update;
 import rs.ltt.jmap.mock.server.util.FuzzyRoleParser;
@@ -102,7 +97,7 @@ public class Jmap {
   final LinkedHashMap<String, Update> updates = new LinkedHashMap<>();
 
   static {
-    GsonBuilder gsonBuilder = new GsonBuilder();// .setPrettyPrinting();
+    GsonBuilder gsonBuilder = new GsonBuilder(); // .setPrettyPrinting();
     JmapAdapters.register(gsonBuilder);
     GSON = gsonBuilder.create();
   }
@@ -138,13 +133,15 @@ public class Jmap {
   private GenericResponse computeResponse(Request jmapRequest) {
     final Request.Invocation[] methodCalls = jmapRequest.getMethodCalls();
 
-    final ArrayListMultimap<String, rs.ltt.jmap.common.Response.Invocation> response = ArrayListMultimap.create();
+    final ArrayListMultimap<String, rs.ltt.jmap.common.Response.Invocation> response =
+        ArrayListMultimap.create();
 
     for (final Request.Invocation invocation : methodCalls) {
       final MethodCall methodCall = invocation.getMethodCall();
       final String id = invocation.getId();
 
-      MethodResponse[] methodResponses = dispatch(methodCall, ImmutableListMultimap.copyOf(response));
+      MethodResponse[] methodResponses =
+          dispatch(methodCall, ImmutableListMultimap.copyOf(response));
 
       Arrays.stream(methodResponses)
           .sequential()
@@ -202,17 +199,47 @@ public class Jmap {
         yield execute(setEmailMethodCall, previousResponses);
       }
 
+      case SetMailboxMethodCall setMailboxMethodCall -> {
+        yield execute(setMailboxMethodCall, previousResponses);
+      }
+
       default -> {
         System.out.println(
             "................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................");
-        yield new MethodResponse[] { new UnknownMethodMethodErrorResponse() };
+        yield new MethodResponse[] {new UnknownMethodMethodErrorResponse()};
       }
     };
   }
 
   private MethodResponse[] execute(
-      SetEmailMethodCall methodCall,
-      ListMultimap<String, Response.Invocation> previousResponses) {
+            final SetMailboxMethodCall methodCall,
+            ListMultimap<String, Response.Invocation> previousResponses) {
+        final String ifInState = methodCall.getIfInState();
+        final SetMailboxMethodResponse.SetMailboxMethodResponseBuilder responseBuilder =
+                SetMailboxMethodResponse.builder();
+        final Map<String, Mailbox> create = methodCall.getCreate();
+        final Map<String, Map<String, Object>> update = methodCall.getUpdate();
+        final String oldState = getState();
+        if (ifInState != null) {
+            if (!ifInState.equals(oldState)) {
+                return new MethodResponse[] {new StateMismatchMethodErrorResponse()};
+            }
+        }
+
+        if (create != null && create.size() > 0) {
+            processCreateMailbox(create, responseBuilder);
+        }
+        if (update != null && update.size() > 0) {
+            processUpdateMailbox(update, responseBuilder, previousResponses);
+        }
+        increaseState();
+        final SetMailboxMethodResponse setMailboxResponse = responseBuilder.build();
+        updates.put(oldState, Update.of(setMailboxResponse, getState()));
+        return new MethodResponse[] {setMailboxResponse};
+    }
+
+  private MethodResponse[] execute(
+      SetEmailMethodCall methodCall, ListMultimap<String, Response.Invocation> previousResponses) {
     EmailDao emailDao = new EmailImp();
     Map<String, Email> emails = new HashMap<String, Email>();
     for (Email email : emailDao.getAllEmails()) {
@@ -225,11 +252,12 @@ public class Jmap {
     if (destroy != null && destroy.length > 0) {
       throw new IllegalStateException("MockMailServer does not know how to destroy");
     }
-    final SetEmailMethodResponse.SetEmailMethodResponseBuilder responseBuilder = SetEmailMethodResponse.builder();
+    final SetEmailMethodResponse.SetEmailMethodResponseBuilder responseBuilder =
+        SetEmailMethodResponse.builder();
     final String oldState = getState();
     if (ifInState != null) {
       if (!ifInState.equals(oldState)) {
-        return new MethodResponse[] { new StateMismatchMethodErrorResponse() };
+        return new MethodResponse[] {new StateMismatchMethodErrorResponse()};
       }
     }
     if (update != null) {
@@ -255,13 +283,12 @@ public class Jmap {
         mInfo.put(x.getId(), x);
       }
 
-      updates.put(
-          oldState, Update.updated(modifiedEmails, mInfo.keySet(), newState));
+      updates.put(oldState, Update.updated(modifiedEmails, mInfo.keySet(), newState));
     }
     if (create != null && create.size() > 0) {
       processCreateEmail(create, responseBuilder, previousResponses);
     }
-    return new MethodResponse[] { responseBuilder.build() };
+    return new MethodResponse[] {responseBuilder.build()};
   }
 
   private MethodResponse[] execute(
@@ -270,45 +297,43 @@ public class Jmap {
     final String since = methodCall.getSinceState();
     if (since != null && since.equals("0")) {
       return new MethodResponse[] {
-          ChangesEmailMethodResponse.builder()
-              .oldState(getState())
-              .newState(getState())
-              .updated(new String[0])
-              .created(new String[0])
-              .destroyed(new String[0])
-              .build()
+        ChangesEmailMethodResponse.builder()
+            .oldState(getState())
+            .newState(getState())
+            .updated(new String[0])
+            .created(new String[0])
+            .destroyed(new String[0])
+            .build()
       };
     } else {
       final Update update = getAccumulatedUpdateSince(since);
       if (update == null) {
-        return new MethodResponse[] { new CannotCalculateChangesMethodErrorResponse() };
+        return new MethodResponse[] {new CannotCalculateChangesMethodErrorResponse()};
       } else {
         final Changes changes = update.getChangesFor(Email.class);
         return new MethodResponse[] {
-            ChangesEmailMethodResponse.builder()
-                .oldState(since)
-                .newState(update.getNewVersion())
-                .updated(changes == null ? new String[0] : changes.updated)
-                .created(changes == null ? new String[0] : changes.created)
-                .destroyed(new String[0])
-                .hasMoreChanges(!update.getNewVersion().equals(getState()))
-                .build()
+          ChangesEmailMethodResponse.builder()
+              .oldState(since)
+              .newState(update.getNewVersion())
+              .updated(changes == null ? new String[0] : changes.updated)
+              .created(changes == null ? new String[0] : changes.created)
+              .destroyed(new String[0])
+              .hasMoreChanges(!update.getNewVersion().equals(getState()))
+              .build()
         };
       }
     }
   }
 
   private MethodResponse[] execute(
-      GetThreadMethodCall methodCall,
-      ListMultimap<String, Response.Invocation> previousResponses) {
+      GetThreadMethodCall methodCall, ListMultimap<String, Response.Invocation> previousResponses) {
     final Request.Invocation.ResultReference idsReference = methodCall.getIdsReference();
     final List<String> ids;
     if (idsReference != null) {
       try {
-        ids = Arrays.asList(
-            ResultReferenceResolver.resolve(idsReference, previousResponses));
+        ids = Arrays.asList(ResultReferenceResolver.resolve(idsReference, previousResponses));
       } catch (final IllegalArgumentException e) {
-        return new MethodResponse[] { new InvalidResultReferenceMethodErrorResponse() };
+        return new MethodResponse[] {new InvalidResultReferenceMethodErrorResponse()};
       }
     } else {
       ids = Arrays.asList(methodCall.getIds());
@@ -318,56 +343,54 @@ public class Jmap {
     for (Email email : emailDao.getAllEmails()) {
       emails.put(email.getId(), email);
     }
-    final Thread[] threads = ids.stream()
-        .map(
-            threadId -> Thread.builder()
-                .id(threadId)
-                .emailIds(
-                    emails.values().stream()
-                        .filter(
-                            email -> email.getThreadId()
-                                .equals(
-                                    threadId))
-                        .sorted(
-                            Comparator.comparing(
-                                Email::getReceivedAt))
-                        .map(Email::getId)
-                        .collect(Collectors.toList()))
-                .build())
-        .toArray(Thread[]::new);
+    final Thread[] threads =
+        ids.stream()
+            .map(
+                threadId ->
+                    Thread.builder()
+                        .id(threadId)
+                        .emailIds(
+                            emails.values().stream()
+                                .filter(email -> email.getThreadId().equals(threadId))
+                                .sorted(Comparator.comparing(Email::getReceivedAt))
+                                .map(Email::getId)
+                                .collect(Collectors.toList()))
+                        .build())
+            .toArray(Thread[]::new);
     return new MethodResponse[] {
-        GetThreadMethodResponse.builder().list(threads).state(getState()).build()
+      GetThreadMethodResponse.builder().list(threads).state(getState()).build()
     };
   }
 
-  private MethodResponse[] execute(ChangesThreadMethodCall changesThreadMethodCall,
+  private MethodResponse[] execute(
+      ChangesThreadMethodCall changesThreadMethodCall,
       ListMultimap<String, Invocation> previousResponses) {
     final String since = changesThreadMethodCall.getSinceState();
     if (since != null && since.equals(getState())) {
       return new MethodResponse[] {
-          ChangesThreadMethodResponse.builder()
-              .oldState(getState())
-              .newState(getState())
-              .updated(new String[0])
-              .created(new String[0])
-              .destroyed(new String[0])
-              .build()
+        ChangesThreadMethodResponse.builder()
+            .oldState(getState())
+            .newState(getState())
+            .updated(new String[0])
+            .created(new String[0])
+            .destroyed(new String[0])
+            .build()
       };
     } else {
       final Update update = getAccumulatedUpdateSince(since);
       if (update == null) {
-        return new MethodResponse[] { new CannotCalculateChangesMethodErrorResponse() };
+        return new MethodResponse[] {new CannotCalculateChangesMethodErrorResponse()};
       } else {
         final Changes changes = update.getChangesFor(Thread.class);
         return new MethodResponse[] {
-            ChangesThreadMethodResponse.builder()
-                .oldState(since)
-                .newState(update.getNewVersion())
-                .updated(changes == null ? new String[0] : changes.updated)
-                .created(changes == null ? new String[0] : changes.created)
-                .destroyed(new String[0])
-                .hasMoreChanges(!update.getNewVersion().equals(getState()))
-                .build()
+          ChangesThreadMethodResponse.builder()
+              .oldState(since)
+              .newState(update.getNewVersion())
+              .updated(changes == null ? new String[0] : changes.updated)
+              .created(changes == null ? new String[0] : changes.created)
+              .destroyed(new String[0])
+              .hasMoreChanges(!update.getNewVersion().equals(getState()))
+              .build()
         };
       }
     }
@@ -397,27 +420,30 @@ public class Jmap {
       final Long anchorOffset = queryEmailMethodCall.getAnchorOffset();
       final int anchorPosition = ids.indexOf(anchor);
       if (anchorPosition == -1) {
-        return new MethodResponse[] { new AnchorNotFoundMethodErrorResponse() };
+        return new MethodResponse[] {new AnchorNotFoundMethodErrorResponse()};
       }
       position = Math.toIntExact(anchorPosition + (anchorOffset == null ? 0 : anchorOffset));
     } else {
-      position = Math.toIntExact(
-          queryEmailMethodCall.getPosition() == null ? 0 : queryEmailMethodCall.getPosition());
+      position =
+          Math.toIntExact(
+              queryEmailMethodCall.getPosition() == null ? 0 : queryEmailMethodCall.getPosition());
     }
-    final int limit = Math.toIntExact(
-        queryEmailMethodCall.getLimit() == null ? 40 : queryEmailMethodCall.getLimit());
+    final int limit =
+        Math.toIntExact(
+            queryEmailMethodCall.getLimit() == null ? 40 : queryEmailMethodCall.getLimit());
     final int endPosition = Math.min(position + limit, ids.size());
     final String[] page = ids.subList(position, endPosition).toArray(new String[0]);
-    final Long total = Boolean.TRUE.equals(queryEmailMethodCall.getCalculateTotal()) ? (long) ids.size() : null;
+    final Long total =
+        Boolean.TRUE.equals(queryEmailMethodCall.getCalculateTotal()) ? (long) ids.size() : null;
 
     return new MethodResponse[] {
-        QueryEmailMethodResponse.builder()
-            .canCalculateChanges(false) // Non implementato
-            .queryState(getState())
-            .total(total)
-            .ids(page)
-            .position((long) position)
-            .build()
+      QueryEmailMethodResponse.builder()
+          .canCalculateChanges(false) // Non implementato
+          .queryState(getState())
+          .total(total)
+          .ids(page)
+          .position((long) position)
+          .build()
     };
   }
 
@@ -429,7 +455,7 @@ public class Jmap {
       try {
         ids = Arrays.asList(ResultReferenceResolver.resolve(idsReference, previousResponses));
       } catch (final IllegalArgumentException e) {
-        return new MethodResponse[] { new InvalidResultReferenceMethodErrorResponse() };
+        return new MethodResponse[] {new InvalidResultReferenceMethodErrorResponse()};
       }
     } else {
       ids = Arrays.asList(getEmailMethodCall.getIds());
@@ -442,25 +468,31 @@ public class Jmap {
     final String[] properties = getEmailMethodCall.getProperties();
     Stream<Email> emailStream = emails.values().stream();
     if (Arrays.equals(properties, Email.Properties.THREAD_ID)) {
-      emailStream = emailStream.map(
-          email -> Email.builder().id(email.getId()).threadId(email.getThreadId()).build());
+      emailStream =
+          emailStream.map(
+              email -> Email.builder().id(email.getId()).threadId(email.getThreadId()).build());
     } else if (Arrays.equals(properties, Email.Properties.MUTABLE)) {
-      emailStream = emailStream.map(
-          email -> Email.builder()
-              .id(email.getId())
-              .keywords(email.getKeywords())
-              .mailboxIds(email.getMailboxIds())
-              .build());
+      emailStream =
+          emailStream.map(
+              email ->
+                  Email.builder()
+                      .id(email.getId())
+                      .keywords(email.getKeywords())
+                      .mailboxIds(email.getMailboxIds())
+                      .build());
     }
     return new MethodResponse[] {
-        GetEmailMethodResponse.builder().list(emailStream.toArray(Email[]::new)).state(getState()).build()
+      GetEmailMethodResponse.builder()
+          .list(emailStream.toArray(Email[]::new))
+          .state(getState())
+          .build()
     };
   }
 
   private MethodResponse[] execute(
       EchoMethodCall methodCall, ListMultimap<String, Response.Invocation> previousResponses) {
     return new MethodResponse[] {
-        EchoMethodResponse.builder().libraryName(methodCall.getLibraryName()).build()
+      EchoMethodResponse.builder().libraryName(methodCall.getLibraryName()).build()
     };
   }
 
@@ -471,10 +503,10 @@ public class Jmap {
     IdentityDao identityDao = new IdentityImp();
 
     return new MethodResponse[] {
-        GetIdentityMethodResponse.builder()
-            .list(
-                new Identity[] { identityDao.getIdentity(getIdentityMethodCall.getAccountId()).get() })
-            .build()
+      GetIdentityMethodResponse.builder()
+          .list(
+              new Identity[] {identityDao.getIdentity(getIdentityMethodCall.getAccountId()).get()})
+          .build()
     };
   }
 
@@ -489,7 +521,7 @@ public class Jmap {
       try {
         ids = Arrays.asList(ResultReferenceResolver.resolve(idsReference, previousResponses));
       } catch (final IllegalArgumentException e) {
-        return new MethodResponse[] { new InvalidResultReferenceMethodErrorResponse() };
+        return new MethodResponse[] {new InvalidResultReferenceMethodErrorResponse()};
       }
     } else {
       final String[] idsParameter = getMailboxMethodCall.getIds();
@@ -500,14 +532,14 @@ public class Jmap {
     ArrayList<MailboxInfo> mailboxs = mailboxInfoDao.getMailboxsInfo();
 
     return new MethodResponse[] {
-        GetMailboxMethodResponse.builder()
-            .list(
-                mailboxs.stream()
-                    .map(this::toMailbox)
-                    .filter(m -> ids == null || ids.contains(m.getId()))
-                    .toArray(Mailbox[]::new))
-            .state(getState())
-            .build()
+      GetMailboxMethodResponse.builder()
+          .list(
+              mailboxs.stream()
+                  .map(this::toMailbox)
+                  .filter(m -> ids == null || ids.contains(m.getId()))
+                  .toArray(Mailbox[]::new))
+          .state(getState())
+          .build()
     };
   }
 
@@ -517,15 +549,15 @@ public class Jmap {
     final String since = queryChangesEmailMethodCall.getSinceQueryState();
     if (since != null && since.equals(getState())) {
       return new MethodResponse[] {
-          QueryChangesEmailMethodResponse.builder()
-              .oldQueryState(getState())
-              .newQueryState(getState())
-              .added(Collections.emptyList())
-              .removed(new String[0])
-              .build()
+        QueryChangesEmailMethodResponse.builder()
+            .oldQueryState(getState())
+            .newQueryState(getState())
+            .added(Collections.emptyList())
+            .removed(new String[0])
+            .build()
       };
     } else {
-      return new MethodResponse[] { new CannotCalculateChangesMethodErrorResponse() };
+      return new MethodResponse[] {new CannotCalculateChangesMethodErrorResponse()};
     }
   }
 
@@ -535,30 +567,30 @@ public class Jmap {
     final String since = methodCall.getSinceState();
     if (since != null && since.equals(getState())) {
       return new MethodResponse[] {
-          ChangesMailboxMethodResponse.builder()
-              .oldState(getState())
-              .newState(getState())
-              .updated(new String[0])
-              .created(new String[0])
-              .destroyed(new String[0])
-              .updatedProperties(new String[0])
-              .build()
+        ChangesMailboxMethodResponse.builder()
+            .oldState(getState())
+            .newState(getState())
+            .updated(new String[0])
+            .created(new String[0])
+            .destroyed(new String[0])
+            .updatedProperties(new String[0])
+            .build()
       };
     } else {
       final Update update = getAccumulatedUpdateSince(since);
       if (update == null) {
-        return new MethodResponse[] { new CannotCalculateChangesMethodErrorResponse() };
+        return new MethodResponse[] {new CannotCalculateChangesMethodErrorResponse()};
       } else {
         final Changes changes = update.getChangesFor(Mailbox.class);
         return new MethodResponse[] {
-            ChangesMailboxMethodResponse.builder()
-                .oldState(since)
-                .newState(update.getNewVersion())
-                .updated(changes.updated)
-                .created(changes.created)
-                .destroyed(new String[0])
-                .hasMoreChanges(!update.getNewVersion().equals("0"))
-                .build()
+          ChangesMailboxMethodResponse.builder()
+              .oldState(since)
+              .newState(update.getNewVersion())
+              .updated(changes.updated)
+              .created(changes.created)
+              .destroyed(new String[0])
+              .hasMoreChanges(!update.getNewVersion().equals("0"))
+              .build()
         };
       }
     }
@@ -604,7 +636,8 @@ public class Jmap {
       }
       final String[] header = emailFilterCondition.getHeader();
       if (header != null && header.length == 2 && header[0].equals("Autocrypt-Setup-Message")) {
-        emailStream = emailStream.filter(email -> header[1].equals(email.getAutocryptSetupMessage()));
+        emailStream =
+            emailStream.filter(email -> header[1].equals(email.getAutocryptSetupMessage()));
       }
     }
     return emailStream;
@@ -612,22 +645,31 @@ public class Jmap {
 
   // Session
   public String getState() {
-    return MongoConnectionSingleton.INSTANCE.getConnection().getDatabase().getCollection("Account")
-        .find(Filters.eq("_id", "0")).first().getString("state");
+    return MongoConnectionSingleton.INSTANCE
+        .getConnection()
+        .getDatabase()
+        .getCollection("Account")
+        .find(Filters.eq("_id", "0"))
+        .first()
+        .getString("state");
   }
 
   public void increaseState() {
     MongoConnectionSingleton.INSTANCE
-        .getConnection().getDatabase().getCollection(
-            "Account")
-        .updateOne(Filters.eq("_id", "0"), Updates.set("state", String.valueOf(Integer.valueOf(getState()) + 1)));
+        .getConnection()
+        .getDatabase()
+        .getCollection("Account")
+        .updateOne(
+            Filters.eq("_id", "0"),
+            Updates.set("state", String.valueOf(Integer.valueOf(getState()) + 1)));
   }
 
   private MailboxInfo patchMailbox(
       final String id,
       final Map<String, Object> patches,
       ListMultimap<String, Response.Invocation> previousResponses) {
-    final MailboxInfo currentMailbox = new MailboxInfoImp().getMailboxInfo(id).get(); // FIXME: Questo è un Optional
+    final MailboxInfo currentMailbox =
+        new MailboxInfoImp().getMailboxInfo(id).get(); // FIXME: Questo è un Optional
     for (final Map.Entry<String, Object> patch : patches.entrySet()) {
       final String fullPath = patch.getKey();
       final Object modification = patch.getValue();
@@ -664,8 +706,7 @@ public class Jmap {
           final Boolean value = (Boolean) modification;
           emailBuilder.keyword(keyword, value);
         } else {
-          throw new IllegalArgumentException(
-              "Keyword modification was not split into two parts");
+          throw new IllegalArgumentException("Keyword modification was not split into two parts");
         }
       } else if (parameter.equals("mailboxIds")) {
         if (pathParts.size() == 2 && modification instanceof Boolean) {
@@ -676,8 +717,8 @@ public class Jmap {
           final Map<String, Boolean> mailboxMap = (Map<String, Boolean>) modification;
           emailBuilder.clearMailboxIds();
           for (Map.Entry<String, Boolean> mailboxEntry : mailboxMap.entrySet()) {
-            final String mailboxId = CreationIdResolver.resolveIfNecessary(
-                mailboxEntry.getKey(), previousResponses);
+            final String mailboxId =
+                CreationIdResolver.resolveIfNecessary(mailboxEntry.getKey(), previousResponses);
             emailBuilder.mailboxId(mailboxId, mailboxEntry.getValue());
           }
         } else {
@@ -700,14 +741,12 @@ public class Jmap {
       final String threadId = UUID.randomUUID().toString();
       final Email userSuppliedEmail = entry.getValue();
       final Map<String, Boolean> mailboxMap = userSuppliedEmail.getMailboxIds();
-      final Email.EmailBuilder emailBuilder = userSuppliedEmail.toBuilder()
-          .id(id)
-          .threadId(threadId)
-          .receivedAt(Instant.now());
+      final Email.EmailBuilder emailBuilder =
+          userSuppliedEmail.toBuilder().id(id).threadId(threadId).receivedAt(Instant.now());
       emailBuilder.clearMailboxIds();
       for (Map.Entry<String, Boolean> mailboxEntry : mailboxMap.entrySet()) {
-        final String mailboxId = CreationIdResolver.resolveIfNecessary(
-            mailboxEntry.getKey(), previousResponses);
+        final String mailboxId =
+            CreationIdResolver.resolveIfNecessary(mailboxEntry.getKey(), previousResponses);
         emailBuilder.mailboxId(mailboxId, mailboxEntry.getValue());
       }
       final List<EmailBodyPart> attachments = userSuppliedEmail.getAttachments();
@@ -715,7 +754,8 @@ public class Jmap {
       if (attachments != null) {
         for (final EmailBodyPart attachment : attachments) {
           final String partId = attachment.getPartId();
-          final EmailBodyValue value = partId == null ? null : userSuppliedEmail.getBodyValues().get(partId);
+          final EmailBodyValue value =
+              partId == null ? null : userSuppliedEmail.getBodyValues().get(partId);
           if (value != null) {
             final EmailBodyPart emailBodyPart = injectId(attachment);
             emailBuilder.attachment(emailBodyPart);
@@ -733,12 +773,13 @@ public class Jmap {
 
   private void createEmail(final Email email) {
     EmailDao emailDao = new EmailImp();
-    //final String oldVersion = getState();
+    // final String oldVersion = getState();
     emailDao.saveEmail(email);
     increaseState();
-    //final String newVersion = getState();
-    //this.pushUpdate(oldVersion, Update.created(email, newVersion));
+    // final String newVersion = getState();
+    // this.pushUpdate(oldVersion, Update.created(email, newVersion));
   }
+
   private static EmailBodyPart injectId(final Attachment attachment) {
     return EmailBodyPart.builder()
         .blobId(UUID.randomUUID().toString())
@@ -748,4 +789,45 @@ public class Jmap {
         .size(attachment.getSize())
         .build();
   }
+
+  private void processCreateMailbox(
+            final Map<String, Mailbox> create,
+            final SetMailboxMethodResponse.SetMailboxMethodResponseBuilder responseBuilder) {
+        for (Map.Entry<String, Mailbox> entry : create.entrySet()) {
+            final String createId = entry.getKey();
+            final Mailbox mailbox = entry.getValue();
+            final String name = mailbox.getName();
+            if (new MailboxInfoImp().getMailboxsInfo().stream()
+                    .anyMatch(mailboxInfo -> mailboxInfo.getName().equals(name))) {
+                responseBuilder.notCreated(
+                        createId,
+                        new SetError(
+                                SetErrorType.INVALID_PROPERTIES,
+                                "A mailbox with the name " + name + " already exists"));
+                continue;
+            }
+            final String id = UUID.randomUUID().toString();
+            final MailboxInfo mailboxInfo = new MailboxInfo(id, name, mailbox.getRole());
+            new MailboxInfoImp().saveMailboxInfo(mailboxInfo);
+            responseBuilder.created(createId, toMailbox(mailboxInfo));
+        }
+    }
+
+    private void processUpdateMailbox(
+            Map<String, Map<String, Object>> update,
+            SetMailboxMethodResponse.SetMailboxMethodResponseBuilder responseBuilder,
+            ListMultimap<String, Response.Invocation> previousResponses) {
+        for (final Map.Entry<String, Map<String, Object>> entry : update.entrySet()) {
+            final String id = entry.getKey();
+            try {
+                final MailboxInfo modifiedMailbox =
+                        patchMailbox(id, entry.getValue(), previousResponses);
+                responseBuilder.updated(id, toMailbox(modifiedMailbox));
+                new MailboxInfoImp().saveMailboxInfo(modifiedMailbox);
+            } catch (final IllegalArgumentException e) {
+                responseBuilder.notUpdated(
+                        id, new SetError(SetErrorType.INVALID_PROPERTIES, e.getMessage()));
+            }
+        }
+    }
 }
