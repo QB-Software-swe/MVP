@@ -39,11 +39,13 @@ public class EmailImp implements EmailDao {
 
   @Override
   public void saveEmail(Email email) {
+    Document doc = Document.parse(GSON.toJson(email, Email.class));
+    doc.put("_id", email.getId());
     MongoConnectionSingleton.INSTANCE
         .getConnection()
         .mongoDatabase
         .getCollection(COLLECTION)
-        .insertOne(Document.parse(GSON.toJson(email, Email.class).replace("id", "_id")));
+        .insertOne(doc);
   }
 
   @Override
