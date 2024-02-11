@@ -30,6 +30,11 @@
     </dependency>
     <dependency>
       <groupId>rs.ltt.jmap</groupId>
+      <artifactId>jmap-mock-server</artifactId>
+      <version>0.8.18</version>
+    </dependency>
+    <dependency>
+      <groupId>rs.ltt.jmap</groupId>
       <artifactId>jmap-mua-util</artifactId>
       <version>0.8.18</version>
     </dependency>

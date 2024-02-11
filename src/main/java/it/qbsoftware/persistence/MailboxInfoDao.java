@@ -1,11 +1,13 @@
 package it.qbsoftware.persistence;
 
+import java.util.ArrayList;
 import it.qbsoftware.core.util.MailboxInfo;
-import java.util.List;
+import java.util.Optional;
 
 public interface MailboxInfoDao {
-        List<MailboxInfo> getAllMailboxesInfo();
-        MailboxInfo getMailboxInfo(String id);
+        public ArrayList<MailboxInfo> getMailboxsInfo();
+
+        Optional<MailboxInfo> getMailboxInfo(String id);
+
         void saveMailboxInfo(MailboxInfo mailboxInfo);
-        void deleteMailboxInfo(MailboxInfo mailboxInfo);
 }

@@ -1,30 +1,41 @@
 package it.qbsoftware.core;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.*;
 
 import org.joda.time.DateTime;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ListMultimap;
+import com.google.common.collect.Streams;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import it.qbsoftware.core.util.JmapSession;
+import it.qbsoftware.core.util.MailboxInfo;
 import it.qbsoftware.core.util.RequestResponse;
 import it.qbsoftware.persistence.IdentityDao;
 import it.qbsoftware.persistence.IdentityImp;
+import it.qbsoftware.persistence.MailboxInfoDao;
+import it.qbsoftware.persistence.MailboxInfoImp;
 import rs.ltt.jmap.common.GenericResponse;
 import rs.ltt.jmap.common.Request;
 import rs.ltt.jmap.common.Response;
 import rs.ltt.jmap.common.entity.Identity;
+import rs.ltt.jmap.common.entity.Mailbox;
 import rs.ltt.jmap.common.method.MethodCall;
 import rs.ltt.jmap.common.method.call.identity.GetIdentityMethodCall;
 import rs.ltt.jmap.common.method.MethodResponse;
+import rs.ltt.jmap.common.method.call.mailbox.GetMailboxMethodCall;
 import rs.ltt.jmap.common.method.call.core.EchoMethodCall;
+import rs.ltt.jmap.common.method.error.InvalidResultReferenceMethodErrorResponse;
 import rs.ltt.jmap.common.method.error.UnknownMethodMethodErrorResponse;
 import rs.ltt.jmap.common.method.response.core.EchoMethodResponse;
 import rs.ltt.jmap.common.method.response.identity.GetIdentityMethodResponse;
+import rs.ltt.jmap.common.method.response.mailbox.GetMailboxMethodResponse;
 import rs.ltt.jmap.gson.JmapAdapters;
+import rs.ltt.jmap.mock.server.ResultReferenceResolver;
 
 public class Jmap {
     static final Gson GSON;
@@ -91,6 +102,10 @@ public class Jmap {
                 yield execute(getIdentityMethodCall, previousResponses);
             }
 
+            case GetMailboxMethodCall getMailboxMethodCall -> {
+                yield execute(getMailboxMethodCall, previousResponses);
+            }
+
             default -> {
                 yield new MethodResponse[] { new UnknownMethodMethodErrorResponse() };
             }
@@ -119,5 +134,50 @@ public class Jmap {
                                 })
                         .build()
         };
+    }
+
+    private MethodResponse[] execute(GetMailboxMethodCall getMailboxMethodCall,
+            ListMultimap<String, Response.Invocation> previousResponses) {
+
+        final Request.Invocation.ResultReference idsReference = getMailboxMethodCall.getIdsReference();
+        final List<String> ids;
+
+        if (idsReference != null) {
+            try {
+                ids = Arrays.asList(
+                        ResultReferenceResolver.resolve(idsReference, previousResponses));
+            } catch (final IllegalArgumentException e) {
+                return new MethodResponse[] { new InvalidResultReferenceMethodErrorResponse()
+                };
+            }
+        } else {
+            final String[] idsParameter = getMailboxMethodCall.getIds();
+            ids = idsParameter == null ? null : Arrays.asList(idsParameter);
+        }
+
+        MailboxInfoDao mailboxInfoDao = new MailboxInfoImp();
+        Stream<Mailbox> mailboxStream = mailboxInfoDao.getMailboxsInfo().stream().map(this::toMailbox);
+        return new MethodResponse[] {
+                GetMailboxMethodResponse.builder()
+                        .list(
+                                mailboxStream
+                                        .filter(m -> ids == null || ids.contains(m.getId()))
+                                        .toArray(Mailbox[]::new))
+                        .state("0") // FIXME: Get STATE
+                        .build()
+        };
+    }
+
+    private Mailbox toMailbox(MailboxInfo mailboxInfo) {
+        // TODO: implementare conteggio e-mail
+        return Mailbox.builder()
+                .id(mailboxInfo.getId())
+                .name(mailboxInfo.getName())
+                .role(mailboxInfo.getRole())
+                .totalEmails(0L)
+                .totalThreads(0L)
+                .unreadEmails(0L)
+                .unreadThreads(0L)
+                .build();
     }
 }
