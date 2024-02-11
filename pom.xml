@@ -5,10 +5,10 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>it.qbsoftware</groupId>
-  <artifactId>poc_jmap</artifactId>
+  <artifactId>poc</artifactId>
   <version>0.1-SNAPSHOT</version>
 
-  <name>PoC_JMAP</name>
+  <name>PoC</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -200,6 +200,7 @@
           <version>3.5.1</version>
           <configuration>
             <shadedArtifactAttached>true</shadedArtifactAttached>
+            <finalName>poc</finalName>
           </configuration>
           <executions>
             <execution>
