@@ -51,6 +51,13 @@ public class GenPocData {
                                 .email("team@qbsoftware.it")
                                 .name("QB Software")
                                 .build());
+        new IdentityImp()
+                .write(
+                        Identity.builder()
+                                .id("1")
+                                .email("example@examplemail.it")
+                                .name("Identità d'esempio")
+                                .build());
     }
 
     static void generateMailboxInfo() {
@@ -73,6 +80,7 @@ public class GenPocData {
         HashMap<String, Boolean> mx = new HashMap<String, Boolean>();
         mx.put("0", true);
         mx.put("1", true);
+        mx.put("2", true);
 
         Email[] emails =
                 new Email[] {
@@ -100,7 +108,7 @@ public class GenPocData {
                                     "0",
                                     EmailBodyValue.builder()
                                             .value(
-                                                    "Ciao,questo è un esempio di contenuto (body)"
+                                                    "Ciao, questo è un esempio di contenuto (body)"
                                                             + " di un e-mail.")
                                             .build())
                             .textBody(
@@ -120,6 +128,40 @@ public class GenPocData {
                                             .build())
                             .to(
                                     EmailAddress.builder()
+                                            .email("profX@uniX.org")
+                                            .name("Prof X")
+                                            .build())
+                            .subject("Candidatura per la revisione RTB")
+                            .preview("Candidatura RTB")
+                            .bodyStructure(
+                                    EmailBodyPart.builder().partId("0").type("text/plain").build())
+                            .bodyValue(
+                                    "0",
+                                    EmailBodyValue.builder()
+                                            .value(
+                                                    "Gentile prof. X,\n"
+                                                        + "con la presente il gruppo QB Software"
+                                                        + " intende prenotarsi per la revisione"
+                                                        + " RTB.\n\n"
+                                                        + "Distinti saluti, QB Software.")
+                                            .build())
+                            .textBody(
+                                    EmailBodyPart.builder().partId("0").type("text/plain").build())
+                            .keyword("$seen", false)
+                            .build(),
+                    Email.builder()
+                            .id("2")
+                            .threadId("1")
+                            .sentAt(Instant.now().atOffset(ZoneOffset.ofHours(1)))
+                            .receivedAt(Instant.now())
+                            .mailboxId("0", true)
+                            .from(
+                                    EmailAddress.builder()
+                                            .email("profX@uniX.org")
+                                            .name("Prof X")
+                                            .build())
+                            .to(
+                                    EmailAddress.builder()
                                             .email("team@qbsoftware.org")
                                             .name("QB Software Team")
                                             .build())
@@ -128,7 +170,15 @@ public class GenPocData {
                             .bodyStructure(
                                     EmailBodyPart.builder().partId("0").type("text/plain").build())
                             .bodyValue(
-                                    "0", EmailBodyValue.builder().value("Gentile prof. X.").build())
+                                    "0",
+                                    EmailBodyValue.builder()
+                                            .value(
+                                                    "Gentile gruppo QB Software, \n "
+                                                            + "gli orari sono: \n"
+                                                            + "- x y;\n"
+                                                            + "- z k;\n\n"
+                                                            + " Saluti, prof. X.")
+                                            .build())
                             .textBody(
                                     EmailBodyPart.builder().partId("0").type("text/plain").build())
                             .keyword("$seen", false)

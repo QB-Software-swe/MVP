@@ -5,8 +5,11 @@ import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Response;
 import org.eclipse.jetty.util.Callback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DownloadHandler extends Handler.Abstract {
+    final Logger logger = LoggerFactory.getLogger(DownloadHandler.class);
     public static final String HANDLER_ENDPOINT = "/download";
     public static final String HANDLER_CONTEXT_PATH = "/";
 
@@ -16,6 +19,8 @@ public class DownloadHandler extends Handler.Abstract {
                 && Request.getPathInContext(request).equals(HANDLER_ENDPOINT))) {
             return false;
         }
+
+        logger.info("Richiesta HTTP POST all'endpoint /download");
         response.setStatus(404); // Not implemented
         Content.Sink.write(response, true, "", callback);
         return true;

@@ -104,6 +104,7 @@ public class Jmap {
     }
 
     public RequestResponse requestSession(String authentication) {
+        logger.info("Richiesta di autenticazione autorizzata");
         return new RequestResponse(GSON.toJson(new JmapSession().generateSessionResources()), 200);
     }
 
@@ -112,6 +113,7 @@ public class Jmap {
 
         try {
             request = GSON.fromJson(jsonRequestJmap, Request.class);
+            logger.info("Richiesta in JSON:\n" + jsonRequestJmap);
         } catch (Exception e) {
             logger.error("Richiesta in JSON non valida:\n" + jsonRequestJmap);
             request = null;
@@ -154,54 +156,67 @@ public class Jmap {
             final ListMultimap<String, Response.Invocation> previousResponses) {
         return switch (methodCall) {
             case EchoMethodCall echoCall -> {
+                logger.info("Eseguo method call Echo");
                 yield execute(echoCall, previousResponses);
             }
 
             case GetIdentityMethodCall getIdentityMethodCall -> {
+                logger.info("Eseguo method call Identity/Get");
                 yield execute(getIdentityMethodCall, previousResponses);
             }
 
             case GetMailboxMethodCall getMailboxMethodCall -> {
+                logger.info("Eseguo method call Mailbox/Get");
                 yield execute(getMailboxMethodCall, previousResponses);
             }
 
             case ChangesMailboxMethodCall changesMailboxMethodCall -> {
+                logger.info("Eseguo method call Mailbox/Changes");
                 yield execute(changesMailboxMethodCall, previousResponses);
             }
 
             case QueryChangesEmailMethodCall queryChangesEmailMethodCall -> {
+                logger.info("Eseguo method call Email/QueryChanges");
                 yield execute(queryChangesEmailMethodCall, previousResponses);
             }
 
             case QueryMailboxMethodCall queryMailboxMethodCall -> {
+                logger.info("Eseguo method call Mailbox/Query");
                 yield execute(queryMailboxMethodCall, previousResponses);
             }
 
             case GetThreadMethodCall getThreadMethodCall -> {
+                logger.info("Eseguo method call Thread/Get");
                 yield execute(getThreadMethodCall, previousResponses);
             }
 
             case GetEmailMethodCall getEmailMethodCall -> {
+                logger.info("Eseguo method call Email/Get");
                 yield execute(getEmailMethodCall, previousResponses);
             }
 
             case ChangesEmailMethodCall changesEmailMethodCall -> {
+                logger.info("Eseguo method call Email/Changes");
                 yield execute(changesEmailMethodCall, previousResponses);
             }
 
             case QueryEmailMethodCall queryEmailMethodCall -> {
+                logger.info("Eseguo method call Email/Query");
                 yield execute(queryEmailMethodCall, previousResponses);
             }
 
             case ChangesThreadMethodCall changesThreadMethodCall -> {
+                logger.info("Eseguo method call Thread/Changes");
                 yield execute(changesThreadMethodCall, previousResponses);
             }
 
             case SetEmailMethodCall setEmailMethodCall -> {
+                logger.info("Eseguo method call Email/Set");
                 yield execute(setEmailMethodCall, previousResponses);
             }
 
             case SetMailboxMethodCall setMailboxMethodCall -> {
+                logger.info("Eseguo method call Mailbox/Set");
                 yield execute(setMailboxMethodCall, previousResponses);
             }
 
@@ -732,7 +747,7 @@ public class Jmap {
                 final Role role = FuzzyRoleParser.parse((String) modification);
                 return new MailboxInfo(currentMailbox.getId(), currentMailbox.getName(), role);
             } else {
-                throw new IllegalArgumentException("Unable to patch " + fullPath);
+                throw new IllegalArgumentException("No path " + fullPath);
             }
         }
         return currentMailbox;
@@ -759,8 +774,7 @@ public class Jmap {
                     final Boolean value = (Boolean) modification;
                     emailBuilder.keyword(keyword, value);
                 } else {
-                    throw new IllegalArgumentException(
-                            "Keyword modification was not split into two parts");
+                    throw new IllegalArgumentException("");
                 }
             } else if (parameter.equals("mailboxIds")) {
                 if (pathParts.size() == 2 && modification instanceof Boolean) {
@@ -777,10 +791,10 @@ public class Jmap {
                         emailBuilder.mailboxId(mailboxId, mailboxEntry.getValue());
                     }
                 } else {
-                    throw new IllegalArgumentException("Unknown patch object for path " + fullPath);
+                    throw new IllegalArgumentException("No path " + fullPath);
                 }
             } else {
-                throw new IllegalArgumentException("Unable to patch " + fullPath);
+                throw new IllegalArgumentException("No path " + fullPath);
             }
         }
         return emailBuilder.build();
@@ -858,9 +872,7 @@ public class Jmap {
                             .anyMatch(mailboxInfo -> mailboxInfo.getName().equals(name))) {
                 responseBuilder.notCreated(
                         createId,
-                        new SetError(
-                                SetErrorType.INVALID_PROPERTIES,
-                                "A mailbox with the name " + name + " already exists"));
+                        new SetError(SetErrorType.INVALID_PROPERTIES, "Esiste già " + name));
                 continue;
             }
             final String id = UUID.randomUUID().toString();
