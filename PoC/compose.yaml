@@ -1,0 +1,28 @@
+version: "3.8"
+services:
+  pocqb:
+    build: .
+    container_name: poc-qbsoftware
+    ports:
+      - 9999:9999
+    links:
+      - mongodb
+
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    hostname: dbhost
+    command: mongod --quiet --logpath /dev/null 
+    ports:
+      - 27017:27017
+    volumes:
+      - data:/data
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=rootuser 
+      - MONGO_INITDB_ROOT_PASSWORD=rootpass
+    logging:
+      driver: none
+
+volumes:
+  data: {}
+
