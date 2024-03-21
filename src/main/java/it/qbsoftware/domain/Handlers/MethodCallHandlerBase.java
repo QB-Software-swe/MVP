@@ -1,9 +1,9 @@
-package it.qbsoftware.domain;
+package it.qbsoftware.domain.Handlers;
 
 import it.qbsoftware.domain.CallableMethods.AbstractCallableMethodCall;
 import it.qbsoftware.domain.CallableMethods.UnknownMethodCall;
 
-public class MethodCallhandlerBase implements MethodCallHandler {
+public class MethodCallHandlerBase implements MethodCallHandler {
     private MethodCallHandler next = null;
 
     @Override
@@ -13,6 +13,6 @@ public class MethodCallhandlerBase implements MethodCallHandler {
 
     @Override
     public AbstractCallableMethodCall handle(HandlerRequest handlerRequest) {
-        return next != null ? next.handle(handlerRequest) : new UnknownMethodCall();
+        return next != null ? next.handle(handlerRequest) : new UnknownMethodCall(handlerRequest.methodCall(), handlerRequest.previousResponses());
     }
 }

@@ -1,4 +1,4 @@
-package it.qbsoftware.domain;
+package it.qbsoftware.domain.Handlers;
 
 import it.qbsoftware.domain.CallableMethods.AbstractCallableMethodCall;
 
