@@ -7,10 +7,10 @@ import rs.ltt.jmap.common.method.MethodCall;
 import rs.ltt.jmap.common.method.MethodResponse;
 import rs.ltt.jmap.common.method.error.UnknownMethodMethodErrorResponse;
 
-public class UnknownMethodCall extends AbstractCallableMethodCall{
+public class CallableUnknownMethodCall extends AbstractCallableMethodCall{
     private MethodCall methodCall;
 
-    public UnknownMethodCall(MethodCall methodCall, ListMultimap<String, Response.Invocation> previousResponses) {
+    public CallableUnknownMethodCall(MethodCall methodCall, ListMultimap<String, Response.Invocation> previousResponses) {
         super(previousResponses);
         this.methodCall = methodCall;
     }
