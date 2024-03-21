@@ -1,7 +1,7 @@
 package it.qbsoftware.domain.MethodCallHandlers;
 
-import it.qbsoftware.domain.CallableMethods.AbstractCallableMethodCall;
-import it.qbsoftware.domain.CallableMethods.CallableUnknownMethodCall;
+import it.qbsoftware.domain.CallableMethodCalls.AbstractCallableMethodCall;
+import it.qbsoftware.domain.CallableMethodCalls.CallableUnknownMethodCall;
 
 public abstract class MethodCallHandlerBase implements MethodCallHandler {
     private MethodCallHandler next = null;

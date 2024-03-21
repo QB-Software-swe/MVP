@@ -1,7 +1,8 @@
-package it.qbsoftware.domain.CallableMethods;
+package it.qbsoftware.domain.CallableMethodCalls.CallableGetMethodCalls;
 
 import com.google.common.collect.ListMultimap;
 
+import it.qbsoftware.domain.CallableMethodCalls.AbstractCallableMethodCall;
 import rs.ltt.jmap.common.Response;
 import rs.ltt.jmap.common.method.MethodResponse;
 import rs.ltt.jmap.common.method.call.email.GetEmailMethodCall;

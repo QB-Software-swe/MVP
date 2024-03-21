@@ -1,4 +1,4 @@
-package it.qbsoftware.domain.CallableMethods;
+package it.qbsoftware.domain.CallableMethodCalls;
 
 import java.util.concurrent.Callable;
 

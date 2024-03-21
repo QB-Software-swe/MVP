@@ -2,7 +2,7 @@ package it.qbsoftware.boot;
 
 import com.google.common.collect.ArrayListMultimap;
 
-import it.qbsoftware.domain.CallableMethods.CallableUnknownMethodCall;
+import it.qbsoftware.domain.CallableMethodCalls.CallableUnknownMethodCall;
 import it.qbsoftware.domain.MethodCallHandlers.HandlerRequest;
 import it.qbsoftware.domain.MethodCallHandlers.MethodCallHandlerBase;
 import it.qbsoftware.domain.MethodCallHandlers.GetMethodCallHandlers.GetMethodCallHandler;

@@ -1,7 +1,7 @@
 package it.qbsoftware.domain.MethodCallHandlers;
 
-import it.qbsoftware.domain.CallableMethods.AbstractCallableMethodCall;
-import it.qbsoftware.domain.CallableMethods.CallableEchoMethoCall;
+import it.qbsoftware.domain.CallableMethodCalls.AbstractCallableMethodCall;
+import it.qbsoftware.domain.CallableMethodCalls.CallableEchoMethoCall;
 import rs.ltt.jmap.common.method.call.core.EchoMethodCall;
 
 public class EchoMethodCallHandler extends MethodCallHandlerBase {
