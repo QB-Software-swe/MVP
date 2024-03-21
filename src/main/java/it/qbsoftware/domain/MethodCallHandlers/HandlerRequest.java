@@ -1,4 +1,4 @@
-package it.qbsoftware.domain.Handlers;
+package it.qbsoftware.domain.MethodCallHandlers;
 
 import com.google.common.collect.ListMultimap;
 

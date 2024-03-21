@@ -3,9 +3,9 @@ package it.qbsoftware.boot;
 import com.google.common.collect.ArrayListMultimap;
 
 import it.qbsoftware.domain.CallableMethods.CallableUnknownMethodCall;
-import it.qbsoftware.domain.Handlers.HandlerRequest;
-import it.qbsoftware.domain.Handlers.MethodCallHandlerBase;
-import it.qbsoftware.domain.Handlers.GetMethodCallHandlers.GetMethodCallHandler;
+import it.qbsoftware.domain.MethodCallHandlers.HandlerRequest;
+import it.qbsoftware.domain.MethodCallHandlers.MethodCallHandlerBase;
+import it.qbsoftware.domain.MethodCallHandlers.GetMethodCallHandlers.GetMethodCallHandler;
 import rs.ltt.jmap.common.method.call.email.ChangesEmailMethodCall;
 
 public class Boot {

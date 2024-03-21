@@ -1,9 +1,9 @@
-package it.qbsoftware.domain.Handlers;
+package it.qbsoftware.domain.MethodCallHandlers;
 
 import it.qbsoftware.domain.CallableMethods.AbstractCallableMethodCall;
 import it.qbsoftware.domain.CallableMethods.CallableUnknownMethodCall;
 
-public class MethodCallHandlerBase implements MethodCallHandler {
+public abstract class MethodCallHandlerBase implements MethodCallHandler {
     private MethodCallHandler next = null;
 
     @Override
