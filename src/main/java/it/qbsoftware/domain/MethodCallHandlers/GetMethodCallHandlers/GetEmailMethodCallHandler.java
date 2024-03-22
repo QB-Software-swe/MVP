@@ -1,7 +1,7 @@
 package it.qbsoftware.domain.MethodCallHandlers.GetMethodCallHandlers;
 
 import it.qbsoftware.domain.CallableMethodCalls.AbstractCallableMethodCall;
-import it.qbsoftware.domain.CallableMethodCalls.CallableGetMethodCalls.CallableGetEmailMethodCall;
+import it.qbsoftware.domain.CallableMethodCalls.GetMethodCalls.CallableGetEmailMethodCall;
 import it.qbsoftware.domain.MethodCallHandlers.HandlerRequest;
 import it.qbsoftware.domain.MethodCallHandlers.MethodCallHandlerBase;
 import rs.ltt.jmap.common.method.call.email.GetEmailMethodCall;

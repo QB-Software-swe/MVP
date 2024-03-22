@@ -1,4 +1,4 @@
-package it.qbsoftware.domain.CallableMethodCalls.CallableGetMethodCalls;
+package it.qbsoftware.domain.CallableMethodCalls.GetMethodCalls;
 
 import com.google.common.collect.ListMultimap;
 
@@ -8,12 +8,12 @@ import rs.ltt.jmap.common.method.MethodResponse;
 import rs.ltt.jmap.common.method.call.email.GetEmailMethodCall;
 
 public class CallableGetEmailMethodCall extends AbstractCallableMethodCall {
-    private GetEmailMethodCall methodCall;
+    private GetEmailMethodCall getEmailMethodCall;
 
-    public CallableGetEmailMethodCall(GetEmailMethodCall methodCall,
+    public CallableGetEmailMethodCall(GetEmailMethodCall getEmailMethodCall,
             ListMultimap<String, Response.Invocation> previousResponses) {
         super(previousResponses);
-        this.methodCall = methodCall;
+        this.getEmailMethodCall = getEmailMethodCall;
     }
 
     @Override

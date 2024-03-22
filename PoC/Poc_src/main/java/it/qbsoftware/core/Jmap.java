@@ -155,26 +155,6 @@ public class Jmap {
             final MethodCall methodCall,
             final ListMultimap<String, Response.Invocation> previousResponses) {
         return switch (methodCall) {
-            case EchoMethodCall echoCall -> {
-                logger.info("Eseguo method call Echo");
-                yield execute(echoCall, previousResponses);
-            }
-
-            case GetIdentityMethodCall getIdentityMethodCall -> {
-                logger.info("Eseguo method call Identity/Get");
-                yield execute(getIdentityMethodCall, previousResponses);
-            }
-
-            case GetMailboxMethodCall getMailboxMethodCall -> {
-                logger.info("Eseguo method call Mailbox/Get");
-                yield execute(getMailboxMethodCall, previousResponses);
-            }
-
-            case ChangesMailboxMethodCall changesMailboxMethodCall -> {
-                logger.info("Eseguo method call Mailbox/Changes");
-                yield execute(changesMailboxMethodCall, previousResponses);
-            }
-
             case QueryChangesEmailMethodCall queryChangesEmailMethodCall -> {
                 logger.info("Eseguo method call Email/QueryChanges");
                 yield execute(queryChangesEmailMethodCall, previousResponses);
@@ -185,39 +165,9 @@ public class Jmap {
                 yield execute(queryMailboxMethodCall, previousResponses);
             }
 
-            case GetThreadMethodCall getThreadMethodCall -> {
-                logger.info("Eseguo method call Thread/Get");
-                yield execute(getThreadMethodCall, previousResponses);
-            }
-
-            case GetEmailMethodCall getEmailMethodCall -> {
-                logger.info("Eseguo method call Email/Get");
-                yield execute(getEmailMethodCall, previousResponses);
-            }
-
-            case ChangesEmailMethodCall changesEmailMethodCall -> {
-                logger.info("Eseguo method call Email/Changes");
-                yield execute(changesEmailMethodCall, previousResponses);
-            }
-
             case QueryEmailMethodCall queryEmailMethodCall -> {
                 logger.info("Eseguo method call Email/Query");
                 yield execute(queryEmailMethodCall, previousResponses);
-            }
-
-            case ChangesThreadMethodCall changesThreadMethodCall -> {
-                logger.info("Eseguo method call Thread/Changes");
-                yield execute(changesThreadMethodCall, previousResponses);
-            }
-
-            case SetEmailMethodCall setEmailMethodCall -> {
-                logger.info("Eseguo method call Email/Set");
-                yield execute(setEmailMethodCall, previousResponses);
-            }
-
-            case SetMailboxMethodCall setMailboxMethodCall -> {
-                logger.info("Eseguo method call Mailbox/Set");
-                yield execute(setMailboxMethodCall, previousResponses);
             }
 
             default -> {

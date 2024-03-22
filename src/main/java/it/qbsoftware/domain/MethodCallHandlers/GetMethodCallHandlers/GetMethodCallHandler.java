@@ -10,10 +10,12 @@ public class GetMethodCallHandler extends MethodCallHandlerBase {
     public AbstractCallableMethodCall handle(HandlerRequest handlerRequest) {
         if (handlerRequest.methodCall() instanceof GetMethodCall) {
             // CoR
-            GetMethodCallHandler getMethodCallHandler = new GetMethodCallHandler();
+            GetMailboxMethodCallHandler getMailboxMethodCallHandler = new GetMailboxMethodCallHandler();
+            GetIdentityMethodCallHandler getIdentityMethodCallHandler = new GetIdentityMethodCallHandler();
+            
+            getMailboxMethodCallHandler.setNext(getIdentityMethodCallHandler);
 
-
-            return getMethodCallHandler.handle(handlerRequest);
+            return getMailboxMethodCallHandler.handle(handlerRequest);
         }
 
         return super.handle(handlerRequest);

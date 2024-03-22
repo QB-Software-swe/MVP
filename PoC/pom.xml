@@ -17,6 +17,7 @@
     <maven.compiler.target>21</maven.compiler.target>
   </properties>
 
+  
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -79,6 +80,11 @@
   <build>
     <pluginManagement>
       <plugins>
+        <plugin>
+          <groupId>org.sonarsource.scanner.maven</groupId>
+          <artifactId>sonar-maven-plugin</artifactId>
+          <version>3.10.0.2594</version>
+        </plugin>
         <plugin>
           <artifactId>maven-clean-plugin</artifactId>
           <version>3.3.2</version>
