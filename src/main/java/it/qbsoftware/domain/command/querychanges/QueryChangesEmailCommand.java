@@ -18,7 +18,6 @@ public class QueryChangesEmailCommand implements MethodCallCommand {
 
     @Override
     public MethodResponse[] execute() {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'execute'");
     }
     

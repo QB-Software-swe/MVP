@@ -5,7 +5,6 @@ import com.google.common.collect.ListMultimap;
 import rs.ltt.jmap.common.Response;
 import rs.ltt.jmap.common.method.MethodCall;
 import rs.ltt.jmap.common.method.MethodResponse;
-import rs.ltt.jmap.common.method.error.UnknownMethodMethodErrorResponse;
 
 public class UnknownCommand implements MethodCallCommand {
     private MethodCall methodCall;
@@ -18,7 +17,6 @@ public class UnknownCommand implements MethodCallCommand {
 
     @Override
     public MethodResponse[] execute() {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'execute'");
-    }    
+    }
 }
