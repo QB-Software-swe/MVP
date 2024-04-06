@@ -25,6 +25,11 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-all</artifactId>
+      <version>1.10.19</version>
+    </dependency>
+    <dependency>
       <groupId>rs.ltt.jmap</groupId>
       <artifactId>jmap-common</artifactId>
       <version>0.8.18</version>
