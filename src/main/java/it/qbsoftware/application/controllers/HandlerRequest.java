@@ -6,5 +6,4 @@ import it.qbsoftware.business.ports.in.utils.ListMultimapPort;
 
 public record HandlerRequest(MethodCall methodCall,
         ListMultimapPort<String, Response.Invocation> previousResponses) {
-
 }
