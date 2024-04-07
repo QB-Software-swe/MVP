@@ -1,72 +1,53 @@
 package it.qbsoftware.business.services;
 
 import java.util.HashMap;
+import java.util.Optional;
 
+import it.qbsoftware.business.ports.in.jmap.EndPointConfiguration;
 import it.qbsoftware.business.ports.in.jmap.SessionResourceBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.SessionResourcePort;
 import it.qbsoftware.business.ports.in.jmap.capabilities.CapabilityPort;
-import it.qbsoftware.business.ports.in.jmap.capabilities.CoreCapabilityBuilderPort;
-import it.qbsoftware.business.ports.in.jmap.capabilities.CoreCapabilityPort;
-import it.qbsoftware.business.ports.in.jmap.capabilities.MailAccountCapabilityPort;
-import it.qbsoftware.business.ports.in.jmap.capabilities.MailCapabilityBuilderPort;
-import it.qbsoftware.business.ports.in.jmap.capabilities.MailCapabilityPort;
 import it.qbsoftware.business.ports.in.jmap.entity.AccountBuilderPort;
-import it.qbsoftware.business.ports.in.jmap.capabilities.AccountCapabilityPort;
-import it.qbsoftware.business.ports.in.jmap.entity.AccountPort;
 import it.qbsoftware.business.ports.in.usecase.SessionUsecase;
+import it.qbsoftware.business.ports.out.jmap.UserSessionResourceRepository;
 
 public class SessionService implements SessionUsecase {
-    SessionResourceBuilderPort sessionResourceBuilderPort;
-    AccountBuilderPort accountBuilderPort;
-    CoreCapabilityBuilderPort coreCapabilityBuilderPort;
-    MailCapabilityBuilderPort mailCapabilityBuilderPort;
+        SessionResourceBuilderPort sessionResourceBuilderPort;
+        AccountBuilderPort accountBuilderPort;
+        UserSessionResourceRepository userSessionResourceRepository;
 
-    public SessionService(SessionResourceBuilderPort sessionResourceBuilderPort,
-            AccountBuilderPort accountBuilderPort, CoreCapabilityBuilderPort coreCapabilityBuilderPort,
-            MailCapabilityBuilderPort mailCapabilityBuilderPort) {
-        this.sessionResourceBuilderPort = sessionResourceBuilderPort;
-        this.accountBuilderPort = accountBuilderPort;
-        this.mailCapabilityBuilderPort = mailCapabilityBuilderPort;
-    }
+        public SessionService(
+                        SessionResourceBuilderPort sessionResourceBuilderPort,
+                        AccountBuilderPort accountBuilderPort,
+                        UserSessionResourceRepository userSessionResourceRepository) {
+                this.sessionResourceBuilderPort = sessionResourceBuilderPort;
+                this.accountBuilderPort = accountBuilderPort;
+        }
 
-    // FIXME
-    @Override
-    public SessionResourcePort call(String username) {
+        @Override
+        public Optional<SessionResourcePort> call(String username, EndPointConfiguration endPointConfiguration,
+                        HashMap<Class<? extends CapabilityPort>, CapabilityPort> serverCapabilities) {
 
-        // HTTP port
-        sessionResourceBuilderPort
-                .apiUrl("/api")
-                .uploadUrl("/upload")
-                .downloadUrl("/dowload")
-                .eventSourceUrl("/event");
+                sessionResourceBuilderPort
+                                .apiUrl(endPointConfiguration.apiEndPoint())
+                                .uploadUrl(endPointConfiguration.uploadEndPoint())
+                                .downloadUrl(endPointConfiguration.downloadEndPoint())
+                                .eventSourceUrl(endPointConfiguration.eventSourceEndPoint());
 
-        // Accounts
-        var userAccounts = new HashMap<String, AccountPort>();
-        userAccounts.put("0", accountBuilderPort.build());
+                sessionResourceBuilderPort.capabilities(serverCapabilities);
 
-        // Server capabilities
-        var serverCapabilities = new HashMap<Class<? extends CapabilityPort>, CapabilityPort>();
-        serverCapabilities.put(
-                CoreCapabilityPort.class,
-                coreCapabilityBuilderPort
-                        .build());
-        serverCapabilities.put(
-                MailCapabilityPort.class,
-                mailCapabilityBuilderPort.build());
+                Optional<SessionResourcePort> oldSessionData = userSessionResourceRepository.retrieve(username);
 
-        var primaryAccounts = new HashMap<Class<? extends AccountCapabilityPort>, String>();
-        primaryAccounts.put(
-                MailAccountCapabilityPort.class,
-                "0");
+                if (oldSessionData.isPresent()) {
+                        sessionResourceBuilderPort
+                                        .username(username)
+                                        .accounts(oldSessionData.get().accounts())
+                                        .state(oldSessionData.get().state()); //FIXME: se c'è una variazione va segnalata con un cambio di stato
 
-        // FIXME refactoring
-        sessionResourceBuilderPort
-                .username("Example")
-                .accounts(userAccounts)
-                .capabilities(serverCapabilities)
-                .primaryAccounts(primaryAccounts);
+                        return Optional.of(sessionResourceBuilderPort.build());
+                }
 
-        return sessionResourceBuilderPort.build();
-    }
+                return Optional.empty();
+        }
 
 }

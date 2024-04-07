@@ -23,5 +23,7 @@ public interface SessionResourceBuilderPort {
     public SessionResourceBuilderPort primaryAccounts(
             Map<Class<? extends AccountCapabilityPort>, String> primaryAccounts);
 
+    public SessionResourceBuilderPort state(String state);
+
     public SessionResourcePort build();
 }
