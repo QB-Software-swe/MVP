@@ -84,7 +84,7 @@ public class SetMailboxMethodCallService implements SetMailboxMethodCallUsecase 
             final MailboxPort mailbox = entry.getValue();
             final String name = mailbox.getName();
 
-            if (duplicateMailbox(mailboxInfoRepository.retrive(accountId), name)) {
+            if (duplicateMailbox(mailboxInfoRepository.retriveAll(accountId), name)) {
                 SetErrorPort copySetErrorPort = setErrorPort;
                 copySetErrorPort.invalidPropertiesErorr("Mailbox '" + name + "' already exits");
                 setMailboxMethodResponseBuilder.notCreated(createId, copySetErrorPort);
