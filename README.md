@@ -36,6 +36,7 @@ http://<server_ip>:9999/.well-known/jmap
 
 # TODO
 - [ ] mettere *final* gli argomenti di tutte le funzioni call degli *usecase*.
+- [ ] rinominare update e create dei Foo/Set
 
 # Check
 - Nessun controllo viene effettivamente fatto se la risposta supera i limiti che il server aveva indicato all'inizio della conversazione.
