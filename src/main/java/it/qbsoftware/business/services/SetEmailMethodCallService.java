@@ -1,8 +1,6 @@
 package it.qbsoftware.business.services;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -20,11 +18,9 @@ import it.qbsoftware.business.ports.in.jmap.entity.EmailBodyValuePort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
-import it.qbsoftware.business.ports.in.jmap.error.SetErrorPort;
 import it.qbsoftware.business.ports.in.jmap.error.StateMismatchMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.usecase.SetEmailMethodCallUsecase;
 import it.qbsoftware.business.ports.in.utils.ListMultimapPort;
-import it.qbsoftware.business.ports.in.jmap.SetEmailMethodResponsePort;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.business.ports.out.jmap.EmailRepository;
 
@@ -52,6 +48,8 @@ public class SetEmailMethodCallService implements SetEmailMethodCallUsecase {
     @Override
     public MethodResponsePort[] call(final SetEmailMethodCallPort setEmailMethodCallPort,
             final ListMultimapPort<String, ResponseInvocationPort> previousResponses) {
+        setEmailMethodResponseBuilderPort.reset();
+
         final String accountId = setEmailMethodCallPort.accountId();
         AccountState accountState = accountStateRepository.retrive(accountId);
 
@@ -65,7 +63,8 @@ public class SetEmailMethodCallService implements SetEmailMethodCallUsecase {
 
         if (emailsToDestroy != null) {
             DestroyEmailResponse destroyEmailResponse = processDestroyEmail(accountId, emailsToDestroy);
-            // FIXME: implement destroy email response
+            setEmailMethodResponseBuilderPort.destroyed(destroyEmailResponse.destroyEmails());
+            setEmailMethodResponseBuilderPort.notDestroyed(destroyEmailResponse.notDestroyEmail());
         }
 
         if (emailsToCreate != null && emailsToCreate.size() > 0) {
@@ -163,5 +162,5 @@ public class SetEmailMethodCallService implements SetEmailMethodCallUsecase {
     }
 }
 
-record DestroyEmailResponse(String[] destroyEmail, String[] notDestroyEmail) {
+record DestroyEmailResponse(String[] destroyEmails, String[] notDestroyEmail) {
 }

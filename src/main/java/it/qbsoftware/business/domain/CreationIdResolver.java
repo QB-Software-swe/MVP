@@ -2,10 +2,9 @@ package it.qbsoftware.business.domain;
 
 import it.qbsoftware.business.ports.in.jmap.SetEmailMethodResponsePort;
 import it.qbsoftware.business.ports.in.jmap.SetMailboxMethodResponsePort;
+import it.qbsoftware.business.ports.in.jmap.entity.AbstractIdentifiableEntityPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
 import it.qbsoftware.business.ports.in.utils.ListMultimapPort;
-//FIXME: (grave) rompe l'archiettura esangonale
-import rs.ltt.jmap.common.entity.AbstractIdentifiableEntity;
 
 public class CreationIdResolver {
 
@@ -20,14 +19,12 @@ public class CreationIdResolver {
         // FIXME: (precond) creationId != null
         final String strippedId = creationId.substring(1);
         for (final ResponseInvocationPort invocation : previousResponses.values()) {
-            final AbstractIdentifiableEntity entity = switch (invocation) {
+            final AbstractIdentifiableEntityPort entity = switch (invocation) {
                 case SetEmailMethodResponsePort setEmailMethodResponsePort:
-                    var x = setEmailMethodResponsePort.getCreated().get(strippedId);
-                    yield x;
+                    yield setEmailMethodResponsePort.getCreated().get(strippedId);
 
                 case SetMailboxMethodResponsePort setMailboxMethodResponsePort:
-                    var y = setMailboxMethodResponsePort.getCreated().get(strippedId);
-                    yield y;
+                    yield setMailboxMethodResponsePort.getCreated().get(strippedId);
 
                 default:
                     yield null;
