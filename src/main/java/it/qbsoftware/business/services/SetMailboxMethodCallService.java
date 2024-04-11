@@ -1,26 +1,26 @@
 package it.qbsoftware.business.services;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
+import it.qbsoftware.business.domain.AccountUpdate;
 import it.qbsoftware.business.domain.MailboxInfo;
 import it.qbsoftware.business.domain.MailboxInfoConvertToMailboxPort;
 import it.qbsoftware.business.domain.MailboxPatcher;
 import it.qbsoftware.business.ports.in.jmap.MethodResponsePort;
 import it.qbsoftware.business.ports.in.jmap.SetMailboxMethodCallPort;
 import it.qbsoftware.business.ports.in.jmap.SetMailboxMethodResponseBuilder;
+import it.qbsoftware.business.ports.in.jmap.SetMailboxMethodResponsePort;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxPort;
-import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
 import it.qbsoftware.business.ports.in.jmap.entity.RolePort;
 import it.qbsoftware.business.ports.in.jmap.error.SetErrorPort;
 import it.qbsoftware.business.ports.in.jmap.error.StateMismatchMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.usecase.SetMailboxMethodCallUsecase;
 import it.qbsoftware.business.ports.in.utils.CaseFormatPort;
-import it.qbsoftware.business.ports.in.utils.ListMultimapPort;
 import it.qbsoftware.business.ports.in.utils.SplitterPort;
 import it.qbsoftware.business.ports.out.jmap.MailboxInfoRepository;
-import rs.ltt.jmap.common.method.response.mailbox.SetMailboxMethodResponse;
 
 public class SetMailboxMethodCallService implements SetMailboxMethodCallUsecase {
 
@@ -60,10 +60,15 @@ public class SetMailboxMethodCallService implements SetMailboxMethodCallUsecase 
         if (mapCreateMailbox != null && mapCreateMailbox.size() > 0) {
             processCreateMailbox(setMailboxMethodCallPort.accountId(), mapCreateMailbox);
         }
-        // IfProcessUpdateMailbox
+        if (mapUpdateObject != null && mapUpdateObject.size() > 0) {
+            processUpdateMailbox(setMailboxMethodCallPort.accountId(), mapUpdateObject);
+        }
 
-        final SetMailboxMethodResponse setMailboxMethodResponse = setMailboxMethodResponseBuilder.build();
+        final SetMailboxMethodResponsePort setMailboxMethodResponsePort = setMailboxMethodResponseBuilder.build();
+        AccountUpdate accountUpdate = new AccountUpdate(setMailboxMethodCallPort.accountId());
+        accountUpdate.put("NULLSTATE", null); // TODO: tenere traccia degli update
         // Generate response
+        return new MethodResponsePort[] { setMailboxMethodResponsePort };
     }
 
     private boolean ifInStateMismatch(final String ifInState) {
@@ -107,22 +112,32 @@ public class SetMailboxMethodCallService implements SetMailboxMethodCallUsecase 
 
     private void processUpdateMailbox(
             String accountId,
-            Map<String, Map<String, Object>> update,
-            ListMultimapPort<String, ResponseInvocationPort> previousResponses) {
+            Map<String, Map<String, Object>> update) {
 
         for (final Map.Entry<String, Map<String, Object>> entry : update.entrySet()) {
             final String id = entry.getKey();
 
-            try {
-                //TODO: get -> patch -> save
-                MailboxPatcher mailboxPatcher = new MailboxPatcher(splitterPort, caseFormatPort, rolePort);
-                //TODO:Patcher
-                final MailboxInfo modifiedMailboxInfo = mailboxPatcher.patch(accountId, null, null)
-            } catch (Exception e) {
+            // getmailbox (done) -> patch mailbox (done) -> save mailbox (done)
+            Optional<MailboxInfo> currentMailboxInfo = mailboxInfoRepository.retrive(accountId, id);
+            MailboxPatcher mailboxPatcher = new MailboxPatcher(splitterPort, caseFormatPort, rolePort);
+
+            // FIXME: ugly asf
+            if (!currentMailboxInfo.isPresent()) {
                 SetErrorPort copySetErrorPort = setErrorPort;
-                copySetErrorPort.invalidPropertiesErorr(e.getMessage());
+                copySetErrorPort.notFoundError("Mailbox id: " + id + " not found");
                 setMailboxMethodResponseBuilder.notUpdated(
                         id, copySetErrorPort);
+            } else {
+                try {
+                    final MailboxInfo modifiedMailboxInfo = mailboxPatcher.patch(accountId, currentMailboxInfo.get(),
+                            entry.getValue());
+                    mailboxInfoRepository.save(accountId, modifiedMailboxInfo);
+                } catch (Exception e) {
+                    SetErrorPort copySetErrorPort = setErrorPort;
+                    copySetErrorPort.invalidPropertiesErorr(e.getMessage());
+                    setMailboxMethodResponseBuilder.notUpdated(
+                            id, copySetErrorPort);
+                }
             }
         }
 

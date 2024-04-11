@@ -9,4 +9,6 @@ public interface SetMailboxMethodResponseBuilder {
     public SetMailboxMethodResponseBuilder notCreated(String notCreatedKey, SetErrorPort notCreatedError);
 
     public SetMailboxMethodResponseBuilder notUpdated(String id, SetErrorPort copySetErrorPort);
+
+    public SetMailboxMethodResponsePort build();
 }
