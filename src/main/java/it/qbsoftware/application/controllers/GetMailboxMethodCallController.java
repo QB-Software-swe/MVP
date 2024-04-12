@@ -1,6 +1,8 @@
 package it.qbsoftware.application.controllers;
 
+import it.qbsoftware.adapters.jmaplib.AccountStateRepositoryAdapter;
 import it.qbsoftware.adapters.jmaplib.GetMailboxMethodCallAdapter;
+import it.qbsoftware.adapters.jmaplib.GetMailboxMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.jmaplib.MailboxBuilderAdapter;
 import it.qbsoftware.adapters.jmaplib.MailboxInfoRepositoryAdapter;
 import it.qbsoftware.adapters.jmaplib.MethodResponseAdapter;
