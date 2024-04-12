@@ -1,6 +1,8 @@
 package it.qbsoftware.application.controllers;
 
 import it.qbsoftware.adapters.jmaplib.GetMailboxMethodCallAdapter;
+import it.qbsoftware.adapters.jmaplib.MailboxBuilderAdapter;
+import it.qbsoftware.adapters.jmaplib.MailboxInfoRepositoryAdapter;
 import it.qbsoftware.adapters.jmaplib.MethodResponseAdapter;
 import it.qbsoftware.business.ports.in.usecase.GetMailboxMethodCallUsecase;
 import it.qbsoftware.business.services.GetMailboxMethodCallService;
@@ -17,12 +19,7 @@ public class GetMailboxMethodCallController extends ControllerHandlerBase{
             
             GetMailboxMethodCallAdapter getMailboxMethodCallAdapter = new GetMailboxMethodCallAdapter(getMailboxMethodCall);
 
-            GetMailboxMethodCallUsecase getMailboxMethodCallService = new GetMailboxMethodCallService(null,null,null,null
-            //new MailboxInfoRepositoryAdapter()
-            //new MailboxBuilderAdapter()
-            //new GetMailboxMethodResponseBuilderAdapter()
-            //new AccountStateAdapter()
-            );
+            GetMailboxMethodCallUsecase getMailboxMethodCallService = new GetMailboxMethodCallService(new MailboxInfoRepositoryAdapter(), new MailboxBuilderAdapter(), new GetMailboxMethodResponseBuilderAdapter(), new AccountStateRepositoryAdapter());
 
             MethodResponseAdapter[] methodResponseAdapters = (MethodResponseAdapter[]) getMailboxMethodCallService.call(getMailboxMethodCallAdapter, handlerRequest.previousResponses());
 
