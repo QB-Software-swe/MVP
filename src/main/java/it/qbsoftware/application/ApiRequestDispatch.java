@@ -4,8 +4,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import it.qbsoftware.adapters.guava.ListMultimapAdapter;
+import it.qbsoftware.adapters.jmaplib.ResponseInvocationAdapter;
 import it.qbsoftware.application.controllers.EchoMethodCallController;
 import it.qbsoftware.application.controllers.HandlerRequest;
+import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
 import rs.ltt.jmap.common.GenericResponse;
 import rs.ltt.jmap.common.Request;
 import rs.ltt.jmap.common.Response;
@@ -31,7 +33,7 @@ public class ApiRequestDispatch {
     }
 
     public String Dispatch(String jmapRequest) {
-        System.out.println(GSON.toJson(EchoMethodResponse.builder().libraryName("Alpha").build()));
+        //System.out.println(GSON.toJson(EchoMethodResponse.builder().libraryName("Alpha").build()));
 
         Request request;
         try {
@@ -42,7 +44,7 @@ public class ApiRequestDispatch {
         }
         Request.Invocation[] methodCalls = request.getMethodCalls();
 
-        var previousResponses = new ListMultimapAdapter<String, Response.Invocation>();
+        var previousResponses = new ListMultimapAdapter<String, ResponseInvocationPort>();
 
         for (final Request.Invocation invocation : methodCalls) {
             final String invocationId = invocation.getId();
@@ -51,7 +53,7 @@ public class ApiRequestDispatch {
                     new HandlerRequest(invocation.getMethodCall(), previousResponses));
 
             Arrays.stream(methodResponses).sequential().forEach(
-                    response -> previousResponses.put(invocationId, new Response.Invocation(response, invocationId)));
+                    response -> previousResponses.put(invocationId, new ResponseInvocationAdapter(new Response.Invocation(response, invocationId))));
         }
 
         // FIXME: Session state fissato a zero, ma non è conforme allo standard così
