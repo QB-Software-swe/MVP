@@ -1,5 +1,8 @@
 package it.qbsoftware.business.ports.in.jmap.entity;
 
-public interface ResultReferencePort {
+import it.qbsoftware.business.ports.in.utils.ListMultimapPort;
 
+public interface ResultReferencePort {
+    public String[] resolve(final InvocationResultReferencePort resultReference,
+            final ListMultimapPort<String, ResponseInvocationPort> previousResponses);
 }
