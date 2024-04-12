@@ -7,4 +7,8 @@ import rs.ltt.jmap.common.entity.Account;
 //TODOSILVIA: forse questo file non dovrebbe esistere
 public class AccountAdapter implements AccountPort {
     Account account;
+
+    public AccountAdapter(Account account){
+        this.account = account;
+    }
 }

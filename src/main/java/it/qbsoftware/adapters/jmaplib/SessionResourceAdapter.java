@@ -1,6 +1,8 @@
 package it.qbsoftware.adapters.jmaplib;
 
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import it.qbsoftware.business.ports.in.jmap.SessionResourcePort;
 import it.qbsoftware.business.ports.in.jmap.capabilities.AccountCapabilityPort;
@@ -21,8 +23,7 @@ public class SessionResourceAdapter implements SessionResourcePort{
 
     @Override
     public Map<String, AccountPort> accounts() {
-        return sessionResource.getAccounts();
-
+        return sessionResource.getAccounts().entrySet().stream().collect(Collectors.toMap(Entry::getKey, e -> new AccountAdapter(e.getValue())));
     }
 
     @Override
