@@ -7,6 +7,7 @@ import java.util.stream.Stream;
 import it.qbsoftware.business.ports.in.jmap.GetEmailMethodCallPort;
 import it.qbsoftware.business.ports.in.jmap.GetEmailMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.MethodResponsePort;
+import it.qbsoftware.business.ports.in.jmap.entity.EmailBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailPort;
 import it.qbsoftware.business.ports.in.jmap.entity.InvocationResultReferencePort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
@@ -23,15 +24,17 @@ public class GetEmailMethodCallService implements GetEmailMethodCallUsecase {
     final ResultReferencePort resultReferencePort;
     final InvalidResultReferenceMethodErrorResponsePort invalidResultReferenceMethodErrorResponsePort;
     final EmailRepository emailRepository;
+    final EmailBuilderPort emailBuilderPort;
     final GetEmailMethodResponseBuilderPort getEmailMethodResponseBuilderPort;
 
     public GetEmailMethodCallService(final EmailRepository emailRepository,
             final InvalidResultReferenceMethodErrorResponsePort invalidResultReferenceMethodErrorResponsePort,
             final ResultReferencePort resultReferencePort,
-            GetEmailMethodResponseBuilderPort getEmailMethodResponseBuilderPort) {
+            GetEmailMethodResponseBuilderPort getEmailMethodResponseBuilderPort, EmailBuilderPort emailBuilderPort) {
         this.resultReferencePort = resultReferencePort;
         this.invalidResultReferenceMethodErrorResponsePort = invalidResultReferenceMethodErrorResponsePort;
         this.emailRepository = emailRepository;
+        this.emailBuilderPort = emailBuilderPort;
         this.getEmailMethodResponseBuilderPort = getEmailMethodResponseBuilderPort;
     }
 
@@ -40,7 +43,7 @@ public class GetEmailMethodCallService implements GetEmailMethodCallUsecase {
             final ListMultimapPort<String, ResponseInvocationPort> previousResponses) {
         getEmailMethodResponseBuilderPort.reset();
 
-        final String accountId = getEmailMethodCallPort.accountId();
+        //final String accountId = getEmailMethodCallPort.accountId(); FIXME: IMPLEMENTARE LO STATO dell'account
         final InvocationResultReferencePort clientIdsReference = getEmailMethodCallPort.getIdsReference();
         final List<String> ids;
 
@@ -56,15 +59,33 @@ public class GetEmailMethodCallService implements GetEmailMethodCallUsecase {
 
         final String[] properties = getEmailMethodCallPort.getProperties();
 
-        Stream<EmailPort> emailStream = Arrays.asList(emailRepository.retrive(accountId)).stream();
+        Stream<EmailPort> emailStream = Arrays.asList(emailRepository.retrive(ids.toArray(new String[0]))).stream();
 
         if (Arrays.equals(properties, Email.Properties.THREAD_ID)) { // FIXME:
-
+            EmailBuilderPort emailBuilder = emailBuilderPort;
+            emailBuilder.reset();
+            emailStream = emailStream.map(
+                    email -> emailBuilder
+                            .id(email.getId())
+                            .threadId(email.getThreadId())
+                            .build());
         } else if (Arrays.equals(properties, Email.Properties.MUTABLE)) {
-
+            EmailBuilderPort emailBuilder = emailBuilderPort;
+            emailBuilder.reset();
+            emailStream = emailStream.map(
+                    email -> emailBuilder
+                            .id(email.getId())
+                            .keywords(email.getKeywords())
+                            .mailboxIds(email.getMailboxIds())
+                            .build());
         }
 
-        return new MethodResponsePort[] { getEmailMethodResponseBuilderPort };
+        return new MethodResponsePort[] {
+                getEmailMethodResponseBuilderPort
+                        .list(emailStream.toArray(EmailPort[]::new))
+                        .state("0") // TODO: implementare veramente il retrive dello state dell'e-mail
+                        .build()
+        };
     }
 
 }

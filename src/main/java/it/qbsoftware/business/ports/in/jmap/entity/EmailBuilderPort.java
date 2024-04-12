@@ -1,6 +1,7 @@
 package it.qbsoftware.business.ports.in.jmap.entity;
 
 import java.time.Instant;
+import java.util.Map;
 
 public interface EmailBuilderPort {
     public EmailBuilderPort id(final String id);
@@ -13,9 +14,15 @@ public interface EmailBuilderPort {
 
     public EmailBuilderPort attachment(final EmailBodyPartPort emailBodyPartPort);
 
+    public EmailBuilderPort keywords(final Map<String, Boolean> keywords);
+
+    public EmailBuilderPort mailboxIds(final Map<String, Boolean> mailboxIds);
+
     public EmailBuilderPort clearMailboxIds();
 
     public EmailBuilderPort clearAttachments();
 
     public EmailPort build();
+
+    public EmailBuilderPort reset();
 }
