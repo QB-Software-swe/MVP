@@ -1,9 +1,8 @@
 package it.qbsoftware.business.ports.in.jmap.entity;
 
-import rs.ltt.jmap.common.method.MethodCall;
+import it.qbsoftware.business.ports.in.utils.ListMultimapPort;
 
 public interface ResultReferencePort {
-    String getId();
-    String getPath();
-    Class<? extends MethodCall> getClazz();
+    public String[] resolve(final InvocationResultReferencePort resultReference,
+            final ListMultimapPort<String, ResponseInvocationPort> previousResponses);
 }
