@@ -398,6 +398,8 @@ public class Jmap {
         for (Email email : emailDao.getAll()) {
             emails.put(email.getId(), email);
         }
+        queryEmailMethodCall.getSort();
+
         Stream<Email> emailStream = emails.values().stream();
         emailStream = applyFilter(filter, emailStream);
         emailStream = emailStream.sorted(Comparator.comparing(Email::getReceivedAt).reversed());
@@ -435,6 +437,7 @@ public class Jmap {
                         ? (long) ids.size()
                         : null;
 
+                        QueryEmailMethodResponse.builder().
         return new MethodResponse[] {
             QueryEmailMethodResponse.builder()
                     .canCalculateChanges(false) // Non implementato

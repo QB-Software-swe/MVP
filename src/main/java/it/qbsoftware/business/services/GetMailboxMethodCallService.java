@@ -2,7 +2,9 @@ package it.qbsoftware.business.services;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
+import it.qbsoftware.business.domain.AccountNotFoundMethodErrorResponse;
 import it.qbsoftware.business.domain.AccountState;
 import it.qbsoftware.business.domain.MailboxInfo;
 import it.qbsoftware.business.domain.MailboxInfoConvertToMailboxPort;
@@ -37,7 +39,15 @@ public class GetMailboxMethodCallService implements GetMailboxMethodCallUsecase 
         @Override
         public MethodResponsePort[] call(final GetMailboxMethodCallPort getMailboxMethodCallPort,
                         final ListMultimapPort<String, ResponseInvocationPort> previousResponses) {
-                final String accountTargetId = getMailboxMethodCallPort.accountId();
+
+                final String accountId = getMailboxMethodCallPort.accountId();
+                Optional<AccountState> accountState = accountStateRepository.retrive(accountId);
+                if (!accountState.isPresent()) {
+                        return new MethodResponsePort[] {
+                                        new AccountNotFoundMethodErrorResponse()
+                        };
+                }
+
                 final String[] mailboxIdsToRetrive = getMailboxMethodCallPort.getIds();
                 final ResultReferencePort clientIdsReference = getMailboxMethodCallPort.getIdsReference();
 
@@ -54,20 +64,20 @@ public class GetMailboxMethodCallService implements GetMailboxMethodCallUsecase 
                 }
 
                 List<MailboxInfo> retrivedMailboxsInfo = mailboxIdsToRetrive == null
-                                ? Arrays.asList(mailboxInfoRepository.retriveAll(accountTargetId))
+                                ? Arrays.asList(mailboxInfoRepository.retriveAll(accountId))
                                 : Arrays.asList(
-                                                mailboxInfoRepository.retrive(accountTargetId, mailboxIdsToRetrive));
+                                                mailboxInfoRepository.retrive(accountId, mailboxIdsToRetrive));
 
                 MailboxInfoConvertToMailboxPort mailboxInfoConvertToMailboxPort = new MailboxInfoConvertToMailboxPort(
                                 null);
-                AccountState accountState = accountStateRepository.retrive(accountTargetId);
+
                 return new MethodResponsePort[] {
                                 getMailboxMethodResponseBuilderPort.list(
                                                 retrivedMailboxsInfo.stream()
                                                                 .map(mailboxInfo -> mailboxInfoConvertToMailboxPort
                                                                                 .convert(mailboxInfo))
                                                                 .toArray(MailboxPort[]::new))
-                                                .state(accountState.mailboxState()).build()
+                                                .state(accountState.get().mailboxState()).build()
                 };
         }
 
