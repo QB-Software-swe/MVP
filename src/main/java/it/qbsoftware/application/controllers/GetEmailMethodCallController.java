@@ -38,4 +38,4 @@ public class GetEmailMethodCallController extends ControllerHandlerBase{
         return super.handle(handlerRequest);
     }
 }
-}
+
