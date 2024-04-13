@@ -6,26 +6,29 @@ import it.qbsoftware.business.domain.MailboxInfo;
 import it.qbsoftware.business.ports.out.jmap.MailboxInfoRepository;
 
 public class MailboxInfoRepositoryAdapter implements MailboxInfoRepository{
-    MailboxInfoRepository mailboxInfoRepository;
+    MailboxInfo mailboxInfo;
 
     @Override
     public MailboxInfo[] retriveAll(String accountId) {
-        return mailboxInfoRepository.retriveAll(accountId);
+        //TODODB
+        return null;
     }
 
     @Override
     public MailboxInfo[] retrive(String accountId, String[] mailboxIds) {
-        return mailboxInfoRepository.retrive(accountId, mailboxIds);
+        //TODODB
+        return null;
     }
 
     @Override
     public Optional<MailboxInfo> retrive(String accountId, String mailboxId) {
-        return mailboxInfoRepository.retrive(accountId, mailboxId);
+        //TODODB
+        return null;
     }
 
     @Override
     public void save(String accountId, MailboxInfo mailboxInfo) {
-        mailboxInfoRepository.save(accountId, mailboxInfo);
+        //TODODB        
     }
 
 }
