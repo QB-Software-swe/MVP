@@ -6,7 +6,7 @@ import rs.ltt.jmap.common.method.error.InvalidResultReferenceMethodErrorResponse
 public class InvalidResultReferenceMethodErrorResponseAdapter implements InvalidResultReferenceMethodErrorResponsePort {
     InvalidResultReferenceMethodErrorResponse invalidResultReferenceMethodErrorResponse;
 
-    public InvalidResultReferenceMethodErrorResponseAdapter(InvalidResultReferenceMethodErrorResponse invalidResultReferenceMethodErrorResponse){
-        this.invalidResultReferenceMethodErrorResponse = invalidResultReferenceMethodErrorResponse;
+    public InvalidResultReferenceMethodErrorResponseAdapter(){
+        this.invalidResultReferenceMethodErrorResponse = new InvalidResultReferenceMethodErrorResponse();
     }
 }
