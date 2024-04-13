@@ -16,6 +16,10 @@ public class EmailBuilderAdapter implements EmailBuilderPort{
         this.emailBuilder = Email.builder();
     }
 
+    public EmailBuilderAdapter(final EmailBuilder emailBuilder) {
+        this.emailBuilder = emailBuilder;
+    }
+
     @Override
     public EmailBuilderPort id(String id) {
         emailBuilder.id(id);
