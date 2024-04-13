@@ -46,9 +46,7 @@ public class GetIdentityMethodCallService implements GetIdentityMethodCallUsecas
         final String accountId = getIdentityMethodCallPort.accountId();
         Optional<AccountState> accountState = accountStateRepository.retrive(accountId);
         if (!accountState.isPresent()) {
-            return new MethodResponsePort[] {
-                    new AccountNotFoundMethodErrorResponse()
-            };
+            return new MethodResponsePort[] { new AccountNotFoundMethodErrorResponse() };
         }
 
         List<String> ids;
