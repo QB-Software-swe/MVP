@@ -6,10 +6,15 @@ import it.qbsoftware.business.ports.in.jmap.GetMailboxMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.GetMailboxMethodResponsePort;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxPort;
 import rs.ltt.jmap.common.entity.Mailbox;
+import rs.ltt.jmap.common.method.response.mailbox.GetMailboxMethodResponse;
 import rs.ltt.jmap.common.method.response.mailbox.GetMailboxMethodResponse.GetMailboxMethodResponseBuilder;
 
 public class GetMailboxMethodResponseBuilderAdapter implements GetMailboxMethodResponseBuilderPort{
     GetMailboxMethodResponseBuilder getMailboxMethodResponseBuilder;
+
+    public GetMailboxMethodResponseBuilderAdapter(){
+        this.getMailboxMethodResponseBuilder = GetMailboxMethodResponse.builder();
+    }
 
     @Override
     public GetMailboxMethodResponseBuilderPort list(MailboxPort[] mailboxs) {

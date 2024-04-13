@@ -17,13 +17,14 @@ public class SessionController extends ControllerHandlerBase{
 
     @Override
     public MethodResponse[] handle(HandlerRequest handlerRequest) {
-        if (handlerRequest.methodCall() instanceof SessionResource sessionResource) {
+        /*if (handlerRequest.methodCall() instanceof SessionResource sessionResource) {
             
             SessionResourceAdapter sessionResourceAdapter = new SessionResourceAdapter(sessionResource);
 
             SessionUsecase sessionService = new SessionService(new SessionResourceBuilderAdapter(), new AccountBuilderAdapter(),new UserSessionResourceRepositoryAdapter());
 
-            MethodResponseAdapter[] methodResponseAdapters = (MethodResponseAdapter[]) sessionService.call(sessionResourceAdapter, handlerRequest.previousResponses());
+            //TODO ALE : passare nome utente su handlerrequest
+            MethodResponseAdapter[] methodResponseAdapters = (MethodResponseAdapter[]) sessionService.call();
 
             ArrayList<MethodResponse> methodResponseList = new ArrayList<>();
 
@@ -32,7 +33,7 @@ public class SessionController extends ControllerHandlerBase{
             }
 
             return methodResponseList.toArray(new MethodResponse[0]);
-        }
+        }*/
 
         return super.handle(handlerRequest);
     }

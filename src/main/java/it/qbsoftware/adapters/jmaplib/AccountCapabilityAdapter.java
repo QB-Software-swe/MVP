@@ -6,4 +6,8 @@ import rs.ltt.jmap.common.entity.AccountCapability;
 public class AccountCapabilityAdapter implements AccountCapabilityPort{
     AccountCapability accountCapability;
 
+    public AccountCapabilityAdapter(AccountCapability accountCapability){
+        this.accountCapability = accountCapability;
+    }
+
 }

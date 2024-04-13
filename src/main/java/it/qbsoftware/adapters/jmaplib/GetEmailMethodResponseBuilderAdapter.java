@@ -12,6 +12,10 @@ import rs.ltt.jmap.common.method.response.email.GetEmailMethodResponse.GetEmailM
 public class GetEmailMethodResponseBuilderAdapter implements GetEmailMethodResponseBuilderPort{
     GetEmailMethodResponseBuilder getEmailMethodResponseBuilder;
 
+    public GetEmailMethodResponseBuilderAdapter(){
+        this.getEmailMethodResponseBuilder = GetEmailMethodResponse.builder();
+    }
+
     @Override
     public GetEmailMethodResponseBuilderPort list(EmailPort[] emailList) {
         getEmailMethodResponseBuilder.list(Stream.of(emailList).map(emailPort->((EmailAdapter)emailPort).email).toArray(Email[]::new));
@@ -31,7 +35,7 @@ public class GetEmailMethodResponseBuilderAdapter implements GetEmailMethodRespo
 
     @Override
     public GetEmailMethodResponseBuilderPort reset() {
-        GetEmailMethodResponse.builder();
+        this.getEmailMethodResponseBuilder = GetEmailMethodResponse.builder();
         return this;
     }
     

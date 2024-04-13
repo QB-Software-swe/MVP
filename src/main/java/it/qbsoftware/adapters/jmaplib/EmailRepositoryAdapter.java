@@ -5,30 +5,30 @@ import it.qbsoftware.business.ports.out.jmap.EmailRepository;
 
 public class EmailRepositoryAdapter implements EmailRepository{
 
-    //TODODB
+    //TODO DB
     //Email email;
 
     @Override
     public EmailPort[] retriveAll(String accountId) {
-        //TODODB
+        //TODO DB
         return null;
     }
 
     @Override
     public EmailPort[] retrive(String[] emailsIds) {
-        //TODODB
+        //TODO DB
         return null;
     }
 
     @Override
     public boolean destroy(String emailId) {
-        //TODODB
+        //TODO DB
         return false;
     }
 
     @Override
     public boolean save(EmailPort emailPort) {
-        //TODODB
+        //TODO DB
         return false;
     }
     

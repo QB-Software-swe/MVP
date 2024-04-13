@@ -7,9 +7,11 @@ public class AccountStateRepositoryAdapter implements AccountStateRepository{
 
     AccountState accountState;
 
+    //TODO COSTRUTTORE
+
     @Override
     public AccountState retrive(String accountId) {
-        //TODODB
+        //TODO DB
         return null;
     }
 

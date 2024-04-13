@@ -11,13 +11,13 @@ public class UserSessionResourceRepositoryAdapter implements UserSessionResource
 
     @Override
     public Optional<SessionResourcePort> retrieve(String username) {
-        //TODODB
+        //TODO DB
         return null;
     }
 
     @Override
     public void save(SessionResourcePort sessionResourcePort) {
-        //TODODB
+        //TODO DB
     }
 
     

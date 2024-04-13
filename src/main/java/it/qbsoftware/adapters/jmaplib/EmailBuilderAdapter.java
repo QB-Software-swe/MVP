@@ -8,15 +8,18 @@ import it.qbsoftware.business.ports.in.jmap.entity.EmailBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailPort;
 import rs.ltt.jmap.common.entity.Email.EmailBuilder;
 import rs.ltt.jmap.common.entity.Email;
-import rs.ltt.jmap.common.entity.EmailBodyPart;
 
 public class EmailBuilderAdapter implements EmailBuilderPort{
     EmailBuilder emailBuilder;
 
+    public EmailBuilderAdapter(){
+        this.emailBuilder = Email.builder();
+    }
+
     @Override
     public EmailBuilderPort id(String id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'id'");
+        emailBuilder.id(id);
+        return this;
     }
 
     @Override
@@ -38,29 +41,33 @@ public class EmailBuilderAdapter implements EmailBuilderPort{
     }
 
     @Override
-    public EmailBuilderPort attachment(EmailBodyPartPort emailBodyPartPort) {
-        emailBuilder.attachment((EmailBodyPart) emailBodyPartPort);
+    public EmailBuilderPort attachment(EmailBodyPartPort emailBodyPartPort) {      
+        emailBuilder.attachment(((EmailBodyPartAdapter)emailBodyPartPort).emailBodyPart);
         return this;
     }
 
     @Override
     public EmailBuilderPort keywords(Map<String, Boolean> keywords) {
-        
+        emailBuilder.keywords(keywords);
+        return this;
     }
 
     @Override
     public EmailBuilderPort mailboxIds(Map<String, Boolean> mailboxIds) {
-        
+        emailBuilder.mailboxIds(mailboxIds);
+        return this;
     }
 
     @Override
     public EmailBuilderPort clearMailboxIds() {
-        
+        emailBuilder.clearMailboxIds();
+        return this;
     }
 
     @Override
     public EmailBuilderPort clearAttachments() {
-        
+        emailBuilder.clearAttachments();
+        return this;
     }
 
     @Override
@@ -70,7 +77,7 @@ public class EmailBuilderAdapter implements EmailBuilderPort{
 
     @Override
     public EmailBuilderPort reset() {
-        Email.builder();
+        this.emailBuilder = Email.builder();
         return this;
     }
 

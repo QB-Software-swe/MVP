@@ -1,5 +1,7 @@
 package it.qbsoftware.application.controllers;
 
+import java.util.ArrayList;
+
 import it.qbsoftware.adapters.jmaplib.AccountStateRepositoryAdapter;
 import it.qbsoftware.adapters.jmaplib.GetMailboxMethodCallAdapter;
 import it.qbsoftware.adapters.jmaplib.GetMailboxMethodResponseBuilderAdapter;
@@ -11,7 +13,7 @@ import it.qbsoftware.business.services.GetMailboxMethodCallService;
 import rs.ltt.jmap.common.method.MethodResponse;
 import rs.ltt.jmap.common.method.call.mailbox.GetMailboxMethodCall;
 
-import java.util.ArrayList;
+
 
 public class GetMailboxMethodCallController extends ControllerHandlerBase{
 

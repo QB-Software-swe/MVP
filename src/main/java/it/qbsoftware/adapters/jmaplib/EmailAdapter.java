@@ -56,7 +56,7 @@ public class EmailAdapter implements EmailPort{
 
     @Override
     public EmailBuilderPort toBuilder() {
-
+        return new EmailBuilderAdapter(email.toBuilder());
     }
 
 }

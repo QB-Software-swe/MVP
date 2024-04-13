@@ -2,10 +2,15 @@ package it.qbsoftware.adapters.jmaplib;
 
 import it.qbsoftware.business.ports.in.jmap.EchoMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.MethodResponsePort;
+import rs.ltt.jmap.common.method.response.core.EchoMethodResponse;
 import rs.ltt.jmap.common.method.response.core.EchoMethodResponse.EchoMethodResponseBuilder;
 
 public class EchoMethodResponseBuilderAdapter implements EchoMethodResponseBuilderPort {
     EchoMethodResponseBuilder echoMethodResponseBuilder;
+
+    public EchoMethodResponseBuilderAdapter(){
+        this.echoMethodResponseBuilder = EchoMethodResponse.builder();
+    }
 
     @Override
     public MethodResponsePort build() {

@@ -3,10 +3,15 @@ package it.qbsoftware.adapters.jmaplib;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxPort;
 import it.qbsoftware.business.ports.in.jmap.entity.RolePort;
+import rs.ltt.jmap.common.entity.Mailbox;
 import rs.ltt.jmap.common.entity.Mailbox.MailboxBuilder;
 
 public class MailboxBuilderAdapter implements MailboxBuilderPort{
     MailboxBuilder mailboxBuilder;
+
+    public MailboxBuilderAdapter(){
+        this.mailboxBuilder = Mailbox.builder();
+    }
 
     @Override
     public MailboxBuilderPort id(String id) {
