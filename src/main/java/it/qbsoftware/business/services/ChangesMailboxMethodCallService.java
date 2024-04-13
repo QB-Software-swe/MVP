@@ -15,6 +15,7 @@ import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.business.ports.in.jmap.error.CannotCalculateChangesMethodErrorResponsePort;
 
 //TODO: implementare la logica
+@SuppressWarnings("unused")
 public class ChangesMailboxMethodCallService implements ChangesMailboxMethodCallUsecase {
     final AccountStateRepository accountStateRepository;
     final ChangesMailboxMethodResponseBuilderPort changesMailboxMethodResponseBuilderPort;

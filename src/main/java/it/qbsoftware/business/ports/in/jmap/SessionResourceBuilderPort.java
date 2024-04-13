@@ -26,4 +26,6 @@ public interface SessionResourceBuilderPort {
     public SessionResourceBuilderPort state(String state);
 
     public SessionResourcePort build();
+
+    public SessionResourceBuilderPort reset();
 }
