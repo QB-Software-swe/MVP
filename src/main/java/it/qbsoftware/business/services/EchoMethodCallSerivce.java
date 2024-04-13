@@ -6,9 +6,9 @@ import it.qbsoftware.business.ports.in.jmap.MethodResponsePort;
 import it.qbsoftware.business.ports.in.usecase.EchoMethodCallUsecase;
 
 public class EchoMethodCallSerivce implements EchoMethodCallUsecase {
-    EchoMethodResponseBuilderPort echoMethodResponseBuilder;
+    final EchoMethodResponseBuilderPort echoMethodResponseBuilder;
 
-    public EchoMethodCallSerivce(EchoMethodResponseBuilderPort echoMethodResponseBuilder) {
+    public EchoMethodCallSerivce(final EchoMethodResponseBuilderPort echoMethodResponseBuilder) {
         this.echoMethodResponseBuilder = echoMethodResponseBuilder;
     }
 
