@@ -1,18 +1,22 @@
 package it.qbsoftware.adapters.jmaplib;
 
 import java.util.Map;
+import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import it.qbsoftware.business.ports.in.jmap.SessionResourcePort;
 import it.qbsoftware.business.ports.in.jmap.capabilities.AccountCapabilityPort;
 import it.qbsoftware.business.ports.in.jmap.entity.AccountPort;
+import it.qbsoftware.business.ports.in.jmap.entity.ClassAccountCapabilityPort;
 import rs.ltt.jmap.common.SessionResource;
+import rs.ltt.jmap.common.entity.capability.CoreCapability;
+import rs.ltt.jmap.common.entity.capability.MailAccountCapability;
 
-public class SessionResourceAdapter implements SessionResourcePort{
+public class SessionResourceAdapter implements SessionResourcePort {
     SessionResource sessionResource;
 
-    public SessionResourceAdapter(SessionResource sessionResource){
+    public SessionResourceAdapter(SessionResource sessionResource) {
         this.sessionResource = sessionResource;
     }
 
@@ -23,12 +27,18 @@ public class SessionResourceAdapter implements SessionResourcePort{
 
     @Override
     public Map<String, AccountPort> accounts() {
-        return sessionResource.getAccounts().entrySet().stream().collect(Collectors.toMap(Entry::getKey, e -> new AccountAdapter(e.getValue())));
+        return sessionResource.getAccounts().entrySet().stream()
+                .collect(Collectors.toMap(Entry::getKey, e -> new AccountAdapter(e.getValue())));
     }
 
     @Override
-    public Map<Class<? extends AccountCapabilityPort>, String> primaryAccounts() {
-        return sessionResource.getPrimaryAccount();
+    public Map<ClassAccountCapabilityPort, String> primaryAccounts() {
+        Map<ClassAccountCapabilityPort, String> returnMap = new HashMap<ClassAccountCapabilityPort, String>();
+
+        returnMap.put(new ClassAccountCapabilityAdapter(MailAccountCapability.class),
+                sessionResource.getPrimaryAccount(MailAccountCapability.class));
+
+        return returnMap;
     }
 
     @Override

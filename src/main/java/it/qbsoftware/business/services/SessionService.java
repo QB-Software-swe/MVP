@@ -42,6 +42,7 @@ public class SessionService implements SessionUsecase {
                         sessionResourceBuilderPort
                                         .username(username)
                                         .accounts(oldSessionData.get().accounts())
+                                        .primaryAccounts(oldSessionData.get().primaryAccounts())
                                         .state(oldSessionData.get().state()); //FIXME: se c'è una variazione va segnalata con un cambio di stato
 
                         return Optional.of(sessionResourceBuilderPort.build());

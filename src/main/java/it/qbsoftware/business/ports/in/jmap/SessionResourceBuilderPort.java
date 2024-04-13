@@ -2,8 +2,8 @@ package it.qbsoftware.business.ports.in.jmap;
 
 import java.util.Map;
 import it.qbsoftware.business.ports.in.jmap.entity.AccountPort;
+import it.qbsoftware.business.ports.in.jmap.entity.ClassAccountCapabilityPort;
 import it.qbsoftware.business.ports.in.jmap.capabilities.CapabilityPort;
-import it.qbsoftware.business.ports.in.jmap.capabilities.AccountCapabilityPort;
 
 public interface SessionResourceBuilderPort {
     public SessionResourceBuilderPort username(String name);
@@ -21,7 +21,7 @@ public interface SessionResourceBuilderPort {
     public SessionResourceBuilderPort capabilities(Map<Class<? extends CapabilityPort>, CapabilityPort> capabilities);
 
     public SessionResourceBuilderPort primaryAccounts(
-            Map<Class<? extends AccountCapabilityPort>, String> primaryAccounts);
+            Map<ClassAccountCapabilityPort, String> primaryAccounts);
 
     public SessionResourceBuilderPort state(String state);
 
