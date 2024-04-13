@@ -3,10 +3,12 @@ package it.qbsoftware.business.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import java.time.Instant;
 
+import it.qbsoftware.business.domain.AccountNotFoundMethodErrorResponse;
 import it.qbsoftware.business.domain.AccountState;
 import it.qbsoftware.business.domain.CreationIdResolver;
 import it.qbsoftware.business.ports.in.jmap.MethodResponsePort;
@@ -51,13 +53,18 @@ public class SetEmailMethodCallService implements SetEmailMethodCallUsecase {
         setEmailMethodResponseBuilderPort.reset();
 
         final String accountId = setEmailMethodCallPort.accountId();
-        AccountState accountState = accountStateRepository.retrive(accountId);
+        Optional<AccountState> accountState = accountStateRepository.retrive(accountId);
+        if (!accountState.isPresent()) {
+            return new MethodResponsePort[] {
+                    new AccountNotFoundMethodErrorResponse()
+            };
+        }
 
         final Map<String, EmailPort> emailsToCreate = setEmailMethodCallPort.getCreate();
         final Map<String, Map<String, Object>> emailsToUpdate = setEmailMethodCallPort.getUpdate();
         final String[] emailsToDestroy = setEmailMethodCallPort.getDestroy();
 
-        if (ifInStateMismatch(accountState, setEmailMethodCallPort.getIfInState())) {
+        if (ifInStateMismatch(accountState.get(), setEmailMethodCallPort.getIfInState())) {
             return new MethodResponsePort[] { stateMismatchMethodErrorResponsePort };
         }
 
@@ -68,7 +75,7 @@ public class SetEmailMethodCallService implements SetEmailMethodCallUsecase {
         }
 
         if (emailsToCreate != null && emailsToCreate.size() > 0) {
-            processCreateEmail(accountId, emailsToCreate, accountState, previousResponses);
+            processCreateEmail(accountId, emailsToCreate, accountState.get(), previousResponses);
         }
 
         if (emailsToUpdate != null && emailsToUpdate.size() > 0) {
@@ -76,7 +83,8 @@ public class SetEmailMethodCallService implements SetEmailMethodCallUsecase {
             throw new UnsupportedOperationException("Unimplemented method 'call'");
         }
 
-        return new MethodResponsePort[] { setEmailMethodResponseBuilderPort.build() };
+        return new MethodResponsePort[] {
+                setEmailMethodResponseBuilderPort.state(accountState.get().mailboxState()).build() };
     }
 
     boolean ifInStateMismatch(final AccountState accountState, final String methodCallState) {
