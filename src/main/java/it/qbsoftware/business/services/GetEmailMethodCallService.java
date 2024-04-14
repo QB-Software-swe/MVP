@@ -11,8 +11,8 @@ import it.qbsoftware.business.ports.in.jmap.entity.EmailBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailPort;
 import it.qbsoftware.business.ports.in.jmap.entity.InvocationResultReferencePort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
-import it.qbsoftware.business.ports.in.jmap.entity.ResultReferencePort;
 import it.qbsoftware.business.ports.in.jmap.error.InvalidResultReferenceMethodErrorResponsePort;
+import it.qbsoftware.business.ports.in.jmap.utility.ResultReferenceResolverPort;
 import it.qbsoftware.business.ports.in.usecase.GetEmailMethodCallUsecase;
 import it.qbsoftware.business.ports.in.utils.ListMultimapPort;
 import it.qbsoftware.business.ports.out.jmap.EmailRepository;
@@ -21,7 +21,7 @@ import it.qbsoftware.business.ports.out.jmap.EmailRepository;
 import rs.ltt.jmap.common.entity.Email;
 
 public class GetEmailMethodCallService implements GetEmailMethodCallUsecase {
-    final ResultReferencePort resultReferencePort;
+    final ResultReferenceResolverPort resultReferenceResolverPort;
     final InvalidResultReferenceMethodErrorResponsePort invalidResultReferenceMethodErrorResponsePort;
     final EmailRepository emailRepository;
     final EmailBuilderPort emailBuilderPort;
@@ -29,9 +29,9 @@ public class GetEmailMethodCallService implements GetEmailMethodCallUsecase {
 
     public GetEmailMethodCallService(final EmailRepository emailRepository,
             final InvalidResultReferenceMethodErrorResponsePort invalidResultReferenceMethodErrorResponsePort,
-            final ResultReferencePort resultReferencePort,
+            final ResultReferenceResolverPort resultReferencePort,
             GetEmailMethodResponseBuilderPort getEmailMethodResponseBuilderPort, EmailBuilderPort emailBuilderPort) {
-        this.resultReferencePort = resultReferencePort;
+        this.resultReferenceResolverPort = resultReferencePort;
         this.invalidResultReferenceMethodErrorResponsePort = invalidResultReferenceMethodErrorResponsePort;
         this.emailRepository = emailRepository;
         this.emailBuilderPort = emailBuilderPort;
@@ -43,13 +43,14 @@ public class GetEmailMethodCallService implements GetEmailMethodCallUsecase {
             final ListMultimapPort<String, ResponseInvocationPort> previousResponses) {
         getEmailMethodResponseBuilderPort.reset();
 
-        //final String accountId = getEmailMethodCallPort.accountId(); FIXME: IMPLEMENTARE LO STATO dell'account
+        // final String accountId = getEmailMethodCallPort.accountId(); FIXME:
+        // IMPLEMENTARE LO STATO dell'account
         final InvocationResultReferencePort clientIdsReference = getEmailMethodCallPort.getIdsReference();
         final List<String> ids;
 
         if (clientIdsReference != null) {
             try {
-                ids = Arrays.asList(resultReferencePort.resolve(clientIdsReference, previousResponses));
+                ids = Arrays.asList(resultReferenceResolverPort.resolve(clientIdsReference, previousResponses));
             } catch (final IllegalArgumentException exception) {
                 return new MethodResponsePort[] { invalidResultReferenceMethodErrorResponsePort };
             }

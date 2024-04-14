@@ -11,10 +11,10 @@ import it.qbsoftware.business.domain.MailboxInfoConvertToMailboxPort;
 import it.qbsoftware.business.ports.in.jmap.GetMailboxMethodCallPort;
 import it.qbsoftware.business.ports.in.jmap.GetMailboxMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.MethodResponsePort;
+import it.qbsoftware.business.ports.in.jmap.entity.InvocationResultReferencePort;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
-import it.qbsoftware.business.ports.in.jmap.entity.ResultReferencePort;
 import it.qbsoftware.business.ports.in.usecase.GetMailboxMethodCallUsecase;
 import it.qbsoftware.business.ports.in.utils.ListMultimapPort;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
@@ -49,7 +49,7 @@ public class GetMailboxMethodCallService implements GetMailboxMethodCallUsecase 
                 }
 
                 final String[] mailboxIdsToRetrive = getMailboxMethodCallPort.getIds();
-                final ResultReferencePort clientIdsReference = getMailboxMethodCallPort.getIdsReference();
+                final InvocationResultReferencePort clientIdsReference = getMailboxMethodCallPort.getIdsReference();
 
                 if (clientIdsReference != null) {
                         // TODO: in pratica bisogna risolvere gli id creati dal client con gli effettivi

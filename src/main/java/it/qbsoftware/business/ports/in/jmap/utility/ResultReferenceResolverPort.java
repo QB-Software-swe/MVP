@@ -6,5 +6,5 @@ import it.qbsoftware.business.ports.in.utils.ListMultimapPort;
 
 public interface ResultReferenceResolverPort {
     public String[] resolve(final InvocationResultReferencePort resultReferenceResolverPort,
-            ListMultimapPort<String, ResponseInvocationPort> previousResponses);
+            final ListMultimapPort<String, ResponseInvocationPort> previousResponses);
 }

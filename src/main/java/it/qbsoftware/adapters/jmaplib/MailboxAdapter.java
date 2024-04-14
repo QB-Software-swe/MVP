@@ -4,10 +4,10 @@ import it.qbsoftware.business.ports.in.jmap.entity.MailboxPort;
 import it.qbsoftware.business.ports.in.jmap.entity.RolePort;
 import rs.ltt.jmap.common.entity.Mailbox;
 
-public class MailboxAdapter implements MailboxPort{
+public class MailboxAdapter implements MailboxPort {
     Mailbox mailbox;
 
-    public MailboxAdapter(Mailbox mailbox){
+    public MailboxAdapter(Mailbox mailbox) {
         this.mailbox = mailbox;
     }
 
@@ -19,6 +19,10 @@ public class MailboxAdapter implements MailboxPort{
     @Override
     public RolePort getRole() {
         return new RoleAdapter(mailbox.getRole());
+    }
+
+    public Mailbox mailbox() {
+        return this.mailbox;
     }
 
 }

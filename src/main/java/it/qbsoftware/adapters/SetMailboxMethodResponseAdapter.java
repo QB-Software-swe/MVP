@@ -12,7 +12,7 @@ import rs.ltt.jmap.common.method.response.mailbox.SetMailboxMethodResponse;
 public class SetMailboxMethodResponseAdapter implements SetMailboxMethodResponsePort{
     SetMailboxMethodResponse setMailboxMethodResponse;
 
-    public SetMailboxMethodResponseAdapter(SetMailboxMethodResponse setMailboxMethodResponse){
+    public SetMailboxMethodResponseAdapter(final SetMailboxMethodResponse setMailboxMethodResponse){
         this.setMailboxMethodResponse = setMailboxMethodResponse;
     }
 

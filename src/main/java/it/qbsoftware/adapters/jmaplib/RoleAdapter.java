@@ -11,7 +11,7 @@ public class RoleAdapter implements RolePort{
     }
 
     public RoleAdapter() {
-        this.role = new Role();
+        this.role = null; //FIXME: Non può esserci un RoleAdapter con null, 
     }
     
     @Override

@@ -1,36 +1,35 @@
 package it.qbsoftware.adapters.jmaplib;
 
-import org.checkerframework.checker.units.qual.A;
-
-import it.qbsoftware.business.ports.in.jmap.SetMailboxMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.SetMailboxMethodResponsePort;
-import it.qbsoftware.business.ports.in.jmap.SetMailboxMethodResponseBuilder;
+import it.qbsoftware.adapters.SetMailboxMethodResponseAdapter;
+import it.qbsoftware.adapters.jmaplib.error.SetErrorAdapter;
+import it.qbsoftware.business.ports.in.jmap.SetMailboxMethodResponsePortBuilder;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxPort;
 import it.qbsoftware.business.ports.in.jmap.error.SetErrorPort;
 import rs.ltt.jmap.common.method.response.mailbox.SetMailboxMethodResponse;
 
-public class SetMailboxMethodResponseBuilderAdapter implements SetMailboxMethodResponseBuilder{
-    SetMailboxMethodResponseBuilder setMailboxMethodResponseBuilder;
+public class SetMailboxMethodResponseBuilderAdapter implements SetMailboxMethodResponsePortBuilder {
+    SetMailboxMethodResponse.SetMailboxMethodResponseBuilder setMailboxMethodResponseBuilder;
 
-    public SetMailboxMethodResponseBuilderAdapter(){
+    public SetMailboxMethodResponseBuilderAdapter() {
         this.setMailboxMethodResponseBuilder = SetMailboxMethodResponse.builder();
     }
 
     @Override
-    public SetMailboxMethodResponseBuilder created(String createdKey, MailboxPort createdMailbox) {
-        setMailboxMethodResponseBuilder.created(createdKey, createdMailbox);
+    public SetMailboxMethodResponsePortBuilder created(String createdKey, MailboxPort createdMailbox) {
+        setMailboxMethodResponseBuilder.created(createdKey, ((MailboxAdapter) createdMailbox).mailbox());
         return this;
     }
 
     @Override
-    public SetMailboxMethodResponseBuilder notCreated(String notCreatedKey, SetErrorPort notCreatedError) {
-        setMailboxMethodResponseBuilder.notCreated(notCreatedKey, notCreatedError);
+    public SetMailboxMethodResponsePortBuilder notCreated(String notCreatedKey, SetErrorPort notCreatedError) {
+        setMailboxMethodResponseBuilder.notCreated(notCreatedKey, ((SetErrorAdapter) notCreatedError).setError());
         return this;
     }
 
     @Override
-    public SetMailboxMethodResponseBuilder notUpdated(String id, SetErrorPort copySetErrorPort) {
-        setMailboxMethodResponseBuilder.notUpdated(id, copySetErrorPort);
+    public SetMailboxMethodResponsePortBuilder notUpdated(final String id, final SetErrorPort copySetErrorPort) {
+        setMailboxMethodResponseBuilder.notUpdated(id, ((SetErrorAdapter) copySetErrorPort).setError());
         return this;
     }
 

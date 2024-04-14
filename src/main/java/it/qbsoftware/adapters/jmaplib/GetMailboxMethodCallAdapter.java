@@ -1,13 +1,13 @@
 package it.qbsoftware.adapters.jmaplib;
 
 import it.qbsoftware.business.ports.in.jmap.GetMailboxMethodCallPort;
-import it.qbsoftware.business.ports.in.jmap.entity.ResultReferencePort;
+import it.qbsoftware.business.ports.in.jmap.entity.InvocationResultReferencePort;
 import rs.ltt.jmap.common.method.call.mailbox.GetMailboxMethodCall;
 
-public class GetMailboxMethodCallAdapter implements GetMailboxMethodCallPort{
+public class GetMailboxMethodCallAdapter implements GetMailboxMethodCallPort {
     GetMailboxMethodCall getMailboxMethodCall;
 
-    public GetMailboxMethodCallAdapter(GetMailboxMethodCall getMailboxMethodCall){
+    public GetMailboxMethodCallAdapter(GetMailboxMethodCall getMailboxMethodCall) {
         this.getMailboxMethodCall = getMailboxMethodCall;
     }
 
@@ -18,14 +18,11 @@ public class GetMailboxMethodCallAdapter implements GetMailboxMethodCallPort{
 
     @Override
     public String[] getIds() {
-        return getMailboxMethodCall.getIds();    
+        return getMailboxMethodCall.getIds();
     }
 
     @Override
-    public ResultReferencePort getIdsReference() {
-        return getMailboxMethodCall.getIdsReference() != null ?
-            new ResultReferenceAdapter(getMailboxMethodCall.getIdsReference()) : null;
+    public InvocationResultReferencePort getIdsReference() {
+        return new InvocationResultReferenceAdapter(getMailboxMethodCall.getIdsReference());
     }
-    
-
 }

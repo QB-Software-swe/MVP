@@ -1,11 +1,11 @@
 package it.qbsoftware.business.ports.in.jmap;
 
-import it.qbsoftware.business.ports.in.jmap.entity.ResultReferencePort;
+import it.qbsoftware.business.ports.in.jmap.entity.InvocationResultReferencePort;
 
 public interface GetMailboxMethodCallPort {
     public String accountId();
 
     public String[] getIds();
 
-    public ResultReferencePort getIdsReference();
+    public InvocationResultReferencePort getIdsReference();
 }

@@ -10,7 +10,7 @@ import it.qbsoftware.business.domain.MailboxInfoConvertToMailboxPort;
 import it.qbsoftware.business.domain.MailboxPatcher;
 import it.qbsoftware.business.ports.in.jmap.MethodResponsePort;
 import it.qbsoftware.business.ports.in.jmap.SetMailboxMethodCallPort;
-import it.qbsoftware.business.ports.in.jmap.SetMailboxMethodResponseBuilder;
+import it.qbsoftware.business.ports.in.jmap.SetMailboxMethodResponsePortBuilder;
 import it.qbsoftware.business.ports.in.jmap.SetMailboxMethodResponsePort;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxPort;
@@ -24,7 +24,7 @@ import it.qbsoftware.business.ports.out.jmap.MailboxInfoRepository;
 
 public class SetMailboxMethodCallService implements SetMailboxMethodCallUsecase {
 
-    final SetMailboxMethodResponseBuilder setMailboxMethodResponseBuilder;
+    final SetMailboxMethodResponsePortBuilder setMailboxMethodResponseBuilder;
     final StateMismatchMethodErrorResponsePort stateMismatchMethodErrorResponsePort;
     final MailboxBuilderPort mailboxBuilderPort;
     final MailboxInfoRepository mailboxInfoRepository;
@@ -33,7 +33,7 @@ public class SetMailboxMethodCallService implements SetMailboxMethodCallUsecase 
     final CaseFormatPort caseFormatPort;
     final RolePort rolePort;
 
-    public SetMailboxMethodCallService(final SetMailboxMethodResponseBuilder setMailboxMethodResponseBuilder,
+    public SetMailboxMethodCallService(final SetMailboxMethodResponsePortBuilder setMailboxMethodResponseBuilder,
             final StateMismatchMethodErrorResponsePort stateMismatchMethodErrorResponsePort,
             final MailboxBuilderPort mailboxBuilderPort, MailboxInfoRepository mailboxInfoRepository,
             final SetErrorPort setErrorPort, final SplitterPort splitterPort, final CaseFormatPort caseFormatPort,

@@ -8,23 +8,26 @@ import it.qbsoftware.adapters.jmaplib.GetEmailMethodCallAdapter;
 import it.qbsoftware.adapters.jmaplib.GetEmailMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.jmaplib.InvalidResultReferenceMethodErrorResponseAdapter;
 import it.qbsoftware.adapters.jmaplib.MethodResponseAdapter;
-import it.qbsoftware.adapters.jmaplib.ResultReferenceAdapter;
+import it.qbsoftware.adapters.jmaplib.utils.ResultReferenceResolverAdapter;
 import it.qbsoftware.business.ports.in.usecase.GetEmailMethodCallUsecase;
 import it.qbsoftware.business.services.GetEmailMethodCallService;
 import rs.ltt.jmap.common.method.MethodResponse;
 import rs.ltt.jmap.common.method.call.email.GetEmailMethodCall;
-import rs.ltt.jmap.common.method.error.InvalidArgumentsMethodErrorResponse;
 
-public class GetEmailMethodCallController extends ControllerHandlerBase{
+public class GetEmailMethodCallController extends ControllerHandlerBase {
     @Override
     public MethodResponse[] handle(HandlerRequest handlerRequest) {
         if (handlerRequest.methodCall() instanceof GetEmailMethodCall getEmailMethodCall) {
-            
+
             GetEmailMethodCallAdapter getEmailMethodCallAdapter = new GetEmailMethodCallAdapter(getEmailMethodCall);
 
-            GetEmailMethodCallUsecase getEmailMethodCallService = new GetEmailMethodCallService(new EmailRepositoryAdapter(), new InvalidResultReferenceMethodErrorResponseAdapter(), new ResultReferenceAdapter(), new GetEmailMethodResponseBuilderAdapter(), new EmailBuilderAdapter());
+            GetEmailMethodCallUsecase getEmailMethodCallService = new GetEmailMethodCallService(
+                    new EmailRepositoryAdapter(), new InvalidResultReferenceMethodErrorResponseAdapter(),
+                    new ResultReferenceResolverAdapter(), new GetEmailMethodResponseBuilderAdapter(),
+                    new EmailBuilderAdapter());
 
-            MethodResponseAdapter[] methodResponseAdapters = (MethodResponseAdapter[]) getEmailMethodCallService.call(getEmailMethodCallAdapter, handlerRequest.previousResponses());
+            MethodResponseAdapter[] methodResponseAdapters = (MethodResponseAdapter[]) getEmailMethodCallService
+                    .call(getEmailMethodCallAdapter, handlerRequest.previousResponses());
 
             ArrayList<MethodResponse> methodResponseList = new ArrayList<>();
 
@@ -38,4 +41,3 @@ public class GetEmailMethodCallController extends ControllerHandlerBase{
         return super.handle(handlerRequest);
     }
 }
-

@@ -16,7 +16,7 @@ import rs.ltt.jmap.common.entity.Capability;
 public class SessionResourceBuilderAdapter implements SessionResourceBuilderPort {
     SessionResourceBuilder sessionResourceBuilder;
 
-    public SessionResourceBuilderAdapter(){
+    public SessionResourceBuilderAdapter() {
         this.sessionResourceBuilder = SessionResource.builder();
     }
 
@@ -90,6 +90,12 @@ public class SessionResourceBuilderAdapter implements SessionResourceBuilderPort
     @Override
     public SessionResourcePort build() {
         return new SessionResourceAdapter(sessionResourceBuilder.build());
+    }
+
+    @Override
+    public SessionResourceBuilderPort reset() {
+        this.sessionResourceBuilder = SessionResource.builder();
+        return this;
     }
 
 }
