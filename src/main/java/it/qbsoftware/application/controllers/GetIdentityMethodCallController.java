@@ -26,7 +26,8 @@ public class GetIdentityMethodCallController extends ControllerHandlerBase {
             GetIdentityMethodCallUsecase getIdentityMethodCallService = new GetIdentityMethodCallService(
                     new IdentityRepositoryAdapter(), new GetIdentityMethodResponseBuilderAdapter(),
                     new AccountStateRepositoryAdapter(),
-                    new InvalidResultReferenceMethodErrorResponseAdapter(), new ResultReferenceResolverAdapter());
+                    new InvalidResultReferenceMethodErrorResponseAdapter(), new ResultReferenceResolverAdapter(), null,
+                    null); // FIXME: null null
 
             MethodResponseAdapter[] methodResponseAdapters = (MethodResponseAdapter[]) getIdentityMethodCallService
                     .call(getIdentityMethodCallAdapter, handlerRequest.previousResponses());

@@ -1,6 +1,6 @@
 package it.qbsoftware.business.domain.util.get;
 
-public class GetEntityRetrivedImp<EntityType> implements GetEntityRetrived<EntityType> {
+public class GetEntityRetrivedImp<EntityType> implements GetRetrivedEntity<EntityType> {
     final EntityType[] found;
     final String[] notFound;
 

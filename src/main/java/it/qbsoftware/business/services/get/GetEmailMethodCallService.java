@@ -8,7 +8,7 @@ import it.qbsoftware.business.domain.exception.InvalidResultReferenceExecption;
 import it.qbsoftware.business.domain.util.MethodCallSetup;
 import it.qbsoftware.business.domain.util.get.GetEmailPropertiesFilter;
 import it.qbsoftware.business.domain.util.get.GetEntityPropertiesFilter;
-import it.qbsoftware.business.domain.util.get.GetEntityRetrived;
+import it.qbsoftware.business.domain.util.get.GetRetrivedEntity;
 import it.qbsoftware.business.domain.util.get.GetMethodCallSetup;
 import it.qbsoftware.business.domain.util.get.GetMethodCallSetupImp;
 import it.qbsoftware.business.domain.util.CommonMethodCallSetup;
@@ -65,7 +65,7 @@ public class GetEmailMethodCallService implements GetEmailMethodCallUsecase {
             return new MethodResponsePort[] { new AccountNotFoundMethodErrorResponse() };
         }
 
-        GetEntityRetrived<EmailPort> getRetrivedEmails;
+        GetRetrivedEntity<EmailPort> getRetrivedEmails;
         try {
             getRetrivedEmails = getMethodCallSetup.getEntity(getEmailMethodCallPort, previousResponses);
         } catch (final InvalidResultReferenceExecption invalidResultReferenceExecption) {
@@ -88,6 +88,7 @@ public class GetEmailMethodCallService implements GetEmailMethodCallUsecase {
 
         return new MethodResponsePort[] {
                 getEmailMethodResponseBuilderPort
+                        .reset()
                         .list(emailsFound)
                         .notFound(getRetrivedEmails.notFound())
                         .state(accountState.emailState())

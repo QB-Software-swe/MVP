@@ -40,7 +40,7 @@ public class GetMethodCallSetupImp<EntityType> implements GetMethodCallSetup<Ent
 
     @SuppressWarnings("unchecked")
     @Override
-    public GetEntityRetrived<EntityType> getEntity(final GetMethodCallPort getMethodCallPort,
+    public GetRetrivedEntity<EntityType> getEntity(final GetMethodCallPort getMethodCallPort,
             final ListMultimapPort<String, ResponseInvocationPort> previousResponses)
             throws InvalidResultReferenceExecption {
         final String[] entityIds = fectchEntityId(getMethodCallPort, previousResponses);

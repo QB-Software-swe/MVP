@@ -7,7 +7,7 @@ import it.qbsoftware.business.ports.in.utils.ListMultimapPort;
 
 //FIXME: rinominare
 public interface GetMethodCallSetup<EntityType> {
-    public GetEntityRetrived<EntityType> getEntity(final GetMethodCallPort getMethodCallPort,
+    public GetRetrivedEntity<EntityType> getEntity(final GetMethodCallPort getMethodCallPort,
             final ListMultimapPort<String, ResponseInvocationPort> previousResponses)
             throws InvalidResultReferenceExecption;
 }
