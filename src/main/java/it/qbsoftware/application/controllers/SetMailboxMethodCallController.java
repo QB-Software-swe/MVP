@@ -9,7 +9,6 @@ import it.qbsoftware.adapters.jmaplib.error.StateMismatchMethodErrorResponseAdap
 import it.qbsoftware.adapters.jmaplib.utils.CaseFormatAdapter;
 import it.qbsoftware.adapters.jmaplib.utils.SplitterAdapter;
 import it.qbsoftware.adapters.jmaplib.MailboxBuilderAdapter;
-import it.qbsoftware.adapters.jmaplib.MailboxInfoRepositoryAdapter;
 import it.qbsoftware.adapters.jmaplib.MethodResponseAdapter;
 import it.qbsoftware.adapters.jmaplib.RoleAdapter;
 import it.qbsoftware.business.ports.in.usecase.set.SetMailboxMethodCallUsecase;

@@ -13,19 +13,24 @@ import it.qbsoftware.business.services.get.GetMailboxMethodCallService;
 import rs.ltt.jmap.common.method.MethodResponse;
 import rs.ltt.jmap.common.method.call.mailbox.GetMailboxMethodCall;
 
-
-
-public class GetMailboxMethodCallController extends ControllerHandlerBase{
+public class GetMailboxMethodCallController extends ControllerHandlerBase {
 
     @Override
     public MethodResponse[] handle(HandlerRequest handlerRequest) {
         if (handlerRequest.methodCall() instanceof GetMailboxMethodCall getMailboxMethodCall) {
-            
-            GetMailboxMethodCallAdapter getMailboxMethodCallAdapter = new GetMailboxMethodCallAdapter(getMailboxMethodCall);
 
-            GetMailboxMethodCallUsecase getMailboxMethodCallService = new GetMailboxMethodCallService(new MailboxInfoRepositoryAdapter(), new MailboxBuilderAdapter(), new GetMailboxMethodResponseBuilderAdapter(), new AccountStateRepositoryAdapter());
+            GetMailboxMethodCallAdapter getMailboxMethodCallAdapter = new GetMailboxMethodCallAdapter(
+                    getMailboxMethodCall);
 
-            MethodResponseAdapter[] methodResponseAdapters = (MethodResponseAdapter[]) getMailboxMethodCallService.call(getMailboxMethodCallAdapter, handlerRequest.previousResponses());
+                    //TODO: fixme, il costruttore è completamente andato
+            GetMailboxMethodCallUsecase getMailboxMethodCallService = null; // new GetMailboxMethodCallService(new
+                                                                            // MailboxInfoRepositoryAdapter(), new
+                                                                            // MailboxBuilderAdapter(), new
+                                                                            // GetMailboxMethodResponseBuilderAdapter(),
+                                                                            // new AccountStateRepositoryAdapter());
+
+            MethodResponseAdapter[] methodResponseAdapters = (MethodResponseAdapter[]) getMailboxMethodCallService
+                    .call(getMailboxMethodCallAdapter, handlerRequest.previousResponses());
 
             ArrayList<MethodResponse> methodResponseList = new ArrayList<>();
 

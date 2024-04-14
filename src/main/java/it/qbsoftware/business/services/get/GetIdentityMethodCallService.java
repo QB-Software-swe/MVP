@@ -69,9 +69,9 @@ public class GetIdentityMethodCallService implements GetIdentityMethodCallUsecas
             return new MethodResponsePort[] { invalidResultReferenceMethodErrorResponsePort };
         }
 
-        final IdentityPort[] identitiesFound;
+        final IdentityPort[] identitiesFiltred;
         try {
-            identitiesFound = getIdentityPropertiesFilter.filter(getRetrivedIdentities.found(),
+            identitiesFiltred = getIdentityPropertiesFilter.filter(getRetrivedIdentities.found(),
                     getIdentityMethodCallPort.getProperties());
         } catch (final InvalidArgumentsException invalidArgumentsException) {
             return new MethodResponsePort[] { invalidArgumentsMethodErrorResponsePort };
@@ -80,7 +80,7 @@ public class GetIdentityMethodCallService implements GetIdentityMethodCallUsecas
         return new MethodResponsePort[] {
                 getIdentityMethodResponseBuilderPort
                         .reset()
-                        .list(identitiesFound)
+                        .list(identitiesFiltred)
                         .notFound(getRetrivedIdentities.notFound())
                         .state(accountState.identityState())
                         .build()

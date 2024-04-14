@@ -72,15 +72,15 @@ public class GetEmailMethodCallService implements GetEmailMethodCallUsecase {
             return new MethodResponsePort[] { invalidResultReferenceMethodErrorResponsePort };
         }
 
-        final EmailPort[] emailsFound;
         final GetEntityPropertiesFilter<EmailPort> getEmailPropertiesFilter = new GetEmailPropertiesFilter(
                 emailBuilderPort.reset(),
                 getEmailMethodCallPort.getBodyProperties(), getEmailMethodCallPort.getFetchTextBodyValues(),
                 getEmailMethodCallPort.getFetchHTMLBodyValues(), getEmailMethodCallPort.getFetchAllBodyValues(),
                 getEmailMethodCallPort.getMaxBodyValueBytes());
 
+        final EmailPort[] emailsFiltred;
         try {
-            emailsFound = getEmailPropertiesFilter.filter(getRetrivedEmails.found(),
+            emailsFiltred = getEmailPropertiesFilter.filter(getRetrivedEmails.found(),
                     getEmailMethodCallPort.getProperties());
         } catch (InvalidArgumentsException invalidArgumentsException) {
             return new MethodResponsePort[] { invalidArgumentsMethodErrorResponsePort };
@@ -89,7 +89,7 @@ public class GetEmailMethodCallService implements GetEmailMethodCallUsecase {
         return new MethodResponsePort[] {
                 getEmailMethodResponseBuilderPort
                         .reset()
-                        .list(emailsFound)
+                        .list(emailsFiltred)
                         .notFound(getRetrivedEmails.notFound())
                         .state(accountState.emailState())
                         .build()

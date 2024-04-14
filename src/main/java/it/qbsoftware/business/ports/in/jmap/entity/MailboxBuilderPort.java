@@ -6,7 +6,11 @@ public interface MailboxBuilderPort {
 
     public MailboxBuilderPort name(String name);
 
+    public MailboxBuilderPort parentId(String parentId);
+
     public MailboxBuilderPort role(RolePort role);
+
+    public MailboxBuilderPort sortOrder(Long sortOrder);
 
     public MailboxBuilderPort totalEmails(Long totalEmails);
 
@@ -16,5 +20,11 @@ public interface MailboxBuilderPort {
 
     public MailboxBuilderPort unreadThreads(Long unreadThreads);
 
+    public MailboxBuilderPort myRights(MailboxRightsPort mailboxRightsPort);
+
+    public MailboxBuilderPort getIsSubscribed(Boolean isSubscribed);
+
     public MailboxPort build();
+
+    public MailboxBuilderPort reset();
 }
