@@ -13,6 +13,7 @@ import rs.ltt.jmap.common.method.MethodResponse;
 import java.util.ArrayList;
 
 
+@SuppressWarnings("unused")
 public class SessionController extends ControllerHandlerBase{
 
     @Override

@@ -12,7 +12,6 @@ import rs.ltt.jmap.common.GenericResponse;
 import rs.ltt.jmap.common.Request;
 import rs.ltt.jmap.common.Response;
 import rs.ltt.jmap.common.method.MethodResponse;
-import rs.ltt.jmap.common.method.response.core.EchoMethodResponse;
 import rs.ltt.jmap.gson.JmapAdapters;
 
 import java.util.Arrays;

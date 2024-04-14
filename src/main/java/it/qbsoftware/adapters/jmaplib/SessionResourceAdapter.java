@@ -6,11 +6,9 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import it.qbsoftware.business.ports.in.jmap.SessionResourcePort;
-import it.qbsoftware.business.ports.in.jmap.capabilities.AccountCapabilityPort;
 import it.qbsoftware.business.ports.in.jmap.entity.AccountPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ClassAccountCapabilityPort;
 import rs.ltt.jmap.common.SessionResource;
-import rs.ltt.jmap.common.entity.capability.CoreCapability;
 import rs.ltt.jmap.common.entity.capability.MailAccountCapability;
 
 public class SessionResourceAdapter implements SessionResourcePort {
