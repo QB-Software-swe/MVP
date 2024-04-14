@@ -9,6 +9,10 @@ public class RoleAdapter implements RolePort{
     public RoleAdapter(Role role) {
         this.role = role;
     }
+
+    public RoleAdapter() {
+        this.role = new Role();
+    }
     
     @Override
     public RolePort valueOf(String name) {
