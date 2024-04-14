@@ -6,9 +6,13 @@ import java.util.Map;
 public interface EmailBuilderPort {
     public EmailBuilderPort id(final String id);
 
+    public EmailBuilderPort blobId(final String id);
+
     public EmailBuilderPort threadId(final String threadId);
 
     public EmailBuilderPort receivedAt(final Instant instant);
+
+    public EmailBuilderPort size(final Long size);
 
     public EmailBuilderPort mailboxId(final String mailboxIdKey, final Boolean mailboxIdValue);
 

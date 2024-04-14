@@ -2,12 +2,14 @@ package it.qbsoftware.application.controllers;
 
 import java.util.ArrayList;
 
+import it.qbsoftware.adapters.jmaplib.AccountStateRepositoryAdapter;
 import it.qbsoftware.adapters.jmaplib.EmailBuilderAdapter;
 import it.qbsoftware.adapters.jmaplib.EmailRepositoryAdapter;
 import it.qbsoftware.adapters.jmaplib.GetEmailMethodCallAdapter;
 import it.qbsoftware.adapters.jmaplib.GetEmailMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.jmaplib.InvalidResultReferenceMethodErrorResponseAdapter;
 import it.qbsoftware.adapters.jmaplib.MethodResponseAdapter;
+import it.qbsoftware.adapters.jmaplib.error.InvalidArgumentsMethodErrorResponseAdapter;
 import it.qbsoftware.adapters.jmaplib.utils.ResultReferenceResolverAdapter;
 import it.qbsoftware.business.ports.in.usecase.GetEmailMethodCallUsecase;
 import it.qbsoftware.business.services.GetEmailMethodCallService;
@@ -24,7 +26,8 @@ public class GetEmailMethodCallController extends ControllerHandlerBase {
             GetEmailMethodCallUsecase getEmailMethodCallService = new GetEmailMethodCallService(
                     new EmailRepositoryAdapter(), new InvalidResultReferenceMethodErrorResponseAdapter(),
                     new ResultReferenceResolverAdapter(), new GetEmailMethodResponseBuilderAdapter(),
-                    new EmailBuilderAdapter());
+                    new EmailBuilderAdapter(), new InvalidArgumentsMethodErrorResponseAdapter(),
+                    new AccountStateRepositoryAdapter());
 
             MethodResponseAdapter[] methodResponseAdapters = (MethodResponseAdapter[]) getEmailMethodCallService
                     .call(getEmailMethodCallAdapter, handlerRequest.previousResponses());

@@ -9,10 +9,10 @@ import it.qbsoftware.business.ports.in.jmap.entity.EmailPort;
 import rs.ltt.jmap.common.entity.Email.EmailBuilder;
 import rs.ltt.jmap.common.entity.Email;
 
-public class EmailBuilderAdapter implements EmailBuilderPort{
+public class EmailBuilderAdapter implements EmailBuilderPort {
     EmailBuilder emailBuilder;
 
-    public EmailBuilderAdapter(){
+    public EmailBuilderAdapter() {
         this.emailBuilder = Email.builder();
     }
 
@@ -22,55 +22,55 @@ public class EmailBuilderAdapter implements EmailBuilderPort{
 
     @Override
     public EmailBuilderPort id(String id) {
-        emailBuilder.id(id);
+        this.emailBuilder.id(id);
         return this;
     }
 
     @Override
     public EmailBuilderPort threadId(String threadId) {
-        emailBuilder.threadId(threadId);
+        this.emailBuilder.threadId(threadId);
         return this;
     }
 
     @Override
     public EmailBuilderPort receivedAt(Instant instant) {
-        emailBuilder.receivedAt(instant);
+        this.emailBuilder.receivedAt(instant);
         return this;
     }
 
     @Override
     public EmailBuilderPort mailboxId(String mailboxIdKey, Boolean mailboxIdValue) {
-        emailBuilder.mailboxId(mailboxIdKey, mailboxIdValue);
+        this.emailBuilder.mailboxId(mailboxIdKey, mailboxIdValue);
         return this;
     }
 
     @Override
-    public EmailBuilderPort attachment(EmailBodyPartPort emailBodyPartPort) {      
-        emailBuilder.attachment(((EmailBodyPartAdapter)emailBodyPartPort).emailBodyPart);
+    public EmailBuilderPort attachment(EmailBodyPartPort emailBodyPartPort) {
+        this.emailBuilder.attachment(((EmailBodyPartAdapter) emailBodyPartPort).emailBodyPart);
         return this;
     }
 
     @Override
     public EmailBuilderPort keywords(Map<String, Boolean> keywords) {
-        emailBuilder.keywords(keywords);
+        this.emailBuilder.keywords(keywords);
         return this;
     }
 
     @Override
     public EmailBuilderPort mailboxIds(Map<String, Boolean> mailboxIds) {
-        emailBuilder.mailboxIds(mailboxIds);
+        this.emailBuilder.mailboxIds(mailboxIds);
         return this;
     }
 
     @Override
     public EmailBuilderPort clearMailboxIds() {
-        emailBuilder.clearMailboxIds();
+        this.emailBuilder.clearMailboxIds();
         return this;
     }
 
     @Override
     public EmailBuilderPort clearAttachments() {
-        emailBuilder.clearAttachments();
+        this.emailBuilder.clearAttachments();
         return this;
     }
 
@@ -85,6 +85,16 @@ public class EmailBuilderAdapter implements EmailBuilderPort{
         return this;
     }
 
-    
+    @Override
+    public EmailBuilderPort blobId(String id) {
+        this.emailBuilder.blobId(id);
+        return this;
+    }
+
+    @Override
+    public EmailBuilderPort size(Long size) {
+        this.emailBuilder.size(size);
+        return this;
+    }
 
 }

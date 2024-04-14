@@ -9,16 +9,17 @@ import rs.ltt.jmap.common.entity.Email;
 import rs.ltt.jmap.common.method.response.email.GetEmailMethodResponse;
 import rs.ltt.jmap.common.method.response.email.GetEmailMethodResponse.GetEmailMethodResponseBuilder;
 
-public class GetEmailMethodResponseBuilderAdapter implements GetEmailMethodResponseBuilderPort{
+public class GetEmailMethodResponseBuilderAdapter implements GetEmailMethodResponseBuilderPort {
     GetEmailMethodResponseBuilder getEmailMethodResponseBuilder;
 
-    public GetEmailMethodResponseBuilderAdapter(){
+    public GetEmailMethodResponseBuilderAdapter() {
         this.getEmailMethodResponseBuilder = GetEmailMethodResponse.builder();
     }
 
     @Override
     public GetEmailMethodResponseBuilderPort list(EmailPort[] emailList) {
-        getEmailMethodResponseBuilder.list(Stream.of(emailList).map(emailPort->((EmailAdapter)emailPort).email).toArray(Email[]::new));
+        getEmailMethodResponseBuilder
+                .list(Stream.of(emailList).map(emailPort -> ((EmailAdapter) emailPort).email).toArray(Email[]::new));
         return this;
     }
 
@@ -38,6 +39,11 @@ public class GetEmailMethodResponseBuilderAdapter implements GetEmailMethodRespo
         this.getEmailMethodResponseBuilder = GetEmailMethodResponse.builder();
         return this;
     }
-    
+
+    @Override
+    public GetEmailMethodResponseBuilderPort notFound(String[] notFound) {
+        this.getEmailMethodResponseBuilder.notFound(notFound);
+        return this;
+    }
 
 }

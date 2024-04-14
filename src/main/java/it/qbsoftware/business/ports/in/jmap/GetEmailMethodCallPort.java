@@ -1,15 +1,13 @@
 package it.qbsoftware.business.ports.in.jmap;
 
-import it.qbsoftware.business.ports.in.jmap.entity.InvocationResultReferencePort;
+public interface GetEmailMethodCallPort extends GetMethodCallPort {
+    public String[] getBodyProperties();
 
-public interface GetEmailMethodCallPort {
+    public Boolean getFetchTextBodyValues();
 
-    public String accountId();
+    public Boolean getFetchHTMLBodyValues();
 
-    public String[] getIds();
+    public Boolean getFetchAllBodyValues();
 
-    public String[] getProperties();
-
-    public InvocationResultReferencePort getIdsReference();
-
+    public Long getMaxBodyValueBytes();
 }

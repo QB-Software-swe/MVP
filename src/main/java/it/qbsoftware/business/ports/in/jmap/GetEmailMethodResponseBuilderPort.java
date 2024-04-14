@@ -6,6 +6,8 @@ public interface GetEmailMethodResponseBuilderPort {
 
     public GetEmailMethodResponseBuilderPort list(EmailPort[] emailList);
 
+    public GetEmailMethodResponseBuilderPort notFound(String[] notFound);
+
     public GetEmailMethodResponseBuilderPort state(final String state);
 
     public GetEmailMethodResponsePort build();

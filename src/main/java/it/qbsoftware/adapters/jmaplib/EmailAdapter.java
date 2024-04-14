@@ -12,13 +12,13 @@ import it.qbsoftware.business.ports.in.jmap.entity.EmailBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailPort;
 import rs.ltt.jmap.common.entity.Email;
 
-public class EmailAdapter implements EmailPort{
+public class EmailAdapter implements EmailPort {
     Email email;
 
-    public EmailAdapter(Email email){
+    public EmailAdapter(Email email) {
         this.email = email;
     }
-    
+
     @Override
     public String getId() {
         return email.getId();
@@ -46,7 +46,8 @@ public class EmailAdapter implements EmailPort{
 
     @Override
     public Map<String, EmailBodyValuePort> getBodyValues() {
-        return email.getBodyValues().entrySet().stream().collect(Collectors.toMap(Entry::getKey, e-> new EmailBodyValueAdapter(e.getValue())));
+        return email.getBodyValues().entrySet().stream()
+                .collect(Collectors.toMap(Entry::getKey, e -> new EmailBodyValueAdapter(e.getValue())));
     }
 
     @Override
@@ -57,6 +58,16 @@ public class EmailAdapter implements EmailPort{
     @Override
     public EmailBuilderPort toBuilder() {
         return new EmailBuilderAdapter(email.toBuilder());
+    }
+
+    @Override
+    public String getBlobId() {
+        return this.email.getBlobId();
+    }
+
+    @Override
+    public Long getSize() {
+        return this.email.getSize();
     }
 
 }
