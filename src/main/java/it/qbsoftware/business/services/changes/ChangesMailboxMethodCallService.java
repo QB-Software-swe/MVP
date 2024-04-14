@@ -1,4 +1,4 @@
-package it.qbsoftware.business.services;
+package it.qbsoftware.business.services.changes;
 
 import java.util.Optional;
 
@@ -9,10 +9,10 @@ import it.qbsoftware.business.ports.in.jmap.ChangesMailboxMethodCallPort;
 import it.qbsoftware.business.ports.in.jmap.ChangesMailboxMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.MethodResponsePort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
-import it.qbsoftware.business.ports.in.usecase.ChangesMailboxMethodCallUsecase;
 import it.qbsoftware.business.ports.in.utils.ListMultimapPort;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.business.ports.in.jmap.error.CannotCalculateChangesMethodErrorResponsePort;
+import it.qbsoftware.business.ports.in.usecase.changes.ChangesMailboxMethodCallUsecase;
 
 //TODO: implementare la logica
 @SuppressWarnings("unused")

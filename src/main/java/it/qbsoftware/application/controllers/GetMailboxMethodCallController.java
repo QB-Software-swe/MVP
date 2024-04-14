@@ -8,8 +8,8 @@ import it.qbsoftware.adapters.jmaplib.GetMailboxMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.jmaplib.MailboxBuilderAdapter;
 import it.qbsoftware.adapters.jmaplib.MailboxInfoRepositoryAdapter;
 import it.qbsoftware.adapters.jmaplib.MethodResponseAdapter;
-import it.qbsoftware.business.ports.in.usecase.GetMailboxMethodCallUsecase;
-import it.qbsoftware.business.services.GetMailboxMethodCallService;
+import it.qbsoftware.business.ports.in.usecase.get.GetMailboxMethodCallUsecase;
+import it.qbsoftware.business.services.get.GetMailboxMethodCallService;
 import rs.ltt.jmap.common.method.MethodResponse;
 import rs.ltt.jmap.common.method.call.mailbox.GetMailboxMethodCall;
 

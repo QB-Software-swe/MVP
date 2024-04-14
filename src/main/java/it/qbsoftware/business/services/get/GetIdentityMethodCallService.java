@@ -1,4 +1,4 @@
-package it.qbsoftware.business.services;
+package it.qbsoftware.business.services.get;
 
 import it.qbsoftware.business.domain.AccountNotFoundMethodErrorResponse;
 import it.qbsoftware.business.domain.AccountState;
@@ -9,7 +9,7 @@ import it.qbsoftware.business.ports.in.jmap.entity.IdentityPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
 import it.qbsoftware.business.ports.in.jmap.error.InvalidResultReferenceMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.utility.ResultReferenceResolverPort;
-import it.qbsoftware.business.ports.in.usecase.GetIdentityMethodCallUsecase;
+import it.qbsoftware.business.ports.in.usecase.get.GetIdentityMethodCallUsecase;
 import it.qbsoftware.business.ports.in.utils.ListMultimapPort;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.business.ports.out.jmap.IdentityRepository;

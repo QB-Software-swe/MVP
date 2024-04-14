@@ -1,4 +1,4 @@
-package it.qbsoftware.business.services;
+package it.qbsoftware.business.services.get;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,7 +15,7 @@ import it.qbsoftware.business.ports.in.jmap.entity.InvocationResultReferencePort
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
-import it.qbsoftware.business.ports.in.usecase.GetMailboxMethodCallUsecase;
+import it.qbsoftware.business.ports.in.usecase.get.GetMailboxMethodCallUsecase;
 import it.qbsoftware.business.ports.in.utils.ListMultimapPort;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.business.ports.out.jmap.MailboxInfoRepository;

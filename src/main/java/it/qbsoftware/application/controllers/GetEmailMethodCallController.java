@@ -11,8 +11,8 @@ import it.qbsoftware.adapters.jmaplib.InvalidResultReferenceMethodErrorResponseA
 import it.qbsoftware.adapters.jmaplib.MethodResponseAdapter;
 import it.qbsoftware.adapters.jmaplib.error.InvalidArgumentsMethodErrorResponseAdapter;
 import it.qbsoftware.adapters.jmaplib.utils.ResultReferenceResolverAdapter;
-import it.qbsoftware.business.ports.in.usecase.GetEmailMethodCallUsecase;
-import it.qbsoftware.business.services.GetEmailMethodCallService;
+import it.qbsoftware.business.ports.in.usecase.get.GetEmailMethodCallUsecase;
+import it.qbsoftware.business.services.get.GetEmailMethodCallService;
 import rs.ltt.jmap.common.method.MethodResponse;
 import rs.ltt.jmap.common.method.call.email.GetEmailMethodCall;
 

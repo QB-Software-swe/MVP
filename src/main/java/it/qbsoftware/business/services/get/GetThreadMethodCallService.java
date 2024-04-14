@@ -1,4 +1,4 @@
-package it.qbsoftware.business.services;
+package it.qbsoftware.business.services.get;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -17,7 +17,7 @@ import it.qbsoftware.business.ports.in.jmap.entity.ThreadBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ThreadPort;
 import it.qbsoftware.business.ports.in.jmap.error.InvalidResultReferenceMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.utility.ResultReferenceResolverPort;
-import it.qbsoftware.business.ports.in.usecase.GetThreadMethodCallUsecase;
+import it.qbsoftware.business.ports.in.usecase.get.GetThreadMethodCallUsecase;
 import it.qbsoftware.business.ports.in.utils.ListMultimapPort;
 import it.qbsoftware.business.ports.out.jmap.EmailRepository;
 

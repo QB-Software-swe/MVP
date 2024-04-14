@@ -1,4 +1,4 @@
-package it.qbsoftware.business.services;
+package it.qbsoftware.business.services.set;
 
 import java.util.Map;
 import java.util.Optional;
@@ -17,7 +17,7 @@ import it.qbsoftware.business.ports.in.jmap.entity.MailboxPort;
 import it.qbsoftware.business.ports.in.jmap.entity.RolePort;
 import it.qbsoftware.business.ports.in.jmap.error.SetErrorPort;
 import it.qbsoftware.business.ports.in.jmap.error.StateMismatchMethodErrorResponsePort;
-import it.qbsoftware.business.ports.in.usecase.SetMailboxMethodCallUsecase;
+import it.qbsoftware.business.ports.in.usecase.set.SetMailboxMethodCallUsecase;
 import it.qbsoftware.business.ports.in.utils.CaseFormatPort;
 import it.qbsoftware.business.ports.in.utils.SplitterPort;
 import it.qbsoftware.business.ports.out.jmap.MailboxInfoRepository;

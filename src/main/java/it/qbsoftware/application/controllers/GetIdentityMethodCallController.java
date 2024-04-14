@@ -11,8 +11,8 @@ import it.qbsoftware.adapters.jmaplib.IdentityRepositoryAdapter;
 import it.qbsoftware.adapters.jmaplib.AccountStateRepositoryAdapter;
 import rs.ltt.jmap.common.method.MethodResponse;
 import rs.ltt.jmap.common.method.call.identity.GetIdentityMethodCall;
-import it.qbsoftware.business.ports.in.usecase.GetIdentityMethodCallUsecase;
-import it.qbsoftware.business.services.GetIdentityMethodCallService;
+import it.qbsoftware.business.ports.in.usecase.get.GetIdentityMethodCallUsecase;
+import it.qbsoftware.business.services.get.GetIdentityMethodCallService;
 
 public class GetIdentityMethodCallController extends ControllerHandlerBase {
 

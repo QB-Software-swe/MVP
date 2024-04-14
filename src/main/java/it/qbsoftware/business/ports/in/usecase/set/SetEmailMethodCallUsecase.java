@@ -1,4 +1,4 @@
-package it.qbsoftware.business.ports.in.usecase;
+package it.qbsoftware.business.ports.in.usecase.set;
 
 import it.qbsoftware.business.ports.in.jmap.MethodResponsePort;
 import it.qbsoftware.business.ports.in.jmap.SetEmailMethodCallPort;
