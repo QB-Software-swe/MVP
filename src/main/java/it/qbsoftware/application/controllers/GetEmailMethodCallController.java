@@ -2,15 +2,15 @@ package it.qbsoftware.application.controllers;
 
 import java.util.ArrayList;
 
-import it.qbsoftware.adapters.jmaplib.AccountStateRepositoryAdapter;
-import it.qbsoftware.adapters.jmaplib.EmailBuilderAdapter;
-import it.qbsoftware.adapters.jmaplib.EmailRepositoryAdapter;
-import it.qbsoftware.adapters.jmaplib.GetEmailMethodCallAdapter;
-import it.qbsoftware.adapters.jmaplib.GetEmailMethodResponseBuilderAdapter;
-import it.qbsoftware.adapters.jmaplib.InvalidResultReferenceMethodErrorResponseAdapter;
-import it.qbsoftware.adapters.jmaplib.MethodResponseAdapter;
-import it.qbsoftware.adapters.jmaplib.error.InvalidArgumentsMethodErrorResponseAdapter;
-import it.qbsoftware.adapters.jmaplib.utils.ResultReferenceResolverAdapter;
+import it.qbsoftware.adapters.in.jmaplib.AccountStateRepositoryAdapter;
+import it.qbsoftware.adapters.in.jmaplib.EmailBuilderAdapter;
+import it.qbsoftware.adapters.in.jmaplib.EmailRepositoryAdapter;
+import it.qbsoftware.adapters.in.jmaplib.GetEmailMethodCallAdapter;
+import it.qbsoftware.adapters.in.jmaplib.GetEmailMethodResponseBuilderAdapter;
+import it.qbsoftware.adapters.in.jmaplib.InvalidResultReferenceMethodErrorResponseAdapter;
+import it.qbsoftware.adapters.in.jmaplib.MethodResponseAdapter;
+import it.qbsoftware.adapters.in.jmaplib.error.InvalidArgumentsMethodErrorResponseAdapter;
+import it.qbsoftware.adapters.in.jmaplib.utils.ResultReferenceResolverAdapter;
 import it.qbsoftware.business.ports.in.usecase.get.GetEmailMethodCallUsecase;
 import it.qbsoftware.business.services.get.GetEmailMethodCallService;
 import rs.ltt.jmap.common.method.MethodResponse;

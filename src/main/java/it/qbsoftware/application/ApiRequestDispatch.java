@@ -3,8 +3,8 @@ package it.qbsoftware.application;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import it.qbsoftware.adapters.guava.ListMultimapAdapter;
-import it.qbsoftware.adapters.jmaplib.ResponseInvocationAdapter;
+import it.qbsoftware.adapters.in.guava.ListMultimapAdapter;
+import it.qbsoftware.adapters.in.jmaplib.ResponseInvocationAdapter;
 import it.qbsoftware.application.controllers.EchoMethodCallController;
 import it.qbsoftware.application.controllers.HandlerRequest;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;

@@ -1,6 +1,6 @@
 package it.qbsoftware.application.controllers;
 
-import it.qbsoftware.adapters.jmaplib.SessionResourceAdapter;
+import it.qbsoftware.adapters.in.jmaplib.SessionResourceAdapter;
 import it.qbsoftware.business.ports.in.jmap.EndPointConfiguration;
 import it.qbsoftware.business.ports.in.jmap.SessionResourcePort;
 import it.qbsoftware.business.ports.in.jmap.capabilities.CapabilityPort;

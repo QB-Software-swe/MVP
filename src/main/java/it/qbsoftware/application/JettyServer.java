@@ -10,10 +10,10 @@ import com.google.gson.GsonBuilder;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-import it.qbsoftware.adapters.jmaplib.AccountBuilderAdapter;
-import it.qbsoftware.adapters.jmaplib.CapabilityAdapter;
-import it.qbsoftware.adapters.jmaplib.SessionResourceBuilderAdapter;
-import it.qbsoftware.adapters.jmaplib.UserSessionResourceRepositoryAdapter;
+import it.qbsoftware.adapters.in.jmaplib.AccountBuilderAdapter;
+import it.qbsoftware.adapters.in.jmaplib.CapabilityAdapter;
+import it.qbsoftware.adapters.in.jmaplib.SessionResourceBuilderAdapter;
+import it.qbsoftware.adapters.out.UserSessionResourceRepositoryAdapter;
 import it.qbsoftware.application.controllers.SessionController;
 import it.qbsoftware.application.handlers.ApiHandler;
 import it.qbsoftware.application.handlers.WellKnownHandler;

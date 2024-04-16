@@ -2,15 +2,15 @@ package it.qbsoftware.application.controllers;
 
 import java.util.ArrayList;
 
-import it.qbsoftware.adapters.jmaplib.GetIdentityMethodCallAdapter;
-import it.qbsoftware.adapters.jmaplib.InvalidResultReferenceMethodErrorResponseAdapter;
-import it.qbsoftware.adapters.jmaplib.MethodResponseAdapter;
-import it.qbsoftware.adapters.jmaplib.utils.ResultReferenceResolverAdapter;
-import it.qbsoftware.adapters.jmaplib.GetIdentityMethodResponseBuilderAdapter;
-import it.qbsoftware.adapters.jmaplib.IdentityRepositoryAdapter;
-import it.qbsoftware.adapters.jmaplib.AccountStateRepositoryAdapter;
 import rs.ltt.jmap.common.method.MethodResponse;
 import rs.ltt.jmap.common.method.call.identity.GetIdentityMethodCall;
+import it.qbsoftware.adapters.in.jmaplib.AccountStateRepositoryAdapter;
+import it.qbsoftware.adapters.in.jmaplib.GetIdentityMethodCallAdapter;
+import it.qbsoftware.adapters.in.jmaplib.GetIdentityMethodResponseBuilderAdapter;
+import it.qbsoftware.adapters.in.jmaplib.IdentityRepositoryAdapter;
+import it.qbsoftware.adapters.in.jmaplib.InvalidResultReferenceMethodErrorResponseAdapter;
+import it.qbsoftware.adapters.in.jmaplib.MethodResponseAdapter;
+import it.qbsoftware.adapters.in.jmaplib.utils.ResultReferenceResolverAdapter;
 import it.qbsoftware.business.ports.in.usecase.get.GetIdentityMethodCallUsecase;
 import it.qbsoftware.business.services.get.GetIdentityMethodCallService;
 

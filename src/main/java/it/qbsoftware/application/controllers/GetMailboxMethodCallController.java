@@ -2,8 +2,8 @@ package it.qbsoftware.application.controllers;
 
 import java.util.ArrayList;
 
-import it.qbsoftware.adapters.jmaplib.GetMailboxMethodCallAdapter;
-import it.qbsoftware.adapters.jmaplib.MethodResponseAdapter;
+import it.qbsoftware.adapters.in.jmaplib.GetMailboxMethodCallAdapter;
+import it.qbsoftware.adapters.in.jmaplib.MethodResponseAdapter;
 import it.qbsoftware.business.ports.in.usecase.get.GetMailboxMethodCallUsecase;
 import rs.ltt.jmap.common.method.MethodResponse;
 import rs.ltt.jmap.common.method.call.mailbox.GetMailboxMethodCall;

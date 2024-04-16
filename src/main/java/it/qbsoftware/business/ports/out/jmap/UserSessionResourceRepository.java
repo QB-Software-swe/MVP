@@ -5,7 +5,5 @@ import java.util.Optional;
 
 public interface UserSessionResourceRepository {
 
-    public Optional<SessionResourcePort> retrieve(String username);
-
-    public void save(SessionResourcePort sessionResourcePort);
+    public Optional<SessionResourcePort> retrieve(final String username);
 }

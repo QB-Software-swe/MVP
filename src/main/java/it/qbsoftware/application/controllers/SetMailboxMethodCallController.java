@@ -2,16 +2,16 @@ package it.qbsoftware.application.controllers;
 
 import java.util.ArrayList;
 
-import it.qbsoftware.adapters.jmaplib.SetMailboxMethodCallAdapter;
-import it.qbsoftware.adapters.jmaplib.SetMailboxMethodResponseBuilderAdapter;
-import it.qbsoftware.adapters.jmaplib.error.SetErrorAdapter;
-import it.qbsoftware.adapters.jmaplib.error.StateMismatchMethodErrorResponseAdapter;
-import it.qbsoftware.adapters.jmaplib.utils.CaseFormatAdapter;
-import it.qbsoftware.adapters.jmaplib.utils.SplitterAdapter;
-import it.qbsoftware.adapters.jmaplib.MailboxBuilderAdapter;
-import it.qbsoftware.adapters.jmaplib.MailboxInfoRepositoryAdapter;
-import it.qbsoftware.adapters.jmaplib.MethodResponseAdapter;
-import it.qbsoftware.adapters.jmaplib.RoleAdapter;
+import it.qbsoftware.adapters.in.jmaplib.MailboxBuilderAdapter;
+import it.qbsoftware.adapters.in.jmaplib.MailboxInfoRepositoryAdapter;
+import it.qbsoftware.adapters.in.jmaplib.MethodResponseAdapter;
+import it.qbsoftware.adapters.in.jmaplib.RoleAdapter;
+import it.qbsoftware.adapters.in.jmaplib.SetMailboxMethodCallAdapter;
+import it.qbsoftware.adapters.in.jmaplib.SetMailboxMethodResponseBuilderAdapter;
+import it.qbsoftware.adapters.in.jmaplib.error.SetErrorAdapter;
+import it.qbsoftware.adapters.in.jmaplib.error.StateMismatchMethodErrorResponseAdapter;
+import it.qbsoftware.adapters.in.jmaplib.utils.CaseFormatAdapter;
+import it.qbsoftware.adapters.in.jmaplib.utils.SplitterAdapter;
 import it.qbsoftware.business.ports.in.usecase.set.SetMailboxMethodCallUsecase;
 import it.qbsoftware.business.services.set.SetMailboxMethodCallService;
 import rs.ltt.jmap.common.method.MethodResponse;
