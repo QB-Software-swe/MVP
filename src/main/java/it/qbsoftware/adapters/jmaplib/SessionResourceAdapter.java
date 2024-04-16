@@ -44,4 +44,7 @@ public class SessionResourceAdapter implements SessionResourcePort {
         return sessionResource.getState();
     }
 
+    public SessionResource adaptee() {
+        return this.sessionResource;
+    }
 }

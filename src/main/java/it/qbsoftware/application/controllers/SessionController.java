@@ -1,41 +1,39 @@
 package it.qbsoftware.application.controllers;
 
-import it.qbsoftware.adapters.jmaplib.AccountBuilderAdapter;
-import it.qbsoftware.adapters.jmaplib.MethodResponseAdapter;
 import it.qbsoftware.adapters.jmaplib.SessionResourceAdapter;
-import it.qbsoftware.adapters.jmaplib.SessionResourceBuilderAdapter;
-import it.qbsoftware.adapters.jmaplib.UserSessionResourceRepositoryAdapter;
-import it.qbsoftware.business.services.SessionService;
+import it.qbsoftware.business.ports.in.jmap.EndPointConfiguration;
+import it.qbsoftware.business.ports.in.jmap.SessionResourcePort;
+import it.qbsoftware.business.ports.in.jmap.capabilities.CapabilityPort;
 import it.qbsoftware.business.ports.in.usecase.SessionUsecase;
-import rs.ltt.jmap.common.SessionResource;
-import rs.ltt.jmap.common.method.MethodResponse;
+import java.util.Optional;
 
-import java.util.ArrayList;
+import com.google.gson.Gson;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
+public class SessionController {
+    final SessionUsecase sessionUsecase;
+    final EndPointConfiguration endPointConfiguration;
+    final CapabilityPort[] serverCapabilities;
+    final Gson gson;
 
-@SuppressWarnings("unused")
-public class SessionController extends ControllerHandlerBase{
+    @Inject
+    public SessionController(final SessionUsecase sessionUsecase, final EndPointConfiguration endPointConfiguration,
+            @Named("serverCapabilities") final CapabilityPort[] serverCapabilities, final Gson gson) {
+        this.sessionUsecase = sessionUsecase;
+        this.endPointConfiguration = endPointConfiguration;
+        this.serverCapabilities = serverCapabilities;
+        this.gson = gson;
+    }
 
-    @Override
-    public MethodResponse[] handle(HandlerRequest handlerRequest) {
-        /*if (handlerRequest.methodCall() instanceof SessionResource sessionResource) {
-            
-            SessionResourceAdapter sessionResourceAdapter = new SessionResourceAdapter(sessionResource);
+    public String call(final String user) {
+        Optional<SessionResourcePort> optionalSessionResource = sessionUsecase.call(user, endPointConfiguration,
+                serverCapabilities);
 
-            SessionUsecase sessionService = new SessionService(new SessionResourceBuilderAdapter(), new AccountBuilderAdapter(),new UserSessionResourceRepositoryAdapter());
+        if (optionalSessionResource.isPresent()) {
+            return gson.toJson(((SessionResourceAdapter) optionalSessionResource.get()).adaptee());
+        }
 
-            //TODO ALE : passare nome utente su handlerrequest
-            MethodResponseAdapter[] methodResponseAdapters = (MethodResponseAdapter[]) sessionService.call();
-
-            ArrayList<MethodResponse> methodResponseList = new ArrayList<>();
-
-            for (MethodResponseAdapter methodResponseAdapter : methodResponseAdapters) {
-                methodResponseList.add(methodResponseAdapter.methodResponse());
-            }
-
-            return methodResponseList.toArray(new MethodResponse[0]);
-        }*/
-
-        return super.handle(handlerRequest);
+        return null;
     }
 }

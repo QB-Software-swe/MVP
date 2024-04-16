@@ -28,7 +28,7 @@ public class SessionService implements SessionUsecase {
         @Override
         public Optional<SessionResourcePort> call(final String username,
                         final EndPointConfiguration endPointConfiguration,
-                        final HashMap<Class<? extends CapabilityPort>, CapabilityPort> serverCapabilities) {
+                        final CapabilityPort[] serverCapabilities) {
 
                 sessionResourceBuilderPort.reset();
 

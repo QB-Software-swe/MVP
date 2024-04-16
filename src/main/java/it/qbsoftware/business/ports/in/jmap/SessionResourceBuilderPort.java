@@ -18,7 +18,7 @@ public interface SessionResourceBuilderPort {
 
     public SessionResourceBuilderPort accounts(Map<String, AccountPort> accounts);
 
-    public SessionResourceBuilderPort capabilities(Map<Class<? extends CapabilityPort>, CapabilityPort> capabilities);
+    public SessionResourceBuilderPort capabilities(CapabilityPort[] capabilities);
 
     public SessionResourceBuilderPort primaryAccounts(
             Map<ClassAccountCapabilityPort, String> primaryAccounts);

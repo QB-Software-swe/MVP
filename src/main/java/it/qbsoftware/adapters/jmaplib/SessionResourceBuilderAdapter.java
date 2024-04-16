@@ -1,5 +1,6 @@
 package it.qbsoftware.adapters.jmaplib;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
@@ -60,13 +61,10 @@ public class SessionResourceBuilderAdapter implements SessionResourceBuilderPort
     }
 
     @Override
-    public SessionResourceBuilderPort capabilities(Map<Class<? extends CapabilityPort>, CapabilityPort> capabilities) {
+    public SessionResourceBuilderPort capabilities(CapabilityPort[] capabilities) {
         sessionResourceBuilder.capabilities(
-                capabilities.entrySet()
-                        .stream()
-                        .map(e -> ((CapabilityAdapter) e.getValue()).capability)
+                Arrays.asList(capabilities).stream().map(c -> ((CapabilityAdapter) c).adaptee())
                         .collect(Collectors.toMap(Capability::getClass, c -> c)));
-        // FIXME: check della logica di questo stream
         return this;
     }
 
