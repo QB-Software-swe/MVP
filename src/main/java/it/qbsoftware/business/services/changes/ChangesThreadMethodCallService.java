@@ -1,28 +1,27 @@
 package it.qbsoftware.business.services.changes;
 
-import it.qbsoftware.business.ports.in.jmap.ChangesMailboxMethodCallPort;
+import it.qbsoftware.business.ports.in.jmap.ChangesThreadMethodCallPort;
 import it.qbsoftware.business.ports.in.jmap.MethodResponsePort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
-import it.qbsoftware.business.ports.in.utils.ListMultimapPort;
 import it.qbsoftware.business.ports.in.jmap.error.CannotCalculateChangesMethodErrorResponsePort;
-import it.qbsoftware.business.ports.in.usecase.changes.ChangesMailboxMethodCallUsecase;
+import it.qbsoftware.business.ports.in.usecase.changes.ChangesThreadMethodCallUsecase;
+import it.qbsoftware.business.ports.in.utils.ListMultimapPort;
 
-public class ChangesMailboxMethodCallService implements ChangesMailboxMethodCallUsecase {
+public class ChangesThreadMethodCallService implements ChangesThreadMethodCallUsecase {
+
     final CannotCalculateChangesMethodErrorResponsePort cannotCalculateChangesMethodErrorResponsePort;
 
-    public ChangesMailboxMethodCallService(
+    public ChangesThreadMethodCallService(
             final CannotCalculateChangesMethodErrorResponsePort cannotCalculateChangesMethodErrorResponsePort) {
         this.cannotCalculateChangesMethodErrorResponsePort = cannotCalculateChangesMethodErrorResponsePort;
     }
 
     @Override
-    public MethodResponsePort[] call(final ChangesMailboxMethodCallPort changesMailboxMethodCallPort,
-            final ListMultimapPort<String, ResponseInvocationPort> previousresponses) {
-
+    public MethodResponsePort[] call(ChangesThreadMethodCallPort changesThreadMethodCallPort,
+            ListMultimapPort<String, ResponseInvocationPort> previousresponses) {
         return new MethodResponsePort[] {
                 cannotCalculateChangesMethodErrorResponsePort
         };
-
     }
 
 }

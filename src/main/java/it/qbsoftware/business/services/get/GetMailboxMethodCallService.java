@@ -1,13 +1,7 @@
 package it.qbsoftware.business.services.get;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
 import it.qbsoftware.business.domain.AccountNotFoundMethodErrorResponse;
 import it.qbsoftware.business.domain.AccountState;
-import it.qbsoftware.business.domain.MailboxInfo;
-import it.qbsoftware.business.domain.MailboxInfoConvertToMailboxPort;
 import it.qbsoftware.business.domain.exception.AccountNotFoundException;
 import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
 import it.qbsoftware.business.domain.exception.InvalidResultReferenceExecption;
@@ -21,7 +15,6 @@ import it.qbsoftware.business.domain.util.get.GetRetrivedEntity;
 import it.qbsoftware.business.ports.in.jmap.GetMailboxMethodCallPort;
 import it.qbsoftware.business.ports.in.jmap.GetMailboxMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.MethodResponsePort;
-import it.qbsoftware.business.ports.in.jmap.entity.InvocationResultReferencePort;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
@@ -30,7 +23,6 @@ import it.qbsoftware.business.ports.in.jmap.utility.ResultReferenceResolverPort;
 import it.qbsoftware.business.ports.in.usecase.get.GetMailboxMethodCallUsecase;
 import it.qbsoftware.business.ports.in.utils.ListMultimapPort;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
-import it.qbsoftware.business.ports.out.jmap.MailboxInfoRepository;
 import it.qbsoftware.business.ports.out.jmap.MailboxRepository;
 
 public class GetMailboxMethodCallService implements GetMailboxMethodCallUsecase {
