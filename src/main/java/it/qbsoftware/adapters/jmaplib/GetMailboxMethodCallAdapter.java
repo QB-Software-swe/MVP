@@ -25,4 +25,9 @@ public class GetMailboxMethodCallAdapter implements GetMailboxMethodCallPort {
     public InvocationResultReferencePort getIdsReference() {
         return new InvocationResultReferenceAdapter(getMailboxMethodCall.getIdsReference());
     }
+
+    @Override
+    public String[] getProperties() {
+        return this.getMailboxMethodCall.getProperties();
+    }
 }

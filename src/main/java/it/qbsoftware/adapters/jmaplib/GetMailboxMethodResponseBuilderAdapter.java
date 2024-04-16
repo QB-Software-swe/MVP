@@ -9,16 +9,17 @@ import rs.ltt.jmap.common.entity.Mailbox;
 import rs.ltt.jmap.common.method.response.mailbox.GetMailboxMethodResponse;
 import rs.ltt.jmap.common.method.response.mailbox.GetMailboxMethodResponse.GetMailboxMethodResponseBuilder;
 
-public class GetMailboxMethodResponseBuilderAdapter implements GetMailboxMethodResponseBuilderPort{
+public class GetMailboxMethodResponseBuilderAdapter implements GetMailboxMethodResponseBuilderPort {
     GetMailboxMethodResponseBuilder getMailboxMethodResponseBuilder;
 
-    public GetMailboxMethodResponseBuilderAdapter(){
+    public GetMailboxMethodResponseBuilderAdapter() {
         this.getMailboxMethodResponseBuilder = GetMailboxMethodResponse.builder();
     }
 
     @Override
     public GetMailboxMethodResponseBuilderPort list(MailboxPort[] mailboxs) {
-        getMailboxMethodResponseBuilder.list(Stream.of(mailboxs).map(mailboxPort -> ((MailboxAdapter)mailboxPort).mailbox).toArray(Mailbox[]::new));
+        getMailboxMethodResponseBuilder.list(
+                Stream.of(mailboxs).map(mailboxPort -> ((MailboxAdapter) mailboxPort).mailbox).toArray(Mailbox[]::new));
         return this;
     }
 
@@ -32,6 +33,17 @@ public class GetMailboxMethodResponseBuilderAdapter implements GetMailboxMethodR
     public GetMailboxMethodResponsePort build() {
         return new GetMailboxMethodResponseAdapter(getMailboxMethodResponseBuilder.build());
     }
-    
+
+    @Override
+    public GetMailboxMethodResponseBuilderPort notFound(String[] ids) {
+        getMailboxMethodResponseBuilder.notFound(ids);
+        return this;
+    }
+
+    @Override
+    public GetMailboxMethodResponseBuilderPort reset() {
+        this.getMailboxMethodResponseBuilder = GetMailboxMethodResponse.builder();
+        return this;
+    }
 
 }
