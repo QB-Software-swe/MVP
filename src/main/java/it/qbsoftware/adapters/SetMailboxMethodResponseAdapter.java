@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
-import it.qbsoftware.adapters.in.jmaplib.AbstractIdentifiableEntityAdapter;
+import it.qbsoftware.adapters.in.jmaplib.entity.AbstractIdentifiableEntityAdapter;
 import it.qbsoftware.business.ports.in.jmap.entity.AbstractIdentifiableEntityPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.set.SetMailboxMethodResponsePort;
 import rs.ltt.jmap.common.method.response.mailbox.SetMailboxMethodResponse;

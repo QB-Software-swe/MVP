@@ -8,6 +8,8 @@ import it.qbsoftware.business.domain.AccountUpdate;
 import it.qbsoftware.business.domain.MailboxInfo;
 import it.qbsoftware.business.domain.MailboxInfoConvertToMailboxPort;
 import it.qbsoftware.business.domain.MailboxPatcher;
+import it.qbsoftware.business.ports.in.guava.CaseFormatPort;
+import it.qbsoftware.business.ports.in.guava.SplitterPort;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxPort;
 import it.qbsoftware.business.ports.in.jmap.entity.RolePort;
@@ -18,8 +20,6 @@ import it.qbsoftware.business.ports.in.jmap.method.response.MethodResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.response.set.SetMailboxMethodResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.response.set.SetMailboxMethodResponsePortBuilder;
 import it.qbsoftware.business.ports.in.usecase.set.SetMailboxMethodCallUsecase;
-import it.qbsoftware.business.ports.in.utils.CaseFormatPort;
-import it.qbsoftware.business.ports.in.utils.SplitterPort;
 import it.qbsoftware.business.ports.out.jmap.MailboxInfoRepository;
 
 public class SetMailboxMethodCallService implements SetMailboxMethodCallUsecase {

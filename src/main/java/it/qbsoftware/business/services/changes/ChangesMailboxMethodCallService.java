@@ -1,7 +1,7 @@
 package it.qbsoftware.business.services.changes;
 
+import it.qbsoftware.business.ports.in.guava.ListMultimapPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
-import it.qbsoftware.business.ports.in.utils.ListMultimapPort;
 import it.qbsoftware.business.ports.in.jmap.error.CannotCalculateChangesMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.call.changes.ChangesMailboxMethodCallPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.MethodResponsePort;

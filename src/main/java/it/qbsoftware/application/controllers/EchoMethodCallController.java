@@ -1,8 +1,8 @@
 package it.qbsoftware.application.controllers;
 
-import it.qbsoftware.adapters.in.jmaplib.EchoMethodCallAdapter;
-import it.qbsoftware.adapters.in.jmaplib.EchoMethodResponseBuilderAdapter;
-import it.qbsoftware.adapters.in.jmaplib.MethodResponseAdapter;
+import it.qbsoftware.adapters.in.jmaplib.method.call.other.EchoMethodCallAdapter;
+import it.qbsoftware.adapters.in.jmaplib.method.response.MethodResponseAdapter;
+import it.qbsoftware.adapters.in.jmaplib.method.response.other.EchoMethodResponseBuilderAdapter;
 import it.qbsoftware.business.ports.in.usecase.EchoMethodCallUsecase;
 import it.qbsoftware.business.services.EchoMethodCallSerivce;
 import rs.ltt.jmap.common.method.MethodResponse;

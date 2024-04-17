@@ -9,7 +9,7 @@ import com.google.inject.Inject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Filters;
 
-import it.qbsoftware.adapters.in.jmaplib.SessionResourceAdapter;
+import it.qbsoftware.adapters.in.jmaplib.entity.SessionResourceAdapter;
 import it.qbsoftware.business.ports.in.jmap.entity.SessionResourcePort;
 import it.qbsoftware.business.ports.out.jmap.UserSessionResourceRepository;
 import it.qbsoftware.persistance.MongoConnection;

@@ -11,6 +11,7 @@ import java.time.Instant;
 import it.qbsoftware.business.domain.AccountNotFoundMethodErrorResponse;
 import it.qbsoftware.business.domain.AccountState;
 import it.qbsoftware.business.domain.CreationIdResolver;
+import it.qbsoftware.business.ports.in.guava.ListMultimapPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailBodyPartBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailBodyPartPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailBodyValuePort;
@@ -22,7 +23,6 @@ import it.qbsoftware.business.ports.in.jmap.method.call.set.SetEmailMethodCallPo
 import it.qbsoftware.business.ports.in.jmap.method.response.MethodResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.response.set.SetEmailMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.usecase.set.SetEmailMethodCallUsecase;
-import it.qbsoftware.business.ports.in.utils.ListMultimapPort;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.business.ports.out.jmap.EmailRepository;
 

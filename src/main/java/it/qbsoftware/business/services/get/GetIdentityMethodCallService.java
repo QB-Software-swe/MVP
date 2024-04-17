@@ -12,6 +12,7 @@ import it.qbsoftware.business.domain.util.get.GetIdentityPropertiesFilter;
 import it.qbsoftware.business.domain.util.get.GetMethodCallSetup;
 import it.qbsoftware.business.domain.util.get.GetMethodCallSetupImp;
 import it.qbsoftware.business.domain.util.get.GetRetrivedEntity;
+import it.qbsoftware.business.ports.in.guava.ListMultimapPort;
 import it.qbsoftware.business.ports.in.jmap.entity.IdentityBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.IdentityPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
@@ -20,9 +21,8 @@ import it.qbsoftware.business.ports.in.jmap.error.InvalidResultReferenceMethodEr
 import it.qbsoftware.business.ports.in.jmap.method.call.get.GetIdentityMethodCallPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.MethodResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetIdentityMethodResponseBuilderPort;
-import it.qbsoftware.business.ports.in.jmap.utility.ResultReferenceResolverPort;
+import it.qbsoftware.business.ports.in.jmap.util.ResultReferenceResolverPort;
 import it.qbsoftware.business.ports.in.usecase.get.GetIdentityMethodCallUsecase;
-import it.qbsoftware.business.ports.in.utils.ListMultimapPort;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.business.ports.out.jmap.IdentityRepository;
 

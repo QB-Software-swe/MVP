@@ -1,7 +1,8 @@
 package it.qbsoftware.application;
 
 import com.google.common.collect.ImmutableMap;
-import it.qbsoftware.adapters.in.jmaplib.SessionResourceAdapter;
+
+import it.qbsoftware.adapters.in.jmaplib.entity.SessionResourceAdapter;
 import it.qbsoftware.adapters.out.UserSessionResourceRepositoryAdapter;
 import rs.ltt.jmap.common.SessionResource;
 import rs.ltt.jmap.common.SessionResource.SessionResourceBuilder;

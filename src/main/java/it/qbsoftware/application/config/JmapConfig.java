@@ -1,7 +1,7 @@
 package it.qbsoftware.application.config;
 
-import it.qbsoftware.adapters.in.jmaplib.CapabilityAdapter;
-import it.qbsoftware.business.ports.in.jmap.capabilities.CapabilityPort;
+import it.qbsoftware.adapters.in.jmaplib.entity.CapabilityAdapter;
+import it.qbsoftware.business.ports.in.jmap.capability.CapabilityPort;
 import rs.ltt.jmap.common.entity.capability.CoreCapability;
 import rs.ltt.jmap.common.entity.capability.MailCapability;
 

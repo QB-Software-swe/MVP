@@ -4,11 +4,11 @@ import java.util.ArrayList;
 
 import rs.ltt.jmap.common.method.MethodResponse;
 import rs.ltt.jmap.common.method.call.identity.GetIdentityMethodCall;
-import it.qbsoftware.adapters.in.jmaplib.GetIdentityMethodCallAdapter;
-import it.qbsoftware.adapters.in.jmaplib.GetIdentityMethodResponseBuilderAdapter;
-import it.qbsoftware.adapters.in.jmaplib.InvalidResultReferenceMethodErrorResponseAdapter;
-import it.qbsoftware.adapters.in.jmaplib.MethodResponseAdapter;
-import it.qbsoftware.adapters.in.jmaplib.utils.ResultReferenceResolverAdapter;
+import it.qbsoftware.adapters.in.jmaplib.error.InvalidResultReferenceMethodErrorResponseAdapter;
+import it.qbsoftware.adapters.in.jmaplib.method.call.get.GetIdentityMethodCallAdapter;
+import it.qbsoftware.adapters.in.jmaplib.method.response.MethodResponseAdapter;
+import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetIdentityMethodResponseBuilderAdapter;
+import it.qbsoftware.adapters.in.jmaplib.util.ResultReferenceResolverAdapter;
 import it.qbsoftware.adapters.out.AccountStateRepositoryAdapter;
 import it.qbsoftware.adapters.out.IdentityRepositoryAdapter;
 import it.qbsoftware.business.ports.in.usecase.get.GetIdentityMethodCallUsecase;

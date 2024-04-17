@@ -5,7 +5,7 @@ import java.util.Optional;
 import com.google.inject.Inject;
 
 import it.qbsoftware.business.ports.in.jmap.EndPointConfiguration;
-import it.qbsoftware.business.ports.in.jmap.capabilities.CapabilityPort;
+import it.qbsoftware.business.ports.in.jmap.capability.CapabilityPort;
 import it.qbsoftware.business.ports.in.jmap.entity.AccountBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.SessionResourceBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.SessionResourcePort;

@@ -1,6 +1,6 @@
 package it.qbsoftware.adapters.in.jmaplib.method.call.get;
 
-import it.qbsoftware.adapters.in.jmaplib.InvocationResultReferenceAdapter;
+import it.qbsoftware.adapters.in.jmaplib.entity.InvocationResultReferenceAdapter;
 import it.qbsoftware.business.ports.in.jmap.entity.InvocationResultReferencePort;
 import it.qbsoftware.business.ports.in.jmap.method.call.get.GetMailboxMethodCallPort;
 import rs.ltt.jmap.common.method.call.mailbox.GetMailboxMethodCall;

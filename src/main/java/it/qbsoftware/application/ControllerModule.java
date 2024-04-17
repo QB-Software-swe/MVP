@@ -7,13 +7,13 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 import com.mongodb.client.MongoClients;
 
-import it.qbsoftware.adapters.in.jmaplib.AccountBuilderAdapter;
-import it.qbsoftware.adapters.in.jmaplib.SessionResourceBuilderAdapter;
+import it.qbsoftware.adapters.in.jmaplib.entity.AccountBuilderAdapter;
+import it.qbsoftware.adapters.in.jmaplib.entity.SessionResourceBuilderAdapter;
 import it.qbsoftware.adapters.out.UserSessionResourceRepositoryAdapter;
 import it.qbsoftware.application.config.JmapConfig;
 import it.qbsoftware.application.config.JmapEndpoint;
 import it.qbsoftware.business.ports.in.jmap.EndPointConfiguration;
-import it.qbsoftware.business.ports.in.jmap.capabilities.CapabilityPort;
+import it.qbsoftware.business.ports.in.jmap.capability.CapabilityPort;
 import it.qbsoftware.business.ports.in.jmap.entity.AccountBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.SessionResourceBuilderPort;
 import it.qbsoftware.business.ports.in.usecase.SessionUsecase;

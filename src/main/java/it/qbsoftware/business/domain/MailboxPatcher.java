@@ -3,9 +3,9 @@ package it.qbsoftware.business.domain;
 import java.util.List;
 import java.util.Map;
 
+import it.qbsoftware.business.ports.in.guava.CaseFormatPort;
+import it.qbsoftware.business.ports.in.guava.SplitterPort;
 import it.qbsoftware.business.ports.in.jmap.entity.RolePort;
-import it.qbsoftware.business.ports.in.utils.CaseFormatPort;
-import it.qbsoftware.business.ports.in.utils.SplitterPort;
 
 public class MailboxPatcher {
     final SplitterPort splitterPort;
