@@ -1,7 +1,8 @@
 package it.qbsoftware.business.services;
 
-import java.util.HashMap;
 import java.util.Optional;
+
+import com.google.inject.Inject;
 
 import it.qbsoftware.business.ports.in.jmap.EndPointConfiguration;
 import it.qbsoftware.business.ports.in.jmap.SessionResourceBuilderPort;
@@ -16,6 +17,7 @@ public class SessionService implements SessionUsecase {
         final AccountBuilderPort accountBuilderPort;
         final UserSessionResourceRepository userSessionResourceRepository;
 
+        @Inject
         public SessionService(
                         final SessionResourceBuilderPort sessionResourceBuilderPort,
                         final AccountBuilderPort accountBuilderPort,
@@ -44,9 +46,8 @@ public class SessionService implements SessionUsecase {
                         sessionResourceBuilderPort
                                         .username(username)
                                         .accounts(oldSessionData.get().accounts())
-                                        .state(oldSessionData.get().state()); // FIXME: se c'è una variazione va
-                                                                              // segnalata con un cambio di stato e
-                                                                              // salvata nel db
+                                        .primaryAccounts(oldSessionData.get().primaryAccounts())
+                                        .state(oldSessionData.get().state());
 
                         return Optional.of(sessionResourceBuilderPort.build());
                 }

@@ -142,7 +142,7 @@
           </descriptorRefs>
           <archive>
             <manifest>
-              <mainClass>it.qbsoftware.boot.JettyServer</mainClass>
+              <mainClass>it.qbsoftware.application.JettyServer</mainClass>
             </manifest>
           </archive>
         </configuration>

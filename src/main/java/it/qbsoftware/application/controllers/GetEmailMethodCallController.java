@@ -2,7 +2,6 @@ package it.qbsoftware.application.controllers;
 
 import java.util.ArrayList;
 
-import it.qbsoftware.adapters.in.jmaplib.AccountStateRepositoryAdapter;
 import it.qbsoftware.adapters.in.jmaplib.EmailBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.EmailRepositoryAdapter;
 import it.qbsoftware.adapters.in.jmaplib.GetEmailMethodCallAdapter;
@@ -11,6 +10,7 @@ import it.qbsoftware.adapters.in.jmaplib.InvalidResultReferenceMethodErrorRespon
 import it.qbsoftware.adapters.in.jmaplib.MethodResponseAdapter;
 import it.qbsoftware.adapters.in.jmaplib.error.InvalidArgumentsMethodErrorResponseAdapter;
 import it.qbsoftware.adapters.in.jmaplib.utils.ResultReferenceResolverAdapter;
+import it.qbsoftware.adapters.out.AccountStateRepositoryAdapter;
 import it.qbsoftware.business.ports.in.usecase.get.GetEmailMethodCallUsecase;
 import it.qbsoftware.business.services.get.GetEmailMethodCallService;
 import rs.ltt.jmap.common.method.MethodResponse;

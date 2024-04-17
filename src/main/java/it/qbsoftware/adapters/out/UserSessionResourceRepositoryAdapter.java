@@ -4,6 +4,8 @@ import java.util.Optional;
 
 import org.bson.Document;
 
+import com.google.gson.Gson;
+import com.google.inject.Inject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Filters;
 
@@ -15,7 +17,14 @@ import rs.ltt.jmap.common.SessionResource;
 
 public class UserSessionResourceRepositoryAdapter implements UserSessionResourceRepository {
     private final static String COLLECTION = "Session";
-    private final MongoConnection mongoConnection = new MongoConnection();
+    private final MongoConnection mongoConnection;
+    private final Gson gson;
+
+    @Inject
+    public UserSessionResourceRepositoryAdapter(final MongoConnection mongoConnection, final Gson gson) {
+        this.mongoConnection = mongoConnection;
+        this.gson = gson;
+    }
 
     @Override
     public Optional<SessionResourcePort> retrieve(String username) {
@@ -25,7 +34,7 @@ public class UserSessionResourceRepositoryAdapter implements UserSessionResource
         try {
             if (docs.first() != null) {
                 return Optional.of(new SessionResourceAdapter(
-                        MongoConnection.gson.fromJson(docs.first().toJson(), SessionResource.class)));
+                        gson.fromJson(docs.first().toJson(), SessionResource.class)));
             }
         } catch (final Exception e) {
         }
@@ -39,7 +48,7 @@ public class UserSessionResourceRepositoryAdapter implements UserSessionResource
 
         Document sessionDoc;
         try {
-            sessionDoc = Document.parse(MongoConnection.gson.toJson((sessionResourceAdapter.adaptee())));
+            sessionDoc = Document.parse(gson.toJson((sessionResourceAdapter.adaptee())));
         } catch (Exception e) {
             return false;
         }

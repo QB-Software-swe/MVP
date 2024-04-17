@@ -1,4 +1,4 @@
-package it.qbsoftware.adapters.in.jmaplib;
+package it.qbsoftware.adapters.out;
 
 import java.util.Map;
 

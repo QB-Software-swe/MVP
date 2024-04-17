@@ -1,8 +1,8 @@
 version: "3.8"
 services:
-  pocqb:
+  mvp:
     build: .
-    container_name: poc-qbsoftware
+    container_name: mvo-qbsoftware
     ports:
       - 9999:9999
     links:
