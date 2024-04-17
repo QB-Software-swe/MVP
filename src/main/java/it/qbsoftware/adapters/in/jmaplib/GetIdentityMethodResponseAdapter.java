@@ -1,9 +1,8 @@
 package it.qbsoftware.adapters.in.jmaplib;
 
-import it.qbsoftware.business.ports.in.jmap.GetIdentityMethodResponsePort;
 import rs.ltt.jmap.common.method.response.identity.GetIdentityMethodResponse;
 
-public class GetIdentityMethodResponseAdapter implements GetIdentityMethodResponsePort{
+public class GetIdentityMethodResponseAdapter implements it.qbsoftware.business.ports.in.jmap.method.response.get.GetIdentityMethodResponsePort{
     GetIdentityMethodResponse getIdentityMethodResponse;
 
     public GetIdentityMethodResponseAdapter(GetIdentityMethodResponse getIdentityMethodResponse){

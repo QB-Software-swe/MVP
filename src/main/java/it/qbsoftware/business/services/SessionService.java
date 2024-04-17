@@ -5,10 +5,10 @@ import java.util.Optional;
 import com.google.inject.Inject;
 
 import it.qbsoftware.business.ports.in.jmap.EndPointConfiguration;
-import it.qbsoftware.business.ports.in.jmap.SessionResourceBuilderPort;
-import it.qbsoftware.business.ports.in.jmap.SessionResourcePort;
 import it.qbsoftware.business.ports.in.jmap.capabilities.CapabilityPort;
 import it.qbsoftware.business.ports.in.jmap.entity.AccountBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.entity.SessionResourceBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.entity.SessionResourcePort;
 import it.qbsoftware.business.ports.in.usecase.SessionUsecase;
 import it.qbsoftware.business.ports.out.jmap.UserSessionResourceRepository;
 

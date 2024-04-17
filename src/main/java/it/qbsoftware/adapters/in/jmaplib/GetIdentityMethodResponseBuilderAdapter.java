@@ -2,25 +2,26 @@ package it.qbsoftware.adapters.in.jmaplib;
 
 import java.util.stream.Stream;
 
-import it.qbsoftware.business.ports.in.jmap.GetIdentityMethodResponseBuilderPort;
-import it.qbsoftware.business.ports.in.jmap.GetIdentityMethodResponsePort;
 import it.qbsoftware.business.ports.in.jmap.entity.IdentityPort;
+import it.qbsoftware.business.ports.in.jmap.method.response.get.GetIdentityMethodResponseBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.method.response.get.GetIdentityMethodResponsePort;
 import rs.ltt.jmap.common.entity.Identity;
 import rs.ltt.jmap.common.method.response.identity.GetIdentityMethodResponse;
 import rs.ltt.jmap.common.method.response.identity.GetIdentityMethodResponse.GetIdentityMethodResponseBuilder;
 
-public class GetIdentityMethodResponseBuilderAdapter implements GetIdentityMethodResponseBuilderPort{
+public class GetIdentityMethodResponseBuilderAdapter implements GetIdentityMethodResponseBuilderPort {
     GetIdentityMethodResponseBuilder getIdentityMethodResponseBuilder;
 
-    public GetIdentityMethodResponseBuilderAdapter(){
+    public GetIdentityMethodResponseBuilderAdapter() {
         this.getIdentityMethodResponseBuilder = GetIdentityMethodResponse.builder();
     }
 
     @Override
     public GetIdentityMethodResponseBuilderPort list(IdentityPort[] identityPorts) {
-        getIdentityMethodResponseBuilder.list(Stream.of(identityPorts).map(identityPort -> ((IdentityAdapter)identityPort).identity).toArray(Identity[]::new));
+        getIdentityMethodResponseBuilder.list(Stream.of(identityPorts)
+                .map(identityPort -> ((IdentityAdapter) identityPort).identity).toArray(Identity[]::new));
         return this;
-        
+
     }
 
     @Override
@@ -33,7 +34,7 @@ public class GetIdentityMethodResponseBuilderAdapter implements GetIdentityMetho
     public GetIdentityMethodResponseBuilderPort state(String state) {
         getIdentityMethodResponseBuilder.state(state);
         return this;
-        
+
     }
 
     @Override
@@ -46,6 +47,5 @@ public class GetIdentityMethodResponseBuilderAdapter implements GetIdentityMetho
         this.getIdentityMethodResponseBuilder = GetIdentityMethodResponse.builder();
         return this;
     }
-
 
 }

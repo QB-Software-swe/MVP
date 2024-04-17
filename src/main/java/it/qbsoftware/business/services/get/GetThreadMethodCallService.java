@@ -7,15 +7,15 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import it.qbsoftware.business.ports.in.jmap.GetThreadMethodCallPort;
-import it.qbsoftware.business.ports.in.jmap.GetThreadMethodResponseBuilderPort;
-import it.qbsoftware.business.ports.in.jmap.MethodResponsePort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailPort;
 import it.qbsoftware.business.ports.in.jmap.entity.InvocationResultReferencePort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ThreadBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ThreadPort;
 import it.qbsoftware.business.ports.in.jmap.error.InvalidResultReferenceMethodErrorResponsePort;
+import it.qbsoftware.business.ports.in.jmap.method.call.get.GetThreadMethodCallPort;
+import it.qbsoftware.business.ports.in.jmap.method.response.MethodResponsePort;
+import it.qbsoftware.business.ports.in.jmap.method.response.get.GetThreadMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.utility.ResultReferenceResolverPort;
 import it.qbsoftware.business.ports.in.usecase.get.GetThreadMethodCallUsecase;
 import it.qbsoftware.business.ports.in.utils.ListMultimapPort;
@@ -26,7 +26,7 @@ public class GetThreadMethodCallService implements GetThreadMethodCallUsecase {
     final InvalidResultReferenceMethodErrorResponsePort invalidResultReferenceMethodErrorResponsePort;
     final EmailRepository emailRepository;
     final ThreadBuilderPort threadBuilderPort;
-    final GetThreadMethodResponseBuilderPort getThreadMethodResponseBuilderPort;
+    final it.qbsoftware.business.ports.in.jmap.method.response.get.GetThreadMethodResponseBuilderPort getThreadMethodResponseBuilderPort;
 
     public GetThreadMethodCallService(final ResultReferenceResolverPort referenceResolverPort,
             final InvalidResultReferenceMethodErrorResponsePort invalidResultReferenceMethodErrorResponsePort,

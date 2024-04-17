@@ -2,14 +2,14 @@ package it.qbsoftware.adapters.in.jmaplib;
 
 import java.util.Map;
 
-import it.qbsoftware.business.ports.in.jmap.SetMailboxMethodCallPort;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxPort;
+import it.qbsoftware.business.ports.in.jmap.method.call.set.SetMailboxMethodCallPort;
 import rs.ltt.jmap.common.method.call.mailbox.SetMailboxMethodCall;
 
-public class SetMailboxMethodCallAdapter implements SetMailboxMethodCallPort{
+public class SetMailboxMethodCallAdapter implements SetMailboxMethodCallPort {
     SetMailboxMethodCall setMailboxMethodCall;
 
-    public SetMailboxMethodCallAdapter(SetMailboxMethodCall setMailboxMethodCall){
+    public SetMailboxMethodCallAdapter(SetMailboxMethodCall setMailboxMethodCall) {
         this.setMailboxMethodCall = setMailboxMethodCall;
     }
 

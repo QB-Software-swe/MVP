@@ -1,9 +1,9 @@
 package it.qbsoftware.business.domain;
 
-import it.qbsoftware.business.ports.in.jmap.SetEmailMethodResponsePort;
-import it.qbsoftware.business.ports.in.jmap.SetMailboxMethodResponsePort;
 import it.qbsoftware.business.ports.in.jmap.entity.AbstractIdentifiableEntityPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
+import it.qbsoftware.business.ports.in.jmap.method.response.set.SetEmailMethodResponsePort;
+import it.qbsoftware.business.ports.in.jmap.method.response.set.SetMailboxMethodResponsePort;
 import it.qbsoftware.business.ports.in.utils.ListMultimapPort;
 
 public class CreationIdResolver {

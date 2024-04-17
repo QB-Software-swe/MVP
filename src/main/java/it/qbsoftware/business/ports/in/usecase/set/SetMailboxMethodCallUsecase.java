@@ -1,7 +1,7 @@
 package it.qbsoftware.business.ports.in.usecase.set;
 
-import it.qbsoftware.business.ports.in.jmap.MethodResponsePort;
-import it.qbsoftware.business.ports.in.jmap.SetMailboxMethodCallPort;
+import it.qbsoftware.business.ports.in.jmap.method.call.set.SetMailboxMethodCallPort;
+import it.qbsoftware.business.ports.in.jmap.method.response.MethodResponsePort;
 
 public interface SetMailboxMethodCallUsecase {
 

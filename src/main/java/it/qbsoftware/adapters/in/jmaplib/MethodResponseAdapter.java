@@ -1,6 +1,6 @@
 package it.qbsoftware.adapters.in.jmaplib;
 
-import it.qbsoftware.business.ports.in.jmap.MethodResponsePort;
+import it.qbsoftware.business.ports.in.jmap.method.response.MethodResponsePort;
 import rs.ltt.jmap.common.method.MethodResponse;
 
 public class MethodResponseAdapter implements MethodResponsePort {

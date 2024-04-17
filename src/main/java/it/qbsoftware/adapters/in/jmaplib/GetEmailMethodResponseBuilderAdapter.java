@@ -2,9 +2,9 @@ package it.qbsoftware.adapters.in.jmaplib;
 
 import java.util.stream.Stream;
 
-import it.qbsoftware.business.ports.in.jmap.GetEmailMethodResponseBuilderPort;
-import it.qbsoftware.business.ports.in.jmap.GetEmailMethodResponsePort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailPort;
+import it.qbsoftware.business.ports.in.jmap.method.response.get.GetEmailMethodResponseBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.method.response.get.GetEmailMethodResponsePort;
 import rs.ltt.jmap.common.entity.Email;
 import rs.ltt.jmap.common.method.response.email.GetEmailMethodResponse;
 import rs.ltt.jmap.common.method.response.email.GetEmailMethodResponse.GetEmailMethodResponseBuilder;

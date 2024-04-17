@@ -35,7 +35,7 @@ public class WellKnownHandler extends Handler.Abstract {
         }
 
         String user = null;
-        String password = null;
+        //String password = null;
         {
             final String auth = request.getHeaders().get(HttpHeader.AUTHORIZATION);
             if (auth != null && auth.toLowerCase().startsWith("basic")) {
@@ -44,7 +44,7 @@ public class WellKnownHandler extends Handler.Abstract {
                 String creds = new String(credDecod, StandardCharsets.UTF_8);
                 final String[] values = creds.split(":", 2);
                 user = values[0].split("@")[0];
-                password = values[1];
+                //password = values[1];
             }
         }
 

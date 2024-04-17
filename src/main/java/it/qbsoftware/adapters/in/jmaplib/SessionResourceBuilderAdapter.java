@@ -5,11 +5,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
-import it.qbsoftware.business.ports.in.jmap.SessionResourceBuilderPort;
-import it.qbsoftware.business.ports.in.jmap.SessionResourcePort;
 import it.qbsoftware.business.ports.in.jmap.capabilities.CapabilityPort;
 import it.qbsoftware.business.ports.in.jmap.entity.AccountPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ClassAccountCapabilityPort;
+import it.qbsoftware.business.ports.in.jmap.entity.SessionResourceBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.entity.SessionResourcePort;
 import rs.ltt.jmap.common.SessionResource;
 import rs.ltt.jmap.common.SessionResource.SessionResourceBuilder;
 import rs.ltt.jmap.common.entity.Capability;

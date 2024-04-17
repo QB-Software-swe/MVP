@@ -1,7 +1,7 @@
 package it.qbsoftware.adapters.in.jmaplib;
 
-import it.qbsoftware.business.ports.in.jmap.GetEmailMethodCallPort;
 import it.qbsoftware.business.ports.in.jmap.entity.InvocationResultReferencePort;
+import it.qbsoftware.business.ports.in.jmap.method.call.get.GetEmailMethodCallPort;
 import rs.ltt.jmap.common.method.call.email.GetEmailMethodCall;
 
 public class GetEmailMethodCallAdapter implements GetEmailMethodCallPort {

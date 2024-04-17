@@ -1,7 +1,7 @@
 package it.qbsoftware.adapters.in.jmaplib;
 
-import it.qbsoftware.business.ports.in.jmap.GetIdentityMethodCallPort;
 import it.qbsoftware.business.ports.in.jmap.entity.InvocationResultReferencePort;
+import it.qbsoftware.business.ports.in.jmap.method.call.get.GetIdentityMethodCallPort;
 import rs.ltt.jmap.common.method.call.identity.GetIdentityMethodCall;
 
 public class GetIdentityMethodCallAdapter implements GetIdentityMethodCallPort{

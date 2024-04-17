@@ -6,9 +6,9 @@ import java.util.Map;
 
 import it.qbsoftware.business.domain.exception.InvalidResultReferenceExecption;
 import it.qbsoftware.business.domain.repository.EntityRetriveRepository;
-import it.qbsoftware.business.ports.in.jmap.GetMethodCallPort;
 import it.qbsoftware.business.ports.in.jmap.entity.InvocationResultReferencePort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
+import it.qbsoftware.business.ports.in.jmap.method.call.get.GetMethodCallPort;
 import it.qbsoftware.business.ports.in.jmap.utility.ResultReferenceResolverPort;
 import it.qbsoftware.business.ports.in.utils.ListMultimapPort;
 

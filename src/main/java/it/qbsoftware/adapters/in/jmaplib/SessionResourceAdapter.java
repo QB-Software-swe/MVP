@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
-import it.qbsoftware.business.ports.in.jmap.SessionResourcePort;
 import it.qbsoftware.business.ports.in.jmap.entity.AccountPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ClassAccountCapabilityPort;
+import it.qbsoftware.business.ports.in.jmap.entity.SessionResourcePort;
 import rs.ltt.jmap.common.SessionResource;
 import rs.ltt.jmap.common.entity.capability.MailAccountCapability;
 

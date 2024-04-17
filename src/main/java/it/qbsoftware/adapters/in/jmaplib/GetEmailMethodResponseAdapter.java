@@ -1,6 +1,6 @@
 package it.qbsoftware.adapters.in.jmaplib;
 
-import it.qbsoftware.business.ports.in.jmap.GetEmailMethodResponsePort;
+import it.qbsoftware.business.ports.in.jmap.method.response.get.GetEmailMethodResponsePort;
 import rs.ltt.jmap.common.method.response.email.GetEmailMethodResponse;
 
 public class GetEmailMethodResponseAdapter implements GetEmailMethodResponsePort{

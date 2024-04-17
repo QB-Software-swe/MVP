@@ -1,7 +1,7 @@
 package it.qbsoftware.adapters.in.jmaplib;
 
-import it.qbsoftware.business.ports.in.jmap.EchoMethodResponseBuilderPort;
-import it.qbsoftware.business.ports.in.jmap.MethodResponsePort;
+import it.qbsoftware.business.ports.in.jmap.method.response.MethodResponsePort;
+import it.qbsoftware.business.ports.in.jmap.method.response.other.EchoMethodResponseBuilderPort;
 import rs.ltt.jmap.common.method.response.core.EchoMethodResponse;
 import rs.ltt.jmap.common.method.response.core.EchoMethodResponse.EchoMethodResponseBuilder;
 

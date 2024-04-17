@@ -1,6 +1,6 @@
 package it.qbsoftware.adapters.in.jmaplib;
 
-import it.qbsoftware.business.ports.in.jmap.EchoMethodCallPort;
+import it.qbsoftware.business.ports.in.jmap.method.call.other.EchoMethodCallPort;
 import rs.ltt.jmap.common.method.call.core.EchoMethodCall;
 
 public class EchoMethodCallAdapter implements EchoMethodCallPort {

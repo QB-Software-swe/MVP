@@ -1,11 +1,11 @@
 package it.qbsoftware.adapters.in.jmaplib;
 
-import it.qbsoftware.business.ports.in.jmap.SetMailboxMethodResponsePort;
 import it.qbsoftware.adapters.SetMailboxMethodResponseAdapter;
 import it.qbsoftware.adapters.in.jmaplib.error.SetErrorAdapter;
-import it.qbsoftware.business.ports.in.jmap.SetMailboxMethodResponsePortBuilder;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxPort;
 import it.qbsoftware.business.ports.in.jmap.error.SetErrorPort;
+import it.qbsoftware.business.ports.in.jmap.method.response.set.SetMailboxMethodResponsePort;
+import it.qbsoftware.business.ports.in.jmap.method.response.set.SetMailboxMethodResponsePortBuilder;
 import rs.ltt.jmap.common.method.response.mailbox.SetMailboxMethodResponse;
 
 public class SetMailboxMethodResponseBuilderAdapter implements SetMailboxMethodResponsePortBuilder {
