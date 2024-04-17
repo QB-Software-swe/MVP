@@ -12,7 +12,7 @@ import org.eclipse.jetty.util.Callback;
 
 import com.google.inject.Inject;
 
-import it.qbsoftware.application.controllers.SessionController;
+import it.qbsoftware.application.controllers.other.SessionController;
 
 public class WellKnownHandler extends Handler.Abstract {
     final SessionController sessionController;

@@ -9,7 +9,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 import it.qbsoftware.adapters.out.UserSessionResourceRepositoryAdapter;
-import it.qbsoftware.application.controllers.SessionController;
+import it.qbsoftware.application.controllers.other.SessionController;
 import it.qbsoftware.application.handlers.ApiHandler;
 import it.qbsoftware.application.handlers.WellKnownHandler;
 

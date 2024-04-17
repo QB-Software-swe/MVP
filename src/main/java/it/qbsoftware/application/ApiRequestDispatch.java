@@ -5,8 +5,8 @@ import com.google.gson.GsonBuilder;
 
 import it.qbsoftware.adapters.in.guava.ListMultimapAdapter;
 import it.qbsoftware.adapters.in.jmaplib.entity.ResponseInvocationAdapter;
-import it.qbsoftware.application.controllers.EchoMethodCallController;
 import it.qbsoftware.application.controllers.HandlerRequest;
+import it.qbsoftware.application.controllers.other.EchoMethodCallController;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
 import rs.ltt.jmap.common.GenericResponse;
 import rs.ltt.jmap.common.Request;

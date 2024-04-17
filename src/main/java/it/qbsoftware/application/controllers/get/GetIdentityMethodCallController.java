@@ -1,4 +1,4 @@
-package it.qbsoftware.application.controllers;
+package it.qbsoftware.application.controllers.get;
 
 import java.util.ArrayList;
 
@@ -11,6 +11,8 @@ import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetIdentityMethodRe
 import it.qbsoftware.adapters.in.jmaplib.util.ResultReferenceResolverAdapter;
 import it.qbsoftware.adapters.out.AccountStateRepositoryAdapter;
 import it.qbsoftware.adapters.out.IdentityRepositoryAdapter;
+import it.qbsoftware.application.controllers.ControllerHandlerBase;
+import it.qbsoftware.application.controllers.HandlerRequest;
 import it.qbsoftware.business.ports.in.usecase.get.GetIdentityMethodCallUsecase;
 import it.qbsoftware.business.services.get.GetIdentityMethodCallService;
 

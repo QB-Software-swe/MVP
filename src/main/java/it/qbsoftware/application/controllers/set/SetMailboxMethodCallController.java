@@ -1,4 +1,4 @@
-package it.qbsoftware.application.controllers;
+package it.qbsoftware.application.controllers.set;
 
 import java.util.ArrayList;
 
@@ -12,6 +12,8 @@ import it.qbsoftware.adapters.in.jmaplib.method.call.set.SetMailboxMethodCallAda
 import it.qbsoftware.adapters.in.jmaplib.method.response.MethodResponseAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.set.SetMailboxMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.out.MailboxInfoRepositoryAdapter;
+import it.qbsoftware.application.controllers.ControllerHandlerBase;
+import it.qbsoftware.application.controllers.HandlerRequest;
 import it.qbsoftware.business.ports.in.usecase.set.SetMailboxMethodCallUsecase;
 import it.qbsoftware.business.services.set.SetMailboxMethodCallService;
 import rs.ltt.jmap.common.method.MethodResponse;
