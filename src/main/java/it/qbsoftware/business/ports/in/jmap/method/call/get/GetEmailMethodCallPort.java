@@ -5,7 +5,7 @@ public interface GetEmailMethodCallPort extends GetMethodCallPort {
 
     public Boolean getFetchTextBodyValues();
 
-    public Boolean getFetchHTMLBodyValues();
+    public Boolean getFetchHtmlBodyValues();
 
     public Boolean getFetchAllBodyValues();
 

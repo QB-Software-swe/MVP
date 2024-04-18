@@ -19,11 +19,8 @@ public class MailboxAdapter implements MailboxPort {
 
     @Override
     public RolePort getRole() {
-        return new RoleAdapter(mailbox.getRole());
-    }
-
-    public Mailbox mailbox() {
-        return this.mailbox;
+        var mailboxRole = mailbox.getRole();
+        return mailboxRole != null ? new RoleAdapter(mailboxRole) : null;
     }
 
     @Override

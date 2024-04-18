@@ -1,27 +1,28 @@
-package it.qbsoftware.business.domain.util.get;
+package it.qbsoftware.business.domain.methodcall.filter.standard;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
+import it.qbsoftware.business.domain.methodcall.filter.IdentityPropertiesFilter;
 import it.qbsoftware.business.ports.in.jmap.entity.IdentityBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.IdentityPort;
 
-public class GetIdentityPropertiesFilter implements GetEntityPropertiesFilter<IdentityPort> {
+public class StandardIdentityPropertiesFilter implements IdentityPropertiesFilter {
     final IdentityBuilderPort identityBuilderPort;
 
-    public GetIdentityPropertiesFilter(final IdentityBuilderPort identityBuilderPort) {
-        this.identityBuilderPort = identityBuilderPort;
+    public StandardIdentityPropertiesFilter(final IdentityBuilderPort identityBuilderPort) {
+        this.identityBuilderPort = identityBuilderPort.reset();
     }
 
     @Override
-    public IdentityPort[] filter(IdentityPort[] entities, String[] properties) throws InvalidArgumentsException {
-        if (properties == null) {
-            return entities;
+    public IdentityPort[] filter(IdentityPort[] identityPorts, String[] properties) throws InvalidArgumentsException {
+        if (identityPorts == null) {
+            return identityPorts;
         }
 
-        List<IdentityPort> filtredIdenities = new ArrayList<IdentityPort>();
-        for (IdentityPort identityPort : entities) {
+        final List<IdentityPort> filtredIdenities = new ArrayList<IdentityPort>();
+        for (IdentityPort identityPort : identityPorts) {
             filtredIdenities.add(identityFilter(identityPort, properties));
         }
 
@@ -33,7 +34,8 @@ public class GetIdentityPropertiesFilter implements GetEntityPropertiesFilter<Id
         IdentityBuilderPort identityBuilder = identityBuilderPort.reset();
         identityBuilder.id(identityPort.getId());
 
-        for (final String property : properties) {
+        for (final String property : properties) { // FIXME: check completezza. Nel caso in cui fosse incompleto allora
+                                                   // completarlo
             identityBuilder = switch (property) {
                 case "name":
                     yield identityBuilder.name(identityPort.getName());
@@ -63,5 +65,4 @@ public class GetIdentityPropertiesFilter implements GetEntityPropertiesFilter<Id
 
         return identityBuilder.build();
     }
-
 }

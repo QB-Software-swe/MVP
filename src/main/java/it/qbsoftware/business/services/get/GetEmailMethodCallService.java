@@ -1,19 +1,17 @@
 package it.qbsoftware.business.services.get;
 
-import it.qbsoftware.business.domain.AccountNotFoundMethodErrorResponse;
-import it.qbsoftware.business.domain.AccountState;
+import com.google.inject.Inject;
+
+import it.qbsoftware.business.domain.entity.AccountState;
 import it.qbsoftware.business.domain.exception.AccountNotFoundException;
 import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
 import it.qbsoftware.business.domain.exception.InvalidResultReferenceExecption;
-import it.qbsoftware.business.domain.util.MethodCallSetup;
-import it.qbsoftware.business.domain.util.get.GetEmailPropertiesFilter;
-import it.qbsoftware.business.domain.util.get.GetEntityPropertiesFilter;
-import it.qbsoftware.business.domain.util.get.GetRetrivedEntity;
-import it.qbsoftware.business.domain.util.get.GetMethodCallSetup;
-import it.qbsoftware.business.domain.util.get.GetMethodCallSetupImp;
-import it.qbsoftware.business.domain.util.CommonMethodCallSetup;
+import it.qbsoftware.business.domain.methodcall.filter.EmailFilterBodyPartSettings;
+import it.qbsoftware.business.domain.methodcall.filter.EmailPropertiesFilter;
+import it.qbsoftware.business.domain.methodcall.process.get.GetReferenceIdsResolver;
+import it.qbsoftware.business.domain.methodcall.response.AccountNotFoundMethodErrorResponse;
+import it.qbsoftware.business.domain.util.get.RetrivedEntity;
 import it.qbsoftware.business.ports.in.guava.ListMultimapPort;
-import it.qbsoftware.business.ports.in.jmap.entity.EmailBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
 import it.qbsoftware.business.ports.in.jmap.error.InvalidArgumentsMethodErrorResponsePort;
@@ -21,7 +19,6 @@ import it.qbsoftware.business.ports.in.jmap.error.InvalidResultReferenceMethodEr
 import it.qbsoftware.business.ports.in.jmap.method.call.get.GetEmailMethodCallPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.MethodResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetEmailMethodResponseBuilderPort;
-import it.qbsoftware.business.ports.in.jmap.util.ResultReferenceResolverPort;
 import it.qbsoftware.business.ports.in.usecase.get.GetEmailMethodCallUsecase;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.business.ports.out.jmap.EmailRepository;
@@ -29,71 +26,65 @@ import it.qbsoftware.business.ports.out.jmap.EmailRepository;
 public class GetEmailMethodCallService implements GetEmailMethodCallUsecase {
     final InvalidResultReferenceMethodErrorResponsePort invalidResultReferenceMethodErrorResponsePort;
     final InvalidArgumentsMethodErrorResponsePort invalidArgumentsMethodErrorResponsePort;
-    final EmailRepository emailRepository;
-    final EmailBuilderPort emailBuilderPort;
     final GetEmailMethodResponseBuilderPort getEmailMethodResponseBuilderPort;
-    final CommonMethodCallSetup commonMethodCallSetup;
-    final GetMethodCallSetup<EmailPort> getMethodCallSetup;
+    final AccountStateRepository accountStateRepository;
+    final EmailRepository emailRepository;
+    final GetReferenceIdsResolver getReferenceIdsResolver;
+    final EmailPropertiesFilter emailPropertiesFilter;
 
-    public GetEmailMethodCallService(final EmailRepository emailRepository,
-            final InvalidResultReferenceMethodErrorResponsePort invalidResultReferenceMethodErrorResponsePort,
-            final ResultReferenceResolverPort resultReferenceResolverPort,
+    @Inject
+    public GetEmailMethodCallService(final AccountStateRepository accountStateRepository,
+            final EmailPropertiesFilter emailPropertiesFilter, final EmailRepository emailRepository,
             final GetEmailMethodResponseBuilderPort getEmailMethodResponseBuilderPort,
-            final EmailBuilderPort emailBuilderPort,
+            final GetReferenceIdsResolver getReferenceIdsResolver,
             final InvalidArgumentsMethodErrorResponsePort invalidArgumentsMethodErrorResponsePort,
-            final AccountStateRepository accountStateRepository) {
+            final InvalidResultReferenceMethodErrorResponsePort invalidResultReferenceMethodErrorResponsePort) {
         this.invalidResultReferenceMethodErrorResponsePort = invalidResultReferenceMethodErrorResponsePort;
         this.invalidArgumentsMethodErrorResponsePort = invalidArgumentsMethodErrorResponsePort;
-        this.emailRepository = emailRepository;
-        this.emailBuilderPort = emailBuilderPort;
         this.getEmailMethodResponseBuilderPort = getEmailMethodResponseBuilderPort;
-
-        this.commonMethodCallSetup = new MethodCallSetup(accountStateRepository);
-        this.getMethodCallSetup = new GetMethodCallSetupImp<EmailPort>(
-                resultReferenceResolverPort, emailRepository);
+        this.accountStateRepository = accountStateRepository;
+        this.emailRepository = emailRepository;
+        this.getReferenceIdsResolver = getReferenceIdsResolver;
+        this.emailPropertiesFilter = emailPropertiesFilter;
     }
 
     @Override
     public MethodResponsePort[] call(final GetEmailMethodCallPort getEmailMethodCallPort,
             final ListMultimapPort<String, ResponseInvocationPort> previousResponses) {
-        getEmailMethodResponseBuilderPort.reset();
 
-        AccountState accountState = null;
         try {
-            accountState = commonMethodCallSetup.accountState(getEmailMethodCallPort.accountId());
+            final String accountId = getEmailMethodCallPort.accountId();
+            final AccountState accountState = accountStateRepository.retrive(accountId);
+
+            final String[] emailIds = getReferenceIdsResolver.resolve(getEmailMethodCallPort, previousResponses);
+
+            final RetrivedEntity<EmailPort> retrivedEmailsResult = emailIds != null
+                    ? emailRepository.retrive(emailIds)
+                    : emailRepository.retriveAll(accountId);
+
+            final EmailFilterBodyPartSettings emailFilterBodyPartSettings = new EmailFilterBodyPartSettings(
+                    getEmailMethodCallPort.getBodyProperties(), getEmailMethodCallPort.getFetchTextBodyValues(),
+                    getEmailMethodCallPort.getFetchHtmlBodyValues(), getEmailMethodCallPort.getFetchAllBodyValues(),
+                    getEmailMethodCallPort.getMaxBodyValueBytes());
+
+            final EmailPort[] emailsFiltred = emailPropertiesFilter.filter(retrivedEmailsResult.found(),
+                    getEmailMethodCallPort.getProperties(), emailFilterBodyPartSettings);
+
+            return new MethodResponsePort[] {
+                    getEmailMethodResponseBuilderPort
+                            .reset()
+                            .list(emailsFiltred)
+                            .notFound(retrivedEmailsResult.notFound())
+                            .state(accountState.emailState())
+                            .build()
+            };
+
         } catch (final AccountNotFoundException accountNotFoundException) {
             return new MethodResponsePort[] { new AccountNotFoundMethodErrorResponse() };
-        }
-
-        GetRetrivedEntity<EmailPort> getRetrivedEmails;
-        try {
-            getRetrivedEmails = getMethodCallSetup.getEntity(getEmailMethodCallPort, previousResponses);
         } catch (final InvalidResultReferenceExecption invalidResultReferenceExecption) {
             return new MethodResponsePort[] { invalidResultReferenceMethodErrorResponsePort };
-        }
-
-        final GetEntityPropertiesFilter<EmailPort> getEmailPropertiesFilter = new GetEmailPropertiesFilter(
-                emailBuilderPort.reset(),
-                getEmailMethodCallPort.getBodyProperties(), getEmailMethodCallPort.getFetchTextBodyValues(),
-                getEmailMethodCallPort.getFetchHTMLBodyValues(), getEmailMethodCallPort.getFetchAllBodyValues(),
-                getEmailMethodCallPort.getMaxBodyValueBytes());
-
-        final EmailPort[] emailsFiltred;
-        try {
-            emailsFiltred = getEmailPropertiesFilter.filter(getRetrivedEmails.found(),
-                    getEmailMethodCallPort.getProperties());
-        } catch (InvalidArgumentsException invalidArgumentsException) {
+        } catch (final InvalidArgumentsException invalidArgumentsException) {
             return new MethodResponsePort[] { invalidArgumentsMethodErrorResponsePort };
         }
-
-        return new MethodResponsePort[] {
-                getEmailMethodResponseBuilderPort
-                        .reset()
-                        .list(emailsFiltred)
-                        .notFound(getRetrivedEmails.notFound())
-                        .state(accountState.emailState())
-                        .build()
-        };
     }
-
 }

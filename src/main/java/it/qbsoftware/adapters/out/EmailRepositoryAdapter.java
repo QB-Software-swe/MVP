@@ -1,34 +1,31 @@
 package it.qbsoftware.adapters.out;
 
-import java.util.Map;
-
 import it.qbsoftware.business.domain.util.get.RetrivedEntity;
-import it.qbsoftware.business.ports.in.jmap.entity.IdentityPort;
-import it.qbsoftware.business.ports.out.jmap.IdentityRepository;
-import rs.ltt.jmap.common.entity.Identity;
+import it.qbsoftware.business.ports.in.jmap.entity.EmailPort;
+import it.qbsoftware.business.ports.out.jmap.EmailRepository;
 
-public class IdentityRepositoryAdapter implements IdentityRepository {
+public class EmailRepositoryAdapter implements EmailRepository {
 
     @Override
-    public RetrivedEntity<IdentityPort> retriveAll(String accountId) {
+    public RetrivedEntity<EmailPort> retriveAll(String accountId) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'retriveAll'");
     }
 
     @Override
-    public RetrivedEntity<IdentityPort> retrive(String[] ids) {
+    public RetrivedEntity<EmailPort> retrive(String[] ids) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'retrive'");
     }
 
     @Override
-    public boolean destroy(String id) {
+    public boolean destroy(String emailId) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'destroy'");
     }
 
     @Override
-    public boolean save(IdentityPort identityPort) {
+    public boolean save(EmailPort emailPort) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'save'");
     }

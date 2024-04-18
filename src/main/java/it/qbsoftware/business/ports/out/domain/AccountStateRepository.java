@@ -1,8 +1,10 @@
 package it.qbsoftware.business.ports.out.domain;
 
-import java.util.Optional;
-import it.qbsoftware.business.domain.AccountState;
+import it.qbsoftware.business.domain.entity.AccountState;
+import it.qbsoftware.business.domain.exception.AccountNotFoundException;
 
 public interface AccountStateRepository {
-    public Optional<AccountState> retrive(String accountId);
+    public AccountState retrive(final String accountId) throws AccountNotFoundException;
+
+    public void save(final AccountState accountState);
 }

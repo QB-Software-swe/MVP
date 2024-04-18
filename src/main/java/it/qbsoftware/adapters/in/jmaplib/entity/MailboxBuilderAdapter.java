@@ -58,11 +58,6 @@ public class MailboxBuilderAdapter implements MailboxBuilderPort {
     }
 
     @Override
-    public MailboxPort build() {
-        return new MailboxAdapter(mailboxBuilder.build());
-    }
-
-    @Override
     public MailboxBuilderPort parentId(String parentId) {
         this.mailboxBuilder.parentId(parentId);
         return this;
@@ -81,9 +76,14 @@ public class MailboxBuilderAdapter implements MailboxBuilderPort {
     }
 
     @Override
-    public MailboxBuilderPort getIsSubscribed(Boolean isSubscribed) {
+    public MailboxBuilderPort isSubscribed(Boolean isSubscribed) {
         this.mailboxBuilder.isSubscribed(isSubscribed);
         return this;
+    }
+
+    @Override
+    public MailboxPort build() {
+        return new MailboxAdapter(mailboxBuilder.build());
     }
 
     @Override

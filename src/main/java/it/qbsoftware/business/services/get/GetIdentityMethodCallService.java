@@ -1,19 +1,16 @@
 package it.qbsoftware.business.services.get;
 
-import it.qbsoftware.business.domain.AccountNotFoundMethodErrorResponse;
-import it.qbsoftware.business.domain.AccountState;
+import com.google.inject.Inject;
+
+import it.qbsoftware.business.domain.entity.AccountState;
 import it.qbsoftware.business.domain.exception.AccountNotFoundException;
 import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
 import it.qbsoftware.business.domain.exception.InvalidResultReferenceExecption;
-import it.qbsoftware.business.domain.util.CommonMethodCallSetup;
-import it.qbsoftware.business.domain.util.MethodCallSetup;
-import it.qbsoftware.business.domain.util.get.GetEntityPropertiesFilter;
-import it.qbsoftware.business.domain.util.get.GetIdentityPropertiesFilter;
-import it.qbsoftware.business.domain.util.get.GetMethodCallSetup;
-import it.qbsoftware.business.domain.util.get.GetMethodCallSetupImp;
-import it.qbsoftware.business.domain.util.get.GetRetrivedEntity;
+import it.qbsoftware.business.domain.methodcall.filter.IdentityPropertiesFilter;
+import it.qbsoftware.business.domain.methodcall.process.get.GetReferenceIdsResolver;
+import it.qbsoftware.business.domain.methodcall.response.AccountNotFoundMethodErrorResponse;
+import it.qbsoftware.business.domain.util.get.RetrivedEntity;
 import it.qbsoftware.business.ports.in.guava.ListMultimapPort;
-import it.qbsoftware.business.ports.in.jmap.entity.IdentityBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.IdentityPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
 import it.qbsoftware.business.ports.in.jmap.error.InvalidArgumentsMethodErrorResponsePort;
@@ -21,7 +18,6 @@ import it.qbsoftware.business.ports.in.jmap.error.InvalidResultReferenceMethodEr
 import it.qbsoftware.business.ports.in.jmap.method.call.get.GetIdentityMethodCallPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.MethodResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetIdentityMethodResponseBuilderPort;
-import it.qbsoftware.business.ports.in.jmap.util.ResultReferenceResolverPort;
 import it.qbsoftware.business.ports.in.usecase.get.GetIdentityMethodCallUsecase;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.business.ports.out.jmap.IdentityRepository;
@@ -30,60 +26,59 @@ public class GetIdentityMethodCallService implements GetIdentityMethodCallUsecas
     final GetIdentityMethodResponseBuilderPort getIdentityMethodResponseBuilderPort;
     final InvalidResultReferenceMethodErrorResponsePort invalidResultReferenceMethodErrorResponsePort;
     final InvalidArgumentsMethodErrorResponsePort invalidArgumentsMethodErrorResponsePort;
-    final CommonMethodCallSetup commonMethodCallSetup;
-    final GetMethodCallSetup<IdentityPort> getMethodCallSetup;
-    final GetEntityPropertiesFilter<IdentityPort> getIdentityPropertiesFilter;
+    final AccountStateRepository accountStateRepository;
+    final GetReferenceIdsResolver getReferenceIdsResolver;
+    final IdentityRepository identityRepository;
+    final IdentityPropertiesFilter identityPropertiesFilter;
 
-    public GetIdentityMethodCallService(final IdentityRepository identityRepository,
+    @Inject
+    public GetIdentityMethodCallService(final AccountStateRepository accountStateRepository,
             final GetIdentityMethodResponseBuilderPort getIdentityMethodResponseBuilderPort,
-            final AccountStateRepository accountStateRepository,
-            final InvalidResultReferenceMethodErrorResponsePort invalidResultReferenceMethodErrorResponsePort,
-            final ResultReferenceResolverPort resultReferenceResolverPort,
-            final IdentityBuilderPort identityBuilderPort,
-            final InvalidArgumentsMethodErrorResponsePort invalidArgumentsMethodErrorResponsePort) {
+            final GetReferenceIdsResolver getReferenceIdsResolver,
+            final IdentityPropertiesFilter identityPropertiesFilter, final IdentityRepository identityRepository,
+            final InvalidArgumentsMethodErrorResponsePort invalidArgumentsMethodErrorResponsePort,
+            final InvalidResultReferenceMethodErrorResponsePort invalidResultReferenceMethodErrorResponsePort) {
         this.getIdentityMethodResponseBuilderPort = getIdentityMethodResponseBuilderPort;
         this.invalidResultReferenceMethodErrorResponsePort = invalidResultReferenceMethodErrorResponsePort;
         this.invalidArgumentsMethodErrorResponsePort = invalidArgumentsMethodErrorResponsePort;
-
-        this.commonMethodCallSetup = new MethodCallSetup(accountStateRepository);
-        this.getMethodCallSetup = new GetMethodCallSetupImp<IdentityPort>(resultReferenceResolverPort,
-                identityRepository);
-        this.getIdentityPropertiesFilter = new GetIdentityPropertiesFilter(identityBuilderPort);
+        this.accountStateRepository = accountStateRepository;
+        this.getReferenceIdsResolver = getReferenceIdsResolver;
+        this.identityRepository = identityRepository;
+        this.identityPropertiesFilter = identityPropertiesFilter;
     }
 
     @Override
     public MethodResponsePort[] call(final GetIdentityMethodCallPort getIdentityMethodCallPort,
             final ListMultimapPort<String, ResponseInvocationPort> previousResponses) {
 
-        AccountState accountState;
         try {
-            accountState = commonMethodCallSetup.accountState(getIdentityMethodCallPort.accountId());
+            final String accountId = getIdentityMethodCallPort.accountId();
+            final AccountState accountState = accountStateRepository.retrive(accountId);
+
+            final String[] identityIds = getReferenceIdsResolver.resolve(getIdentityMethodCallPort, previousResponses);
+
+            final RetrivedEntity<IdentityPort> retrivedIdentities = identityIds != null
+                    ? identityRepository.retrive(identityIds)
+                    : identityRepository.retriveAll(accountId);
+
+            final IdentityPort[] identityFiltred = identityPropertiesFilter.filter(retrivedIdentities.found(),
+                    identityIds);
+
+            return new MethodResponsePort[] {
+                    getIdentityMethodResponseBuilderPort
+                            .reset()
+                            .list(identityFiltred)
+                            .notFound(retrivedIdentities.notFound())
+                            .state(accountState.identityState())
+                            .build()
+            };
+
         } catch (final AccountNotFoundException accountNotFoundException) {
             return new MethodResponsePort[] { new AccountNotFoundMethodErrorResponse() };
-        }
-
-        GetRetrivedEntity<IdentityPort> getRetrivedIdentities;
-        try {
-            getRetrivedIdentities = getMethodCallSetup.getEntity(getIdentityMethodCallPort, previousResponses);
         } catch (final InvalidResultReferenceExecption invalidResultReferenceExecption) {
             return new MethodResponsePort[] { invalidResultReferenceMethodErrorResponsePort };
-        }
-
-        final IdentityPort[] identitiesFiltred;
-        try {
-            identitiesFiltred = getIdentityPropertiesFilter.filter(getRetrivedIdentities.found(),
-                    getIdentityMethodCallPort.getProperties());
         } catch (final InvalidArgumentsException invalidArgumentsException) {
             return new MethodResponsePort[] { invalidArgumentsMethodErrorResponsePort };
         }
-
-        return new MethodResponsePort[] {
-                getIdentityMethodResponseBuilderPort
-                        .reset()
-                        .list(identitiesFiltred)
-                        .notFound(getRetrivedIdentities.notFound())
-                        .state(accountState.identityState())
-                        .build()
-        };
     }
 }

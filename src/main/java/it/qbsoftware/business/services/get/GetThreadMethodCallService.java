@@ -1,82 +1,79 @@
 package it.qbsoftware.business.services.get;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
+import it.qbsoftware.business.domain.entity.AccountState;
+import it.qbsoftware.business.domain.exception.AccountNotFoundException;
+import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
+import it.qbsoftware.business.domain.exception.InvalidResultReferenceExecption;
+import it.qbsoftware.business.domain.methodcall.filter.ThreadPropertiesFilter;
+import it.qbsoftware.business.domain.methodcall.process.get.GetReferenceIdsResolver;
+import it.qbsoftware.business.domain.methodcall.response.AccountNotFoundMethodErrorResponse;
+import it.qbsoftware.business.domain.util.get.RetrivedEntity;
 import it.qbsoftware.business.ports.in.guava.ListMultimapPort;
-import it.qbsoftware.business.ports.in.jmap.entity.EmailPort;
-import it.qbsoftware.business.ports.in.jmap.entity.InvocationResultReferencePort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
-import it.qbsoftware.business.ports.in.jmap.entity.ThreadBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ThreadPort;
+import it.qbsoftware.business.ports.in.jmap.error.InvalidArgumentsMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.error.InvalidResultReferenceMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.call.get.GetThreadMethodCallPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.MethodResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetThreadMethodResponseBuilderPort;
-import it.qbsoftware.business.ports.in.jmap.util.ResultReferenceResolverPort;
 import it.qbsoftware.business.ports.in.usecase.get.GetThreadMethodCallUsecase;
-import it.qbsoftware.business.ports.out.jmap.EmailRepository;
+import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
+import it.qbsoftware.business.ports.out.jmap.ThreadRepository;
 
 public class GetThreadMethodCallService implements GetThreadMethodCallUsecase {
-    final ResultReferenceResolverPort referenceResolverPort;
+    final AccountStateRepository accountStateRepository;
+    final GetReferenceIdsResolver getReferenceIdsResolver;
+    final ThreadRepository threadRepository;
+    final ThreadPropertiesFilter threadPropertiesFilter;
+    final GetThreadMethodResponseBuilderPort getThreadMethodResponseBuilderPort;
     final InvalidResultReferenceMethodErrorResponsePort invalidResultReferenceMethodErrorResponsePort;
-    final EmailRepository emailRepository;
-    final ThreadBuilderPort threadBuilderPort;
-    final it.qbsoftware.business.ports.in.jmap.method.response.get.GetThreadMethodResponseBuilderPort getThreadMethodResponseBuilderPort;
+    final InvalidArgumentsMethodErrorResponsePort invalidArgumentsMethodErrorResponsePort;
 
-    public GetThreadMethodCallService(final ResultReferenceResolverPort referenceResolverPort,
-            final InvalidResultReferenceMethodErrorResponsePort invalidResultReferenceMethodErrorResponsePort,
-            final EmailRepository emailRepository, final ThreadBuilderPort threadBuilderPort,
-            final GetThreadMethodResponseBuilderPort getThreadMethodResponseBuilderPort) {
-        this.referenceResolverPort = referenceResolverPort;
-        this.invalidResultReferenceMethodErrorResponsePort = invalidResultReferenceMethodErrorResponsePort;
-        this.emailRepository = emailRepository;
-        this.threadBuilderPort = threadBuilderPort;
+    public GetThreadMethodCallService(final AccountStateRepository accountStateRepository,
+            final GetReferenceIdsResolver getReferenceIdsResolver,
+            final GetThreadMethodResponseBuilderPort getThreadMethodResponseBuilderPort,
+            final ThreadPropertiesFilter threadPropertiesFilter,
+            final ThreadRepository threadRepository,
+            final InvalidArgumentsMethodErrorResponsePort invalidArgumentsMethodErrorResponsePort,
+            final InvalidResultReferenceMethodErrorResponsePort invalidResultReferenceMethodErrorResponsePort) {
+        this.accountStateRepository = accountStateRepository;
+        this.getReferenceIdsResolver = getReferenceIdsResolver;
+        this.threadRepository = threadRepository;
+        this.threadPropertiesFilter = threadPropertiesFilter;
         this.getThreadMethodResponseBuilderPort = getThreadMethodResponseBuilderPort;
+        this.invalidResultReferenceMethodErrorResponsePort = invalidResultReferenceMethodErrorResponsePort;
+        this.invalidArgumentsMethodErrorResponsePort = invalidArgumentsMethodErrorResponsePort;
     }
 
     @Override
     public MethodResponsePort[] call(final GetThreadMethodCallPort getThreadMethodCallPort,
             final ListMultimapPort<String, ResponseInvocationPort> previouseResponses) {
+        try {
+            final String accountId = getThreadMethodCallPort.accountId();
+            AccountState accountState = accountStateRepository.retrive(accountId);
 
-        final InvocationResultReferencePort clientIdsReference = getThreadMethodCallPort.getIdsReference();
-        final List<String> ids;
+            final String[] threadIds = getReferenceIdsResolver.resolve(getThreadMethodCallPort, previouseResponses);
 
-        if (clientIdsReference != null) {
-            try {
-                ids = Arrays.asList(referenceResolverPort.resolve(clientIdsReference, previouseResponses));
-            } catch (final IllegalArgumentException exception) {
-                return new MethodResponsePort[] { invalidResultReferenceMethodErrorResponsePort };
-            }
-        } else {
-            ids = Arrays.asList(getThreadMethodCallPort.getIds());
+            final RetrivedEntity<ThreadPort> threadsRetrived = threadIds != null ? threadRepository.retrive(threadIds)
+                    : threadRepository.retriveAll(accountId);
+
+            final ThreadPort[] threadsFiltred = threadPropertiesFilter.filter(threadsRetrived.found(),
+                    getThreadMethodCallPort.getProperties());
+
+            return new MethodResponsePort[] {
+                    getThreadMethodResponseBuilderPort
+                            .reset()
+                            .list(threadsFiltred)
+                            .notFound(threadsRetrived.notFound())
+                            .state(accountState.emailState()).build()
+            };
+
+        } catch (final AccountNotFoundException accountNotFoundException) {
+            return new MethodResponsePort[] { new AccountNotFoundMethodErrorResponse() };
+        } catch (final InvalidResultReferenceExecption invalidResultReferenceExecption) {
+            return new MethodResponsePort[] { invalidResultReferenceMethodErrorResponsePort };
+        } catch (final InvalidArgumentsException invalidArgumentsException) {
+            return new MethodResponsePort[] { invalidArgumentsMethodErrorResponsePort };
         }
-
-        Map<String, EmailPort> emails = Arrays.asList(emailRepository.retriveAll(getThreadMethodCallPort.accountId()))
-                .stream().collect(Collectors.toMap(EmailPort::getId, Function.identity()));
-
-        ThreadBuilderPort threadBuilder = threadBuilderPort;
-        final ThreadPort[] threads = ids.stream().map(
-                threadId -> threadBuilder.reset()
-                        .id(threadId)
-                        .emailIds(
-                                emails.values().stream()
-                                        .filter(
-                                                email -> email.getThreadId()
-                                                        .equals(threadId))
-                                        .sorted(Comparator.comparing(EmailPort::getReceivedAt))
-                                        .map(EmailPort::getId)
-                                        .collect(Collectors.toList()))
-                        .build())
-                .toArray(ThreadPort[]::new);
-
-        return new MethodResponsePort[] {
-                getThreadMethodResponseBuilderPort.list(threads).state("0").build() // FIXME: fare lo stato dei threads
-        };
     }
-
 }

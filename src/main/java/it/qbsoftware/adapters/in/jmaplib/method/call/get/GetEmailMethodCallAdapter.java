@@ -46,7 +46,7 @@ public class GetEmailMethodCallAdapter implements GetEmailMethodCallPort {
     }
 
     @Override
-    public Boolean getFetchHTMLBodyValues() {
+    public Boolean getFetchHtmlBodyValues() {
         return this.getEmailMethodCall.getFetchHTMLBodyValues();
     }
 

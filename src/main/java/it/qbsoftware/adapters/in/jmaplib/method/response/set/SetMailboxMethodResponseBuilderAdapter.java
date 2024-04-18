@@ -18,7 +18,7 @@ public class SetMailboxMethodResponseBuilderAdapter implements SetMailboxMethodR
 
     @Override
     public SetMailboxMethodResponsePortBuilder created(String createdKey, MailboxPort createdMailbox) {
-        setMailboxMethodResponseBuilder.created(createdKey, ((MailboxAdapter) createdMailbox).mailbox());
+        setMailboxMethodResponseBuilder.created(createdKey, ((MailboxAdapter) createdMailbox).adaptee());
         return this;
     }
 

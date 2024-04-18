@@ -2,6 +2,8 @@ package it.qbsoftware.application.controllers.get;
 
 import java.util.ArrayList;
 
+import com.google.inject.Inject;
+
 import it.qbsoftware.adapters.in.jmaplib.method.call.get.GetMailboxMethodCallAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.MethodResponseAdapter;
 import it.qbsoftware.application.controllers.ControllerHandlerBase;
@@ -11,6 +13,12 @@ import rs.ltt.jmap.common.method.MethodResponse;
 import rs.ltt.jmap.common.method.call.mailbox.GetMailboxMethodCall;
 
 public class GetMailboxMethodCallController extends ControllerHandlerBase {
+    final GetMailboxMethodCallUsecase getMailboxMethodCallService;
+
+    @Inject
+    public GetMailboxMethodCallController(final GetMailboxMethodCallUsecase getMailboxMethodCallService) {
+        this.getMailboxMethodCallService = getMailboxMethodCallService;
+    }
 
     @Override
     public MethodResponse[] handle(final HandlerRequest handlerRequest) {
@@ -18,9 +26,6 @@ public class GetMailboxMethodCallController extends ControllerHandlerBase {
 
             GetMailboxMethodCallAdapter getMailboxMethodCallAdapter = new GetMailboxMethodCallAdapter(
                     getMailboxMethodCall);
-
-            // TODO: fixme, il costruttore è completamente andato
-            GetMailboxMethodCallUsecase getMailboxMethodCallService = null;
 
             MethodResponseAdapter[] methodResponseAdapters = (MethodResponseAdapter[]) getMailboxMethodCallService
                     .call(getMailboxMethodCallAdapter, handlerRequest.previousResponses());

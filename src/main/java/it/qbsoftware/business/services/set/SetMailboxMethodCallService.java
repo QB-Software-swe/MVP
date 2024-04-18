@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-import it.qbsoftware.business.domain.AccountUpdate;
 import it.qbsoftware.business.domain.MailboxInfo;
 import it.qbsoftware.business.domain.MailboxInfoConvertToMailboxPort;
 import it.qbsoftware.business.domain.MailboxPatcher;
@@ -53,6 +52,7 @@ public class SetMailboxMethodCallService implements SetMailboxMethodCallUsecase 
         final Map<String, MailboxPort> mapCreateMailbox = setMailboxMethodCallPort.getCreate();
         final Map<String, Map<String, Object>> mapUpdateObject = setMailboxMethodCallPort.getUpdate();
 
+        /* 
         if (ifInStateMismatch(setMailboxMethodCallPort.ifInState())) {
             return new MethodResponsePort[] { stateMismatchMethodErrorResponsePort };
         }
@@ -68,7 +68,8 @@ public class SetMailboxMethodCallService implements SetMailboxMethodCallUsecase 
         AccountUpdate accountUpdate = new AccountUpdate(setMailboxMethodCallPort.accountId());
         accountUpdate.put("NULLSTATE", null); // TODO: tenere traccia degli update
         // Generate response
-        return new MethodResponsePort[] { setMailboxMethodResponsePort };
+        */
+        return new MethodResponsePort[] {  };
     }
 
     private boolean ifInStateMismatch(final String ifInState) {

@@ -1,4 +1,4 @@
-package it.qbsoftware.business.domain;
+package it.qbsoftware.business.domain.util;
 
 import it.qbsoftware.business.ports.in.guava.ListMultimapPort;
 import it.qbsoftware.business.ports.in.jmap.entity.AbstractIdentifiableEntityPort;

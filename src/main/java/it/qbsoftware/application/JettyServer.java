@@ -29,7 +29,7 @@ public class JettyServer {
         contextHandlerCollection.addHandler(new ContextHandler(
                 new WellKnownHandler(controllerInjector.getInstance(SessionController.class)),
                 WellKnownHandler.CONTEXT_PATH));
-        contextHandlerCollection.addHandler(new ContextHandler(new ApiHandler()));
+        contextHandlerCollection.addHandler(new ContextHandler(controllerInjector.getInstance(ApiHandler.class)));
 
         server.setHandler(contextHandlerCollection);
         try {

@@ -22,7 +22,7 @@ public interface MailboxBuilderPort {
 
     public MailboxBuilderPort myRights(MailboxRightsPort mailboxRightsPort);
 
-    public MailboxBuilderPort getIsSubscribed(Boolean isSubscribed);
+    public MailboxBuilderPort isSubscribed(Boolean isSubscribed);
 
     public MailboxPort build();
 

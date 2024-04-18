@@ -1,27 +1,28 @@
-package it.qbsoftware.business.domain.util.get;
+package it.qbsoftware.business.domain.methodcall.filter.standard;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
+import it.qbsoftware.business.domain.methodcall.filter.MailboxPropertiesFilter;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxPort;
 
-public class GetMailboxPropertiesFilter implements GetEntityPropertiesFilter<MailboxPort> {
+public class StandardMailboxPropertiesFilter implements MailboxPropertiesFilter {
     final MailboxBuilderPort mailboxBuilderPort;
 
-    public GetMailboxPropertiesFilter(final MailboxBuilderPort mailboxBuilderPort) {
-        this.mailboxBuilderPort = mailboxBuilderPort;
+    public StandardMailboxPropertiesFilter(final MailboxBuilderPort mailboxBuilderPort) {
+        this.mailboxBuilderPort = mailboxBuilderPort.reset();
     }
 
     @Override
-    public MailboxPort[] filter(MailboxPort[] entities, String[] properties) throws InvalidArgumentsException {
+    public MailboxPort[] filter(MailboxPort[] mailboxPorts, String[] properties) throws InvalidArgumentsException {
         if (properties == null) {
-            return entities;
+            return mailboxPorts;
         }
 
-        List<MailboxPort> filtredMailboxes = new ArrayList<MailboxPort>();
-        for (final MailboxPort mailboxPort : entities) {
+        final List<MailboxPort> filtredMailboxes = new ArrayList<MailboxPort>();
+        for (final MailboxPort mailboxPort : mailboxPorts) {
             filtredMailboxes.add(mailboxFilter(mailboxPort, properties));
         }
 
@@ -32,7 +33,8 @@ public class GetMailboxPropertiesFilter implements GetEntityPropertiesFilter<Mai
             throws InvalidArgumentsException {
         MailboxBuilderPort mailboxBuilder = mailboxBuilderPort.reset().id(mailboxPort.getId());
 
-        for (final String property : properties) {
+        for (final String property : properties) { // FIXME: check della aderenza allo standard, nel caso terminare con
+                                                   // quello che manca
             mailboxBuilder = switch (property) {
                 case "name":
                     yield mailboxBuilder.name(mailboxPort.getName());
@@ -49,7 +51,20 @@ public class GetMailboxPropertiesFilter implements GetEntityPropertiesFilter<Mai
                 case "totalEmails":
                     yield mailboxBuilder.totalEmails(mailboxPort.getTotalEmails());
 
-                // TODO: finire la lista, seguire lo standard
+                case "unreadEmails":
+                    yield mailboxBuilder.unreadEmails(mailboxPort.getUnreadEmails());
+
+                case "totalThreads":
+                    yield mailboxBuilder.totalThreads(mailboxPort.getTotalThreads());
+
+                case "unreadThreads":
+                    yield mailboxBuilder.unreadThreads(mailboxPort.getUnreadThreads());
+
+                case "myRights":
+                    yield mailboxBuilder.myRights(mailboxPort.getMyRights());
+
+                case "isSubscribed":
+                    yield mailboxBuilder.isSubscribed(mailboxPort.getIsSubscribed());
 
                 default:
                     throw new InvalidArgumentsException();

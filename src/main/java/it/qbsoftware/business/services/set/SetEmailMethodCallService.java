@@ -8,9 +8,9 @@ import java.util.UUID;
 
 import java.time.Instant;
 
-import it.qbsoftware.business.domain.AccountNotFoundMethodErrorResponse;
-import it.qbsoftware.business.domain.AccountState;
-import it.qbsoftware.business.domain.CreationIdResolver;
+import it.qbsoftware.business.domain.entity.AccountState;
+import it.qbsoftware.business.domain.methodcall.response.AccountNotFoundMethodErrorResponse;
+import it.qbsoftware.business.domain.util.CreationIdResolver;
 import it.qbsoftware.business.ports.in.guava.ListMultimapPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailBodyPartBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailBodyPartPort;
@@ -51,40 +51,52 @@ public class SetEmailMethodCallService implements SetEmailMethodCallUsecase {
     public MethodResponsePort[] call(final SetEmailMethodCallPort setEmailMethodCallPort,
             final ListMultimapPort<String, ResponseInvocationPort> previousResponses) {
         setEmailMethodResponseBuilderPort.reset();
+        /*
+         * final String accountId = setEmailMethodCallPort.accountId();
+         * Optional<AccountState> accountState =
+         * Optional.of(accountStateRepository.retrive(accountId));
+         * if (!accountState.isPresent()) {
+         * return new MethodResponsePort[] {
+         * new AccountNotFoundMethodErrorResponse()
+         * };
+         * }
+         * 
+         * final Map<String, EmailPort> emailsToCreate =
+         * setEmailMethodCallPort.getCreate();
+         * final Map<String, Map<String, Object>> emailsToUpdate =
+         * setEmailMethodCallPort.getUpdate();
+         * final String[] emailsToDestroy = setEmailMethodCallPort.getDestroy();
+         * 
+         * if (ifInStateMismatch(accountState.get(),
+         * setEmailMethodCallPort.getIfInState())) {
+         * return new MethodResponsePort[] { stateMismatchMethodErrorResponsePort };
+         * }
+         * 
+         * if (emailsToDestroy != null) {
+         * DestroyEmailResponse destroyEmailResponse = processDestroyEmail(accountId,
+         * emailsToDestroy);
+         * setEmailMethodResponseBuilderPort.destroyed(destroyEmailResponse.
+         * destroyEmails());
+         * setEmailMethodResponseBuilderPort.notDestroyed(destroyEmailResponse.
+         * notDestroyEmail());
+         * }
+         * 
+         * if (emailsToCreate != null && emailsToCreate.size() > 0) {
+         * processCreateEmail(accountId, emailsToCreate, accountState.get(),
+         * previousResponses);
+         * }
+         * 
+         * if (emailsToUpdate != null && emailsToUpdate.size() > 0) {
+         * // TODO Auto-generated method stub
+         * throw new UnsupportedOperationException("Unimplemented method 'call'");
+         * }
+         * 
+         * return new MethodResponsePort[] {
+         * setEmailMethodResponseBuilderPort.state(accountState.get().mailboxState()).
+         * build() };
+         */
 
-        final String accountId = setEmailMethodCallPort.accountId();
-        Optional<AccountState> accountState = accountStateRepository.retrive(accountId);
-        if (!accountState.isPresent()) {
-            return new MethodResponsePort[] {
-                    new AccountNotFoundMethodErrorResponse()
-            };
-        }
-
-        final Map<String, EmailPort> emailsToCreate = setEmailMethodCallPort.getCreate();
-        final Map<String, Map<String, Object>> emailsToUpdate = setEmailMethodCallPort.getUpdate();
-        final String[] emailsToDestroy = setEmailMethodCallPort.getDestroy();
-
-        if (ifInStateMismatch(accountState.get(), setEmailMethodCallPort.getIfInState())) {
-            return new MethodResponsePort[] { stateMismatchMethodErrorResponsePort };
-        }
-
-        if (emailsToDestroy != null) {
-            DestroyEmailResponse destroyEmailResponse = processDestroyEmail(accountId, emailsToDestroy);
-            setEmailMethodResponseBuilderPort.destroyed(destroyEmailResponse.destroyEmails());
-            setEmailMethodResponseBuilderPort.notDestroyed(destroyEmailResponse.notDestroyEmail());
-        }
-
-        if (emailsToCreate != null && emailsToCreate.size() > 0) {
-            processCreateEmail(accountId, emailsToCreate, accountState.get(), previousResponses);
-        }
-
-        if (emailsToUpdate != null && emailsToUpdate.size() > 0) {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'call'");
-        }
-
-        return new MethodResponsePort[] {
-                setEmailMethodResponseBuilderPort.state(accountState.get().mailboxState()).build() };
+         return new MethodResponsePort[] {};
     }
 
     boolean ifInStateMismatch(final AccountState accountState, final String methodCallState) {
