@@ -1,6 +1,6 @@
 package it.qbsoftware.adapters.in.jmaplib.error;
 
-import it.qbsoftware.business.ports.in.jmap.error.SetErrorPort;
+import it.qbsoftware.business.ports.in.jmap.entity.SetErrorPort;
 import rs.ltt.jmap.common.entity.SetError;
 import rs.ltt.jmap.common.entity.SetErrorType;
 

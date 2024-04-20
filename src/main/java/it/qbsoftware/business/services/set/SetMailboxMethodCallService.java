@@ -12,7 +12,7 @@ import it.qbsoftware.business.ports.in.guava.SplitterPort;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxPort;
 import it.qbsoftware.business.ports.in.jmap.entity.RolePort;
-import it.qbsoftware.business.ports.in.jmap.error.SetErrorPort;
+import it.qbsoftware.business.ports.in.jmap.entity.SetErrorPort;
 import it.qbsoftware.business.ports.in.jmap.error.StateMismatchMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.call.set.SetMailboxMethodCallPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.MethodResponsePort;

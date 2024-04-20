@@ -9,7 +9,7 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 
-import it.qbsoftware.business.domain.entity.AccountState;
+import it.qbsoftware.business.domain.entity.changes.AccountState;
 import it.qbsoftware.business.domain.exception.AccountNotFoundException;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.persistance.MongoConnection;

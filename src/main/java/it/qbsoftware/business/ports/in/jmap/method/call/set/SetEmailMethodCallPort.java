@@ -5,7 +5,6 @@ import java.util.Map;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailPort;
 
 public interface SetEmailMethodCallPort {
-
     public String accountId();
 
     public String getIfInState();

@@ -1,5 +1,6 @@
 package it.qbsoftware.business.ports.out.jmap;
 
+import it.qbsoftware.business.domain.exception.set.SetSingletonException;
 import it.qbsoftware.business.domain.util.get.RetrivedEntity;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailPort;
 
@@ -11,5 +12,5 @@ public interface EmailRepository {
 
     public boolean destroy(final String emailId);
 
-    public boolean save(final EmailPort emailPort);
+    public void save(final EmailPort emailPort) throws SetSingletonException;
 }

@@ -1,6 +1,6 @@
 package it.qbsoftware.business.services.get;
 
-import it.qbsoftware.business.domain.entity.AccountState;
+import it.qbsoftware.business.domain.entity.changes.AccountState;
 import it.qbsoftware.business.domain.exception.AccountNotFoundException;
 import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
 import it.qbsoftware.business.domain.exception.InvalidResultReferenceExecption;
@@ -21,13 +21,13 @@ import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.business.ports.out.jmap.EmailSubmissionRepository;
 
 public class GetEmailSubmissionMethodCallService implements GetEmailSubmissionMethodCallUsecase {
-    final AccountStateRepository accountStateRepository;
-    final GetEmailSubmissionMethodResponseBuilderPort getEmailSubmissionMethodResponseBuilderPort;
-    final GetReferenceIdsResolver getReferenceIdsResolver;
-    final EmailSubmissionRepository emailSubmissionRepository;
-    final EmailSubmissionPropertiesFilter emailSubmissionPropertiesFilter;
-    final InvalidResultReferenceMethodErrorResponsePort invalidResultReferenceMethodErrorResponsePort;
-    final InvalidArgumentsMethodErrorResponsePort invalidArgumentsMethodErrorResponsePort;
+    private final AccountStateRepository accountStateRepository;
+    private final GetEmailSubmissionMethodResponseBuilderPort getEmailSubmissionMethodResponseBuilderPort;
+    private final GetReferenceIdsResolver getReferenceIdsResolver;
+    private final EmailSubmissionRepository emailSubmissionRepository;
+    private final EmailSubmissionPropertiesFilter emailSubmissionPropertiesFilter;
+    private final InvalidResultReferenceMethodErrorResponsePort invalidResultReferenceMethodErrorResponsePort;
+    private final InvalidArgumentsMethodErrorResponsePort invalidArgumentsMethodErrorResponsePort;
 
     public GetEmailSubmissionMethodCallService(final AccountStateRepository accountStateRepository,
             final EmailSubmissionPropertiesFilter emailSubmissionPropertiesFilter,
@@ -60,7 +60,7 @@ public class GetEmailSubmissionMethodCallService implements GetEmailSubmissionMe
                     : emailSubmissionRepository.retriveAll(accountId);
 
             final EmailSubmissionPort[] emailSubmissionFiltred = emailSubmissionPropertiesFilter
-                    .filter(emailSubmissionRetrived.found(), emailSubmissionIds);
+                    .filter(emailSubmissionRetrived.found(), getEmailSubmissionMethodCallPort.getProperties());
 
             return new MethodResponsePort[] {
                     getEmailSubmissionMethodResponseBuilderPort

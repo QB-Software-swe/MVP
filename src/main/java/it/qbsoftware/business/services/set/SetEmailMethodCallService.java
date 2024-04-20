@@ -1,186 +1,49 @@
 package it.qbsoftware.business.services.set;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-
-import java.time.Instant;
-
-import it.qbsoftware.business.domain.entity.AccountState;
+import it.qbsoftware.business.domain.entity.changes.AccountState;
+import it.qbsoftware.business.domain.exception.AccountNotFoundException;
+import it.qbsoftware.business.domain.exception.StateMismatchException;
 import it.qbsoftware.business.domain.methodcall.response.AccountNotFoundMethodErrorResponse;
-import it.qbsoftware.business.domain.util.CreationIdResolver;
+import it.qbsoftware.business.domain.methodcall.statematch.IfInStateMatch;
 import it.qbsoftware.business.ports.in.guava.ListMultimapPort;
-import it.qbsoftware.business.ports.in.jmap.entity.EmailBodyPartBuilderPort;
-import it.qbsoftware.business.ports.in.jmap.entity.EmailBodyPartPort;
-import it.qbsoftware.business.ports.in.jmap.entity.EmailBodyValuePort;
-import it.qbsoftware.business.ports.in.jmap.entity.EmailBuilderPort;
-import it.qbsoftware.business.ports.in.jmap.entity.EmailPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
 import it.qbsoftware.business.ports.in.jmap.error.StateMismatchMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.call.set.SetEmailMethodCallPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.MethodResponsePort;
-import it.qbsoftware.business.ports.in.jmap.method.response.set.SetEmailMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.usecase.set.SetEmailMethodCallUsecase;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
-import it.qbsoftware.business.ports.out.jmap.EmailRepository;
 
 public class SetEmailMethodCallService implements SetEmailMethodCallUsecase {
-    final AccountStateRepository accountStateRepository;
-    final StateMismatchMethodErrorResponsePort stateMismatchMethodErrorResponsePort;
-    final EmailRepository emailRepository;
-    final SetEmailMethodResponseBuilderPort setEmailMethodResponseBuilderPort;
-    final EmailBuilderPort emailBuilderPort;
-    final EmailBodyPartBuilderPort emailBodyPartBuilderPort;
+    private final AccountStateRepository accountStateRepository;
+    private final IfInStateMatch ifInStateMatch;
+    private final StateMismatchMethodErrorResponsePort stateMismatchMethodErrorResponsePort;
 
     public SetEmailMethodCallService(final AccountStateRepository accountStateRepository,
-            final StateMismatchMethodErrorResponsePort stateMismatchMethodErrorResponsePort,
-            final ListMultimapPort<String, ResponseInvocationPort> previousResponses, EmailBuilderPort emailBuilderPort,
-            EmailRepository emailRepository, SetEmailMethodResponseBuilderPort setEmailMethodResponseBuilderPort,
-            EmailBodyPartBuilderPort emailBodyPartBuilderPort) {
+            final IfInStateMatch ifInStateMatch,
+            final StateMismatchMethodErrorResponsePort stateMismatchMethodErrorResponsePort) {
         this.accountStateRepository = accountStateRepository;
+        this.ifInStateMatch = ifInStateMatch;
         this.stateMismatchMethodErrorResponsePort = stateMismatchMethodErrorResponsePort;
-        this.emailRepository = emailRepository;
-        this.setEmailMethodResponseBuilderPort = setEmailMethodResponseBuilderPort;
-        this.emailBuilderPort = emailBuilderPort;
-        this.emailBodyPartBuilderPort = emailBodyPartBuilderPort;
     }
 
     @Override
     public MethodResponsePort[] call(final SetEmailMethodCallPort setEmailMethodCallPort,
             final ListMultimapPort<String, ResponseInvocationPort> previousResponses) {
-        setEmailMethodResponseBuilderPort.reset();
-        /*
-         * final String accountId = setEmailMethodCallPort.accountId();
-         * Optional<AccountState> accountState =
-         * Optional.of(accountStateRepository.retrive(accountId));
-         * if (!accountState.isPresent()) {
-         * return new MethodResponsePort[] {
-         * new AccountNotFoundMethodErrorResponse()
-         * };
-         * }
-         * 
-         * final Map<String, EmailPort> emailsToCreate =
-         * setEmailMethodCallPort.getCreate();
-         * final Map<String, Map<String, Object>> emailsToUpdate =
-         * setEmailMethodCallPort.getUpdate();
-         * final String[] emailsToDestroy = setEmailMethodCallPort.getDestroy();
-         * 
-         * if (ifInStateMismatch(accountState.get(),
-         * setEmailMethodCallPort.getIfInState())) {
-         * return new MethodResponsePort[] { stateMismatchMethodErrorResponsePort };
-         * }
-         * 
-         * if (emailsToDestroy != null) {
-         * DestroyEmailResponse destroyEmailResponse = processDestroyEmail(accountId,
-         * emailsToDestroy);
-         * setEmailMethodResponseBuilderPort.destroyed(destroyEmailResponse.
-         * destroyEmails());
-         * setEmailMethodResponseBuilderPort.notDestroyed(destroyEmailResponse.
-         * notDestroyEmail());
-         * }
-         * 
-         * if (emailsToCreate != null && emailsToCreate.size() > 0) {
-         * processCreateEmail(accountId, emailsToCreate, accountState.get(),
-         * previousResponses);
-         * }
-         * 
-         * if (emailsToUpdate != null && emailsToUpdate.size() > 0) {
-         * // TODO Auto-generated method stub
-         * throw new UnsupportedOperationException("Unimplemented method 'call'");
-         * }
-         * 
-         * return new MethodResponsePort[] {
-         * setEmailMethodResponseBuilderPort.state(accountState.get().mailboxState()).
-         * build() };
-         */
 
-         return new MethodResponsePort[] {};
-    }
+        try {
+            final String accountId = setEmailMethodCallPort.accountId();
+            AccountState accountState = accountStateRepository.retrive(accountId);
 
-    boolean ifInStateMismatch(final AccountState accountState, final String methodCallState) {
-        return !accountState.emailState().equals(methodCallState) && methodCallState != null;
-    }
+            ifInStateMatch.methodStateMatchCurrent(setEmailMethodCallPort.getIfInState(), accountState.emailState());
 
-    DestroyEmailResponse processDestroyEmail(final String accountId, final String[] emailsToDestroy) {
-        ArrayList<String> destroyEmail = new ArrayList<>();
-        ArrayList<String> notDestroyEmail = new ArrayList<>();
+            
 
-        for (final String emailId : emailsToDestroy) {
-            if (emailRepository.destroy(emailId)) {
-                destroyEmail.add(emailId);
-                // TODO: modificare lo stato delle e-mail
-            } else {
-                notDestroyEmail.add(emailId); // Nota: assumiamo che se l'e-mail non venga trovata
-                // TODO: modificare lo stato delle e-mail
-            }
+        } catch (final AccountNotFoundException accountNotFoundException) {
+            return new MethodResponsePort[] { new AccountNotFoundMethodErrorResponse() };
+        } catch (final StateMismatchException stateMismatchException) {
+            return new MethodResponsePort[] { stateMismatchMethodErrorResponsePort };
         }
 
-        return new DestroyEmailResponse(destroyEmail.toArray(String[]::new), notDestroyEmail.toArray(String[]::new));
+        return new MethodResponsePort[] {}; // FIXME: remove me
     }
-
-    void processCreateEmail(final String accountId, final Map<String, EmailPort> emailsToCreate,
-            AccountState accountState, final ListMultimapPort<String, ResponseInvocationPort> previousResponses) {
-        for (final Map.Entry<String, EmailPort> emailToCreate : emailsToCreate.entrySet()) {
-            final String clientReferenceEmailId = emailToCreate.getKey();
-            final EmailPort userSuppliedEmail = emailToCreate.getValue();
-            final Map<String, Boolean> mailboxMap = userSuppliedEmail.getMailboxIds();
-
-            final String serverEmailId = accountId + "." + UUID.randomUUID().toString(); // FIXME: id e-mail random ->
-                                                                                         // conflitti
-            final String serverEmailThreadId = accountId + "." + UUID.randomUUID().toString(); // FIXME: come sopra
-
-            EmailBuilderPort emailBuilder = userSuppliedEmail.toBuilder()
-                    .id(serverEmailId)
-                    .threadId(serverEmailThreadId)
-                    .receivedAt(Instant.now());
-
-            emailBuilder.clearMailboxIds();
-            for (Map.Entry<String, Boolean> mailboxEntry : mailboxMap.entrySet()) {
-                final String mailboxId = CreationIdResolver.resolveIfNecessary(mailboxEntry.getKey(),
-                        previousResponses);
-                emailBuilder.mailboxId(mailboxId, mailboxEntry.getValue());
-            }
-
-            final List<EmailBodyPartPort> attachments = userSuppliedEmail.getAttachments();
-            emailBuilder.clearAttachments();
-
-            if (attachments != null) {
-                for (final EmailBodyPartPort attachment : attachments) {
-                    final String partId = attachment.getPartId();
-                    final EmailBodyValuePort value = partId == null ? null
-                            : userSuppliedEmail.getBodyValues().get(partId);
-
-                    if (value != null) {
-                        final EmailBodyPartPort emailBodyPartPort = injectId(attachment);
-                        emailBuilder.attachment(emailBodyPartPort);
-                    } else {
-                        emailBuilder.attachment(attachment);
-                    }
-                }
-            }
-
-            final EmailPort emailPort = emailBuilder.build();
-
-            emailRepository.save(emailPort);
-            accountState.increaseEmailState();
-
-            setEmailMethodResponseBuilderPort.created(clientReferenceEmailId, emailPort);
-        }
-    }
-
-    private EmailBodyPartPort injectId(final EmailBodyPartPort attachment) {
-        EmailBodyPartBuilderPort emailBodyPartBuilder = emailBodyPartBuilderPort;
-        return emailBodyPartBuilder
-                .blobId(UUID.randomUUID().toString()) // TODO: controllare la correttezza
-                .charset(attachment.getCharset())
-                .type(attachment.getType())
-                .name(attachment.getName())
-                .size(attachment.getSize())
-                .build();
-    }
-}
-
-record DestroyEmailResponse(String[] destroyEmails, String[] notDestroyEmail) {
 }

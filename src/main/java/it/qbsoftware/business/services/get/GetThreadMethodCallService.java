@@ -1,6 +1,6 @@
 package it.qbsoftware.business.services.get;
 
-import it.qbsoftware.business.domain.entity.AccountState;
+import it.qbsoftware.business.domain.entity.changes.AccountState;
 import it.qbsoftware.business.domain.exception.AccountNotFoundException;
 import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
 import it.qbsoftware.business.domain.exception.InvalidResultReferenceExecption;
@@ -21,13 +21,13 @@ import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.business.ports.out.jmap.ThreadRepository;
 
 public class GetThreadMethodCallService implements GetThreadMethodCallUsecase {
-    final AccountStateRepository accountStateRepository;
-    final GetReferenceIdsResolver getReferenceIdsResolver;
-    final ThreadRepository threadRepository;
-    final ThreadPropertiesFilter threadPropertiesFilter;
-    final GetThreadMethodResponseBuilderPort getThreadMethodResponseBuilderPort;
-    final InvalidResultReferenceMethodErrorResponsePort invalidResultReferenceMethodErrorResponsePort;
-    final InvalidArgumentsMethodErrorResponsePort invalidArgumentsMethodErrorResponsePort;
+    private final AccountStateRepository accountStateRepository;
+    private final GetReferenceIdsResolver getReferenceIdsResolver;
+    private final ThreadRepository threadRepository;
+    private final ThreadPropertiesFilter threadPropertiesFilter;
+    private final GetThreadMethodResponseBuilderPort getThreadMethodResponseBuilderPort;
+    private final InvalidResultReferenceMethodErrorResponsePort invalidResultReferenceMethodErrorResponsePort;
+    private final InvalidArgumentsMethodErrorResponsePort invalidArgumentsMethodErrorResponsePort;
 
     public GetThreadMethodCallService(final AccountStateRepository accountStateRepository,
             final GetReferenceIdsResolver getReferenceIdsResolver,

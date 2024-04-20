@@ -2,7 +2,7 @@ package it.qbsoftware.business.services.get;
 
 import com.google.inject.Inject;
 
-import it.qbsoftware.business.domain.entity.AccountState;
+import it.qbsoftware.business.domain.entity.changes.AccountState;
 import it.qbsoftware.business.domain.exception.AccountNotFoundException;
 import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
 import it.qbsoftware.business.domain.exception.InvalidResultReferenceExecption;
@@ -24,13 +24,13 @@ import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.business.ports.out.jmap.EmailRepository;
 
 public class GetEmailMethodCallService implements GetEmailMethodCallUsecase {
-    final InvalidResultReferenceMethodErrorResponsePort invalidResultReferenceMethodErrorResponsePort;
-    final InvalidArgumentsMethodErrorResponsePort invalidArgumentsMethodErrorResponsePort;
-    final GetEmailMethodResponseBuilderPort getEmailMethodResponseBuilderPort;
-    final AccountStateRepository accountStateRepository;
-    final EmailRepository emailRepository;
-    final GetReferenceIdsResolver getReferenceIdsResolver;
-    final EmailPropertiesFilter emailPropertiesFilter;
+    private final InvalidResultReferenceMethodErrorResponsePort invalidResultReferenceMethodErrorResponsePort;
+    private final InvalidArgumentsMethodErrorResponsePort invalidArgumentsMethodErrorResponsePort;
+    private final GetEmailMethodResponseBuilderPort getEmailMethodResponseBuilderPort;
+    private final AccountStateRepository accountStateRepository;
+    private final EmailRepository emailRepository;
+    private final GetReferenceIdsResolver getReferenceIdsResolver;
+    private final EmailPropertiesFilter emailPropertiesFilter;
 
     @Inject
     public GetEmailMethodCallService(final AccountStateRepository accountStateRepository,

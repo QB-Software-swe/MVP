@@ -1,4 +1,4 @@
-package it.qbsoftware.business.domain.entity;
+package it.qbsoftware.business.domain.entity.changes;
 
 //TODO: implementare la classe
 //FIXME: trovare un modo più efficiente per incrementare lo stato
@@ -8,9 +8,10 @@ public class AccountState {
     private String emailState;
     private String identityState;
     private String emailSubmissionState;
+    private String threadState;
 
     public AccountState(final String id, final String mailboxState, final String emailState, final String identityState,
-            final String emailSubmissionState) {
+            final String emailSubmissionState, final String threadState) {
         this.id = id;
         this.mailboxState = mailboxState;
         this.emailState = emailState;
@@ -42,6 +43,10 @@ public class AccountState {
         return this.identityState;
     }
 
+    public String threadState() {
+        return this.threadState;
+    }
+
     public String emailSubmissionState() {
         return this.emailSubmissionState;
     }
@@ -56,6 +61,10 @@ public class AccountState {
 
     public void increaseIdentityState() {
         this.identityState = increaseState(this.identityState);
+    }
+
+    public void increaseThreadState() {
+        this.threadState = increaseState(this.threadState);
     }
 
     private String increaseState(final String state) {

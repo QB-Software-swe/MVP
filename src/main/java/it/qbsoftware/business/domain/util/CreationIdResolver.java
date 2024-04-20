@@ -10,7 +10,7 @@ public class CreationIdResolver {
 
     public static String resolveIfNecessary(final String id,
             final ListMultimapPort<String, ResponseInvocationPort> previousResponses) {
-        return isCreationId(id) ? resolve(id, previousResponses) : id;
+        return isACreationId(id) ? resolve(id, previousResponses) : id;
     }
 
     // FIXME
@@ -27,7 +27,7 @@ public class CreationIdResolver {
                     yield setMailboxMethodResponsePort.getCreated().get(strippedId);
 
                 default:
-                    yield null;
+                    yield null; // TODO: controllare il livello di completezza
             };
 
             if (entity != null) {
@@ -35,10 +35,10 @@ public class CreationIdResolver {
             }
         }
 
-        throw new IllegalArgumentException("Creation if " + strippedId + " not found");
+        throw new IllegalArgumentException("Creation id " + strippedId + " not found");
     }
 
-    private static boolean isCreationId(final String id) {
+    private static boolean isACreationId(final String id) {
         return id != null && id.charAt(0) == '#';
     }
 }
