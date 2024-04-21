@@ -4,10 +4,10 @@ import java.util.Map;
 import java.util.HashMap;
 
 public class SimpleThreadChangesTracker implements ThreadChangesTracker {
-    private final String id;
-    private Map<String, String> created;
-    private Map<String, String> updated;
-    private Map<String, String> destroyed;
+    final private String id;
+    final private Map<String, String> created;
+    final private Map<String, String> updated;
+    final private Map<String, String> destroyed;
 
     public SimpleThreadChangesTracker(final String id) {
         this.id = id;
@@ -46,17 +46,23 @@ public class SimpleThreadChangesTracker implements ThreadChangesTracker {
     }
 
     @Override
-    public void threadHasBeenCreated(final String newState, final String emailId) {
-        this.created.put(newState, emailId);
+    public SimpleThreadChangesTracker threadHasBeenCreated(final String newState, final String threadId) {
+        final Map<String, String> copyCreated = this.created;
+        copyCreated.put(newState, threadId);
+        return new SimpleThreadChangesTracker(threadId, copyCreated, this.updated, this.destroyed);
     }
 
     @Override
-    public void threadHasBeenUpdated(final String newState, final String emailId) {
-        this.updated.put(newState, emailId);
+    public SimpleThreadChangesTracker threadHasBeenUpdated(final String newState, final String threadId) {
+        final Map<String, String> copyUpdated = this.updated;
+        copyUpdated.put(newState, threadId);
+        return new SimpleThreadChangesTracker(threadId, this.created, copyUpdated, this.destroyed);
     }
 
     @Override
-    public void threadHasBeenDestroyed(final String newState, final String emailId) {
-        this.destroyed.put(newState, emailId);
+    public SimpleThreadChangesTracker threadHasBeenDestroyed(final String newState, final String threadId) {
+        final Map<String, String> copyDestroyed = this.destroyed;
+        copyDestroyed.put(newState, threadId);
+        return new SimpleThreadChangesTracker(threadId, this.created, this.updated, copyDestroyed);
     }
 }

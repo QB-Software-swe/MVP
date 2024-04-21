@@ -4,11 +4,11 @@ package it.qbsoftware.business.domain.entity.changes;
 //FIXME: trovare un modo più efficiente per incrementare lo stato
 public class AccountState {
     private final String id;
-    private String mailboxState;
-    private String emailState;
-    private String identityState;
-    private String emailSubmissionState;
-    private String threadState;
+    final private String mailboxState;
+    final private String emailState;
+    final private String identityState;
+    final private String emailSubmissionState;
+    final private String threadState;
 
     public AccountState(final String id, final String mailboxState, final String emailState, final String identityState,
             final String emailSubmissionState, final String threadState) {
@@ -17,6 +17,7 @@ public class AccountState {
         this.emailState = emailState;
         this.identityState = identityState;
         this.emailSubmissionState = emailSubmissionState;
+        this.threadState = threadState;
     }
 
     public AccountState(final String id) {
@@ -25,6 +26,7 @@ public class AccountState {
         this.emailState = "0";
         this.identityState = "0";
         this.emailSubmissionState = "0";
+        this.threadState = "0";
     }
 
     public String id() {
@@ -51,20 +53,29 @@ public class AccountState {
         return this.emailSubmissionState;
     }
 
-    public void increaseMailboxState() {
-        this.mailboxState = increaseState(this.mailboxState);
+    public AccountState increaseMailboxState() {
+        return new AccountState(this.id, increaseState(this.mailboxState), this.emailState, this.identityState,
+                this.emailSubmissionState, this.threadState);
     }
 
-    public void increaseEmailState() {
-        this.emailState = increaseState(this.emailState);
+    public AccountState increaseEmailState() {
+        return new AccountState(this.id, this.mailboxState, increaseState(this.emailState), this.identityState,
+                this.emailSubmissionState, this.threadState);
     }
 
-    public void increaseIdentityState() {
-        this.identityState = increaseState(this.identityState);
+    public AccountState increaseIdentityState() {
+        return new AccountState(this.id, this.mailboxState, this.emailState, increaseState(this.identityState),
+                this.emailSubmissionState, this.threadState);
     }
 
-    public void increaseThreadState() {
-        this.threadState = increaseState(this.threadState);
+    public AccountState increaseEmailSubmissionState() {
+        return new AccountState(this.id, this.mailboxState, this.emailState, this.identityState,
+                increaseState(this.emailSubmissionState), this.threadState);
+    }
+
+    public AccountState increaseThreadState() {
+        return new AccountState(this.id, this.mailboxState, this.emailState, this.identityState,
+                this.emailSubmissionState, increaseState(this.threadState));
     }
 
     private String increaseState(final String state) {

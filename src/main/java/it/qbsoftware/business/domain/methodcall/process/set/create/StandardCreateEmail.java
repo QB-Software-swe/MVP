@@ -58,7 +58,7 @@ public class StandardCreateEmail implements CreateEmail {
     }
 
     @Override
-    public CreateResult<EmailPort> create(final SetEmailMethodCallPort setEmailMethodCallPort,
+    public CreatedResult<EmailPort> create(final SetEmailMethodCallPort setEmailMethodCallPort,
             final ListMultimapPort<String, ResponseInvocationPort> previousResponses)
             throws AccountNotFoundException {
         final AccountState accountState = accountStateRepository.retrive(setEmailMethodCallPort.accountId());
@@ -76,7 +76,7 @@ public class StandardCreateEmail implements CreateEmail {
             }
         }
 
-        return new CreateResult<>(created, notCreated); // FIXME: implement
+        return new CreatedResult<>(created, notCreated); // FIXME: implement
     }
 
     private EmailPort email(final EmailPort emailPort,
@@ -145,8 +145,8 @@ public class StandardCreateEmail implements CreateEmail {
 
     private void updateThread(final String clientThread, final String threadId, final String accountId)
             throws AccountNotFoundException {
-        ThreadChangesTracker threadChangesTracker = threadChangesTrackerRepository.retrive(accountId);
-        AccountState accountState = accountStateRepository.retrive(accountId);
+        final ThreadChangesTracker threadChangesTracker = threadChangesTrackerRepository.retrive(accountId);
+        final AccountState accountState = accountStateRepository.retrive(accountId);
         accountState.increaseThreadState();
 
         var created = threadChangesTracker.created();

@@ -5,11 +5,10 @@ import java.util.Map;
 import java.util.HashMap;
 
 public class SimpleMailboxChangesTracker implements MailboxChangesTracker {
-
-    private final String id;
-    private Map<String, String> created;
-    private Map<String, String> updated;
-    private Map<String, String> destroyed;
+    final private String id;
+    final private Map<String, String> created;
+    final private Map<String, String> updated;
+    final private Map<String, String> destroyed;
 
     public SimpleMailboxChangesTracker(final String id) {
         this.id = id;
@@ -48,18 +47,24 @@ public class SimpleMailboxChangesTracker implements MailboxChangesTracker {
     }
 
     @Override
-    public void mailboxHasBeenCreated(final String newState, final String emailId) {
-        this.created.put(newState, emailId);
+    public SimpleMailboxChangesTracker mailboxHasBeenCreated(final String newState, final String mailboxId) {
+        final Map<String, String> copyCreated = this.created;
+        copyCreated.put(newState, mailboxId);
+        return new SimpleMailboxChangesTracker(mailboxId, copyCreated, this.updated, this.destroyed);
     }
 
     @Override
-    public void mailboxHasBeenUpdated(final String newState, final String emailId) {
-        this.updated.put(newState, emailId);
+    public SimpleMailboxChangesTracker mailboxHasBeenUpdated(final String newState, final String mailboxId) {
+        final Map<String, String> copyUpdated = this.updated;
+        copyUpdated.put(newState, mailboxId);
+        return new SimpleMailboxChangesTracker(mailboxId, this.created, copyUpdated, this.destroyed);
     }
 
     @Override
-    public void mailboxHasBeenDestroyed(final String newState, final String emailId) {
-        this.destroyed.put(newState, emailId);
+    public SimpleMailboxChangesTracker mailboxHasBeenDestroyed(final String newState, final String mailboxId) {
+        final Map<String, String> copyDestroyed = this.destroyed;
+        copyDestroyed.put(newState, mailboxId);
+        return new SimpleMailboxChangesTracker(mailboxId, this.created, this.updated, copyDestroyed);
     }
 
 }

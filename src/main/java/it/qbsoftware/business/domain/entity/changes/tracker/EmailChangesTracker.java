@@ -12,10 +12,10 @@ public interface EmailChangesTracker {
 
     Map<String, String> destroyed();
 
-    void emailHasBeenCreated(String newState, String emailId);
+    EmailChangesTracker emailHasBeenCreated(String newState, String emailId);
 
-    void emailHasBeenUpdated(String newState, String emailId);
+    EmailChangesTracker emailHasBeenUpdated(String newState, String emailId);
 
-    void emailHasBeenDestroyed(String newState, String emailId);
+    EmailChangesTracker emailHasBeenDestroyed(String newState, String emailId);
 
 }

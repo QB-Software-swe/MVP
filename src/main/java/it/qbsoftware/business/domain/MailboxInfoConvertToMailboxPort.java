@@ -3,6 +3,7 @@ package it.qbsoftware.business.domain;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxPort;
 
+//TODO: remove
 public class MailboxInfoConvertToMailboxPort {
     MailboxBuilderPort mailboxBuilderPort;
 

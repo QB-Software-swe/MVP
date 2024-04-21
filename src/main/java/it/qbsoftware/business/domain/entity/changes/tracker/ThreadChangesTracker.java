@@ -11,9 +11,9 @@ public interface ThreadChangesTracker {
 
     Map<String, String> destroyed();
 
-    void threadHasBeenCreated(String newState, String emailId);
+    ThreadChangesTracker threadHasBeenCreated(String newState, String threadId);
 
-    void threadHasBeenUpdated(String newState, String emailId);
+    ThreadChangesTracker threadHasBeenUpdated(String newState, String threadId);
 
-    void threadHasBeenDestroyed(String newState, String emailId);
+    ThreadChangesTracker threadHasBeenDestroyed(String newState, String threadId);
 }

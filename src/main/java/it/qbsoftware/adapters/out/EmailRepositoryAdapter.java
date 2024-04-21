@@ -25,7 +25,7 @@ public class EmailRepositoryAdapter implements EmailRepository {
     }
 
     @Override
-    public boolean save(EmailPort emailPort) {
+    public void save(EmailPort emailPort) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'save'");
     }
