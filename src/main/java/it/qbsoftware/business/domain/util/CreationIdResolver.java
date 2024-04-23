@@ -13,10 +13,8 @@ public class CreationIdResolver {
         return isACreationId(id) ? resolve(id, previousResponses) : id;
     }
 
-    // FIXME
     private static String resolve(String creationId,
             ListMultimapPort<String, ResponseInvocationPort> previousResponses) {
-        // FIXME: (precond) creationId != null
         final String strippedId = creationId.substring(1);
         for (final ResponseInvocationPort invocation : previousResponses.values()) {
             final AbstractIdentifiableEntityPort entity = switch (invocation) {

@@ -5,7 +5,6 @@ import it.qbsoftware.business.ports.in.jmap.capability.CapabilityPort;
 import rs.ltt.jmap.common.entity.capability.CoreCapability;
 import rs.ltt.jmap.common.entity.capability.MailCapability;
 
-//TODO: config
 public class JmapConfig {
     public static CapabilityPort[] serverCapabilities() {
         return new CapabilityPort[] {

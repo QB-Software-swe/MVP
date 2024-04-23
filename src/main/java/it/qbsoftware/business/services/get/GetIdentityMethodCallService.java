@@ -1,18 +1,16 @@
 package it.qbsoftware.business.services.get;
 
-import com.google.inject.Inject;
-
 import it.qbsoftware.business.domain.entity.changes.AccountState;
 import it.qbsoftware.business.domain.exception.AccountNotFoundException;
 import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
 import it.qbsoftware.business.domain.exception.InvalidResultReferenceExecption;
 import it.qbsoftware.business.domain.methodcall.filter.IdentityPropertiesFilter;
 import it.qbsoftware.business.domain.methodcall.process.get.GetReferenceIdsResolver;
-import it.qbsoftware.business.domain.methodcall.response.AccountNotFoundMethodErrorResponse;
 import it.qbsoftware.business.domain.util.get.RetrivedEntity;
 import it.qbsoftware.business.ports.in.guava.ListMultimapPort;
 import it.qbsoftware.business.ports.in.jmap.entity.IdentityPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
+import it.qbsoftware.business.ports.in.jmap.error.AccountNotFoundMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.error.InvalidArgumentsMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.error.InvalidResultReferenceMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.call.get.GetIdentityMethodCallPort;
@@ -30,14 +28,15 @@ public class GetIdentityMethodCallService implements GetIdentityMethodCallUsecas
     private final GetReferenceIdsResolver getReferenceIdsResolver;
     private final IdentityRepository identityRepository;
     private final IdentityPropertiesFilter identityPropertiesFilter;
+    private final AccountNotFoundMethodErrorResponsePort accountNotFoundMethodErrorResponsePort;
 
-    @Inject
     public GetIdentityMethodCallService(final AccountStateRepository accountStateRepository,
             final GetIdentityMethodResponseBuilderPort getIdentityMethodResponseBuilderPort,
             final GetReferenceIdsResolver getReferenceIdsResolver,
             final IdentityPropertiesFilter identityPropertiesFilter, final IdentityRepository identityRepository,
             final InvalidArgumentsMethodErrorResponsePort invalidArgumentsMethodErrorResponsePort,
-            final InvalidResultReferenceMethodErrorResponsePort invalidResultReferenceMethodErrorResponsePort) {
+            final InvalidResultReferenceMethodErrorResponsePort invalidResultReferenceMethodErrorResponsePort,
+            final AccountNotFoundMethodErrorResponsePort accountNotFoundMethodErrorResponsePort) {
         this.getIdentityMethodResponseBuilderPort = getIdentityMethodResponseBuilderPort;
         this.invalidResultReferenceMethodErrorResponsePort = invalidResultReferenceMethodErrorResponsePort;
         this.invalidArgumentsMethodErrorResponsePort = invalidArgumentsMethodErrorResponsePort;
@@ -45,6 +44,7 @@ public class GetIdentityMethodCallService implements GetIdentityMethodCallUsecas
         this.getReferenceIdsResolver = getReferenceIdsResolver;
         this.identityRepository = identityRepository;
         this.identityPropertiesFilter = identityPropertiesFilter;
+        this.accountNotFoundMethodErrorResponsePort = accountNotFoundMethodErrorResponsePort;
     }
 
     @Override
@@ -74,7 +74,7 @@ public class GetIdentityMethodCallService implements GetIdentityMethodCallUsecas
             };
 
         } catch (final AccountNotFoundException accountNotFoundException) {
-            return new MethodResponsePort[] { new AccountNotFoundMethodErrorResponse() };
+            return new MethodResponsePort[] { accountNotFoundMethodErrorResponsePort };
         } catch (final InvalidResultReferenceExecption invalidResultReferenceExecption) {
             return new MethodResponsePort[] { invalidResultReferenceMethodErrorResponsePort };
         } catch (final InvalidArgumentsException invalidArgumentsException) {

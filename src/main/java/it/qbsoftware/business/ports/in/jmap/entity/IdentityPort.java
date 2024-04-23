@@ -17,4 +17,6 @@ public interface IdentityPort {
     public String getHtmlSignature();
 
     public Boolean getMayDelete();
+
+    public IdentityBuilderPort getBuilder();
 }

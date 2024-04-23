@@ -1,7 +1,5 @@
 package it.qbsoftware.adapters.out;
 
-import java.util.Optional;
-
 import org.bson.Document;
 
 import com.google.gson.Gson;

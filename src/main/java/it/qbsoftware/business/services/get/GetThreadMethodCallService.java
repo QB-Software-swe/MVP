@@ -6,11 +6,11 @@ import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
 import it.qbsoftware.business.domain.exception.InvalidResultReferenceExecption;
 import it.qbsoftware.business.domain.methodcall.filter.ThreadPropertiesFilter;
 import it.qbsoftware.business.domain.methodcall.process.get.GetReferenceIdsResolver;
-import it.qbsoftware.business.domain.methodcall.response.AccountNotFoundMethodErrorResponse;
 import it.qbsoftware.business.domain.util.get.RetrivedEntity;
 import it.qbsoftware.business.ports.in.guava.ListMultimapPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ThreadPort;
+import it.qbsoftware.business.ports.in.jmap.error.AccountNotFoundMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.error.InvalidArgumentsMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.error.InvalidResultReferenceMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.call.get.GetThreadMethodCallPort;
@@ -28,6 +28,7 @@ public class GetThreadMethodCallService implements GetThreadMethodCallUsecase {
     private final GetThreadMethodResponseBuilderPort getThreadMethodResponseBuilderPort;
     private final InvalidResultReferenceMethodErrorResponsePort invalidResultReferenceMethodErrorResponsePort;
     private final InvalidArgumentsMethodErrorResponsePort invalidArgumentsMethodErrorResponsePort;
+    private final AccountNotFoundMethodErrorResponsePort accountNotFoundMethodErrorResponsePort;
 
     public GetThreadMethodCallService(final AccountStateRepository accountStateRepository,
             final GetReferenceIdsResolver getReferenceIdsResolver,
@@ -35,7 +36,8 @@ public class GetThreadMethodCallService implements GetThreadMethodCallUsecase {
             final ThreadPropertiesFilter threadPropertiesFilter,
             final ThreadRepository threadRepository,
             final InvalidArgumentsMethodErrorResponsePort invalidArgumentsMethodErrorResponsePort,
-            final InvalidResultReferenceMethodErrorResponsePort invalidResultReferenceMethodErrorResponsePort) {
+            final InvalidResultReferenceMethodErrorResponsePort invalidResultReferenceMethodErrorResponsePort,
+            final AccountNotFoundMethodErrorResponsePort accountNotFoundMethodErrorResponsePort) {
         this.accountStateRepository = accountStateRepository;
         this.getReferenceIdsResolver = getReferenceIdsResolver;
         this.threadRepository = threadRepository;
@@ -43,6 +45,7 @@ public class GetThreadMethodCallService implements GetThreadMethodCallUsecase {
         this.getThreadMethodResponseBuilderPort = getThreadMethodResponseBuilderPort;
         this.invalidResultReferenceMethodErrorResponsePort = invalidResultReferenceMethodErrorResponsePort;
         this.invalidArgumentsMethodErrorResponsePort = invalidArgumentsMethodErrorResponsePort;
+        this.accountNotFoundMethodErrorResponsePort = accountNotFoundMethodErrorResponsePort;
     }
 
     @Override
@@ -69,7 +72,7 @@ public class GetThreadMethodCallService implements GetThreadMethodCallUsecase {
             };
 
         } catch (final AccountNotFoundException accountNotFoundException) {
-            return new MethodResponsePort[] { new AccountNotFoundMethodErrorResponse() };
+            return new MethodResponsePort[] { accountNotFoundMethodErrorResponsePort };
         } catch (final InvalidResultReferenceExecption invalidResultReferenceExecption) {
             return new MethodResponsePort[] { invalidResultReferenceMethodErrorResponsePort };
         } catch (final InvalidArgumentsException invalidArgumentsException) {

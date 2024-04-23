@@ -1,12 +1,13 @@
 package it.qbsoftware.adapters.in.jmaplib.entity;
 
+import it.qbsoftware.business.ports.in.jmap.entity.MailboxBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxPort;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxRightsPort;
 import it.qbsoftware.business.ports.in.jmap.entity.RolePort;
 import rs.ltt.jmap.common.entity.Mailbox;
 
 public class MailboxAdapter implements MailboxPort {
-    Mailbox mailbox;
+    private Mailbox mailbox;
 
     public MailboxAdapter(Mailbox mailbox) {
         this.mailbox = mailbox;
@@ -70,6 +71,23 @@ public class MailboxAdapter implements MailboxPort {
 
     public Mailbox adaptee() {
         return this.mailbox;
+    }
+
+    @Override
+    public MailboxBuilderPort getBuilder() {
+        return new MailboxBuilderAdapter(
+                Mailbox.builder()
+                        .id(mailbox.getId())
+                        .role(mailbox.getRole())
+                        .name(mailbox.getName())
+                        .parentId(mailbox.getParentId())
+                        .sortOrder(mailbox.getSortOrder())
+                        .totalEmails(mailbox.getTotalEmails())
+                        .unreadEmails(mailbox.getUnreadEmails())
+                        .totalThreads(mailbox.getTotalThreads())
+                        .unreadThreads(mailbox.getUnreadThreads())
+                        .myRights(mailbox.getMyRights())
+                        .isSubscribed(mailbox.getIsSubscribed()));
     }
 
 }

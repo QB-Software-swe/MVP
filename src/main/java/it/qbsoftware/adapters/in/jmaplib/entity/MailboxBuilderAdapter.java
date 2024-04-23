@@ -8,10 +8,14 @@ import rs.ltt.jmap.common.entity.Mailbox;
 import rs.ltt.jmap.common.entity.Mailbox.MailboxBuilder;
 
 public class MailboxBuilderAdapter implements MailboxBuilderPort {
-    MailboxBuilder mailboxBuilder;
+    private MailboxBuilder mailboxBuilder;
 
     public MailboxBuilderAdapter() {
         this.mailboxBuilder = Mailbox.builder();
+    }
+
+    public MailboxBuilderAdapter(final MailboxBuilder mailboxBuilder) {
+        this.mailboxBuilder = mailboxBuilder;
     }
 
     @Override

@@ -1,7 +1,5 @@
 package it.qbsoftware.business.domain.entity.changes;
 
-//TODO: implementare la classe
-//FIXME: trovare un modo più efficiente per incrementare lo stato
 public class AccountState {
     private final String id;
     final private String mailboxState;
@@ -79,6 +77,6 @@ public class AccountState {
     }
 
     private String increaseState(final String state) {
-        return state + "A";// FIXME: implementare una tecnica migliore
+        return String.valueOf(Long.parseLong(state) + 1L);
     }
 }

@@ -13,7 +13,7 @@ import rs.ltt.jmap.common.method.MethodResponse;
 import rs.ltt.jmap.common.method.call.mailbox.GetMailboxMethodCall;
 
 public class GetMailboxMethodCallController extends ControllerHandlerBase {
-    final GetMailboxMethodCallUsecase getMailboxMethodCallService;
+    private final GetMailboxMethodCallUsecase getMailboxMethodCallService;
 
     @Inject
     public GetMailboxMethodCallController(final GetMailboxMethodCallUsecase getMailboxMethodCallService) {
@@ -33,10 +33,10 @@ public class GetMailboxMethodCallController extends ControllerHandlerBase {
             ArrayList<MethodResponse> methodResponseList = new ArrayList<>();
 
             for (MethodResponseAdapter methodResponseAdapter : methodResponseAdapters) {
-                methodResponseList.add(methodResponseAdapter.methodResponse());
+                methodResponseList.add(methodResponseAdapter.adaptee());
             }
 
-            return methodResponseList.toArray(new MethodResponse[0]);
+            return methodResponseList.toArray(MethodResponse[]::new);
         }
 
         return super.handle(handlerRequest);

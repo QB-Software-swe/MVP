@@ -5,13 +5,15 @@ import it.qbsoftware.business.domain.exception.AccountNotFoundException;
 import it.qbsoftware.business.domain.exception.StateMismatchException;
 import it.qbsoftware.business.domain.methodcall.process.set.create.CreateEmail;
 import it.qbsoftware.business.domain.methodcall.process.set.create.CreatedResult;
+import it.qbsoftware.business.domain.methodcall.process.set.destroy.DestroyEmail;
 import it.qbsoftware.business.domain.methodcall.process.set.destroy.DestroyedResult;
+import it.qbsoftware.business.domain.methodcall.process.set.update.UpdateEmail;
 import it.qbsoftware.business.domain.methodcall.process.set.update.UpdatedResult;
-import it.qbsoftware.business.domain.methodcall.response.AccountNotFoundMethodErrorResponse;
 import it.qbsoftware.business.domain.methodcall.statematch.IfInStateMatch;
 import it.qbsoftware.business.ports.in.guava.ListMultimapPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
+import it.qbsoftware.business.ports.in.jmap.error.AccountNotFoundMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.error.StateMismatchMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.call.set.SetEmailMethodCallPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.MethodResponsePort;
@@ -24,17 +26,27 @@ public class SetEmailMethodCallService implements SetEmailMethodCallUsecase {
     private final IfInStateMatch ifInStateMatch;
     private final StateMismatchMethodErrorResponsePort stateMismatchMethodErrorResponsePort;
     private final CreateEmail createEmail;
+    private final UpdateEmail updateEmail;
+    private final DestroyEmail destroyEmail;
     private final SetEmailMethodResponseBuilderPort setEmailMethodResponseBuilderPort;
+    private final AccountNotFoundMethodErrorResponsePort accountNotFoundMethodErrorResponsePort;
 
     public SetEmailMethodCallService(final AccountStateRepository accountStateRepository,
             final IfInStateMatch ifInStateMatch,
             final StateMismatchMethodErrorResponsePort stateMismatchMethodErrorResponsePort,
-            final CreateEmail createEmail, final SetEmailMethodResponseBuilderPort setEmailMethodResponseBuilderPort) {
+            final CreateEmail createEmail,
+            final UpdateEmail updateEmail,
+            final DestroyEmail destroyEmail,
+            final SetEmailMethodResponseBuilderPort setEmailMethodResponseBuilderPort,
+            final AccountNotFoundMethodErrorResponsePort accountNotFoundMethodErrorResponsePort) {
         this.accountStateRepository = accountStateRepository;
         this.ifInStateMatch = ifInStateMatch;
         this.stateMismatchMethodErrorResponsePort = stateMismatchMethodErrorResponsePort;
         this.createEmail = createEmail;
+        this.updateEmail = updateEmail;
+        this.destroyEmail = destroyEmail;
         this.setEmailMethodResponseBuilderPort = setEmailMethodResponseBuilderPort;
+        this.accountNotFoundMethodErrorResponsePort = accountNotFoundMethodErrorResponsePort;
     }
 
     @Override
@@ -45,15 +57,15 @@ public class SetEmailMethodCallService implements SetEmailMethodCallUsecase {
             final String accountId = setEmailMethodCallPort.accountId();
             AccountState preSetAccountState = accountStateRepository.retrive(accountId);
 
-            ifInStateMatch.methodStateMatchCurrent(setEmailMethodCallPort.getIfInState(),
+            ifInStateMatch.methodStateMatchCurrent(setEmailMethodCallPort.ifInState(),
                     preSetAccountState.emailState());
 
             final CreatedResult<EmailPort> createdEmailResult = createEmail.create(setEmailMethodCallPort,
                     previousResponses);
 
-            final UpdatedResult<EmailPort> updatedEmailResult = null;
+            final UpdatedResult<EmailPort> updatedEmailResult = updateEmail.update(setEmailMethodCallPort);
 
-            final DestroyedResult destroyedEmailResult = null;
+            final DestroyedResult destroyedEmailResult = destroyEmail.destroy(setEmailMethodCallPort);
 
             AccountState postSetAccountState = accountStateRepository.retrive(accountId);
 
@@ -72,7 +84,7 @@ public class SetEmailMethodCallService implements SetEmailMethodCallUsecase {
             };
 
         } catch (final AccountNotFoundException accountNotFoundException) {
-            return new MethodResponsePort[] { new AccountNotFoundMethodErrorResponse() };
+            return new MethodResponsePort[] { accountNotFoundMethodErrorResponsePort };
         } catch (final StateMismatchException stateMismatchException) {
             return new MethodResponsePort[] { stateMismatchMethodErrorResponsePort };
         }

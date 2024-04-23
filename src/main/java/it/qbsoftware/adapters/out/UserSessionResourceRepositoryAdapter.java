@@ -42,7 +42,6 @@ public class UserSessionResourceRepositoryAdapter implements UserSessionResource
         return Optional.empty();
     }
 
-    // FIXME: in realtà non serve
     public Boolean save(final String username, final SessionResourcePort sessionResourcePort) {
         final SessionResourceAdapter sessionResourceAdapter = (SessionResourceAdapter) sessionResourcePort;
 

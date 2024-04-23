@@ -4,4 +4,6 @@ public interface SetErrorEnumPort {
     public SetErrorPort singleton();
 
     public SetErrorPort invalidProperties();
+
+    public SetErrorPort notFound();
 }

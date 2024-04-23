@@ -1,7 +1,5 @@
 package it.qbsoftware.business.services.get;
 
-import com.google.inject.Inject;
-
 import it.qbsoftware.business.domain.entity.changes.AccountState;
 import it.qbsoftware.business.domain.exception.AccountNotFoundException;
 import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
@@ -9,11 +7,11 @@ import it.qbsoftware.business.domain.exception.InvalidResultReferenceExecption;
 import it.qbsoftware.business.domain.methodcall.filter.EmailFilterBodyPartSettings;
 import it.qbsoftware.business.domain.methodcall.filter.EmailPropertiesFilter;
 import it.qbsoftware.business.domain.methodcall.process.get.GetReferenceIdsResolver;
-import it.qbsoftware.business.domain.methodcall.response.AccountNotFoundMethodErrorResponse;
 import it.qbsoftware.business.domain.util.get.RetrivedEntity;
 import it.qbsoftware.business.ports.in.guava.ListMultimapPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
+import it.qbsoftware.business.ports.in.jmap.error.AccountNotFoundMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.error.InvalidArgumentsMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.error.InvalidResultReferenceMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.call.get.GetEmailMethodCallPort;
@@ -31,14 +29,16 @@ public class GetEmailMethodCallService implements GetEmailMethodCallUsecase {
     private final EmailRepository emailRepository;
     private final GetReferenceIdsResolver getReferenceIdsResolver;
     private final EmailPropertiesFilter emailPropertiesFilter;
+    private final AccountNotFoundMethodErrorResponsePort accountNotFoundMethodErrorResponsePort;
 
-    @Inject
     public GetEmailMethodCallService(final AccountStateRepository accountStateRepository,
-            final EmailPropertiesFilter emailPropertiesFilter, final EmailRepository emailRepository,
+            final EmailPropertiesFilter emailPropertiesFilter,
+            final EmailRepository emailRepository,
             final GetEmailMethodResponseBuilderPort getEmailMethodResponseBuilderPort,
             final GetReferenceIdsResolver getReferenceIdsResolver,
             final InvalidArgumentsMethodErrorResponsePort invalidArgumentsMethodErrorResponsePort,
-            final InvalidResultReferenceMethodErrorResponsePort invalidResultReferenceMethodErrorResponsePort) {
+            final InvalidResultReferenceMethodErrorResponsePort invalidResultReferenceMethodErrorResponsePort,
+            final AccountNotFoundMethodErrorResponsePort accountNotFoundMethodErrorResponsePort) {
         this.invalidResultReferenceMethodErrorResponsePort = invalidResultReferenceMethodErrorResponsePort;
         this.invalidArgumentsMethodErrorResponsePort = invalidArgumentsMethodErrorResponsePort;
         this.getEmailMethodResponseBuilderPort = getEmailMethodResponseBuilderPort;
@@ -46,6 +46,7 @@ public class GetEmailMethodCallService implements GetEmailMethodCallUsecase {
         this.emailRepository = emailRepository;
         this.getReferenceIdsResolver = getReferenceIdsResolver;
         this.emailPropertiesFilter = emailPropertiesFilter;
+        this.accountNotFoundMethodErrorResponsePort = accountNotFoundMethodErrorResponsePort;
     }
 
     @Override
@@ -80,7 +81,7 @@ public class GetEmailMethodCallService implements GetEmailMethodCallUsecase {
             };
 
         } catch (final AccountNotFoundException accountNotFoundException) {
-            return new MethodResponsePort[] { new AccountNotFoundMethodErrorResponse() };
+            return new MethodResponsePort[] { accountNotFoundMethodErrorResponsePort };
         } catch (final InvalidResultReferenceExecption invalidResultReferenceExecption) {
             return new MethodResponsePort[] { invalidResultReferenceMethodErrorResponsePort };
         } catch (final InvalidArgumentsException invalidArgumentsException) {

@@ -21,7 +21,7 @@ public class SetErrorAdapter implements SetErrorPort {
         this.setError = new SetError(SetErrorType.NOT_FOUND, message);
     }
 
-    public SetError setError() {
+    public SetError adaptee() {
         return this.setError;
     }
 }

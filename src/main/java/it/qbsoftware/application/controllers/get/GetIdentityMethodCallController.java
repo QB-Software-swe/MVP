@@ -2,6 +2,8 @@ package it.qbsoftware.application.controllers.get;
 
 import java.util.ArrayList;
 
+import com.google.inject.Inject;
+
 import rs.ltt.jmap.common.method.MethodResponse;
 import rs.ltt.jmap.common.method.call.identity.GetIdentityMethodCall;
 import it.qbsoftware.adapters.in.jmaplib.method.call.get.GetIdentityMethodCallAdapter;
@@ -11,6 +13,12 @@ import it.qbsoftware.application.controllers.HandlerRequest;
 import it.qbsoftware.business.ports.in.usecase.get.GetIdentityMethodCallUsecase;
 
 public class GetIdentityMethodCallController extends ControllerHandlerBase {
+    private final GetIdentityMethodCallUsecase getIdentityMethodCallUsecase;
+
+    @Inject
+    public GetIdentityMethodCallController(final GetIdentityMethodCallUsecase getIdentityMethodCallUsecase) {
+        this.getIdentityMethodCallUsecase = getIdentityMethodCallUsecase;
+    }
 
     @Override
     public MethodResponse[] handle(HandlerRequest handlerRequest) {
@@ -19,18 +27,16 @@ public class GetIdentityMethodCallController extends ControllerHandlerBase {
             GetIdentityMethodCallAdapter getIdentityMethodCallAdapter = new GetIdentityMethodCallAdapter(
                     getIdentityMethodCall);
 
-            GetIdentityMethodCallUsecase getIdentityMethodCallService = null;
-
-            MethodResponseAdapter[] methodResponseAdapters = (MethodResponseAdapter[]) getIdentityMethodCallService
+            MethodResponseAdapter[] methodResponseAdapters = (MethodResponseAdapter[]) getIdentityMethodCallUsecase
                     .call(getIdentityMethodCallAdapter, handlerRequest.previousResponses());
 
             ArrayList<MethodResponse> methodResponseList = new ArrayList<>();
 
             for (MethodResponseAdapter methodResponseAdapter : methodResponseAdapters) {
-                methodResponseList.add(methodResponseAdapter.methodResponse());
+                methodResponseList.add(methodResponseAdapter.adaptee());
             }
 
-            return methodResponseList.toArray(new MethodResponse[0]);
+            return methodResponseList.toArray(MethodResponse[]::new);
         }
 
         return super.handle(handlerRequest);

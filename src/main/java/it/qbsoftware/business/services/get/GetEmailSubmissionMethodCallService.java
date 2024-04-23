@@ -6,11 +6,11 @@ import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
 import it.qbsoftware.business.domain.exception.InvalidResultReferenceExecption;
 import it.qbsoftware.business.domain.methodcall.filter.EmailSubmissionPropertiesFilter;
 import it.qbsoftware.business.domain.methodcall.process.get.GetReferenceIdsResolver;
-import it.qbsoftware.business.domain.methodcall.response.AccountNotFoundMethodErrorResponse;
 import it.qbsoftware.business.domain.util.get.RetrivedEntity;
 import it.qbsoftware.business.ports.in.guava.ListMultimapPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailSubmissionPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
+import it.qbsoftware.business.ports.in.jmap.error.AccountNotFoundMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.error.InvalidArgumentsMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.error.InvalidResultReferenceMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.call.get.GetEmailSubmissionMethodCallPort;
@@ -28,6 +28,7 @@ public class GetEmailSubmissionMethodCallService implements GetEmailSubmissionMe
     private final EmailSubmissionPropertiesFilter emailSubmissionPropertiesFilter;
     private final InvalidResultReferenceMethodErrorResponsePort invalidResultReferenceMethodErrorResponsePort;
     private final InvalidArgumentsMethodErrorResponsePort invalidArgumentsMethodErrorResponsePort;
+    private final AccountNotFoundMethodErrorResponsePort accountNotFoundMethodErrorResponsePort;
 
     public GetEmailSubmissionMethodCallService(final AccountStateRepository accountStateRepository,
             final EmailSubmissionPropertiesFilter emailSubmissionPropertiesFilter,
@@ -35,7 +36,8 @@ public class GetEmailSubmissionMethodCallService implements GetEmailSubmissionMe
             final GetEmailSubmissionMethodResponseBuilderPort getEmailSubmissionMethodResponseBuilderPort,
             final GetReferenceIdsResolver getReferenceIdsResolver,
             final InvalidArgumentsMethodErrorResponsePort invalidArgumentsMethodErrorResponsePort,
-            final InvalidResultReferenceMethodErrorResponsePort invalidResultReferenceMethodErrorResponsePort) {
+            final InvalidResultReferenceMethodErrorResponsePort invalidResultReferenceMethodErrorResponsePort,
+            final AccountNotFoundMethodErrorResponsePort accountNotFoundMethodErrorResponsePort) {
         this.accountStateRepository = accountStateRepository;
         this.getEmailSubmissionMethodResponseBuilderPort = getEmailSubmissionMethodResponseBuilderPort;
         this.getReferenceIdsResolver = getReferenceIdsResolver;
@@ -43,6 +45,7 @@ public class GetEmailSubmissionMethodCallService implements GetEmailSubmissionMe
         this.emailSubmissionPropertiesFilter = emailSubmissionPropertiesFilter;
         this.invalidResultReferenceMethodErrorResponsePort = invalidResultReferenceMethodErrorResponsePort;
         this.invalidArgumentsMethodErrorResponsePort = invalidArgumentsMethodErrorResponsePort;
+        this.accountNotFoundMethodErrorResponsePort = accountNotFoundMethodErrorResponsePort;
     }
 
     @Override
@@ -72,7 +75,7 @@ public class GetEmailSubmissionMethodCallService implements GetEmailSubmissionMe
             };
 
         } catch (final AccountNotFoundException accountNotFoundException) {
-            return new MethodResponsePort[] { new AccountNotFoundMethodErrorResponse() };
+            return new MethodResponsePort[] { accountNotFoundMethodErrorResponsePort };
         } catch (final InvalidResultReferenceExecption invalidResultReferenceExecption) {
             return new MethodResponsePort[] { invalidResultReferenceMethodErrorResponsePort };
         } catch (final InvalidArgumentsException invalidArgumentsException) {

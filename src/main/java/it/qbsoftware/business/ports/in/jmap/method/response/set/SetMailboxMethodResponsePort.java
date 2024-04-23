@@ -6,7 +6,5 @@ import it.qbsoftware.business.ports.in.jmap.entity.AbstractIdentifiableEntityPor
 import it.qbsoftware.business.ports.in.jmap.method.response.MethodResponsePort;
 
 public interface SetMailboxMethodResponsePort extends MethodResponsePort {
-
     Map<String, AbstractIdentifiableEntityPort> getCreated();
-
 }

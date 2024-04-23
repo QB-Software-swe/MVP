@@ -1,18 +1,16 @@
 package it.qbsoftware.business.services.get;
 
-import com.google.inject.Inject;
-
 import it.qbsoftware.business.domain.entity.changes.AccountState;
 import it.qbsoftware.business.domain.exception.AccountNotFoundException;
 import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
 import it.qbsoftware.business.domain.exception.InvalidResultReferenceExecption;
 import it.qbsoftware.business.domain.methodcall.filter.MailboxPropertiesFilter;
 import it.qbsoftware.business.domain.methodcall.process.get.GetReferenceIdsResolver;
-import it.qbsoftware.business.domain.methodcall.response.AccountNotFoundMethodErrorResponse;
 import it.qbsoftware.business.domain.util.get.RetrivedEntity;
 import it.qbsoftware.business.ports.in.guava.ListMultimapPort;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
+import it.qbsoftware.business.ports.in.jmap.error.AccountNotFoundMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.error.InvalidArgumentsMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.error.InvalidResultReferenceMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.call.get.GetMailboxMethodCallPort;
@@ -30,15 +28,16 @@ public class GetMailboxMethodCallService implements GetMailboxMethodCallUsecase 
         private final GetReferenceIdsResolver getReferenceIdsResolver;
         private final MailboxRepository mailboxRepository;
         private final MailboxPropertiesFilter mailboxPropertiesFilter;
+        private final AccountNotFoundMethodErrorResponsePort accountNotFoundMethodErrorResponsePort;
 
-        @Inject
         public GetMailboxMethodCallService(final AccountStateRepository accountStateRepository,
                         final GetMailboxMethodResponseBuilderPort getMailboxMethodResponseBuilderPort,
                         final GetReferenceIdsResolver getReferenceIdsResolver,
                         final InvalidArgumentsMethodErrorResponsePort invalidArgumentsMethodErrorResponsePort,
                         final InvalidResultReferenceMethodErrorResponsePort invalidResultReferenceMethodErrorResponsePort,
                         final MailboxPropertiesFilter mailboxPropertiesFilter,
-                        final MailboxRepository mailboxRepository) {
+                        final MailboxRepository mailboxRepository,
+                        AccountNotFoundMethodErrorResponsePort accountNotFoundMethodErrorResponsePort) {
                 this.getMailboxMethodResponseBuilderPort = getMailboxMethodResponseBuilderPort;
                 this.invalidResultReferenceMethodErrorResponsePort = invalidResultReferenceMethodErrorResponsePort;
                 this.invalidArgumentsMethodErrorResponsePort = invalidArgumentsMethodErrorResponsePort;
@@ -46,6 +45,7 @@ public class GetMailboxMethodCallService implements GetMailboxMethodCallUsecase 
                 this.getReferenceIdsResolver = getReferenceIdsResolver;
                 this.mailboxRepository = mailboxRepository;
                 this.mailboxPropertiesFilter = mailboxPropertiesFilter;
+                this.accountNotFoundMethodErrorResponsePort = accountNotFoundMethodErrorResponsePort;
 
         }
 
@@ -75,7 +75,7 @@ public class GetMailboxMethodCallService implements GetMailboxMethodCallUsecase 
                         };
 
                 } catch (final AccountNotFoundException accountNotFoundException) {
-                        return new MethodResponsePort[] { new AccountNotFoundMethodErrorResponse() };
+                        return new MethodResponsePort[] { accountNotFoundMethodErrorResponsePort };
                 } catch (final InvalidResultReferenceExecption invalidResultReferenceExecption) {
                         return new MethodResponsePort[] { invalidResultReferenceMethodErrorResponsePort };
                 } catch (final InvalidArgumentsException invalidArgumentsException) {
