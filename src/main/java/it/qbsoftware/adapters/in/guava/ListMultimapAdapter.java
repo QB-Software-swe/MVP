@@ -8,7 +8,7 @@ import it.qbsoftware.business.ports.in.guava.ListMultimapPort;
 import java.util.Collection;
 
 public class ListMultimapAdapter<K, V> implements ListMultimapPort<K, V> {
-    ListMultimap<K, V> listMultimap = ArrayListMultimap.create();
+    private ListMultimap<K, V> listMultimap = ArrayListMultimap.create();
 
     @Override
     public void put(K key, V value) {
@@ -19,7 +19,7 @@ public class ListMultimapAdapter<K, V> implements ListMultimapPort<K, V> {
         return listMultimap.values();
     }
 
-    public ListMultimap<K, V> listMultimap() {
+    public ListMultimap<K, V> adaptee() {
         return listMultimap;
     }
 }

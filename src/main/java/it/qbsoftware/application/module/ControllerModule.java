@@ -1,4 +1,4 @@
-package it.qbsoftware.application;
+package it.qbsoftware.application.module;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -66,7 +66,6 @@ import it.qbsoftware.business.services.get.GetIdentityMethodCallService;
 import it.qbsoftware.business.services.get.GetMailboxMethodCallService;
 import it.qbsoftware.business.services.get.GetThreadMethodCallService;
 import it.qbsoftware.persistance.MongoConnection;
-import rs.ltt.jmap.common.method.call.submission.GetEmailSubmissionMethodCall;
 import rs.ltt.jmap.gson.JmapAdapters;
 
 public class ControllerModule extends AbstractModule {

@@ -22,7 +22,7 @@ public class ResultReferenceResolverAdapter implements ResultReferenceResolverPo
             final ListMultimapPort<String, ResponseInvocationPort> previousResponses) {
 
         ListMultimap<String, Response.Invocation> omega = ArrayListMultimap.create();
-        var phi = ((ListMultimapAdapter<String, ResponseInvocationPort>) previousResponses).listMultimap();
+        var phi = ((ListMultimapAdapter<String, ResponseInvocationPort>) previousResponses).adaptee();
 
         for (var xhi : phi.asMap().entrySet()) {
             var zeta = xhi.getValue().stream().map(lambda -> ((ResponseInvocationAdapter) lambda).invocation())

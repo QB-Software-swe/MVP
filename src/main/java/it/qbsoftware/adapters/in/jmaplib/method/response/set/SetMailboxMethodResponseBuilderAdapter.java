@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 import it.qbsoftware.adapters.SetMailboxMethodResponseAdapter;
 import it.qbsoftware.adapters.in.jmaplib.entity.MailboxAdapter;
-import it.qbsoftware.adapters.in.jmaplib.error.SetErrorAdapter;
+import it.qbsoftware.adapters.in.jmaplib.entity.SetErrorAdapter;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxPort;
 import it.qbsoftware.business.ports.in.jmap.entity.SetErrorPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.set.SetMailboxMethodResponsePort;

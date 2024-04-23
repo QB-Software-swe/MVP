@@ -12,6 +12,7 @@ import it.qbsoftware.adapters.out.UserSessionResourceRepositoryAdapter;
 import it.qbsoftware.application.controllers.other.SessionController;
 import it.qbsoftware.application.handlers.ApiHandler;
 import it.qbsoftware.application.handlers.WellKnownHandler;
+import it.qbsoftware.application.module.ControllerModule;
 
 public class JettyServer {
     public static void main(String[] args) {

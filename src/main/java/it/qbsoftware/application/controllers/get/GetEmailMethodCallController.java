@@ -21,7 +21,7 @@ public class GetEmailMethodCallController extends ControllerHandlerBase {
     }
 
     @Override
-    public MethodResponse[] handle(HandlerRequest handlerRequest) {
+    public MethodResponse[] handle(final HandlerRequest handlerRequest) {
         if (handlerRequest.methodCall() instanceof GetEmailMethodCall getEmailMethodCall) {
 
             GetEmailMethodCallAdapter getEmailMethodCallAdapter = new GetEmailMethodCallAdapter(getEmailMethodCall);
