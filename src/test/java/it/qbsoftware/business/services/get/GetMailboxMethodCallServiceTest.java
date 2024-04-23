@@ -45,9 +45,6 @@ public class GetMailboxMethodCallServiceTest {
     @Mock
     private MailboxRepository mailboxRepository;
 
-    //@Mock
-    //private MailboxPort mailboxPort;
-
     @Mock
     private GetMailboxMethodCallPort getMailboxMethodCallPort;
 
