@@ -3,6 +3,7 @@ package it.qbsoftware.adapters.out;
 import org.bson.Document;
 
 import com.google.gson.Gson;
+import com.google.inject.Inject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
@@ -18,6 +19,7 @@ public class AccountStateRepositoryAdapter implements AccountStateRepository {
     private final MongoConnection connection;
     private final Gson gson;
 
+    @Inject
     public AccountStateRepositoryAdapter(final MongoConnection connection, final Gson gson) {
         this.connection = connection;
         this.gson = gson;

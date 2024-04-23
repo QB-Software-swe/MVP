@@ -10,10 +10,10 @@ import it.qbsoftware.business.ports.in.usecase.get.GetEmailSubmissionMethodCallU
 import rs.ltt.jmap.common.method.MethodResponse;
 import rs.ltt.jmap.common.method.call.submission.GetEmailSubmissionMethodCall;
 
-public class GetEmailSubmissionMethodCallService extends ControllerHandlerBase {
+public class GetEmailSubmissionMethodCallController extends ControllerHandlerBase {
     private final GetEmailSubmissionMethodCallUsecase getEmailSubmissionMethodCallUsecase;
 
-    public GetEmailSubmissionMethodCallService(
+    public GetEmailSubmissionMethodCallController(
             final GetEmailSubmissionMethodCallUsecase getEmailSubmissionMethodCallUsecase) {
         this.getEmailSubmissionMethodCallUsecase = getEmailSubmissionMethodCallUsecase;
     }
