@@ -6,9 +6,9 @@ import it.qbsoftware.business.ports.in.jmap.method.call.get.GetMailboxMethodCall
 import rs.ltt.jmap.common.method.call.mailbox.GetMailboxMethodCall;
 
 public class GetMailboxMethodCallAdapter implements GetMailboxMethodCallPort {
-    GetMailboxMethodCall getMailboxMethodCall;
+    private final GetMailboxMethodCall getMailboxMethodCall;
 
-    public GetMailboxMethodCallAdapter(GetMailboxMethodCall getMailboxMethodCall) {
+    public GetMailboxMethodCallAdapter(final GetMailboxMethodCall getMailboxMethodCall) {
         this.getMailboxMethodCall = getMailboxMethodCall;
     }
 
@@ -24,7 +24,9 @@ public class GetMailboxMethodCallAdapter implements GetMailboxMethodCallPort {
 
     @Override
     public InvocationResultReferencePort getIdsReference() {
-        return new InvocationResultReferenceAdapter(getMailboxMethodCall.getIdsReference());
+        return getMailboxMethodCall.getIdsReference() != null
+                ? new InvocationResultReferenceAdapter(getMailboxMethodCall.getIdsReference())
+                : null;
     }
 
     @Override

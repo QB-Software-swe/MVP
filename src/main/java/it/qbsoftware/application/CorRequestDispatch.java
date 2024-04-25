@@ -9,6 +9,7 @@ import it.qbsoftware.adapters.in.jmaplib.entity.ResponseInvocationAdapter;
 import it.qbsoftware.application.controllers.HandlerRequest;
 import it.qbsoftware.application.controllers.get.GetEmailMethodCallController;
 import it.qbsoftware.application.controllers.get.GetIdentityMethodCallController;
+import it.qbsoftware.application.controllers.get.GetMailboxMethodCallController;
 import it.qbsoftware.application.controllers.other.EchoMethodCallController;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
 import rs.ltt.jmap.common.GenericResponse;
@@ -23,18 +24,21 @@ public class CorRequestDispatch implements ApiRequestDispatch {
 
     private final GetEmailMethodCallController getEmailMethodCallController;
     private final GetIdentityMethodCallController getIdentityMethodCallController;
+    private final GetMailboxMethodCallController getMailboxMethodCallController;
 
     private final Gson gson;
 
     @Inject
     public CorRequestDispatch(final EchoMethodCallController echoMethodCallController, final Gson gson,
             final GetEmailMethodCallController getEmailMethodCallController,
-            final GetIdentityMethodCallController getIdentityMethodCallController) {
+            final GetIdentityMethodCallController getIdentityMethodCallController,
+            final GetMailboxMethodCallController getMailboxMethodCallController) {
 
         this.echoMethodCallController = echoMethodCallController;
 
         this.getEmailMethodCallController = getEmailMethodCallController;
         this.getIdentityMethodCallController = getIdentityMethodCallController;
+        this.getMailboxMethodCallController = getMailboxMethodCallController;
 
         this.gson = gson;
 
@@ -45,6 +49,7 @@ public class CorRequestDispatch implements ApiRequestDispatch {
         echoMethodCallController.setNext(getEmailMethodCallController);
 
         getEmailMethodCallController.setNext(getIdentityMethodCallController);
+        getIdentityMethodCallController.setNext(getMailboxMethodCallController);
     }
 
     @Override

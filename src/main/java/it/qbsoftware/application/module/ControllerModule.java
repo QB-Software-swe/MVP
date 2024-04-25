@@ -36,11 +36,13 @@ import it.qbsoftware.business.ports.in.jmap.error.InvalidResultReferenceMethodEr
 import it.qbsoftware.business.ports.in.jmap.error.StateMismatchMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetEmailMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetIdentityMethodResponseBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.method.response.get.GetMailboxMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.set.SetEmailMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.util.ResultReferenceResolverPort;
 import it.qbsoftware.business.ports.in.usecase.SessionUsecase;
 import it.qbsoftware.business.ports.in.usecase.get.GetEmailMethodCallUsecase;
 import it.qbsoftware.business.ports.in.usecase.get.GetIdentityMethodCallUsecase;
+import it.qbsoftware.business.ports.in.usecase.get.GetMailboxMethodCallUsecase;
 import it.qbsoftware.business.ports.in.usecase.set.SetEmailMethodCallUsecase;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.business.ports.out.domain.EmailChangesTrackerRepository;
@@ -48,10 +50,12 @@ import it.qbsoftware.business.ports.out.domain.MailboxChangesTrackerRepository;
 import it.qbsoftware.business.ports.out.domain.ThreadChangesTrackerRepository;
 import it.qbsoftware.business.ports.out.jmap.EmailRepository;
 import it.qbsoftware.business.ports.out.jmap.IdentityRepository;
+import it.qbsoftware.business.ports.out.jmap.MailboxRepository;
 import it.qbsoftware.business.ports.out.jmap.UserSessionResourceRepository;
 import it.qbsoftware.business.services.SessionService;
 import it.qbsoftware.business.services.get.GetEmailMethodCallService;
 import it.qbsoftware.business.services.get.GetIdentityMethodCallService;
+import it.qbsoftware.business.services.get.GetMailboxMethodCallService;
 import it.qbsoftware.business.services.set.SetEmailMethodCallService;
 
 public class ControllerModule extends AbstractModule {
@@ -85,6 +89,17 @@ public class ControllerModule extends AbstractModule {
                         final IdentityRepository identityRepository) {
                 return new GetIdentityMethodCallService(accountStateRepository, getIdentityMethodResponseBuilderPort,
                                 getReferenceIdsResolver, identityPropertiesFilter, identityRepository);
+        }
+
+        @Provides
+        GetMailboxMethodCallUsecase provideGetMailboxMethodCallService(
+                        final AccountStateRepository accountStateRepository,
+                        final GetMailboxMethodResponseBuilderPort getMailboxMethodResponseBuilderPort,
+                        final GetReferenceIdsResolver getReferenceIdsResolver,
+                        final MailboxPropertiesFilter mailboxPropertiesFilter,
+                        final MailboxRepository mailboxRepository) {
+                return new GetMailboxMethodCallService(accountStateRepository, getMailboxMethodResponseBuilderPort,
+                                getReferenceIdsResolver, mailboxPropertiesFilter, mailboxRepository);
         }
 
         // Service /Set

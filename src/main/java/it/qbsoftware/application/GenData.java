@@ -13,6 +13,7 @@ import com.google.inject.Inject;
 
 import it.qbsoftware.adapters.in.jmaplib.entity.EmailAdapter;
 import it.qbsoftware.adapters.in.jmaplib.entity.IdentityAdapter;
+import it.qbsoftware.adapters.in.jmaplib.entity.MailboxAdapter;
 import it.qbsoftware.adapters.in.jmaplib.entity.SessionResourceAdapter;
 import it.qbsoftware.adapters.out.IdentityRepositoryAdapter;
 import it.qbsoftware.adapters.out.UserSessionResourceRepositoryAdapter;
@@ -21,6 +22,7 @@ import it.qbsoftware.business.domain.exception.set.SetSingletonException;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.business.ports.out.jmap.EmailRepository;
 import it.qbsoftware.business.ports.out.jmap.IdentityRepository;
+import it.qbsoftware.business.ports.out.jmap.MailboxRepository;
 import it.qbsoftware.persistance.MongoConnection;
 import rs.ltt.jmap.common.SessionResource;
 import rs.ltt.jmap.common.SessionResource.SessionResourceBuilder;
@@ -38,11 +40,13 @@ import rs.ltt.jmap.common.entity.capability.CoreCapability;
 import rs.ltt.jmap.common.entity.capability.MailAccountCapability;
 import rs.ltt.jmap.common.entity.capability.MailCapability;
 
+//TODO: remove me
+//NOTA: accountid == user per questo caso
 public class GenData {
         private final MongoConnection mongoConnection;
         private final UserSessionResourceRepositoryAdapter userSessionResourceRepositoryAdapter;
         private final EmailRepository emailRepository;
-        // private final MailboxRepository mailboxRepository;
+        private final MailboxRepository mailboxRepository;
         private final AccountStateRepository accountStateRepository;
         private final IdentityRepository identityRepository;
         private final Random random = new Random();
@@ -61,10 +65,12 @@ public class GenData {
         @Inject
         public GenData(final UserSessionResourceRepositoryAdapter userSessionResourceRepositoryAdapter,
                         final EmailRepository emailRepository, final MongoConnection mongoConnection,
-                        AccountStateRepository accountStateRepository, IdentityRepository identityRepository) {
+                        final AccountStateRepository accountStateRepository,
+                        final IdentityRepository identityRepository, final MailboxRepository mailboxRepository) {
                 this.mongoConnection = mongoConnection;
                 this.userSessionResourceRepositoryAdapter = userSessionResourceRepositoryAdapter;
                 this.emailRepository = emailRepository;
+                this.mailboxRepository = mailboxRepository;
                 this.accountStateRepository = accountStateRepository;
                 this.identityRepository = identityRepository;
         }
@@ -75,6 +81,27 @@ public class GenData {
                 generateIdentity();
                 final List<String> mailboxIds = generateMailbox();
                 genEmails(mailboxIds);
+                genMailbox(mailboxIds);
+        }
+
+        public void genMailbox(final List<String> mailboxIds) {
+
+                for (final String mailboxId : mailboxIds) {
+                        try {
+                                mailboxRepository.save(new MailboxAdapter(
+                                                Mailbox.builder()
+                                                                .id(mailboxId)
+                                                                .name(UUID.randomUUID().toString())
+                                                                .role(Role.ALL)
+                                                                .build()
+
+                                ));
+                        } catch (SetSingletonException e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                        }
+                }
+
         }
 
         public void generateIdentity() {

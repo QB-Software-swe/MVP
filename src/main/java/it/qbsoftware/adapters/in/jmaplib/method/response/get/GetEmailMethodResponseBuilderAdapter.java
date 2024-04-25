@@ -11,21 +11,26 @@ import rs.ltt.jmap.common.method.response.email.GetEmailMethodResponse;
 import rs.ltt.jmap.common.method.response.email.GetEmailMethodResponse.GetEmailMethodResponseBuilder;
 
 public class GetEmailMethodResponseBuilderAdapter implements GetEmailMethodResponseBuilderPort {
-    GetEmailMethodResponseBuilder getEmailMethodResponseBuilder;
+    private GetEmailMethodResponseBuilder getEmailMethodResponseBuilder;
 
     public GetEmailMethodResponseBuilderAdapter() {
         this.getEmailMethodResponseBuilder = GetEmailMethodResponse.builder();
     }
 
     @Override
-    public GetEmailMethodResponseBuilderPort list(EmailPort[] emailList) {
-        getEmailMethodResponseBuilder
-                .list(Stream.of(emailList).map(emailPort -> ((EmailAdapter) emailPort).adaptee()).toArray(Email[]::new));
+    public GetEmailMethodResponseBuilderPort list(final EmailPort[] emailList) {
+        if (emailList != null) {
+            getEmailMethodResponseBuilder
+                    .list(Stream.of(emailList).map(emailPort -> ((EmailAdapter) emailPort).adaptee())
+                            .toArray(Email[]::new));
+        } else {
+            getEmailMethodResponseBuilder.list(null);
+        }
         return this;
     }
 
     @Override
-    public GetEmailMethodResponseBuilderPort state(String state) {
+    public GetEmailMethodResponseBuilderPort state(final String state) {
         getEmailMethodResponseBuilder.state(state);
         return this;
     }
@@ -42,7 +47,7 @@ public class GetEmailMethodResponseBuilderAdapter implements GetEmailMethodRespo
     }
 
     @Override
-    public GetEmailMethodResponseBuilderPort notFound(String[] notFound) {
+    public GetEmailMethodResponseBuilderPort notFound(final String[] notFound) {
         this.getEmailMethodResponseBuilder.notFound(notFound);
         return this;
     }

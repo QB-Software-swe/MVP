@@ -19,6 +19,8 @@ import it.qbsoftware.adapters.in.jmaplib.error.InvalidResultReferenceMethodError
 import it.qbsoftware.adapters.in.jmaplib.error.StateMismatchMethodErrorResponseAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetEmailMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetIdentityMethodResponseBuilderAdapter;
+import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetMailboxMethodResponseAdapter;
+import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetMailboxMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.set.SetEmailMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.util.ResultReferenceResolverAdapter;
 import it.qbsoftware.business.ports.in.jmap.entity.AccountBuilderPort;
@@ -36,6 +38,8 @@ import it.qbsoftware.business.ports.in.jmap.error.StateMismatchMethodErrorRespon
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetEmailMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetIdentityMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetIdentityMethodResponsePort;
+import it.qbsoftware.business.ports.in.jmap.method.response.get.GetMailboxMethodResponseBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.method.response.get.GetMailboxMethodResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.response.set.SetEmailMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.util.ResultReferenceResolverPort;
 import rs.ltt.jmap.common.method.response.identity.GetIdentityMethodResponse.GetIdentityMethodResponseBuilder;
@@ -64,6 +68,7 @@ public class JmapLibAdapterModule extends AbstractModule {
         // MethodResponse
         bind(GetEmailMethodResponseBuilderPort.class).to(GetEmailMethodResponseBuilderAdapter.class);
         bind(GetIdentityMethodResponseBuilderPort.class).to(GetIdentityMethodResponseBuilderAdapter.class);
+        bind(GetMailboxMethodResponseBuilderPort.class).to(GetMailboxMethodResponseBuilderAdapter.class);
 
         bind(SetEmailMethodResponseBuilderPort.class).to(SetEmailMethodResponseBuilderAdapter.class);
 

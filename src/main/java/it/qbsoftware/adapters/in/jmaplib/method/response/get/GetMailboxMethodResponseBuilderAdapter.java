@@ -2,6 +2,8 @@ package it.qbsoftware.adapters.in.jmaplib.method.response.get;
 
 import java.util.stream.Stream;
 
+import com.google.inject.Inject;
+
 import it.qbsoftware.adapters.in.jmaplib.entity.MailboxAdapter;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetMailboxMethodResponseBuilderPort;
@@ -11,21 +13,27 @@ import rs.ltt.jmap.common.method.response.mailbox.GetMailboxMethodResponse;
 import rs.ltt.jmap.common.method.response.mailbox.GetMailboxMethodResponse.GetMailboxMethodResponseBuilder;
 
 public class GetMailboxMethodResponseBuilderAdapter implements GetMailboxMethodResponseBuilderPort {
-    GetMailboxMethodResponseBuilder getMailboxMethodResponseBuilder;
+    private GetMailboxMethodResponseBuilder getMailboxMethodResponseBuilder;
 
+    @Inject
     public GetMailboxMethodResponseBuilderAdapter() {
         this.getMailboxMethodResponseBuilder = GetMailboxMethodResponse.builder();
     }
 
     @Override
-    public GetMailboxMethodResponseBuilderPort list(MailboxPort[] mailboxs) {
-        getMailboxMethodResponseBuilder.list(
-                Stream.of(mailboxs).map(mailboxPort -> ((MailboxAdapter) mailboxPort).adaptee()).toArray(Mailbox[]::new));
+    public GetMailboxMethodResponseBuilderPort list(final MailboxPort[] mailboxs) {
+        if (mailboxs != null) {
+            getMailboxMethodResponseBuilder.list(
+                    Stream.of(mailboxs).map(mailboxPort -> ((MailboxAdapter) mailboxPort).adaptee())
+                            .toArray(Mailbox[]::new));
+        } else {
+            getMailboxMethodResponseBuilder.list(null);
+        }
         return this;
     }
 
     @Override
-    public GetMailboxMethodResponseBuilderPort state(String state) {
+    public GetMailboxMethodResponseBuilderPort state(final String state) {
         getMailboxMethodResponseBuilder.state(state);
         return this;
     }
@@ -36,7 +44,7 @@ public class GetMailboxMethodResponseBuilderAdapter implements GetMailboxMethodR
     }
 
     @Override
-    public GetMailboxMethodResponseBuilderPort notFound(String[] ids) {
+    public GetMailboxMethodResponseBuilderPort notFound(final String[] ids) {
         getMailboxMethodResponseBuilder.notFound(ids);
         return this;
     }
