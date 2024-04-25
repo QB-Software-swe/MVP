@@ -8,6 +8,7 @@ import it.qbsoftware.adapters.in.guava.ListMultimapAdapter;
 import it.qbsoftware.adapters.in.jmaplib.entity.ResponseInvocationAdapter;
 import it.qbsoftware.application.controllers.HandlerRequest;
 import it.qbsoftware.application.controllers.changes.ChangesEmailMethodCallController;
+import it.qbsoftware.application.controllers.changes.ChangesEmailSubmissionMethodCallController;
 import it.qbsoftware.application.controllers.get.GetEmailMethodCallController;
 import it.qbsoftware.application.controllers.get.GetEmailSubmissionMethodCallController;
 import it.qbsoftware.application.controllers.get.GetIdentityMethodCallController;
@@ -33,6 +34,7 @@ public class CorRequestDispatch implements ApiRequestDispatch {
     private final GetEmailSubmissionMethodCallController getEmailSubmissionMethodCallController;
 
     private final ChangesEmailMethodCallController changesEmailMethodCallController;
+    private final ChangesEmailSubmissionMethodCallController changesEmailSubmissionMethodCallController;
 
     private final Gson gson;
 
@@ -43,7 +45,8 @@ public class CorRequestDispatch implements ApiRequestDispatch {
             final GetMailboxMethodCallController getMailboxMethodCallController,
             final GetThreadMethodCallController getThreadMethodCallController,
             final GetEmailSubmissionMethodCallController getEmailSubmissionMethodCallController,
-            final ChangesEmailMethodCallController changesEmailMethodCallController) {
+            final ChangesEmailMethodCallController changesEmailMethodCallController,
+            final ChangesEmailSubmissionMethodCallController changesEmailSubmissionMethodCallController) {
 
         this.echoMethodCallController = echoMethodCallController;
 
@@ -54,6 +57,7 @@ public class CorRequestDispatch implements ApiRequestDispatch {
         this.getEmailSubmissionMethodCallController = getEmailSubmissionMethodCallController;
 
         this.changesEmailMethodCallController = changesEmailMethodCallController;
+        this.changesEmailSubmissionMethodCallController = changesEmailSubmissionMethodCallController;
 
         this.gson = gson;
 
@@ -69,6 +73,7 @@ public class CorRequestDispatch implements ApiRequestDispatch {
         getThreadMethodCallController.setNext(getEmailSubmissionMethodCallController);
 
         getEmailSubmissionMethodCallController.setNext(changesEmailMethodCallController);
+        changesEmailMethodCallController.setNext(changesEmailSubmissionMethodCallController);
     }
 
     @Override

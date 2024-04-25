@@ -18,6 +18,7 @@ import it.qbsoftware.adapters.in.jmaplib.error.InvalidArgumentsMethodErrorRespon
 import it.qbsoftware.adapters.in.jmaplib.error.InvalidResultReferenceMethodErrorResponseAdapter;
 import it.qbsoftware.adapters.in.jmaplib.error.StateMismatchMethodErrorResponseAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.changes.ChangesEmailMethodResponseBuilderAdapter;
+import it.qbsoftware.adapters.in.jmaplib.method.response.changes.ChangesEmailSubmissionMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetEmailMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetEmailSubmissionMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetIdentityMethodResponseBuilderAdapter;
@@ -40,6 +41,7 @@ import it.qbsoftware.business.ports.in.jmap.error.InvalidArgumentsMethodErrorRes
 import it.qbsoftware.business.ports.in.jmap.error.InvalidResultReferenceMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.error.StateMismatchMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesEmailMethodResponseBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesEmailSubmissionMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetEmailMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetEmailSubmissionMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetIdentityMethodResponseBuilderPort;
@@ -78,6 +80,8 @@ public class JmapLibAdapterModule extends AbstractModule {
         bind(SetEmailMethodResponseBuilderPort.class).to(SetEmailMethodResponseBuilderAdapter.class);
 
         bind(ChangesEmailMethodResponseBuilderPort.class).to(ChangesEmailMethodResponseBuilderAdapter.class);
+        bind(ChangesEmailSubmissionMethodResponseBuilderPort.class)
+                .to(ChangesEmailSubmissionMethodResponseBuilderAdapter.class);
 
         // Util
         bind(ResultReferenceResolverPort.class).to(ResultReferenceResolverAdapter.class);

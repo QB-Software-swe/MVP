@@ -35,6 +35,7 @@ import it.qbsoftware.business.ports.in.jmap.error.InvalidArgumentsMethodErrorRes
 import it.qbsoftware.business.ports.in.jmap.error.InvalidResultReferenceMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.error.StateMismatchMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesEmailMethodResponseBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesEmailSubmissionMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetEmailMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetEmailSubmissionMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetIdentityMethodResponseBuilderPort;
@@ -44,6 +45,7 @@ import it.qbsoftware.business.ports.in.jmap.method.response.set.SetEmailMethodRe
 import it.qbsoftware.business.ports.in.jmap.util.ResultReferenceResolverPort;
 import it.qbsoftware.business.ports.in.usecase.SessionUsecase;
 import it.qbsoftware.business.ports.in.usecase.changes.ChangesEmailMethodCallUsecase;
+import it.qbsoftware.business.ports.in.usecase.changes.ChangesEmailSubmissionMethodCallUsecase;
 import it.qbsoftware.business.ports.in.usecase.get.GetEmailMethodCallUsecase;
 import it.qbsoftware.business.ports.in.usecase.get.GetEmailSubmissionMethodCallUsecase;
 import it.qbsoftware.business.ports.in.usecase.get.GetIdentityMethodCallUsecase;
@@ -52,6 +54,7 @@ import it.qbsoftware.business.ports.in.usecase.get.GetThreadMethodCallUsecase;
 import it.qbsoftware.business.ports.in.usecase.set.SetEmailMethodCallUsecase;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.business.ports.out.domain.EmailChangesTrackerRepository;
+import it.qbsoftware.business.ports.out.domain.EmailSubmissionChangesTrackerRepository;
 import it.qbsoftware.business.ports.out.domain.MailboxChangesTrackerRepository;
 import it.qbsoftware.business.ports.out.domain.ThreadChangesTrackerRepository;
 import it.qbsoftware.business.ports.out.jmap.EmailRepository;
@@ -62,6 +65,7 @@ import it.qbsoftware.business.ports.out.jmap.ThreadRepository;
 import it.qbsoftware.business.ports.out.jmap.UserSessionResourceRepository;
 import it.qbsoftware.business.services.SessionService;
 import it.qbsoftware.business.services.changes.ChangesEmailMethodCallService;
+import it.qbsoftware.business.services.changes.ChangesEmailSubmissionMethodCallService;
 import it.qbsoftware.business.services.get.GetEmailMethodCallService;
 import it.qbsoftware.business.services.get.GetEmailSubmissionMethodCallService;
 import it.qbsoftware.business.services.get.GetIdentityMethodCallService;
@@ -164,6 +168,16 @@ public class ControllerModule extends AbstractModule {
                         final AccountStateRepository accountStateRepository) {
                 return new ChangesEmailMethodCallService(emailChangesTrackerRepository,
                                 changesEmailMethodResponseBuilderPort, accountStateRepository);
+        }
+
+        @Provides
+        ChangesEmailSubmissionMethodCallUsecase provideChangesEmailSubmissionMethodCallService(
+                        final AccountStateRepository accountStateRepository,
+                        final EmailSubmissionChangesTrackerRepository emailSubmissionChangesTrackerRepository,
+                        final ChangesEmailSubmissionMethodResponseBuilderPort changesEmailSubmissionMethodResponseBuilderPort) {
+                return new ChangesEmailSubmissionMethodCallService(accountStateRepository,
+                                emailSubmissionChangesTrackerRepository,
+                                changesEmailSubmissionMethodResponseBuilderPort);
         }
 
         // Domain>util
