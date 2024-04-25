@@ -12,6 +12,7 @@ import it.qbsoftware.adapters.out.IdentityRepositoryAdapter;
 import it.qbsoftware.adapters.out.MailboxChangesTrackerRepositoryAdapter;
 import it.qbsoftware.adapters.out.MailboxRepositoryAdapter;
 import it.qbsoftware.adapters.out.ThreadChangesTrackerRepositoryAdapter;
+import it.qbsoftware.adapters.out.ThreadRepositoryAdapter;
 import it.qbsoftware.adapters.out.UserSessionResourceRepositoryAdapter;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.business.ports.out.domain.EmailChangesTrackerRepository;
@@ -20,6 +21,7 @@ import it.qbsoftware.business.ports.out.domain.ThreadChangesTrackerRepository;
 import it.qbsoftware.business.ports.out.jmap.EmailRepository;
 import it.qbsoftware.business.ports.out.jmap.IdentityRepository;
 import it.qbsoftware.business.ports.out.jmap.MailboxRepository;
+import it.qbsoftware.business.ports.out.jmap.ThreadRepository;
 import it.qbsoftware.business.ports.out.jmap.UserSessionResourceRepository;
 import it.qbsoftware.persistance.MongoConnection;
 
@@ -35,6 +37,7 @@ public class MongoRepositoryAdapterModule extends AbstractModule {
         bind(MailboxChangesTrackerRepository.class).to(MailboxChangesTrackerRepositoryAdapter.class);
         bind(IdentityRepository.class).to(IdentityRepositoryAdapter.class);
         bind(MailboxRepository.class).to(MailboxRepositoryAdapter.class);
+        bind(ThreadRepository.class).to(ThreadRepositoryAdapter.class);
     }
 
     @Singleton

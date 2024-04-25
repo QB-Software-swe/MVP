@@ -21,6 +21,8 @@ import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetEmailMethodRespo
 import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetIdentityMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetMailboxMethodResponseAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetMailboxMethodResponseBuilderAdapter;
+import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetThreadMethodResponseAdapter;
+import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetThreadMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.set.SetEmailMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.util.ResultReferenceResolverAdapter;
 import it.qbsoftware.business.ports.in.jmap.entity.AccountBuilderPort;
@@ -40,6 +42,8 @@ import it.qbsoftware.business.ports.in.jmap.method.response.get.GetIdentityMetho
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetIdentityMethodResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetMailboxMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetMailboxMethodResponsePort;
+import it.qbsoftware.business.ports.in.jmap.method.response.get.GetThreadMethodResponseBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.method.response.get.GetThreadMethodResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.response.set.SetEmailMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.util.ResultReferenceResolverPort;
 import rs.ltt.jmap.common.method.response.identity.GetIdentityMethodResponse.GetIdentityMethodResponseBuilder;
@@ -58,17 +62,11 @@ public class JmapLibAdapterModule extends AbstractModule {
         bind(SetErrorEnumPort.class).to(SetErrorEnumAdapter.class);
         bind(ThreadBuilderPort.class).to(ThreadBuilderAdapter.class);
 
-        // Error
-        bind(AccountNotFoundMethodErrorResponsePort.class).to(AccountNotFoundMethodErrorResponseAdapter.class);
-        bind(InvalidArgumentsMethodErrorResponsePort.class).to(InvalidArgumentsMethodErrorResponseAdapter.class);
-        bind(InvalidResultReferenceMethodErrorResponsePort.class)
-                .to(InvalidResultReferenceMethodErrorResponseAdapter.class);
-        bind(StateMismatchMethodErrorResponsePort.class).to(StateMismatchMethodErrorResponseAdapter.class);
-
         // MethodResponse
         bind(GetEmailMethodResponseBuilderPort.class).to(GetEmailMethodResponseBuilderAdapter.class);
         bind(GetIdentityMethodResponseBuilderPort.class).to(GetIdentityMethodResponseBuilderAdapter.class);
         bind(GetMailboxMethodResponseBuilderPort.class).to(GetMailboxMethodResponseBuilderAdapter.class);
+        bind(GetThreadMethodResponseBuilderPort.class).to(GetThreadMethodResponseBuilderAdapter.class);
 
         bind(SetEmailMethodResponseBuilderPort.class).to(SetEmailMethodResponseBuilderAdapter.class);
 

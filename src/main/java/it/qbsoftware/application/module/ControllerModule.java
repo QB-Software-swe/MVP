@@ -37,12 +37,14 @@ import it.qbsoftware.business.ports.in.jmap.error.StateMismatchMethodErrorRespon
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetEmailMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetIdentityMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetMailboxMethodResponseBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.method.response.get.GetThreadMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.set.SetEmailMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.util.ResultReferenceResolverPort;
 import it.qbsoftware.business.ports.in.usecase.SessionUsecase;
 import it.qbsoftware.business.ports.in.usecase.get.GetEmailMethodCallUsecase;
 import it.qbsoftware.business.ports.in.usecase.get.GetIdentityMethodCallUsecase;
 import it.qbsoftware.business.ports.in.usecase.get.GetMailboxMethodCallUsecase;
+import it.qbsoftware.business.ports.in.usecase.get.GetThreadMethodCallUsecase;
 import it.qbsoftware.business.ports.in.usecase.set.SetEmailMethodCallUsecase;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.business.ports.out.domain.EmailChangesTrackerRepository;
@@ -51,11 +53,13 @@ import it.qbsoftware.business.ports.out.domain.ThreadChangesTrackerRepository;
 import it.qbsoftware.business.ports.out.jmap.EmailRepository;
 import it.qbsoftware.business.ports.out.jmap.IdentityRepository;
 import it.qbsoftware.business.ports.out.jmap.MailboxRepository;
+import it.qbsoftware.business.ports.out.jmap.ThreadRepository;
 import it.qbsoftware.business.ports.out.jmap.UserSessionResourceRepository;
 import it.qbsoftware.business.services.SessionService;
 import it.qbsoftware.business.services.get.GetEmailMethodCallService;
 import it.qbsoftware.business.services.get.GetIdentityMethodCallService;
 import it.qbsoftware.business.services.get.GetMailboxMethodCallService;
+import it.qbsoftware.business.services.get.GetThreadMethodCallService;
 import it.qbsoftware.business.services.set.SetEmailMethodCallService;
 
 public class ControllerModule extends AbstractModule {
@@ -102,7 +106,19 @@ public class ControllerModule extends AbstractModule {
                                 getReferenceIdsResolver, mailboxPropertiesFilter, mailboxRepository);
         }
 
+        @Provides
+        GetThreadMethodCallUsecase provideGetThreadMethodCallService(
+                        final AccountStateRepository accountStateRepository,
+                        final GetReferenceIdsResolver getReferenceIdsResolver,
+                        final GetThreadMethodResponseBuilderPort getThreadMethodResponseBuilderPort,
+                        final ThreadPropertiesFilter threadPropertiesFilter,
+                        final ThreadRepository threadRepository) {
+                return new GetThreadMethodCallService(accountStateRepository, getReferenceIdsResolver,
+                                getThreadMethodResponseBuilderPort, threadPropertiesFilter, threadRepository);
+        }
+
         // Service /Set
+        /* 
         @Provides
         SetEmailMethodCallUsecase provideSetEmailMethodCallService(final AccountStateRepository accountStateRepository,
                         final IfInStateMatch ifInStateMatch,
@@ -116,6 +132,7 @@ public class ControllerModule extends AbstractModule {
                                 stateMismatchMethodErrorResponsePort, createEmail, updateEmail, destroyEmail,
                                 setEmailMethodResponseBuilderPort, accountNotFoundMethodErrorResponsePort);
         }
+        */
 
         // Domain>util
         @Provides
