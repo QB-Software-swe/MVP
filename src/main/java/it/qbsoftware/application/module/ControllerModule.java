@@ -34,6 +34,7 @@ import it.qbsoftware.business.ports.in.jmap.error.AccountNotFoundMethodErrorResp
 import it.qbsoftware.business.ports.in.jmap.error.InvalidArgumentsMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.error.InvalidResultReferenceMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.error.StateMismatchMethodErrorResponsePort;
+import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesEmailMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetEmailMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetEmailSubmissionMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetIdentityMethodResponseBuilderPort;
@@ -42,6 +43,7 @@ import it.qbsoftware.business.ports.in.jmap.method.response.get.GetThreadMethodR
 import it.qbsoftware.business.ports.in.jmap.method.response.set.SetEmailMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.util.ResultReferenceResolverPort;
 import it.qbsoftware.business.ports.in.usecase.SessionUsecase;
+import it.qbsoftware.business.ports.in.usecase.changes.ChangesEmailMethodCallUsecase;
 import it.qbsoftware.business.ports.in.usecase.get.GetEmailMethodCallUsecase;
 import it.qbsoftware.business.ports.in.usecase.get.GetEmailSubmissionMethodCallUsecase;
 import it.qbsoftware.business.ports.in.usecase.get.GetIdentityMethodCallUsecase;
@@ -59,6 +61,7 @@ import it.qbsoftware.business.ports.out.jmap.MailboxRepository;
 import it.qbsoftware.business.ports.out.jmap.ThreadRepository;
 import it.qbsoftware.business.ports.out.jmap.UserSessionResourceRepository;
 import it.qbsoftware.business.services.SessionService;
+import it.qbsoftware.business.services.changes.ChangesEmailMethodCallService;
 import it.qbsoftware.business.services.get.GetEmailMethodCallService;
 import it.qbsoftware.business.services.get.GetEmailSubmissionMethodCallService;
 import it.qbsoftware.business.services.get.GetIdentityMethodCallService;
@@ -77,7 +80,7 @@ public class ControllerModule extends AbstractModule {
                 return new SessionService(sessionResourceBuilderPort, userSessionResourceRepository);
         }
 
-        // Service /Get
+        // Service>/Get
         @Provides
         GetEmailMethodCallUsecase provideGetEmailMethodCallService(final AccountStateRepository accountStateRepository,
                         final EmailPropertiesFilter emailPropertiesFilter,
@@ -133,7 +136,7 @@ public class ControllerModule extends AbstractModule {
                                 getReferenceIdsResolver);
         }
 
-        // Service /Set
+        // Service>/Set
         /*
          * @Provides
          * SetEmailMethodCallUsecase provideSetEmailMethodCallService(final
@@ -152,6 +155,16 @@ public class ControllerModule extends AbstractModule {
          * setEmailMethodResponseBuilderPort, accountNotFoundMethodErrorResponsePort);
          * }
          */
+
+        // Service>/Changes
+        @Provides
+        ChangesEmailMethodCallUsecase provideChangesEmailMethodCallService(
+                        final EmailChangesTrackerRepository emailChangesTrackerRepository,
+                        final ChangesEmailMethodResponseBuilderPort changesEmailMethodResponseBuilderPort,
+                        final AccountStateRepository accountStateRepository) {
+                return new ChangesEmailMethodCallService(emailChangesTrackerRepository,
+                                changesEmailMethodResponseBuilderPort, accountStateRepository);
+        }
 
         // Domain>util
         @Provides

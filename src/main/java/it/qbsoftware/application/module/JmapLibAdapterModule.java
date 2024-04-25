@@ -17,6 +17,7 @@ import it.qbsoftware.adapters.in.jmaplib.error.AccountNotFoundMethodErrorRespons
 import it.qbsoftware.adapters.in.jmaplib.error.InvalidArgumentsMethodErrorResponseAdapter;
 import it.qbsoftware.adapters.in.jmaplib.error.InvalidResultReferenceMethodErrorResponseAdapter;
 import it.qbsoftware.adapters.in.jmaplib.error.StateMismatchMethodErrorResponseAdapter;
+import it.qbsoftware.adapters.in.jmaplib.method.response.changes.ChangesEmailMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetEmailMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetEmailSubmissionMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetIdentityMethodResponseBuilderAdapter;
@@ -38,6 +39,7 @@ import it.qbsoftware.business.ports.in.jmap.error.AccountNotFoundMethodErrorResp
 import it.qbsoftware.business.ports.in.jmap.error.InvalidArgumentsMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.error.InvalidResultReferenceMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.error.StateMismatchMethodErrorResponsePort;
+import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesEmailMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetEmailMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetEmailSubmissionMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetIdentityMethodResponseBuilderPort;
@@ -48,6 +50,7 @@ import it.qbsoftware.business.ports.in.jmap.method.response.get.GetThreadMethodR
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetThreadMethodResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.response.set.SetEmailMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.util.ResultReferenceResolverPort;
+import rs.ltt.jmap.common.method.response.email.ChangesEmailMethodResponse.ChangesEmailMethodResponseBuilder;
 import rs.ltt.jmap.common.method.response.identity.GetIdentityMethodResponse.GetIdentityMethodResponseBuilder;
 import rs.ltt.jmap.gson.JmapAdapters;
 
@@ -63,7 +66,8 @@ public class JmapLibAdapterModule extends AbstractModule {
         bind(SessionResourceBuilderPort.class).to(SessionResourceBuilderAdapter.class);
         bind(SetErrorEnumPort.class).to(SetErrorEnumAdapter.class);
         bind(ThreadBuilderPort.class).to(ThreadBuilderAdapter.class);
-        bind(GetEmailSubmissionMethodResponseBuilderPort.class).to(GetEmailSubmissionMethodResponseBuilderAdapter.class);
+        bind(GetEmailSubmissionMethodResponseBuilderPort.class)
+                .to(GetEmailSubmissionMethodResponseBuilderAdapter.class);
 
         // MethodResponse
         bind(GetEmailMethodResponseBuilderPort.class).to(GetEmailMethodResponseBuilderAdapter.class);
@@ -72,6 +76,8 @@ public class JmapLibAdapterModule extends AbstractModule {
         bind(GetThreadMethodResponseBuilderPort.class).to(GetThreadMethodResponseBuilderAdapter.class);
 
         bind(SetEmailMethodResponseBuilderPort.class).to(SetEmailMethodResponseBuilderAdapter.class);
+
+        bind(ChangesEmailMethodResponseBuilderPort.class).to(ChangesEmailMethodResponseBuilderAdapter.class);
 
         // Util
         bind(ResultReferenceResolverPort.class).to(ResultReferenceResolverAdapter.class);
