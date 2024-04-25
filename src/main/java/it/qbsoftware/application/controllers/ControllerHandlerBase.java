@@ -4,7 +4,7 @@ import rs.ltt.jmap.common.method.MethodResponse;
 import rs.ltt.jmap.common.method.error.UnknownMethodMethodErrorResponse;
 
 public abstract class ControllerHandlerBase implements ControllerHandler {
-    ControllerHandler nextHandler;
+    private ControllerHandler nextHandler = null;
 
     @Override
     public void setNext(final ControllerHandler nextHandler) {
@@ -12,7 +12,11 @@ public abstract class ControllerHandlerBase implements ControllerHandler {
     }
 
     @Override
-    public MethodResponse[] handle(final HandlerRequest handlerRequest) {
-        return new MethodResponse[] { new UnknownMethodMethodErrorResponse() };
+    public MethodResponse handle(final HandlerRequest handlerRequest) {
+        if (nextHandler != null) {
+            return nextHandler.handle(handlerRequest);
+        }
+
+        return new UnknownMethodMethodErrorResponse();
     }
 }

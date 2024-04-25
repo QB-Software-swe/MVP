@@ -1,7 +1,7 @@
 package it.qbsoftware.application.controllers.changes;
 
 import it.qbsoftware.adapters.in.jmaplib.method.call.changes.ChangesThreadMethodCallAdapter;
-import it.qbsoftware.adapters.in.jmaplib.method.response.MethodResponseAdapter;
+import it.qbsoftware.adapters.in.jmaplib.method.response.AbstracMethodResponseAdapter;
 import it.qbsoftware.application.controllers.ControllerHandlerBase;
 import it.qbsoftware.application.controllers.HandlerRequest;
 import it.qbsoftware.business.ports.in.usecase.changes.ChangesThreadMethodCallUsecase;
@@ -23,12 +23,12 @@ public class ChangesThreadMethodCallController extends ControllerHandlerBase {
             final ChangesThreadMethodCallAdapter changesThreadMethodCallAdapter = new ChangesThreadMethodCallAdapter(
                     changesThreadMethodCall);
 
-            final MethodResponseAdapter[] methodResponseAdapters = (MethodResponseAdapter[]) changesThreadMethodCallUsecase
+            final AbstracMethodResponseAdapter[] methodResponseAdapters = (AbstracMethodResponseAdapter[]) changesThreadMethodCallUsecase
                     .call(changesThreadMethodCallAdapter, handlerRequest.previousResponses());
 
             ArrayList<MethodResponse> methodResponseList = new ArrayList<>();
 
-            for (MethodResponseAdapter methodResponseAdapter : methodResponseAdapters) {
+            for (AbstracMethodResponseAdapter methodResponseAdapter : methodResponseAdapters) {
                 methodResponseList.add(methodResponseAdapter.adaptee());
             }
 

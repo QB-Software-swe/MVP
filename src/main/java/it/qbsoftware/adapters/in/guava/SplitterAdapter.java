@@ -7,7 +7,7 @@ import com.google.common.base.Splitter;
 import it.qbsoftware.business.ports.in.guava.SplitterPort;
 
 public class SplitterAdapter implements SplitterPort {
-    private Splitter splitter;
+    private Splitter splitter = null;
 
     @Override
     public SplitterPort on(char separator) {

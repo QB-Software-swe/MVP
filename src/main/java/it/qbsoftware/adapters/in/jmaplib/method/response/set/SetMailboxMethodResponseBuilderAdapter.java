@@ -3,7 +3,6 @@ package it.qbsoftware.adapters.in.jmaplib.method.response.set;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import it.qbsoftware.adapters.SetMailboxMethodResponseAdapter;
 import it.qbsoftware.adapters.in.jmaplib.entity.MailboxAdapter;
 import it.qbsoftware.adapters.in.jmaplib.entity.SetErrorAdapter;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxPort;

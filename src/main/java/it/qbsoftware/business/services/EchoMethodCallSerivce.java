@@ -1,8 +1,8 @@
 package it.qbsoftware.business.services;
 
 import it.qbsoftware.business.ports.in.jmap.method.call.other.EchoMethodCallPort;
-import it.qbsoftware.business.ports.in.jmap.method.response.MethodResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.response.other.EchoMethodResponseBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.method.response.other.EchoMethodResponsePort;
 import it.qbsoftware.business.ports.in.usecase.EchoMethodCallUsecase;
 
 public class EchoMethodCallSerivce implements EchoMethodCallUsecase {
@@ -13,9 +13,7 @@ public class EchoMethodCallSerivce implements EchoMethodCallUsecase {
     }
 
     @Override
-    public MethodResponsePort[] call(EchoMethodCallPort echoMethodCall) {
-        return new MethodResponsePort[] {
-                echoMethodResponseBuilder.payload(echoMethodCall.payload()).build()
-        };
+    public EchoMethodResponsePort call(EchoMethodCallPort echoMethodCall) {
+        return echoMethodResponseBuilder.payload(echoMethodCall.payload()).build();
     }
 }

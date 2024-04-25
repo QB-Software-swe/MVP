@@ -1,5 +1,10 @@
 package it.qbsoftware.application.module;
 
-public class GuavaLibAdapterModule {
+import com.google.inject.AbstractModule;
 
+public class GuavaLibAdapterModule extends AbstractModule {
+    @Override
+    protected void configure() {
+
+    }
 }

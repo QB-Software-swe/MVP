@@ -1,7 +1,7 @@
 package it.qbsoftware.application.controllers.set;
 
 import it.qbsoftware.adapters.in.jmaplib.method.call.set.SetIdentityMethodCallAdapter;
-import it.qbsoftware.adapters.in.jmaplib.method.response.MethodResponseAdapter;
+import it.qbsoftware.adapters.in.jmaplib.method.response.AbstracMethodResponseAdapter;
 import it.qbsoftware.application.controllers.ControllerHandlerBase;
 import it.qbsoftware.application.controllers.HandlerRequest;
 import it.qbsoftware.business.ports.in.usecase.set.SetIdentityMethodCallUsecase;
@@ -23,12 +23,12 @@ public class SetIdentityMethodCallController extends ControllerHandlerBase {
             final SetIdentityMethodCallAdapter setIdentityMethodCallAdapter = new SetIdentityMethodCallAdapter(
                     setIdentityMethodCall);
 
-            final MethodResponseAdapter[] methodResponseAdapters = (MethodResponseAdapter[]) setIdentityMethodCallUsecase
+            final AbstracMethodResponseAdapter[] methodResponseAdapters = (AbstracMethodResponseAdapter[]) setIdentityMethodCallUsecase
                     .call(setIdentityMethodCallAdapter, handlerRequest.previousResponses());
 
             ArrayList<MethodResponse> methodResponseList = new ArrayList<>();
 
-            for (MethodResponseAdapter methodResponseAdapter : methodResponseAdapters) {
+            for (final AbstracMethodResponseAdapter methodResponseAdapter : methodResponseAdapters) {
                 methodResponseList.add(methodResponseAdapter.adaptee());
             }
 

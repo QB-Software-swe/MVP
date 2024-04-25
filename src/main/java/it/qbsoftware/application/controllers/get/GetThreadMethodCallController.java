@@ -3,7 +3,7 @@ package it.qbsoftware.application.controllers.get;
 import java.util.ArrayList;
 
 import it.qbsoftware.adapters.in.jmaplib.method.call.get.GetThreadMethodCallAdapter;
-import it.qbsoftware.adapters.in.jmaplib.method.response.MethodResponseAdapter;
+import it.qbsoftware.adapters.in.jmaplib.method.response.AbstracMethodResponseAdapter;
 import it.qbsoftware.application.controllers.ControllerHandlerBase;
 import it.qbsoftware.application.controllers.HandlerRequest;
 import it.qbsoftware.business.ports.in.usecase.get.GetThreadMethodCallUsecase;
@@ -23,12 +23,12 @@ public class GetThreadMethodCallController extends ControllerHandlerBase {
             final GetThreadMethodCallAdapter getThreadMethodCallAdapter = new GetThreadMethodCallAdapter(
                     getThreadMethodCall);
 
-            final MethodResponseAdapter[] methodResponseAdapters = (MethodResponseAdapter[]) getThreadMethodCallUsecase
+            final AbstracMethodResponseAdapter[] methodResponseAdapters = (AbstracMethodResponseAdapter[]) getThreadMethodCallUsecase
                     .call(getThreadMethodCallAdapter, handlerRequest.previousResponses());
 
             ArrayList<MethodResponse> methodResponseList = new ArrayList<>();
 
-            for (MethodResponseAdapter methodResponseAdapter : methodResponseAdapters) {
+            for (AbstracMethodResponseAdapter methodResponseAdapter : methodResponseAdapters) {
                 methodResponseList.add(methodResponseAdapter.adaptee());
             }
 

@@ -17,14 +17,14 @@ public class StandardEmailPropertiesFilter implements EmailPropertiesFilter {
     }
 
     @Override
-    public EmailPort[] filter(EmailPort[] emails, String[] properties,
+    public EmailPort[] filter(final EmailPort[] emails, final String[] properties,
             EmailFilterBodyPartSettings emailFilterBodyPartSettings) throws InvalidArgumentsException {
         if (properties == null) {
             return emails;
         }
 
         final List<EmailPort> filtredEmail = new ArrayList<EmailPort>();
-        for (EmailPort emailPort : emails) {
+        for (final EmailPort emailPort : emails) {
             filtredEmail.add(emailFilter(emailPort, properties));
         }
 
@@ -44,6 +44,9 @@ public class StandardEmailPropertiesFilter implements EmailPropertiesFilter {
                     yield emailBuilder.threadId(emailPort.getThreadId());
 
                 case "mailboxIds":
+                    yield emailBuilder.mailboxIds(emailPort.getMailboxIds());
+
+                case "keywords":
                     yield emailBuilder.keywords(emailPort.getKeywords());
 
                 case "size":

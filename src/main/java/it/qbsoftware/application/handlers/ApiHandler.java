@@ -16,7 +16,7 @@ public class ApiHandler extends Handler.Abstract {
     public static String CONTEXT_PATH = "";
     private static String ENDPOINT_PATH = "/api";
 
-    final ApiRequestDispatch apiRequestDispatch;
+    private final ApiRequestDispatch apiRequestDispatch;
 
     @Inject
     public ApiHandler(final ApiRequestDispatch apiRequestDispatch) {
@@ -38,6 +38,7 @@ public class ApiHandler extends Handler.Abstract {
             responsePayload = apiRequestDispatch.Dispatch(requestPayload);
         } catch (final JsonSyntaxException jsonSyntaxException) {
             responsePayload = "{\"type\":\"urn:ietf:params:jmap:error:notJSON\",\"status\":400,\"detail\":\"See https://jmap.io/spec-core.html#errors\"}";
+            response.setStatus(400);
             Content.Sink.write(response, true, responsePayload, callback);
             return true;
         }

@@ -2,28 +2,21 @@ package it.qbsoftware.business.services;
 
 import java.util.Optional;
 
-import com.google.inject.Inject;
-
 import it.qbsoftware.business.ports.in.jmap.EndPointConfiguration;
 import it.qbsoftware.business.ports.in.jmap.capability.CapabilityPort;
-import it.qbsoftware.business.ports.in.jmap.entity.AccountBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.SessionResourceBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.SessionResourcePort;
 import it.qbsoftware.business.ports.in.usecase.SessionUsecase;
 import it.qbsoftware.business.ports.out.jmap.UserSessionResourceRepository;
 
 public class SessionService implements SessionUsecase {
-        final SessionResourceBuilderPort sessionResourceBuilderPort;
-        final AccountBuilderPort accountBuilderPort;
-        final UserSessionResourceRepository userSessionResourceRepository;
+        private final SessionResourceBuilderPort sessionResourceBuilderPort;
+        private final UserSessionResourceRepository userSessionResourceRepository;
 
-        @Inject //TODO: remove inject
         public SessionService(
                         final SessionResourceBuilderPort sessionResourceBuilderPort,
-                        final AccountBuilderPort accountBuilderPort,
                         final UserSessionResourceRepository userSessionResourceRepository) {
                 this.sessionResourceBuilderPort = sessionResourceBuilderPort;
-                this.accountBuilderPort = accountBuilderPort;
                 this.userSessionResourceRepository = userSessionResourceRepository;
         }
 

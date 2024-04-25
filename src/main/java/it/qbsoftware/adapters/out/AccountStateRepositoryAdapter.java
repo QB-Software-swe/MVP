@@ -41,7 +41,7 @@ public class AccountStateRepositoryAdapter implements AccountStateRepository {
 
     @Override
     public void save(final AccountState accountState) {
-        Document docAccountState = Document.parse(gson.toJson(accountState).replace("id", "_id"));
+        Document docAccountState = Document.parse(gson.toJson(accountState).replace("\"id\"", "\"_id\""));
         connection.getDatabase().getCollection(COLLECTION).replaceOne(
                 Filters.eq("_id", accountState.id()), docAccountState, new ReplaceOptions().upsert(true));
     }

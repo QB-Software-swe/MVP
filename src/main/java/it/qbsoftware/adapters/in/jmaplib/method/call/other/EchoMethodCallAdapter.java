@@ -14,5 +14,4 @@ public class EchoMethodCallAdapter implements EchoMethodCallPort {
     public String payload() {
         return echoMethodCall.getLibraryName();
     }
-
 }

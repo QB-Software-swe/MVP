@@ -13,5 +13,5 @@ public interface IdentityRepository {
 
     public boolean destroy(final String id) throws SetNotFoundException;
 
-    public boolean save(final IdentityPort identityPort) throws SetSingletonException;
+    public void save(final IdentityPort identityPort) throws SetSingletonException;
 }

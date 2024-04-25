@@ -1,38 +1,13 @@
 package it.qbsoftware.application.module;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.inject.AbstractModule;
-import com.google.inject.Singleton;
-import com.google.inject.name.Names;
-import com.mongodb.client.MongoClients;
+import com.google.inject.Provides;
 
-import it.qbsoftware.adapters.in.jmaplib.entity.AccountBuilderAdapter;
-import it.qbsoftware.adapters.in.jmaplib.entity.EmailBuilderAdapter;
-import it.qbsoftware.adapters.in.jmaplib.entity.EmailSubmissionBuilderAdapter;
-import it.qbsoftware.adapters.in.jmaplib.entity.IdentityBuilderAdapter;
-import it.qbsoftware.adapters.in.jmaplib.entity.MailboxBuilderAdapter;
-import it.qbsoftware.adapters.in.jmaplib.entity.SessionResourceBuilderAdapter;
-import it.qbsoftware.adapters.in.jmaplib.entity.ThreadBuilderAdapter;
-import it.qbsoftware.adapters.in.jmaplib.error.AccountNotFoundMethodErrorResponseAdapter;
-import it.qbsoftware.adapters.in.jmaplib.error.InvalidArgumentsMethodErrorResponseAdapter;
-import it.qbsoftware.adapters.in.jmaplib.error.InvalidResultReferenceMethodErrorResponseAdapter;
-import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetEmailMethodResponseBuilderAdapter;
-import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetEmailSubmissionMethodResponseBuilderAdapter;
-import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetIdentityMethodResponseBuilderAdapter;
-import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetMailboxMethodResponseBuilderAdapter;
-import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetThreadMethodResponseBuilderAdapter;
-import it.qbsoftware.adapters.in.jmaplib.util.ResultReferenceResolverAdapter;
-import it.qbsoftware.adapters.out.AccountStateRepositoryAdapter;
-import it.qbsoftware.adapters.out.EmailRepositoryAdapter;
-import it.qbsoftware.adapters.out.EmailSubmissionRepositoryAdapter;
-import it.qbsoftware.adapters.out.IdentityRepositoryAdapter;
-import it.qbsoftware.adapters.out.MailboxRepositoryAdapter;
-import it.qbsoftware.adapters.out.ThreadRepositoryAdapter;
-import it.qbsoftware.adapters.out.UserSessionResourceRepositoryAdapter;
-import it.qbsoftware.application.config.JmapConfig;
-import it.qbsoftware.application.config.JmapEndpoint;
+import it.qbsoftware.business.domain.methodcall.filter.EmailPropertiesFilter;
+import it.qbsoftware.business.domain.methodcall.filter.EmailSubmissionPropertiesFilter;
+import it.qbsoftware.business.domain.methodcall.filter.IdentityPropertiesFilter;
 import it.qbsoftware.business.domain.methodcall.filter.MailboxPropertiesFilter;
+import it.qbsoftware.business.domain.methodcall.filter.ThreadPropertiesFilter;
 import it.qbsoftware.business.domain.methodcall.filter.standard.StandardEmailPropertiesFilter;
 import it.qbsoftware.business.domain.methodcall.filter.standard.StandardEmailSubmissionPropertiesFilter;
 import it.qbsoftware.business.domain.methodcall.filter.standard.StandardIdentityPropertiesFilter;
@@ -40,136 +15,162 @@ import it.qbsoftware.business.domain.methodcall.filter.standard.StandardMailboxP
 import it.qbsoftware.business.domain.methodcall.filter.standard.StandardThreadPropertiesFilter;
 import it.qbsoftware.business.domain.methodcall.process.get.GetReferenceIdsResolver;
 import it.qbsoftware.business.domain.methodcall.process.get.JmapReferenceIdsResolver;
-import it.qbsoftware.business.ports.in.jmap.EndPointConfiguration;
-import it.qbsoftware.business.ports.in.jmap.capability.CapabilityPort;
-import it.qbsoftware.business.ports.in.jmap.entity.AccountBuilderPort;
+import it.qbsoftware.business.domain.methodcall.process.set.create.CreateEmail;
+import it.qbsoftware.business.domain.methodcall.process.set.create.StandardCreateEmail;
+import it.qbsoftware.business.domain.methodcall.process.set.destroy.DestroyEmail;
+import it.qbsoftware.business.domain.methodcall.process.set.destroy.StandardDestroyEmail;
+import it.qbsoftware.business.domain.methodcall.process.set.update.StandardUpdateEmail;
+import it.qbsoftware.business.domain.methodcall.process.set.update.UpdateEmail;
+import it.qbsoftware.business.domain.methodcall.statematch.IfInStateMatch;
+import it.qbsoftware.business.domain.methodcall.statematch.StandardIfInStateMatch;
+import it.qbsoftware.business.ports.in.jmap.entity.EmailBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.entity.EmailSubmissionBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.entity.IdentityBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.SessionResourceBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.entity.SetErrorEnumPort;
+import it.qbsoftware.business.ports.in.jmap.entity.ThreadBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.error.AccountNotFoundMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.error.InvalidArgumentsMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.error.InvalidResultReferenceMethodErrorResponsePort;
-import it.qbsoftware.business.ports.in.jmap.method.response.get.GetMailboxMethodResponseBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.error.StateMismatchMethodErrorResponsePort;
+import it.qbsoftware.business.ports.in.jmap.method.response.get.GetEmailMethodResponseBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.method.response.get.GetIdentityMethodResponseBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.method.response.set.SetEmailMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.util.ResultReferenceResolverPort;
 import it.qbsoftware.business.ports.in.usecase.SessionUsecase;
 import it.qbsoftware.business.ports.in.usecase.get.GetEmailMethodCallUsecase;
-import it.qbsoftware.business.ports.in.usecase.get.GetEmailSubmissionMethodCallUsecase;
 import it.qbsoftware.business.ports.in.usecase.get.GetIdentityMethodCallUsecase;
-import it.qbsoftware.business.ports.in.usecase.get.GetMailboxMethodCallUsecase;
-import it.qbsoftware.business.ports.in.usecase.get.GetThreadMethodCallUsecase;
+import it.qbsoftware.business.ports.in.usecase.set.SetEmailMethodCallUsecase;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
-import it.qbsoftware.business.ports.out.jmap.MailboxRepository;
+import it.qbsoftware.business.ports.out.domain.EmailChangesTrackerRepository;
+import it.qbsoftware.business.ports.out.domain.MailboxChangesTrackerRepository;
+import it.qbsoftware.business.ports.out.domain.ThreadChangesTrackerRepository;
+import it.qbsoftware.business.ports.out.jmap.EmailRepository;
+import it.qbsoftware.business.ports.out.jmap.IdentityRepository;
 import it.qbsoftware.business.ports.out.jmap.UserSessionResourceRepository;
 import it.qbsoftware.business.services.SessionService;
 import it.qbsoftware.business.services.get.GetEmailMethodCallService;
-import it.qbsoftware.business.services.get.GetEmailSubmissionMethodCallService;
 import it.qbsoftware.business.services.get.GetIdentityMethodCallService;
-import it.qbsoftware.business.services.get.GetMailboxMethodCallService;
-import it.qbsoftware.business.services.get.GetThreadMethodCallService;
-import it.qbsoftware.persistance.MongoConnection;
-import rs.ltt.jmap.gson.JmapAdapters;
+import it.qbsoftware.business.services.set.SetEmailMethodCallService;
 
 public class ControllerModule extends AbstractModule {
-    @Override
-    protected void configure() {
-        bind(SessionResourceBuilderPort.class).to(SessionResourceBuilderAdapter.class);
-        bind(AccountBuilderPort.class).to(AccountBuilderAdapter.class);
-        bind(EndPointConfiguration.class).to(JmapEndpoint.class);
-        bind(CapabilityPort[].class).annotatedWith(Names.named("serverCapabilities"))
-                .toInstance(JmapConfig.serverCapabilities());
-        bind(Gson.class).toInstance(jampGsonConfig());
+        @Override
+        protected void configure() {
+        }
 
-        // Adapter in JMAP
-        bind(MailboxBuilderPort.class).to(MailboxBuilderAdapter.class);
-        bind(GetMailboxMethodResponseBuilderPort.class).to(GetMailboxMethodResponseBuilderAdapter.class);
-        bind(InvalidResultReferenceMethodErrorResponsePort.class)
-                .to(InvalidResultReferenceMethodErrorResponseAdapter.class);
-        bind(InvalidArgumentsMethodErrorResponsePort.class).to(InvalidArgumentsMethodErrorResponseAdapter.class);
-        bind(ResultReferenceResolverPort.class).to(ResultReferenceResolverAdapter.class);
-        bind(MailboxBuilderPort.class).to(MailboxBuilderAdapter.class);
-        bind(AccountNotFoundMethodErrorResponsePort.class).to(AccountNotFoundMethodErrorResponseAdapter.class);
+        @Provides
+        SessionUsecase provideSessionService(final SessionResourceBuilderPort sessionResourceBuilderPort,
+                        final UserSessionResourceRepository userSessionResourceRepository) {
+                return new SessionService(sessionResourceBuilderPort, userSessionResourceRepository);
+        }
 
-        // Adapter out JMAP ?
-        bind(AccountStateRepository.class).to(AccountStateRepositoryAdapter.class);
-        bind(AccountStateRepository.class).to(AccountStateRepositoryAdapter.class);
-        bind(UserSessionResourceRepository.class).to(UserSessionResourceRepositoryAdapter.class);
-        bind(MailboxRepository.class).to(MailboxRepositoryAdapter.class);
+        // Service /Get
+        @Provides
+        GetEmailMethodCallUsecase provideGetEmailMethodCallService(final AccountStateRepository accountStateRepository,
+                        final EmailPropertiesFilter emailPropertiesFilter,
+                        final EmailRepository emailRepository,
+                        final GetEmailMethodResponseBuilderPort getEmailMethodResponseBuilderPort,
+                        final GetReferenceIdsResolver getReferenceIdsResolver) {
+                return new GetEmailMethodCallService(accountStateRepository, emailPropertiesFilter, emailRepository,
+                                getEmailMethodResponseBuilderPort, getReferenceIdsResolver);
+        }
 
-        // Domain?
-        bind(GetReferenceIdsResolver.class)
-                .toInstance(new JmapReferenceIdsResolver(new ResultReferenceResolverAdapter()));
-        bind(MailboxPropertiesFilter.class)
-                .toInstance(new StandardMailboxPropertiesFilter(new MailboxBuilderAdapter()));
+        @Provides
+        GetIdentityMethodCallUsecase provideGetIdentityMethodCallService(
+                        final AccountStateRepository accountStateRepository,
+                        final GetIdentityMethodResponseBuilderPort getIdentityMethodResponseBuilderPort,
+                        final GetReferenceIdsResolver getReferenceIdsResolver,
+                        final IdentityPropertiesFilter identityPropertiesFilter,
+                        final IdentityRepository identityRepository) {
+                return new GetIdentityMethodCallService(accountStateRepository, getIdentityMethodResponseBuilderPort,
+                                getReferenceIdsResolver, identityPropertiesFilter, identityRepository);
+        }
 
-        // Service
-        bind(SessionUsecase.class).to(SessionService.class);
+        // Service /Set
+        @Provides
+        SetEmailMethodCallUsecase provideSetEmailMethodCallService(final AccountStateRepository accountStateRepository,
+                        final IfInStateMatch ifInStateMatch,
+                        final StateMismatchMethodErrorResponsePort stateMismatchMethodErrorResponsePort,
+                        final CreateEmail createEmail,
+                        final UpdateEmail updateEmail,
+                        final DestroyEmail destroyEmail,
+                        final SetEmailMethodResponseBuilderPort setEmailMethodResponseBuilderPort,
+                        final AccountNotFoundMethodErrorResponsePort accountNotFoundMethodErrorResponsePort) {
+                return new SetEmailMethodCallService(accountStateRepository, ifInStateMatch,
+                                stateMismatchMethodErrorResponsePort, createEmail, updateEmail, destroyEmail,
+                                setEmailMethodResponseBuilderPort, accountNotFoundMethodErrorResponsePort);
+        }
 
-        bind(GetEmailMethodCallUsecase.class)
-                .toInstance(
-                        new GetEmailMethodCallService(gStateRepositoryAdapter(),
-                                new StandardEmailPropertiesFilter(new EmailBuilderAdapter()),
-                                new EmailRepositoryAdapter(),
-                                new GetEmailMethodResponseBuilderAdapter(),
-                                new JmapReferenceIdsResolver(new ResultReferenceResolverAdapter()),
-                                new InvalidArgumentsMethodErrorResponseAdapter(),
-                                new InvalidResultReferenceMethodErrorResponseAdapter(),
-                                new AccountNotFoundMethodErrorResponseAdapter()));
-        bind(GetIdentityMethodCallUsecase.class).toInstance(
-                new GetIdentityMethodCallService(gStateRepositoryAdapter(),
-                        new GetIdentityMethodResponseBuilderAdapter(),
-                        new JmapReferenceIdsResolver(new ResultReferenceResolverAdapter()),
-                        new StandardIdentityPropertiesFilter(new IdentityBuilderAdapter()),
-                        new IdentityRepositoryAdapter(),
-                        new InvalidArgumentsMethodErrorResponseAdapter(),
-                        new InvalidResultReferenceMethodErrorResponseAdapter(),
-                        new AccountNotFoundMethodErrorResponseAdapter()));
-        bind(GetMailboxMethodCallUsecase.class).toInstance(
-                new GetMailboxMethodCallService(
-                        new AccountStateRepositoryAdapter(mongoConnection(), jampGsonConfig()),
-                        new GetMailboxMethodResponseBuilderAdapter(),
-                        new JmapReferenceIdsResolver(new ResultReferenceResolverAdapter()),
-                        new InvalidArgumentsMethodErrorResponseAdapter(),
-                        new InvalidResultReferenceMethodErrorResponseAdapter(),
-                        new StandardMailboxPropertiesFilter(new MailboxBuilderAdapter()),
-                        new MailboxRepositoryAdapter(),
-                        new AccountNotFoundMethodErrorResponseAdapter()));
-        bind(GetThreadMethodCallUsecase.class).toInstance(
-                new GetThreadMethodCallService(gStateRepositoryAdapter(),
-                        new JmapReferenceIdsResolver(new ResultReferenceResolverAdapter()),
-                        new GetThreadMethodResponseBuilderAdapter(),
-                        new StandardThreadPropertiesFilter(new ThreadBuilderAdapter()), new ThreadRepositoryAdapter(),
-                        new InvalidArgumentsMethodErrorResponseAdapter(),
-                        new InvalidResultReferenceMethodErrorResponseAdapter(),
-                        new AccountNotFoundMethodErrorResponseAdapter()));
-        bind(GetEmailSubmissionMethodCallUsecase.class).toInstance(
-                new GetEmailSubmissionMethodCallService(gStateRepositoryAdapter(),
-                        new StandardEmailSubmissionPropertiesFilter(new EmailSubmissionBuilderAdapter()),
-                        new EmailSubmissionRepositoryAdapter(), new GetEmailSubmissionMethodResponseBuilderAdapter(),
-                        new JmapReferenceIdsResolver(new ResultReferenceResolverAdapter()),
-                        new InvalidArgumentsMethodErrorResponseAdapter(),
-                        new InvalidResultReferenceMethodErrorResponseAdapter(),
-                        new AccountNotFoundMethodErrorResponseAdapter()));
+        // Domain>util
+        @Provides
+        GetReferenceIdsResolver provideJmapReferenceIdsResolver(
+                        final ResultReferenceResolverPort referenceResolverPort) {
+                return new JmapReferenceIdsResolver(referenceResolverPort);
+        }
 
-        // Database
-        bind(MongoConnection.class)
-                .toInstance(mongoConnection());
-    }
+        // Domain>filter
+        @Provides
+        EmailPropertiesFilter provideStandardEmailPropertiesFilter(final EmailBuilderPort emailBuilderPort) {
+                return new StandardEmailPropertiesFilter(emailBuilderPort);
+        }
 
-    @Singleton
-    private Gson jampGsonConfig() {
-        Gson gson = new Gson();
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        JmapAdapters.register(gsonBuilder);
-        gson = gsonBuilder.create();
+        @Provides
+        IdentityPropertiesFilter provideStandardIdentityPropertiesFilter(
+                        final IdentityBuilderPort identityBuilderPort) {
+                return new StandardIdentityPropertiesFilter(identityBuilderPort);
+        }
 
-        return gson;
-    }
+        @Provides
+        MailboxPropertiesFilter provideStandardMailboxPropertiesFilter(final MailboxBuilderPort mailboxBuilderPort) {
+                return new StandardMailboxPropertiesFilter(mailboxBuilderPort);
+        }
 
-    @Singleton
-    private MongoConnection mongoConnection() {
-        return new MongoConnection(MongoClients.create("mongodb://rootuser:rootpass@dbhost:27017/"));
-    }
+        @Provides
+        ThreadPropertiesFilter provideStandardThreadPropertiesFilter(final ThreadBuilderPort threadBuilderPort) {
+                return new StandardThreadPropertiesFilter(threadBuilderPort);
+        }
 
-    private AccountStateRepositoryAdapter gStateRepositoryAdapter() {
-        return new AccountStateRepositoryAdapter(mongoConnection(), jampGsonConfig());
-    }
+        @Provides
+        EmailSubmissionPropertiesFilter provideStandardEmailSubmissionPropertiesFilter(
+                        final EmailSubmissionBuilderPort emailSubmissionBuilderPort) {
+                return new StandardEmailSubmissionPropertiesFilter(emailSubmissionBuilderPort);
+        }
+
+        // Domain>methodcall>process>[Create, Update, Destroy]
+        @Provides
+        CreateEmail provideStandardCreateEmail(final EmailBuilderPort emailBuilderPort,
+                        final EmailRepository emailRepository,
+                        final AccountStateRepository accountStateRepository,
+                        final EmailChangesTrackerRepository emailChangesTrackerRepository,
+                        final MailboxChangesTrackerRepository mailboxChangesTrackerRepository,
+                        final ThreadChangesTrackerRepository threadChangesTrackerRepository,
+                        final SetErrorEnumPort setErrorEnumPort) {
+                return new StandardCreateEmail(emailBuilderPort, emailRepository, accountStateRepository,
+                                emailChangesTrackerRepository, mailboxChangesTrackerRepository,
+                                threadChangesTrackerRepository, setErrorEnumPort);
+        }
+
+        @Provides
+        UpdateEmail provideStandardUpdateEmail() {
+                return new StandardUpdateEmail();
+        }
+
+        @Provides
+        DestroyEmail provideDestroyEmail(final EmailRepository emailRepository,
+                        final EmailChangesTrackerRepository emailChangesTrackerRepository,
+                        final MailboxChangesTrackerRepository mailboxChangesTrackerRepository,
+                        final SetErrorEnumPort setErrorEnumPort,
+                        final AccountStateRepository accountStateRepository,
+                        final ThreadChangesTrackerRepository threadChangesTrackerRepository) {
+                return new StandardDestroyEmail(emailRepository, emailChangesTrackerRepository,
+                                mailboxChangesTrackerRepository, setErrorEnumPort, accountStateRepository,
+                                threadChangesTrackerRepository);
+        }
+
+        // Domain>Other
+        @Provides
+        IfInStateMatch provideInStateMatch() {
+                return new StandardIfInStateMatch();
+        }
 }

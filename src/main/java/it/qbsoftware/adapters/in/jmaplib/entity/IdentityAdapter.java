@@ -10,7 +10,7 @@ import rs.ltt.jmap.common.entity.Identity;
 public class IdentityAdapter implements IdentityPort {
     private Identity identity;
 
-    public IdentityAdapter(Identity identity) {
+    public IdentityAdapter(final Identity identity) {
         this.identity = identity;
     }
 
@@ -31,14 +31,18 @@ public class IdentityAdapter implements IdentityPort {
 
     @Override
     public EmailAddressPort[] getReplyTo() {
-        return this.identity.getReplyTo().stream().map(emailAddress -> new EmailAddressAdapter(emailAddress))
-                .collect(Collectors.toList()).toArray(EmailAddressAdapter[]::new);
+        return this.identity.getReplyTo() != null
+                ? this.identity.getReplyTo().stream().map(emailAddress -> new EmailAddressAdapter(emailAddress))
+                        .collect(Collectors.toList()).toArray(EmailAddressAdapter[]::new)
+                : null;
     }
 
     @Override
     public EmailAddressPort[] getBcc() {
-        return this.identity.getBcc().stream().map(emailAddress -> new EmailAddressAdapter(emailAddress))
-                .collect(Collectors.toList()).toArray(EmailAddressAdapter[]::new);
+        return this.identity.getBcc() != null
+                ? this.identity.getBcc().stream().map(emailAddress -> new EmailAddressAdapter(emailAddress))
+                        .collect(Collectors.toList()).toArray(EmailAddressAdapter[]::new)
+                : null;
     }
 
     @Override
