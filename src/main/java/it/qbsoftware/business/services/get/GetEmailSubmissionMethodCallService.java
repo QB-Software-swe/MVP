@@ -16,6 +16,7 @@ import it.qbsoftware.business.ports.in.jmap.error.InvalidResultReferenceMethodEr
 import it.qbsoftware.business.ports.in.jmap.method.call.get.GetEmailSubmissionMethodCallPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.MethodResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetEmailSubmissionMethodResponseBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.method.response.get.GetEmailSubmissionMethodResponsePort;
 import it.qbsoftware.business.ports.in.usecase.get.GetEmailSubmissionMethodCallUsecase;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.business.ports.out.jmap.EmailSubmissionRepository;
@@ -25,61 +26,44 @@ public class GetEmailSubmissionMethodCallService implements GetEmailSubmissionMe
     private final GetEmailSubmissionMethodResponseBuilderPort getEmailSubmissionMethodResponseBuilderPort;
     private final GetReferenceIdsResolver getReferenceIdsResolver;
     private final EmailSubmissionRepository emailSubmissionRepository;
-    private final EmailSubmissionPropertiesFilter emailSubmissionPropertiesFilter;
-    private final InvalidResultReferenceMethodErrorResponsePort invalidResultReferenceMethodErrorResponsePort;
-    private final InvalidArgumentsMethodErrorResponsePort invalidArgumentsMethodErrorResponsePort;
-    private final AccountNotFoundMethodErrorResponsePort accountNotFoundMethodErrorResponsePort;
+    private final EmailSubmissionPropertiesFilter emailSubmissionPropertiesFilter;;
 
     public GetEmailSubmissionMethodCallService(final AccountStateRepository accountStateRepository,
             final EmailSubmissionPropertiesFilter emailSubmissionPropertiesFilter,
             final EmailSubmissionRepository emailSubmissionRepository,
             final GetEmailSubmissionMethodResponseBuilderPort getEmailSubmissionMethodResponseBuilderPort,
-            final GetReferenceIdsResolver getReferenceIdsResolver,
-            final InvalidArgumentsMethodErrorResponsePort invalidArgumentsMethodErrorResponsePort,
-            final InvalidResultReferenceMethodErrorResponsePort invalidResultReferenceMethodErrorResponsePort,
-            final AccountNotFoundMethodErrorResponsePort accountNotFoundMethodErrorResponsePort) {
+            final GetReferenceIdsResolver getReferenceIdsResolver) {
         this.accountStateRepository = accountStateRepository;
         this.getEmailSubmissionMethodResponseBuilderPort = getEmailSubmissionMethodResponseBuilderPort;
         this.getReferenceIdsResolver = getReferenceIdsResolver;
         this.emailSubmissionRepository = emailSubmissionRepository;
         this.emailSubmissionPropertiesFilter = emailSubmissionPropertiesFilter;
-        this.invalidResultReferenceMethodErrorResponsePort = invalidResultReferenceMethodErrorResponsePort;
-        this.invalidArgumentsMethodErrorResponsePort = invalidArgumentsMethodErrorResponsePort;
-        this.accountNotFoundMethodErrorResponsePort = accountNotFoundMethodErrorResponsePort;
     }
 
     @Override
-    public MethodResponsePort[] call(final GetEmailSubmissionMethodCallPort getEmailSubmissionMethodCallPort,
-            final ListMultimapPort<String, ResponseInvocationPort> previousResponses) {
-        try {
-            final String accountId = getEmailSubmissionMethodCallPort.accountId();
-            final AccountState accountState = accountStateRepository.retrive(accountId);
+    public GetEmailSubmissionMethodResponsePort call(
+            final GetEmailSubmissionMethodCallPort getEmailSubmissionMethodCallPort,
+            final ListMultimapPort<String, ResponseInvocationPort> previousResponses)
+            throws InvalidResultReferenceExecption, AccountNotFoundException, InvalidArgumentsException {
 
-            final String[] emailSubmissionIds = getReferenceIdsResolver.resolve(getEmailSubmissionMethodCallPort,
-                    previousResponses);
+        final String accountId = getEmailSubmissionMethodCallPort.accountId();
+        final AccountState accountState = accountStateRepository.retrive(accountId);
 
-            final RetrivedEntity<EmailSubmissionPort> emailSubmissionRetrived = emailSubmissionIds != null
-                    ? emailSubmissionRepository.retrive(emailSubmissionIds)
-                    : emailSubmissionRepository.retriveAll(accountId);
+        final String[] emailSubmissionIds = getReferenceIdsResolver.resolve(getEmailSubmissionMethodCallPort,
+                previousResponses);
 
-            final EmailSubmissionPort[] emailSubmissionFiltred = emailSubmissionPropertiesFilter
-                    .filter(emailSubmissionRetrived.found(), getEmailSubmissionMethodCallPort.getProperties());
+        final RetrivedEntity<EmailSubmissionPort> emailSubmissionRetrived = emailSubmissionIds != null
+                ? emailSubmissionRepository.retrive(emailSubmissionIds)
+                : emailSubmissionRepository.retriveAll(accountId);
 
-            return new MethodResponsePort[] {
-                    getEmailSubmissionMethodResponseBuilderPort
-                            .reset()
-                            .list(emailSubmissionFiltred)
-                            .notFound(emailSubmissionRetrived.notFound())
-                            .state(accountState.emailSubmissionState())
-                            .build()
-            };
+        final EmailSubmissionPort[] emailSubmissionFiltred = emailSubmissionPropertiesFilter
+                .filter(emailSubmissionRetrived.found(), getEmailSubmissionMethodCallPort.getProperties());
 
-        } catch (final AccountNotFoundException accountNotFoundException) {
-            return new MethodResponsePort[] { accountNotFoundMethodErrorResponsePort };
-        } catch (final InvalidResultReferenceExecption invalidResultReferenceExecption) {
-            return new MethodResponsePort[] { invalidResultReferenceMethodErrorResponsePort };
-        } catch (final InvalidArgumentsException invalidArgumentsException) {
-            return new MethodResponsePort[] { invalidArgumentsMethodErrorResponsePort };
-        }
+        return getEmailSubmissionMethodResponseBuilderPort
+                .reset()
+                .list(emailSubmissionFiltred)
+                .notFound(emailSubmissionRetrived.notFound())
+                .state(accountState.emailSubmissionState())
+                .build();
     }
 }

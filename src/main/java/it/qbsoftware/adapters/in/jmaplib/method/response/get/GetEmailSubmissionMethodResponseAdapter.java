@@ -10,4 +10,8 @@ public class GetEmailSubmissionMethodResponseAdapter implements GetEmailSubmissi
             final GetEmailSubmissionMethodResponse getEmailSubmissionMethodResponse) {
         this.getEmailSubmissionMethodResponse = getEmailSubmissionMethodResponse;
     }
+
+    public GetEmailSubmissionMethodResponse adaptee() {
+        return getEmailSubmissionMethodResponse;
+    }
 }

@@ -8,7 +8,7 @@ public interface EmailSubmissionRepository {
 
     public RetrivedEntity<EmailSubmissionPort> retrive(final String[] ids);
 
-    public boolean destroy(final String emailId);
+    public EmailSubmissionPort destroy(final String emailId);
 
-    public boolean save(final EmailSubmissionPort emailPort);
+    public void save(final EmailSubmissionPort emailPort);
 }

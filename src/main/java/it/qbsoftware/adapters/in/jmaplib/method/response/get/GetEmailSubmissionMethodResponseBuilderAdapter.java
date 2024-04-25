@@ -15,9 +15,13 @@ public class GetEmailSubmissionMethodResponseBuilderAdapter implements GetEmailS
 
     @Override
     public GetEmailSubmissionMethodResponseBuilderPort list(final EmailSubmissionPort[] emailSubmissionPort) {
-        getEmailSubmissionMethodResponseBuilder.list(
-                Arrays.asList(emailSubmissionPort).stream().map(e -> ((EmailSubmissionAdapter) e).adaptee())
-                        .toArray(EmailSubmission[]::new));
+        if (emailSubmissionPort != null) {
+            getEmailSubmissionMethodResponseBuilder.list(
+                    Arrays.asList(emailSubmissionPort).stream().map(e -> ((EmailSubmissionAdapter) e).adaptee())
+                            .toArray(EmailSubmission[]::new));
+        } else {
+            getEmailSubmissionMethodResponseBuilder.list(null);
+        }
         return this;
     }
 

@@ -35,6 +35,7 @@ import it.qbsoftware.business.ports.in.jmap.error.InvalidArgumentsMethodErrorRes
 import it.qbsoftware.business.ports.in.jmap.error.InvalidResultReferenceMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.error.StateMismatchMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetEmailMethodResponseBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.method.response.get.GetEmailSubmissionMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetIdentityMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetMailboxMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetThreadMethodResponseBuilderPort;
@@ -42,6 +43,7 @@ import it.qbsoftware.business.ports.in.jmap.method.response.set.SetEmailMethodRe
 import it.qbsoftware.business.ports.in.jmap.util.ResultReferenceResolverPort;
 import it.qbsoftware.business.ports.in.usecase.SessionUsecase;
 import it.qbsoftware.business.ports.in.usecase.get.GetEmailMethodCallUsecase;
+import it.qbsoftware.business.ports.in.usecase.get.GetEmailSubmissionMethodCallUsecase;
 import it.qbsoftware.business.ports.in.usecase.get.GetIdentityMethodCallUsecase;
 import it.qbsoftware.business.ports.in.usecase.get.GetMailboxMethodCallUsecase;
 import it.qbsoftware.business.ports.in.usecase.get.GetThreadMethodCallUsecase;
@@ -51,12 +53,14 @@ import it.qbsoftware.business.ports.out.domain.EmailChangesTrackerRepository;
 import it.qbsoftware.business.ports.out.domain.MailboxChangesTrackerRepository;
 import it.qbsoftware.business.ports.out.domain.ThreadChangesTrackerRepository;
 import it.qbsoftware.business.ports.out.jmap.EmailRepository;
+import it.qbsoftware.business.ports.out.jmap.EmailSubmissionRepository;
 import it.qbsoftware.business.ports.out.jmap.IdentityRepository;
 import it.qbsoftware.business.ports.out.jmap.MailboxRepository;
 import it.qbsoftware.business.ports.out.jmap.ThreadRepository;
 import it.qbsoftware.business.ports.out.jmap.UserSessionResourceRepository;
 import it.qbsoftware.business.services.SessionService;
 import it.qbsoftware.business.services.get.GetEmailMethodCallService;
+import it.qbsoftware.business.services.get.GetEmailSubmissionMethodCallService;
 import it.qbsoftware.business.services.get.GetIdentityMethodCallService;
 import it.qbsoftware.business.services.get.GetMailboxMethodCallService;
 import it.qbsoftware.business.services.get.GetThreadMethodCallService;
@@ -117,22 +121,37 @@ public class ControllerModule extends AbstractModule {
                                 getThreadMethodResponseBuilderPort, threadPropertiesFilter, threadRepository);
         }
 
-        // Service /Set
-        /* 
         @Provides
-        SetEmailMethodCallUsecase provideSetEmailMethodCallService(final AccountStateRepository accountStateRepository,
-                        final IfInStateMatch ifInStateMatch,
-                        final StateMismatchMethodErrorResponsePort stateMismatchMethodErrorResponsePort,
-                        final CreateEmail createEmail,
-                        final UpdateEmail updateEmail,
-                        final DestroyEmail destroyEmail,
-                        final SetEmailMethodResponseBuilderPort setEmailMethodResponseBuilderPort,
-                        final AccountNotFoundMethodErrorResponsePort accountNotFoundMethodErrorResponsePort) {
-                return new SetEmailMethodCallService(accountStateRepository, ifInStateMatch,
-                                stateMismatchMethodErrorResponsePort, createEmail, updateEmail, destroyEmail,
-                                setEmailMethodResponseBuilderPort, accountNotFoundMethodErrorResponsePort);
+        GetEmailSubmissionMethodCallUsecase provideGetEmailSubmissionMethodCallService(
+                        final AccountStateRepository accountStateRepository,
+                        final EmailSubmissionPropertiesFilter emailSubmissionPropertiesFilter,
+                        final EmailSubmissionRepository emailSubmissionRepository,
+                        final GetEmailSubmissionMethodResponseBuilderPort getEmailSubmissionMethodResponseBuilderPort,
+                        final GetReferenceIdsResolver getReferenceIdsResolver) {
+                return new GetEmailSubmissionMethodCallService(accountStateRepository, emailSubmissionPropertiesFilter,
+                                emailSubmissionRepository, getEmailSubmissionMethodResponseBuilderPort,
+                                getReferenceIdsResolver);
         }
-        */
+
+        // Service /Set
+        /*
+         * @Provides
+         * SetEmailMethodCallUsecase provideSetEmailMethodCallService(final
+         * AccountStateRepository accountStateRepository,
+         * final IfInStateMatch ifInStateMatch,
+         * final StateMismatchMethodErrorResponsePort
+         * stateMismatchMethodErrorResponsePort,
+         * final CreateEmail createEmail,
+         * final UpdateEmail updateEmail,
+         * final DestroyEmail destroyEmail,
+         * final SetEmailMethodResponseBuilderPort setEmailMethodResponseBuilderPort,
+         * final AccountNotFoundMethodErrorResponsePort
+         * accountNotFoundMethodErrorResponsePort) {
+         * return new SetEmailMethodCallService(accountStateRepository, ifInStateMatch,
+         * stateMismatchMethodErrorResponsePort, createEmail, updateEmail, destroyEmail,
+         * setEmailMethodResponseBuilderPort, accountNotFoundMethodErrorResponsePort);
+         * }
+         */
 
         // Domain>util
         @Provides

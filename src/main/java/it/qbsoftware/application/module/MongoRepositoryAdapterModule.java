@@ -8,6 +8,7 @@ import com.mongodb.client.MongoClients;
 import it.qbsoftware.adapters.out.AccountStateRepositoryAdapter;
 import it.qbsoftware.adapters.out.EmailChangesTrackerRepositoryAdapter;
 import it.qbsoftware.adapters.out.EmailRepositoryAdapter;
+import it.qbsoftware.adapters.out.EmailSubmissionRepositoryAdapter;
 import it.qbsoftware.adapters.out.IdentityRepositoryAdapter;
 import it.qbsoftware.adapters.out.MailboxChangesTrackerRepositoryAdapter;
 import it.qbsoftware.adapters.out.MailboxRepositoryAdapter;
@@ -19,6 +20,7 @@ import it.qbsoftware.business.ports.out.domain.EmailChangesTrackerRepository;
 import it.qbsoftware.business.ports.out.domain.MailboxChangesTrackerRepository;
 import it.qbsoftware.business.ports.out.domain.ThreadChangesTrackerRepository;
 import it.qbsoftware.business.ports.out.jmap.EmailRepository;
+import it.qbsoftware.business.ports.out.jmap.EmailSubmissionRepository;
 import it.qbsoftware.business.ports.out.jmap.IdentityRepository;
 import it.qbsoftware.business.ports.out.jmap.MailboxRepository;
 import it.qbsoftware.business.ports.out.jmap.ThreadRepository;
@@ -38,6 +40,7 @@ public class MongoRepositoryAdapterModule extends AbstractModule {
         bind(IdentityRepository.class).to(IdentityRepositoryAdapter.class);
         bind(MailboxRepository.class).to(MailboxRepositoryAdapter.class);
         bind(ThreadRepository.class).to(ThreadRepositoryAdapter.class);
+        bind(EmailSubmissionRepository.class).to(EmailSubmissionRepositoryAdapter.class);
     }
 
     @Singleton

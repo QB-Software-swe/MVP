@@ -10,6 +10,11 @@ public class EmailSubmissionAdapter implements EmailSubmissionPort {
         this.emailSubmission = emailSubmission;
     }
 
+    @Override
+    public String getId() {
+        return emailSubmission.getId();
+    }
+
     public EmailSubmission adaptee() {
         return emailSubmission;
     }
