@@ -1,20 +1,23 @@
 package it.qbsoftware.business.ports.in.jmap.method.response.changes;
 
 public interface ChangesMailboxMethodResponseBuilderPort {
+    public ChangesMailboxMethodResponseBuilderPort accountId(String accountId);
 
-    public ChangesMailboxMethodResponseBuilderPort oldState(final String oldState);
+    public ChangesMailboxMethodResponseBuilderPort oldState(String oldState);
 
-    public ChangesMailboxMethodResponseBuilderPort newState(final String newState);
+    public ChangesMailboxMethodResponseBuilderPort newState(String newState);
 
-    public ChangesMailboxMethodResponseBuilderPort updated(String[] updates);
+    public ChangesMailboxMethodResponseBuilderPort hasMoreChanges(Boolean hasMoreChanges);
 
-    public ChangesMailboxMethodResponseBuilderPort created(String[] created);
+    public ChangesMailboxMethodResponseBuilderPort created(String[] ids);
 
-    public ChangesMailboxMethodResponseBuilderPort destroyed(String[] destroyed);
+    public ChangesMailboxMethodResponseBuilderPort updated(String[] ids);
 
-    public ChangesMailboxMethodResponseBuilderPort updatedProperties(String[] updatedProperties);
+    public ChangesMailboxMethodResponseBuilderPort destroyed(String[] ids);
+
+    public ChangesMailboxMethodResponseBuilderPort updatedProperties(String[] updateProperties);
 
     public ChangesMailboxMethodResponsePort build();
 
-    public ChangesMailboxMethodResponseBuilderPort reset();
+    public ChangesEmailMethodResponseBuilderPort reset();
 }

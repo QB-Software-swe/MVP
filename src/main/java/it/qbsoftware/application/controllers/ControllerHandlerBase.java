@@ -7,13 +7,12 @@ public abstract class ControllerHandlerBase implements ControllerHandler {
     ControllerHandler nextHandler;
 
     @Override
-    public void setNext(ControllerHandler nextHandler) {
+    public void setNext(final ControllerHandler nextHandler) {
         this.nextHandler = nextHandler;
     }
 
     @Override
-    public MethodResponse[] handle(HandlerRequest handlerRequest) {
-        // TODO
+    public MethodResponse[] handle(final HandlerRequest handlerRequest) {
         return new MethodResponse[] { new UnknownMethodMethodErrorResponse() };
     }
 }

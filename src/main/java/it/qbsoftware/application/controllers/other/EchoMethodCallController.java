@@ -27,7 +27,7 @@ public class EchoMethodCallController extends ControllerHandlerBase {
             ArrayList<MethodResponse> methodResponseList = new ArrayList<>();
 
             for (MethodResponseAdapter methodResponseAdapter : methodResponseAdapters) {
-                methodResponseList.add(methodResponseAdapter.methodResponse());
+                methodResponseList.add(methodResponseAdapter.adaptee());
             }
 
             return methodResponseList.toArray(new MethodResponse[0]);

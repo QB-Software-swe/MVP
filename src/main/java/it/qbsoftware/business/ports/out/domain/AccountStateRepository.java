@@ -1,6 +1,6 @@
 package it.qbsoftware.business.ports.out.domain;
 
-import it.qbsoftware.business.domain.entity.AccountState;
+import it.qbsoftware.business.domain.entity.changes.AccountState;
 import it.qbsoftware.business.domain.exception.AccountNotFoundException;
 
 public interface AccountStateRepository {

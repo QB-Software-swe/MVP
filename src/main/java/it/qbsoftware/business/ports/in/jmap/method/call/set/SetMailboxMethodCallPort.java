@@ -13,4 +13,6 @@ public interface SetMailboxMethodCallPort {
     public Map<String, MailboxPort> getCreate();
 
     public Map<String, Map<String, Object>> getUpdate();
+
+    public String[] getDestroy();
 }

@@ -15,13 +15,11 @@ import it.qbsoftware.business.ports.in.jmap.util.ResultReferenceResolverPort;
 import rs.ltt.jmap.common.Response;
 import rs.ltt.jmap.mock.server.ResultReferenceResolver;
 
-//FIXME: tic tac tic tac tic tac
-//TODO: cambiare i nomi
 public class ResultReferenceResolverAdapter implements ResultReferenceResolverPort {
 
     @Override
-    public String[] resolve(InvocationResultReferencePort resultReferenceResolverPort,
-            ListMultimapPort<String, ResponseInvocationPort> previousResponses) {
+    public String[] resolve(final InvocationResultReferencePort resultReferenceResolverPort,
+            final ListMultimapPort<String, ResponseInvocationPort> previousResponses) {
 
         ListMultimap<String, Response.Invocation> omega = ArrayListMultimap.create();
         var phi = ((ListMultimapAdapter<String, ResponseInvocationPort>) previousResponses).listMultimap();

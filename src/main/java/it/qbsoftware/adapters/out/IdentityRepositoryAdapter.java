@@ -1,11 +1,11 @@
 package it.qbsoftware.adapters.out;
 
-import java.util.Map;
 
+import it.qbsoftware.business.domain.exception.set.SetNotFoundException;
+import it.qbsoftware.business.domain.exception.set.SetSingletonException;
 import it.qbsoftware.business.domain.util.get.RetrivedEntity;
 import it.qbsoftware.business.ports.in.jmap.entity.IdentityPort;
 import it.qbsoftware.business.ports.out.jmap.IdentityRepository;
-import rs.ltt.jmap.common.entity.Identity;
 
 public class IdentityRepositoryAdapter implements IdentityRepository {
 
@@ -22,13 +22,13 @@ public class IdentityRepositoryAdapter implements IdentityRepository {
     }
 
     @Override
-    public boolean destroy(String id) {
+    public boolean destroy(String id) throws SetNotFoundException {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'destroy'");
     }
 
     @Override
-    public boolean save(IdentityPort identityPort) {
+    public boolean save(IdentityPort identityPort) throws SetSingletonException {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'save'");
     }

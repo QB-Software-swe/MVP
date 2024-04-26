@@ -15,7 +15,6 @@ import it.qbsoftware.adapters.out.AccountStateRepositoryAdapter;
 import it.qbsoftware.adapters.out.UserSessionResourceRepositoryAdapter;
 import it.qbsoftware.application.config.JmapConfig;
 import it.qbsoftware.application.config.JmapEndpoint;
-import it.qbsoftware.application.controllers.get.GetMailboxMethodCallController;
 import it.qbsoftware.business.ports.in.jmap.EndPointConfiguration;
 import it.qbsoftware.business.ports.in.jmap.capability.CapabilityPort;
 import it.qbsoftware.business.ports.in.jmap.entity.AccountBuilderPort;

@@ -17,7 +17,7 @@ public class SessionService implements SessionUsecase {
         final AccountBuilderPort accountBuilderPort;
         final UserSessionResourceRepository userSessionResourceRepository;
 
-        @Inject
+        @Inject //TODO: remove inject
         public SessionService(
                         final SessionResourceBuilderPort sessionResourceBuilderPort,
                         final AccountBuilderPort accountBuilderPort,

@@ -23,4 +23,6 @@ public interface MailboxPort {
     public MailboxRightsPort getMyRights();
 
     public Boolean getIsSubscribed();
+
+    public MailboxBuilderPort getBuilder();
 }

@@ -3,6 +3,7 @@ package it.qbsoftware.adapters.in.jmaplib.entity;
 import java.util.stream.Collectors;
 
 import it.qbsoftware.business.ports.in.jmap.entity.EmailAddressPort;
+import it.qbsoftware.business.ports.in.jmap.entity.IdentityBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.IdentityPort;
 import rs.ltt.jmap.common.entity.Identity;
 
@@ -55,5 +56,21 @@ public class IdentityAdapter implements IdentityPort {
         return this.identity.getMayDelete();
     }
 
-    public Identity adaptee() {return this.identity;}
+    public Identity adaptee() {
+        return this.identity;
+    }
+
+    @Override
+    public IdentityBuilderPort getBuilder() {
+        return new IdentityBuilderAdapter(
+                Identity.builder()
+                        .id(identity.getId())
+                        .name(identity.getName())
+                        .email(identity.getEmail())
+                        .replyTo(identity.getReplyTo())
+                        .bcc(identity.getBcc())
+                        .textSignature(identity.getTextSignature())
+                        .htmlSignature(identity.getHtmlSignature())
+                        .mayDelete(identity.getMayDelete()));
+    }
 }

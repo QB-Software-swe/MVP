@@ -4,14 +4,13 @@ import it.qbsoftware.business.ports.in.jmap.method.response.MethodResponsePort;
 import rs.ltt.jmap.common.method.MethodResponse;
 
 public class MethodResponseAdapter implements MethodResponsePort {
-    MethodResponse methodResponse;
+    private MethodResponse methodResponse;
 
-    public MethodResponseAdapter(MethodResponse methodResponse) {
+    public MethodResponseAdapter(final MethodResponse methodResponse) {
         this.methodResponse = methodResponse;
     }
 
-    //FIXME
-    public MethodResponse methodResponse() {
+    public MethodResponse adaptee() {
         return methodResponse;
     }
 }

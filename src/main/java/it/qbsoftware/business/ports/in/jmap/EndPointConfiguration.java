@@ -1,6 +1,5 @@
 package it.qbsoftware.business.ports.in.jmap;
 
-//FIXME: chiamarli Url?
 public interface EndPointConfiguration {
     public String apiEndPoint();
 

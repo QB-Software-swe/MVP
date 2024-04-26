@@ -48,7 +48,6 @@ public class ApiRequestDispatch {
                             new ResponseInvocationAdapter(new Response.Invocation(response, invocationId))));
         }
 
-        // FIXME: Session state fissato a zero, ma non è conforme allo standard così
         GenericResponse genericResponse = new Response(previousResponses.values().toArray(new Response.Invocation[0]),
                 "0");
 
