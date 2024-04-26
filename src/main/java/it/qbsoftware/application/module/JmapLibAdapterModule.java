@@ -21,6 +21,7 @@ import it.qbsoftware.adapters.in.jmaplib.method.response.changes.ChangesEmailMet
 import it.qbsoftware.adapters.in.jmaplib.method.response.changes.ChangesEmailSubmissionMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.changes.ChangesIdentityMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.changes.ChangesMailboxMethodResponseBuilderAdapter;
+import it.qbsoftware.adapters.in.jmaplib.method.response.changes.ChangesThreadMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetEmailMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetEmailSubmissionMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetIdentityMethodResponseBuilderAdapter;
@@ -46,6 +47,8 @@ import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesEmail
 import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesEmailSubmissionMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesIdentityMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesMailboxMethodResponseBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesThreadMethodResponseBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesThreadMethodResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetEmailMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetEmailSubmissionMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetIdentityMethodResponseBuilderPort;
@@ -88,6 +91,7 @@ public class JmapLibAdapterModule extends AbstractModule {
                 .to(ChangesEmailSubmissionMethodResponseBuilderAdapter.class);
         bind(ChangesIdentityMethodResponseBuilderPort.class).to(ChangesIdentityMethodResponseBuilderAdapter.class);
         bind(ChangesMailboxMethodResponseBuilderPort.class).to(ChangesMailboxMethodResponseBuilderAdapter.class);
+        bind(ChangesThreadMethodResponseBuilderPort.class).to(ChangesThreadMethodResponseBuilderAdapter.class);
 
         // Util
         bind(ResultReferenceResolverPort.class).to(ResultReferenceResolverAdapter.class);

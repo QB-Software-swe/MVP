@@ -38,6 +38,7 @@ import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesEmail
 import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesEmailSubmissionMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesIdentityMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesMailboxMethodResponseBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesThreadMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetEmailMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetEmailSubmissionMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetIdentityMethodResponseBuilderPort;
@@ -50,6 +51,7 @@ import it.qbsoftware.business.ports.in.usecase.changes.ChangesEmailMethodCallUse
 import it.qbsoftware.business.ports.in.usecase.changes.ChangesEmailSubmissionMethodCallUsecase;
 import it.qbsoftware.business.ports.in.usecase.changes.ChangesIdentityMethodCallUsecase;
 import it.qbsoftware.business.ports.in.usecase.changes.ChangesMailboxMethodCallUsecase;
+import it.qbsoftware.business.ports.in.usecase.changes.ChangesThreadMethodCallUsecase;
 import it.qbsoftware.business.ports.in.usecase.get.GetEmailMethodCallUsecase;
 import it.qbsoftware.business.ports.in.usecase.get.GetEmailSubmissionMethodCallUsecase;
 import it.qbsoftware.business.ports.in.usecase.get.GetIdentityMethodCallUsecase;
@@ -73,12 +75,14 @@ import it.qbsoftware.business.services.changes.ChangesEmailMethodCallService;
 import it.qbsoftware.business.services.changes.ChangesEmailSubmissionMethodCallService;
 import it.qbsoftware.business.services.changes.ChangesIdentityMethodCallService;
 import it.qbsoftware.business.services.changes.ChangesMailboxMethodCallService;
+import it.qbsoftware.business.services.changes.ChangesThreadMethodCallService;
 import it.qbsoftware.business.services.get.GetEmailMethodCallService;
 import it.qbsoftware.business.services.get.GetEmailSubmissionMethodCallService;
 import it.qbsoftware.business.services.get.GetIdentityMethodCallService;
 import it.qbsoftware.business.services.get.GetMailboxMethodCallService;
 import it.qbsoftware.business.services.get.GetThreadMethodCallService;
 import it.qbsoftware.business.services.set.SetEmailMethodCallService;
+import rs.ltt.jmap.common.method.call.thread.ChangesThreadMethodCall;
 
 public class ControllerModule extends AbstractModule {
         @Override
@@ -203,6 +207,15 @@ public class ControllerModule extends AbstractModule {
                         final MailboxChangesTrackerRepository mailboxChangesTrackerRepository) {
                 return new ChangesMailboxMethodCallService(accountStateRepository,
                                 changesMailboxMethodResponseBuilderPort, mailboxChangesTrackerRepository);
+        }
+
+        @Provides
+        ChangesThreadMethodCallUsecase provideChangesThreadMethodCallService(
+                        final AccountStateRepository accountStateRepository,
+                        final ChangesThreadMethodResponseBuilderPort changesThreadMethodResponseBuilderPort,
+                        final ThreadChangesTrackerRepository threadChangesTrackerRepository) {
+                return new ChangesThreadMethodCallService(accountStateRepository,
+                                changesThreadMethodResponseBuilderPort, threadChangesTrackerRepository);
         }
 
         // Domain>util
