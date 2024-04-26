@@ -10,7 +10,7 @@ import it.qbsoftware.business.ports.in.jmap.method.response.set.SetMailboxMethod
 import rs.ltt.jmap.common.method.response.mailbox.SetMailboxMethodResponse;
 
 public class SetMailboxMethodResponseAdapter implements SetMailboxMethodResponsePort {
-    private SetMailboxMethodResponse setMailboxMethodResponse;
+    private final SetMailboxMethodResponse setMailboxMethodResponse;
 
     public SetMailboxMethodResponseAdapter(final SetMailboxMethodResponse setMailboxMethodResponse) {
         this.setMailboxMethodResponse = setMailboxMethodResponse;
@@ -22,4 +22,7 @@ public class SetMailboxMethodResponseAdapter implements SetMailboxMethodResponse
                 .collect(Collectors.toMap(Entry::getKey, e -> new AbstractIdentifiableEntityAdapter(e.getValue())));
     }
 
+    public SetMailboxMethodResponse adaptee() {
+        return setMailboxMethodResponse;
+    }
 }

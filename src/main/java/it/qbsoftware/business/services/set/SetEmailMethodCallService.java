@@ -13,80 +13,63 @@ import it.qbsoftware.business.domain.methodcall.statematch.IfInStateMatch;
 import it.qbsoftware.business.ports.in.guava.ListMultimapPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
-import it.qbsoftware.business.ports.in.jmap.error.AccountNotFoundMethodErrorResponsePort;
-import it.qbsoftware.business.ports.in.jmap.error.StateMismatchMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.call.set.SetEmailMethodCallPort;
-import it.qbsoftware.business.ports.in.jmap.method.response.MethodResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.response.set.SetEmailMethodResponseBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.method.response.set.SetEmailMethodResponsePort;
 import it.qbsoftware.business.ports.in.usecase.set.SetEmailMethodCallUsecase;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 
 public class SetEmailMethodCallService implements SetEmailMethodCallUsecase {
     private final AccountStateRepository accountStateRepository;
     private final IfInStateMatch ifInStateMatch;
-    private final StateMismatchMethodErrorResponsePort stateMismatchMethodErrorResponsePort;
     private final CreateEmail createEmail;
     private final UpdateEmail updateEmail;
     private final DestroyEmail destroyEmail;
     private final SetEmailMethodResponseBuilderPort setEmailMethodResponseBuilderPort;
-    private final AccountNotFoundMethodErrorResponsePort accountNotFoundMethodErrorResponsePort;
 
     public SetEmailMethodCallService(final AccountStateRepository accountStateRepository,
             final IfInStateMatch ifInStateMatch,
-            final StateMismatchMethodErrorResponsePort stateMismatchMethodErrorResponsePort,
             final CreateEmail createEmail,
             final UpdateEmail updateEmail,
             final DestroyEmail destroyEmail,
-            final SetEmailMethodResponseBuilderPort setEmailMethodResponseBuilderPort,
-            final AccountNotFoundMethodErrorResponsePort accountNotFoundMethodErrorResponsePort) {
+            final SetEmailMethodResponseBuilderPort setEmailMethodResponseBuilderPort) {
         this.accountStateRepository = accountStateRepository;
         this.ifInStateMatch = ifInStateMatch;
-        this.stateMismatchMethodErrorResponsePort = stateMismatchMethodErrorResponsePort;
         this.createEmail = createEmail;
         this.updateEmail = updateEmail;
         this.destroyEmail = destroyEmail;
         this.setEmailMethodResponseBuilderPort = setEmailMethodResponseBuilderPort;
-        this.accountNotFoundMethodErrorResponsePort = accountNotFoundMethodErrorResponsePort;
     }
 
     @Override
-    public MethodResponsePort[] call(final SetEmailMethodCallPort setEmailMethodCallPort,
-            final ListMultimapPort<String, ResponseInvocationPort> previousResponses) {
+    public SetEmailMethodResponsePort call(final SetEmailMethodCallPort setEmailMethodCallPort,
+            final ListMultimapPort<String, ResponseInvocationPort> previousResponses) throws AccountNotFoundException, StateMismatchException {
 
-        try {
-            final String accountId = setEmailMethodCallPort.accountId();
-            AccountState preSetAccountState = accountStateRepository.retrive(accountId);
+        final String accountId = setEmailMethodCallPort.accountId();
+        final AccountState preSetAccountState = accountStateRepository.retrive(accountId);
 
-            ifInStateMatch.methodStateMatchCurrent(setEmailMethodCallPort.ifInState(),
-                    preSetAccountState.emailState());
+        ifInStateMatch.methodStateMatchCurrent(setEmailMethodCallPort.ifInState(),
+                preSetAccountState.emailState());
 
-            final CreatedResult<EmailPort> createdEmailResult = createEmail.create(setEmailMethodCallPort,
-                    previousResponses);
+        final CreatedResult<EmailPort> createdEmailResult = createEmail.create(setEmailMethodCallPort,
+                previousResponses);
 
-            final UpdatedResult<EmailPort> updatedEmailResult = updateEmail.update(setEmailMethodCallPort);
+        final UpdatedResult<EmailPort> updatedEmailResult = updateEmail.update(setEmailMethodCallPort);
 
-            final DestroyedResult destroyedEmailResult = destroyEmail.destroy(setEmailMethodCallPort);
+        final DestroyedResult destroyedEmailResult = destroyEmail.destroy(setEmailMethodCallPort);
 
-            AccountState postSetAccountState = accountStateRepository.retrive(accountId);
+        final AccountState postSetAccountState = accountStateRepository.retrive(accountId);
 
-            return new MethodResponsePort[] {
-                    setEmailMethodResponseBuilderPort
-                            .reset()
-                            .oldState(preSetAccountState.emailState())
-                            .newState(postSetAccountState.emailState())
-                            .created(createdEmailResult.created())
-                            .notCreated(createdEmailResult.notCreated())
-                            .updated(updatedEmailResult.updated())
-                            .notUpdated(updatedEmailResult.notUpdated())
-                            .destroyed(destroyedEmailResult.destroyed())
-                            .notDestroyed(destroyedEmailResult.notDestroyed())
-                            .build()
-            };
-
-        } catch (final AccountNotFoundException accountNotFoundException) {
-            return new MethodResponsePort[] { accountNotFoundMethodErrorResponsePort };
-        } catch (final StateMismatchException stateMismatchException) {
-            return new MethodResponsePort[] { stateMismatchMethodErrorResponsePort };
-        }
+        return setEmailMethodResponseBuilderPort
+                .reset()
+                .oldState(preSetAccountState.emailState())
+                .newState(postSetAccountState.emailState())
+                .created(createdEmailResult.created())
+                .notCreated(createdEmailResult.notCreated())
+                .updated(updatedEmailResult.updated())
+                .notUpdated(updatedEmailResult.notUpdated())
+                .destroyed(destroyedEmailResult.destroyed())
+                .notDestroyed(destroyedEmailResult.notDestroyed())
+                .build();
     }
 }

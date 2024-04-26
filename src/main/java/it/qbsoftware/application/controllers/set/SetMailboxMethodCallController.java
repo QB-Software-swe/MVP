@@ -1,39 +1,44 @@
 package it.qbsoftware.application.controllers.set;
 
-import java.util.ArrayList;
+import com.google.inject.Inject;
 
 import it.qbsoftware.adapters.in.jmaplib.method.call.set.SetMailboxMethodCallAdapter;
-import it.qbsoftware.adapters.in.jmaplib.method.response.AbstracMethodResponseAdapter;
+import it.qbsoftware.adapters.in.jmaplib.method.response.set.SetMailboxMethodResponseAdapter;
 import it.qbsoftware.application.controllers.ControllerHandlerBase;
 import it.qbsoftware.application.controllers.HandlerRequest;
+import it.qbsoftware.business.domain.exception.AccountNotFoundException;
+import it.qbsoftware.business.domain.exception.StateMismatchException;
 import it.qbsoftware.business.ports.in.usecase.set.SetMailboxMethodCallUsecase;
 import rs.ltt.jmap.common.method.MethodResponse;
 import rs.ltt.jmap.common.method.call.mailbox.SetMailboxMethodCall;
+import rs.ltt.jmap.common.method.error.InvalidArgumentsMethodErrorResponse;
+import rs.ltt.jmap.common.method.error.StateMismatchMethodErrorResponse;
 
 public class SetMailboxMethodCallController extends ControllerHandlerBase {
     private final SetMailboxMethodCallUsecase setMailboxMethodCallUsecase;
 
+    @Inject
     public SetMailboxMethodCallController(final SetMailboxMethodCallUsecase setMailboxMethodCall) {
         this.setMailboxMethodCallUsecase = setMailboxMethodCall;
     }
 
     @Override
-    public MethodResponse[] handle(HandlerRequest handlerRequest) {
+    public MethodResponse handle(final HandlerRequest handlerRequest) {
         if (handlerRequest.methodCall() instanceof SetMailboxMethodCall setMailboxMethodCall) {
 
-            SetMailboxMethodCallAdapter setMailboxMethodCallAdapter = new SetMailboxMethodCallAdapter(
+            final SetMailboxMethodCallAdapter setMailboxMethodCallAdapter = new SetMailboxMethodCallAdapter(
                     setMailboxMethodCall);
 
-            AbstracMethodResponseAdapter[] methodResponseAdapters = (AbstracMethodResponseAdapter[]) setMailboxMethodCallUsecase
-                    .call(setMailboxMethodCallAdapter, handlerRequest.previousResponses());
+            try {
+                final SetMailboxMethodResponseAdapter setMailboxMethodResponseAdapter = (SetMailboxMethodResponseAdapter) setMailboxMethodCallUsecase
+                        .call(setMailboxMethodCallAdapter, handlerRequest.previousResponses());
+                return setMailboxMethodResponseAdapter.adaptee();
 
-            ArrayList<MethodResponse> methodResponseList = new ArrayList<>();
-
-            for (AbstracMethodResponseAdapter methodResponseAdapter : methodResponseAdapters) {
-                methodResponseList.add(methodResponseAdapter.adaptee());
+            } catch (final AccountNotFoundException accountNotFoundException) {
+                return new InvalidArgumentsMethodErrorResponse();
+            } catch (final StateMismatchException stateMismatchException) {
+                return new StateMismatchMethodErrorResponse();
             }
-
-            return methodResponseList.toArray(new MethodResponse[0]);
         }
 
         return super.handle(handlerRequest);

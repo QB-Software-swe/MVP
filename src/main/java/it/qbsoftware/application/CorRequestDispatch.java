@@ -18,6 +18,9 @@ import it.qbsoftware.application.controllers.get.GetIdentityMethodCallController
 import it.qbsoftware.application.controllers.get.GetMailboxMethodCallController;
 import it.qbsoftware.application.controllers.get.GetThreadMethodCallController;
 import it.qbsoftware.application.controllers.other.EchoMethodCallController;
+import it.qbsoftware.application.controllers.set.SetEmailMethodCallController;
+import it.qbsoftware.application.controllers.set.SetIdentityMethodCallController;
+import it.qbsoftware.application.controllers.set.SetMailboxMethodCallController;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
 import rs.ltt.jmap.common.GenericResponse;
 import rs.ltt.jmap.common.Request;
@@ -39,6 +42,10 @@ public class CorRequestDispatch implements ApiRequestDispatch {
     private final ChangesMailboxMethodCallController changesMailboxMethodCallController;
     private final ChangesThreadMethodCallController changesThreadMethodCallController;
 
+    private final SetEmailMethodCallController setEmailMethodCallController;
+    private final SetMailboxMethodCallController setMailboxMethodCallController;
+    private final SetIdentityMethodCallController setIdentityMethodCallController;
+
     private final Gson gson;
 
     @Inject
@@ -52,7 +59,10 @@ public class CorRequestDispatch implements ApiRequestDispatch {
             final ChangesEmailSubmissionMethodCallController changesEmailSubmissionMethodCallController,
             final ChangesIdentityMethodCallController changesIdentityMethodCallController,
             final ChangesMailboxMethodCallController changesMailboxMethodCallController,
-            final ChangesThreadMethodCallController changesThreadMethodCallController) {
+            final ChangesThreadMethodCallController changesThreadMethodCallController,
+            final SetEmailMethodCallController setEmailMethodCallController,
+            final SetIdentityMethodCallController setIdentityMethodCallController,
+            final SetMailboxMethodCallController setMailboxMethodCallController) {
 
         this.echoMethodCallController = echoMethodCallController;
 
@@ -67,6 +77,9 @@ public class CorRequestDispatch implements ApiRequestDispatch {
         this.changesIdentityMethodCallController = changesIdentityMethodCallController;
         this.changesMailboxMethodCallController = changesMailboxMethodCallController;
         this.changesThreadMethodCallController = changesThreadMethodCallController;
+        this.setEmailMethodCallController = setEmailMethodCallController;
+        this.setMailboxMethodCallController = setMailboxMethodCallController;
+        this.setIdentityMethodCallController = setIdentityMethodCallController;
 
         this.gson = gson;
 
@@ -86,6 +99,10 @@ public class CorRequestDispatch implements ApiRequestDispatch {
         changesEmailSubmissionMethodCallController.setNext(changesIdentityMethodCallController);
         changesIdentityMethodCallController.setNext(changesMailboxMethodCallController);
         changesMailboxMethodCallController.setNext(changesThreadMethodCallController);
+        changesThreadMethodCallController.setNext(setEmailMethodCallController);
+
+        setEmailMethodCallController.setNext(setMailboxMethodCallController);
+        setMailboxMethodCallController.setNext(setIdentityMethodCallController);
     }
 
     @Override
