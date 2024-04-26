@@ -19,5 +19,5 @@ public interface ChangesMailboxMethodResponseBuilderPort {
 
     public ChangesMailboxMethodResponsePort build();
 
-    public ChangesEmailMethodResponseBuilderPort reset();
+    public ChangesMailboxMethodResponseBuilderPort reset();
 }
