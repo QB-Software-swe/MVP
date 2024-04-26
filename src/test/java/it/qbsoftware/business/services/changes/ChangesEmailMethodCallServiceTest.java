@@ -1,9 +1,5 @@
 package it.qbsoftware.business.services.changes;
 
-import org.eclipse.jetty.util.annotation.ManagedObject;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -13,13 +9,15 @@ import static org.mockito.Mockito.when;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 import it.qbsoftware.business.domain.entity.changes.AccountState;
 import it.qbsoftware.business.domain.entity.changes.tracker.EmailChangesTracker;
 import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
+import it.qbsoftware.business.domain.exception.changes.CannotCalculateChangesException;
 import it.qbsoftware.business.ports.in.guava.ListMultimapPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
 import it.qbsoftware.business.ports.in.jmap.method.call.changes.ChangesEmailMethodCallPort;
@@ -107,13 +105,33 @@ public class ChangesEmailMethodCallServiceTest {
         assertThrows(InvalidArgumentsException.class, () -> changesEmailMethodCallService.call(changesEmailMethodCallPort, null));
     }
 
-    /*@Test
-    public void testCallWithZeroMaxChanges() {
+    @Test
+    public void testCallWithZeroMaxChanges() throws Exception{
+        String accountId = "testAccountId";
+        Map<String, String> changesMap = new HashMap<>();
         Long maxChanges = 0L;
+        
         when(changesEmailMethodCallPort.getMaxChanges()).thenReturn(maxChanges);
+        when(changesEmailMethodCallPort.accountId()).thenReturn(accountId);
+        when(accountStateRepository.retrive(accountId)).thenReturn(accountState);
+        when(emailChangesTrackerRepository.retrive(accountId)).thenReturn(emailChangesTracker);
+        when(emailChangesTracker.created()).thenReturn(changesMap);
+        when(emailChangesTracker.updated()).thenReturn(changesMap);
+        when(emailChangesTracker.destroyed()).thenReturn(changesMap);
+        when(changesEmailMethodResponseBuilderPort.reset()).thenReturn(changesEmailMethodResponseBuilderPort);
+        when(changesEmailMethodResponseBuilderPort.accountId(accountId)).thenReturn(changesEmailMethodResponseBuilderPort);
+        when(changesEmailMethodResponseBuilderPort.oldState(any())).thenReturn(changesEmailMethodResponseBuilderPort);
+        when(changesEmailMethodResponseBuilderPort.newState(any())).thenReturn(changesEmailMethodResponseBuilderPort);
+        when(changesEmailMethodResponseBuilderPort.created(any())).thenReturn(changesEmailMethodResponseBuilderPort);
+        when(changesEmailMethodResponseBuilderPort.updated(any())).thenReturn(changesEmailMethodResponseBuilderPort);
+        when(changesEmailMethodResponseBuilderPort.destroyed(any())).thenReturn(changesEmailMethodResponseBuilderPort);
+        when(changesEmailMethodResponseBuilderPort.hasMoreChanges(false)).thenReturn(changesEmailMethodResponseBuilderPort);
+        when(changesEmailMethodResponseBuilderPort.build()).thenReturn(changesEmailMethodResponsePort);
 
-        assertThrows(InvalidArgumentsException.class, () -> changesEmailMethodCallService.call(changesEmailMethodCallPort, null));
-    }*/
+        ChangesEmailMethodResponsePort result = changesEmailMethodCallService.call(changesEmailMethodCallPort, previousResponses);
+
+        assertEquals(changesEmailMethodResponsePort, result);
+    }
 
     @Test
     public void testCallWithNullMaxChanges() throws Exception {
@@ -140,6 +158,26 @@ public class ChangesEmailMethodCallServiceTest {
         ChangesEmailMethodResponsePort result = changesEmailMethodCallService.call(changesEmailMethodCallPort, previousResponses);
 
         assertEquals(changesEmailMethodResponsePort, result);
+    }
+
+    @Test
+    public void testCallWithOneMaxChanges() throws Exception{
+        String accountId = "testAccountId";
+        Map<String, String> changesMap = new HashMap<>();
+        Map<String, String> changesMap2 = new HashMap<>();
+        changesMap2.put("chiave1", "valore1b");
+        changesMap2.put("chiave2", "valore2a");
+        Long maxChanges = 1L;
+        
+        when(changesEmailMethodCallPort.getMaxChanges()).thenReturn(maxChanges);
+        when(changesEmailMethodCallPort.accountId()).thenReturn(accountId);
+        when(accountStateRepository.retrive(accountId)).thenReturn(accountState);
+        when(emailChangesTrackerRepository.retrive(accountId)).thenReturn(emailChangesTracker);
+        when(emailChangesTracker.created()).thenReturn(changesMap);
+        when(emailChangesTracker.updated()).thenReturn(changesMap2);
+        when(emailChangesTracker.destroyed()).thenReturn(changesMap);
+
+        assertThrows(CannotCalculateChangesException.class, () -> changesEmailMethodCallService.call(changesEmailMethodCallPort, null));
     }
 
 }
