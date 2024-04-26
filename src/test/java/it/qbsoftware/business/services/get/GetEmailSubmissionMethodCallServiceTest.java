@@ -73,11 +73,8 @@ public class GetEmailSubmissionMethodCallServiceTest {
         when(accountStateRepository.retrive(accountId)).thenReturn(accountState);
         when(emailSubmissionPropertiesFilter.filter(any(), any())).thenReturn(emailSubmissions);
         when(getEmailSubmissionMethodResponseBuilderPort.reset()).thenReturn(getEmailSubmissionMethodResponseBuilderPort);
-        
         when(getEmailSubmissionMethodResponseBuilderPort.list(any())).thenReturn(getEmailSubmissionMethodResponseBuilderPort);
-        
         when(getEmailSubmissionMethodResponseBuilderPort.notFound(any())).thenReturn(getEmailSubmissionMethodResponseBuilderPort);
-        
         when(getEmailSubmissionMethodResponseBuilderPort.state(any())).thenReturn(getEmailSubmissionMethodResponseBuilderPort);
         when(getEmailSubmissionMethodResponseBuilderPort.build()).thenReturn(getEmailSubmissionMethodResponsePort);
 
@@ -105,11 +102,8 @@ public class GetEmailSubmissionMethodCallServiceTest {
         when(accountStateRepository.retrive(accountId)).thenReturn(accountState);
         when(emailSubmissionPropertiesFilter.filter(any(), any())).thenReturn(emailSubmissions);
         when(getEmailSubmissionMethodResponseBuilderPort.reset()).thenReturn(getEmailSubmissionMethodResponseBuilderPort);
-        
         when(getEmailSubmissionMethodResponseBuilderPort.list(any())).thenReturn(getEmailSubmissionMethodResponseBuilderPort);
-        
         when(getEmailSubmissionMethodResponseBuilderPort.notFound(any())).thenReturn(getEmailSubmissionMethodResponseBuilderPort);
-        
         when(getEmailSubmissionMethodResponseBuilderPort.state(any())).thenReturn(getEmailSubmissionMethodResponseBuilderPort);
         when(getEmailSubmissionMethodResponseBuilderPort.build()).thenReturn(getEmailSubmissionMethodResponsePort);
 

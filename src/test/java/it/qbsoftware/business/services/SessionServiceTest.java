@@ -29,10 +29,8 @@ public class SessionServiceTest {
     @Mock
     private UserSessionResourceRepository userSessionResourceRepository;
 
-
     @Mock
     private SessionResourcePort sessionResourcePort;
-
 
     @Mock
     private EndPointConfiguration endPointConfiguration;
@@ -42,25 +40,6 @@ public class SessionServiceTest {
 
     @InjectMocks
     private SessionService sessionService;
-
-
-    /*@Test
-    public void testEmptyCall() {
-
-        String username = "testusername";
-
-        when(userSessionResourceRepository.retrieve(username)).thenReturn(Optional.empty());
-
-        assertEquals(Optional.empty(), sessionService.call(username, endPointConfiguration, serverCapabilities));
-    }
-
-    @Test
-    public void testPresentCall() {
-        String username = "testusername";
-
-        when(userSessionResourceRepository.retrieve(username)).thenReturn(Optional.of(sessionResourcePort));
-        when(sessionResourceBuilderPort.build()).thenReturn(sessionResourcePort);
-    }*/
 
     @Test
     public void testPresentCall() {
