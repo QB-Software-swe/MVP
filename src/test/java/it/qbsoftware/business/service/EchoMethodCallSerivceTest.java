@@ -1,7 +1,6 @@
 package it.qbsoftware.business.service;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -10,12 +9,11 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import it.qbsoftware.business.ports.in.usecase.EchoMethodCallUsecase;
-import it.qbsoftware.business.services.EchoMethodCallSerivce;
-import rs.ltt.jmap.common.method.response.core.EchoMethodResponse;
 import it.qbsoftware.business.ports.in.jmap.method.call.other.EchoMethodCallPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.MethodResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.response.other.EchoMethodResponseBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.method.response.other.EchoMethodResponsePort;
+import it.qbsoftware.business.services.EchoMethodCallSerivce;
 
 @RunWith(org.mockito.junit.MockitoJUnitRunner.class)
 public class EchoMethodCallSerivceTest {
@@ -29,6 +27,9 @@ public class EchoMethodCallSerivceTest {
     @Mock
     private EchoMethodResponseBuilderPort echoMethodResponseBuilderPort;
 
+    @Mock
+    private EchoMethodResponsePort echoMethodResponsePort;
+
     @InjectMocks
     private EchoMethodCallSerivce echoMethodCallSerivce;
 
@@ -40,14 +41,12 @@ public class EchoMethodCallSerivceTest {
         
         when(echoMethodCallPort.payload()).thenReturn(payload);
         when(echoMethodResponseBuilderPort.payload(payload)).thenReturn(echoMethodResponseBuilderPort);
-        when(echoMethodResponseBuilderPort.build()).thenReturn(methodResponsePort);
+        when(echoMethodResponseBuilderPort.build()).thenReturn(echoMethodResponsePort);
 
-        MethodResponsePort[] methodResponsePorts = echoMethodCallSerivce.call(echoMethodCallPort);
+        EchoMethodResponsePort result = echoMethodCallSerivce.call(echoMethodCallPort);
 
         verify(echoMethodResponseBuilderPort).payload(echoMethodCallPort.payload());
-        assertEquals(1, methodResponsePorts.length);
-        //TODO: attendo ale per capire i tipi
-        //assertEquals(EchoMethodResponseBuilderPort.class, methodResponsePorts[0].getClass());
+        assertEquals(result, echoMethodResponsePort);
     }
 
     @Test
@@ -56,14 +55,12 @@ public class EchoMethodCallSerivceTest {
         
         when(echoMethodCallPort.payload()).thenReturn(payload);
         when(echoMethodResponseBuilderPort.payload(payload)).thenReturn(echoMethodResponseBuilderPort);
-        when(echoMethodResponseBuilderPort.build()).thenReturn(methodResponsePort);
+        when(echoMethodResponseBuilderPort.build()).thenReturn(echoMethodResponsePort);
 
-        MethodResponsePort[] methodResponsePorts = echoMethodCallSerivce.call(echoMethodCallPort);
+        EchoMethodResponsePort result = echoMethodCallSerivce.call(echoMethodCallPort);
 
         verify(echoMethodResponseBuilderPort).payload(echoMethodCallPort.payload());
-        assertEquals(1, methodResponsePorts.length);
-        //TODO: attendo ale per capire i tipi
-        //assertEquals(EchoMethodResponseBuilderPort.class, methodResponsePorts[0].getClass());
+        assertEquals(result, echoMethodResponsePort);
     }
 
 }
