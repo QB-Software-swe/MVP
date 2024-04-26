@@ -1,8 +1,5 @@
 package it.qbsoftware.business.domain.methodcall.filter.standard;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -12,7 +9,8 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.mockito.InjectMocks;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
 import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
@@ -20,23 +18,21 @@ import it.qbsoftware.business.domain.methodcall.filter.EmailFilterBodyPartSettin
 import it.qbsoftware.business.ports.in.jmap.entity.EmailBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailPort;
 
-//TODO TEST: completare il test
 @RunWith(org.mockito.junit.MockitoJUnitRunner.class)
 public class StandardEmailPropertiesFilterTest {
 
-    /*@Mock
+    @Mock
     private EmailBuilderPort emailBuilderPort;
 
     @Mock
     private EmailPort emailPort;
 
-    @InjectMocks
-    private StandardEmailPropertiesFilter standardEmailPropertiesFilter;
-
 
     @Test
     public void testFilterWithNullProperties() throws InvalidArgumentsException {
         EmailPort[] emails = new EmailPort[] {emailPort};
+
+        StandardEmailPropertiesFilter standardEmailPropertiesFilter = new StandardEmailPropertiesFilter(emailBuilderPort);
 
         EmailPort[] result = standardEmailPropertiesFilter.filter(emails, null, null);
 
@@ -68,6 +64,8 @@ public class StandardEmailPropertiesFilterTest {
         when(emailBuilderPort.receivedAt(any())).thenReturn(emailBuilderPort);
         when(emailBuilderPort.build()).thenReturn(emailPort);
 
+        StandardEmailPropertiesFilter standardEmailPropertiesFilter = new StandardEmailPropertiesFilter(emailBuilderPort);
+
         emailBuilderPort.reset().id(emailPort.getId());
 
         EmailPort[] result = standardEmailPropertiesFilter.filter(emails, properties, null);
@@ -81,7 +79,11 @@ public class StandardEmailPropertiesFilterTest {
         String[] properties = new String[] {"invalidProperty"};
         EmailFilterBodyPartSettings emailFilterBodyPartSettings =  new EmailFilterBodyPartSettings(
             new String[] { "property1", "property2" }, true, false, true, 1000L);
+        
+        when(emailBuilderPort.reset()).thenReturn(emailBuilderPort);
+  
+        StandardEmailPropertiesFilter standardEmailPropertiesFilter = new StandardEmailPropertiesFilter(emailBuilderPort);
 
         assertThrows(InvalidArgumentsException.class, () -> standardEmailPropertiesFilter.filter(emails, properties, emailFilterBodyPartSettings));
-    }*/
+    }
 }
