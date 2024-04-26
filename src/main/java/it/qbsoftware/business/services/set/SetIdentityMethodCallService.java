@@ -13,11 +13,9 @@ import it.qbsoftware.business.domain.methodcall.statematch.IfInStateMatch;
 import it.qbsoftware.business.ports.in.guava.ListMultimapPort;
 import it.qbsoftware.business.ports.in.jmap.entity.IdentityPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
-import it.qbsoftware.business.ports.in.jmap.error.AccountNotFoundMethodErrorResponsePort;
-import it.qbsoftware.business.ports.in.jmap.error.StateMismatchMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.call.set.SetIdentityMethodCallPort;
-import it.qbsoftware.business.ports.in.jmap.method.response.MethodResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.response.set.SetIdentityMethodResponseBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.method.response.set.SetIdentityMethodResponsePort;
 import it.qbsoftware.business.ports.in.usecase.set.SetIdentityMethodCallUsecase;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 
@@ -28,64 +26,51 @@ public class SetIdentityMethodCallService implements SetIdentityMethodCallUsecas
     private final UpdateIdentity updateIdentity;
     private final DestroyIdentity destroyIdentity;
     private final SetIdentityMethodResponseBuilderPort setIdentityMethodResponseBuilderPort;
-    private final StateMismatchMethodErrorResponsePort stateMismatchMethodErrorResponsePort;
-    private final AccountNotFoundMethodErrorResponsePort accountNotFoundMethodErrorResponsePort;
 
     public SetIdentityMethodCallService(final AccountStateRepository accountStateRepository,
             final CreateIdentity createIndetity,
             final DestroyIdentity destroyIdentity,
             final IfInStateMatch ifInStateMatch,
             final SetIdentityMethodResponseBuilderPort setIdentityMethodResponseBuilderPort,
-            final StateMismatchMethodErrorResponsePort stateMismatchMethodErrorResponsePort,
-            final UpdateIdentity updateIdentity,
-            final AccountNotFoundMethodErrorResponsePort accountNotFoundMethodErrorResponsePort) {
+            final UpdateIdentity updateIdentity) {
         this.accountStateRepository = accountStateRepository;
         this.ifInStateMatch = ifInStateMatch;
         this.createIndetity = createIndetity;
         this.updateIdentity = updateIdentity;
         this.destroyIdentity = destroyIdentity;
         this.setIdentityMethodResponseBuilderPort = setIdentityMethodResponseBuilderPort;
-        this.stateMismatchMethodErrorResponsePort = stateMismatchMethodErrorResponsePort;
-        this.accountNotFoundMethodErrorResponsePort = accountNotFoundMethodErrorResponsePort;
     }
 
     @Override
-    public MethodResponsePort[] call(final SetIdentityMethodCallPort setIdentityMethodCallPort,
-            final ListMultimapPort<String, ResponseInvocationPort> previousResponse) {
-        try {
-            final String accountId = setIdentityMethodCallPort.accountId();
-            AccountState preSetAccountState = accountStateRepository.retrive(accountId);
+    public SetIdentityMethodResponsePort call(final SetIdentityMethodCallPort setIdentityMethodCallPort,
+            final ListMultimapPort<String, ResponseInvocationPort> previousResponse)
+            throws AccountNotFoundException, StateMismatchException {
 
-            ifInStateMatch.methodStateMatchCurrent(setIdentityMethodCallPort.ifInState(),
-                    preSetAccountState.emailState());
+        final String accountId = setIdentityMethodCallPort.accountId();
+        final AccountState preSetAccountState = accountStateRepository.retrive(accountId);
 
-            final CreatedResult<IdentityPort> createdIdentityResult = createIndetity.create(setIdentityMethodCallPort);
+        ifInStateMatch.methodStateMatchCurrent(setIdentityMethodCallPort.ifInState(),
+                preSetAccountState.emailState());
 
-            final UpdatedResult<IdentityPort> updatedIdentityResult = updateIdentity.update(setIdentityMethodCallPort);
+        final CreatedResult<IdentityPort> createdIdentityResult = createIndetity.create(setIdentityMethodCallPort);
 
-            final DestroyedResult destroyedIdentityResult = destroyIdentity.destroy(setIdentityMethodCallPort);
+        final UpdatedResult<IdentityPort> updatedIdentityResult = updateIdentity.update(setIdentityMethodCallPort);
 
-            AccountState postSetAccountState = accountStateRepository.retrive(accountId);
+        final DestroyedResult destroyedIdentityResult = destroyIdentity.destroy(setIdentityMethodCallPort);
 
-            return new MethodResponsePort[] {
-                    setIdentityMethodResponseBuilderPort
-                            .reset()
-                            .oldState(preSetAccountState.emailState())
-                            .newState(postSetAccountState.emailState())
-                            .created(createdIdentityResult.created())
-                            .notCreated(createdIdentityResult.notCreated())
-                            .updated(updatedIdentityResult.updated())
-                            .notUpdated(updatedIdentityResult.notUpdated())
-                            .destroyed(destroyedIdentityResult.destroyed())
-                            .notDestroyed(destroyedIdentityResult.notDestroyed())
-                            .build()
-            };
+        final AccountState postSetAccountState = accountStateRepository.retrive(accountId);
 
-        } catch (final AccountNotFoundException accountNotFoundException) {
-            return new MethodResponsePort[] { accountNotFoundMethodErrorResponsePort };
-        } catch (final StateMismatchException stateMismatchException) {
-            return new MethodResponsePort[] { stateMismatchMethodErrorResponsePort };
-        }
+        return setIdentityMethodResponseBuilderPort
+                .reset()
+                .oldState(preSetAccountState.emailState())
+                .newState(postSetAccountState.emailState())
+                .created(createdIdentityResult.created())
+                .notCreated(createdIdentityResult.notCreated())
+                .updated(updatedIdentityResult.updated())
+                .notUpdated(updatedIdentityResult.notUpdated())
+                .destroyed(destroyedIdentityResult.destroyed())
+                .notDestroyed(destroyedIdentityResult.notDestroyed())
+                .build();
     }
 
 }

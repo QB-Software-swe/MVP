@@ -13,11 +13,9 @@ import it.qbsoftware.business.domain.methodcall.statematch.IfInStateMatch;
 import it.qbsoftware.business.ports.in.guava.ListMultimapPort;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
-import it.qbsoftware.business.ports.in.jmap.error.AccountNotFoundMethodErrorResponsePort;
-import it.qbsoftware.business.ports.in.jmap.error.StateMismatchMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.call.set.SetMailboxMethodCallPort;
-import it.qbsoftware.business.ports.in.jmap.method.response.MethodResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.response.set.SetMailboxMethodResponseBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.method.response.set.SetMailboxMethodResponsePort;
 import it.qbsoftware.business.ports.in.usecase.set.SetMailboxMethodCallUsecase;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 
@@ -25,66 +23,52 @@ public class SetMailboxMethodCallService implements SetMailboxMethodCallUsecase 
     private final AccountStateRepository accountStateRepository;
     private final IfInStateMatch ifInStateMatch;
     private final SetMailboxMethodResponseBuilderPort setMailboxMethodResponseBuilderPort;
-    private final StateMismatchMethodErrorResponsePort stateMismatchMethodErrorResponsePort;
     private final CreateMailbox createMailbox;
     private final UpdateMailbox updateMailbox;
     private final DestroyMailbox destroyMailbox;
-    private final AccountNotFoundMethodErrorResponsePort accountNotFoundMethodErrorResponsePort;
 
     public SetMailboxMethodCallService(final AccountStateRepository accountStateRepository,
             final IfInStateMatch ifInStateMatch,
             final SetMailboxMethodResponseBuilderPort setMailboxMethodResponseBuilderPort,
-            final StateMismatchMethodErrorResponsePort stateMismatchMethodErrorResponsePort,
             final CreateMailbox createMailbox,
             final DestroyMailbox destroyMailbox,
-            final UpdateMailbox updateMailbox,
-            final AccountNotFoundMethodErrorResponsePort accountNotFoundMethodErrorResponsePort) {
+            final UpdateMailbox updateMailbox) {
         this.accountStateRepository = accountStateRepository;
         this.ifInStateMatch = ifInStateMatch;
         this.setMailboxMethodResponseBuilderPort = setMailboxMethodResponseBuilderPort;
-        this.stateMismatchMethodErrorResponsePort = stateMismatchMethodErrorResponsePort;
         this.createMailbox = createMailbox;
         this.updateMailbox = updateMailbox;
         this.destroyMailbox = destroyMailbox;
-        this.accountNotFoundMethodErrorResponsePort = accountNotFoundMethodErrorResponsePort;
     }
 
     @Override
-    public MethodResponsePort[] call(final SetMailboxMethodCallPort setMailboxMethodCallPort,
-            final ListMultimapPort<String, ResponseInvocationPort> previousResponse) {
+    public SetMailboxMethodResponsePort call(final SetMailboxMethodCallPort setMailboxMethodCallPort,
+            final ListMultimapPort<String, ResponseInvocationPort> previousResponse)
+            throws StateMismatchException, AccountNotFoundException {
 
-        try {
-            final String accountId = setMailboxMethodCallPort.accountId();
-            AccountState preSetAccountState = accountStateRepository.retrive(accountId);
+        final String accountId = setMailboxMethodCallPort.accountId();
+        final AccountState preSetAccountState = accountStateRepository.retrive(accountId);
 
-            ifInStateMatch.methodStateMatchCurrent(setMailboxMethodCallPort.ifInState(),
-                    preSetAccountState.mailboxState());
+        ifInStateMatch.methodStateMatchCurrent(setMailboxMethodCallPort.ifInState(),
+                preSetAccountState.mailboxState());
 
-            final CreatedResult<MailboxPort> createdMailboxResult = createMailbox.create(setMailboxMethodCallPort);
-            final UpdatedResult<MailboxPort> updatedMailboxResult = updateMailbox.update(setMailboxMethodCallPort);
-            final DestroyedResult destroyedMailboxResult = destroyMailbox.destroy(setMailboxMethodCallPort);
+        final CreatedResult<MailboxPort> createdMailboxResult = createMailbox.create(setMailboxMethodCallPort);
+        final UpdatedResult<MailboxPort> updatedMailboxResult = updateMailbox.update(setMailboxMethodCallPort);
+        final DestroyedResult destroyedMailboxResult = destroyMailbox.destroy(setMailboxMethodCallPort);
 
-            AccountState postSetAccountState = accountStateRepository.retrive(accountId);
+        final AccountState postSetAccountState = accountStateRepository.retrive(accountId);
 
-            return new MethodResponsePort[] {
-                    setMailboxMethodResponseBuilderPort
-                            .reset()
-                            .oldState(preSetAccountState.emailState())
-                            .newState(postSetAccountState.emailState())
-                            .created(createdMailboxResult.created())
-                            .notCreated(createdMailboxResult.notCreated())
-                            .updated(updatedMailboxResult.updated())
-                            .notUpdated(updatedMailboxResult.notUpdated())
-                            .destroyed(destroyedMailboxResult.destroyed())
-                            .notDestroyed(destroyedMailboxResult.notDestroyed())
-                            .build()
-            };
-
-        } catch (final AccountNotFoundException accountNotFoundException) {
-            return new MethodResponsePort[] { accountNotFoundMethodErrorResponsePort };
-        } catch (final StateMismatchException stateMismatchException) {
-            return new MethodResponsePort[] { stateMismatchMethodErrorResponsePort };
-        }
+        return setMailboxMethodResponseBuilderPort
+                .reset()
+                .oldState(preSetAccountState.emailState())
+                .newState(postSetAccountState.emailState())
+                .created(createdMailboxResult.created())
+                .notCreated(createdMailboxResult.notCreated())
+                .updated(updatedMailboxResult.updated())
+                .notUpdated(updatedMailboxResult.notUpdated())
+                .destroyed(destroyedMailboxResult.destroyed())
+                .notDestroyed(destroyedMailboxResult.notDestroyed())
+                .build();
     }
 
 }

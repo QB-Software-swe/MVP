@@ -35,15 +35,23 @@ public class SetEmailMethodResponseBuilderAdapter implements SetEmailMethodRespo
 
     @Override
     public SetEmailMethodResponseBuilderPort created(final Map<String, EmailPort> created) {
-        setEmailMethodResponseBuilder.created(created.entrySet().stream()
-                .collect(Collectors.toMap(e -> e.getKey(), e -> ((EmailAdapter) e).adaptee())));
+        if (created != null) {
+            setEmailMethodResponseBuilder.created(created.entrySet().stream()
+                    .collect(Collectors.toMap(e -> e.getKey(), e -> ((EmailAdapter) e).adaptee())));
+        } else {
+            setEmailMethodResponseBuilder.created(null);
+        }
         return this;
     }
 
     @Override
     public SetEmailMethodResponseBuilderPort updated(final Map<String, EmailPort> updated) {
-        setEmailMethodResponseBuilder.updated(updated.entrySet().stream()
-                .collect(Collectors.toMap(e -> e.getKey(), e -> ((EmailAdapter) e).adaptee())));
+        if (updated != null) {
+            setEmailMethodResponseBuilder.updated(updated.entrySet().stream()
+                    .collect(Collectors.toMap(e -> e.getKey(), e -> ((EmailAdapter) e).adaptee())));
+        } else {
+            setEmailMethodResponseBuilder.updated(null);
+        }
         return this;
     }
 
@@ -55,22 +63,34 @@ public class SetEmailMethodResponseBuilderAdapter implements SetEmailMethodRespo
 
     @Override
     public SetEmailMethodResponseBuilderPort notCreated(final Map<String, SetErrorPort> notCreated) {
-        setEmailMethodResponseBuilder.notCreated(notCreated.entrySet().stream()
-                .collect(Collectors.toMap(e -> e.getKey(), e -> ((SetErrorAdapter) e).adaptee())));
+        if (notCreated != null) {
+            setEmailMethodResponseBuilder.notCreated(notCreated.entrySet().stream()
+                    .collect(Collectors.toMap(e -> e.getKey(), e -> ((SetErrorAdapter) e).adaptee())));
+        } else {
+            setEmailMethodResponseBuilder.notCreated(null);
+        }
         return this;
     }
 
     @Override
     public SetEmailMethodResponseBuilderPort notUpdated(final Map<String, SetErrorPort> notUpdated) {
-        setEmailMethodResponseBuilder.notUpdated(notUpdated.entrySet().stream()
-                .collect(Collectors.toMap(e -> e.getKey(), e -> ((SetErrorAdapter) e).adaptee())));
+        if (notUpdated != null) {
+            setEmailMethodResponseBuilder.notUpdated(notUpdated.entrySet().stream()
+                    .collect(Collectors.toMap(e -> e.getKey(), e -> ((SetErrorAdapter) e).adaptee())));
+        } else {
+            setEmailMethodResponseBuilder.notUpdated(null);
+        }
         return this;
     }
 
     @Override
-    public SetEmailMethodResponseBuilderPort notDestroyed(Map<String, SetErrorPort> notDestroyed) {
-        setEmailMethodResponseBuilder.notDestroyed(notDestroyed.entrySet().stream()
-                .collect(Collectors.toMap(e -> e.getKey(), e -> ((SetErrorAdapter) e).adaptee())));
+    public SetEmailMethodResponseBuilderPort notDestroyed(final Map<String, SetErrorPort> notDestroyed) {
+        if (notDestroyed != null) {
+            setEmailMethodResponseBuilder.notDestroyed(notDestroyed.entrySet().stream()
+                    .collect(Collectors.toMap(e -> e.getKey(), e -> ((SetErrorAdapter) e).adaptee())));
+        } else {
+            setEmailMethodResponseBuilder.notDestroyed(null);
+        }
         return this;
     }
 

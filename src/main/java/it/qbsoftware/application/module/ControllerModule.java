@@ -16,11 +16,23 @@ import it.qbsoftware.business.domain.methodcall.filter.standard.StandardThreadPr
 import it.qbsoftware.business.domain.methodcall.process.get.GetReferenceIdsResolver;
 import it.qbsoftware.business.domain.methodcall.process.get.JmapReferenceIdsResolver;
 import it.qbsoftware.business.domain.methodcall.process.set.create.CreateEmail;
+import it.qbsoftware.business.domain.methodcall.process.set.create.CreateIdentity;
+import it.qbsoftware.business.domain.methodcall.process.set.create.CreateMailbox;
 import it.qbsoftware.business.domain.methodcall.process.set.create.StandardCreateEmail;
+import it.qbsoftware.business.domain.methodcall.process.set.create.StandardCreateIdentity;
+import it.qbsoftware.business.domain.methodcall.process.set.create.StandardCreateMailbox;
 import it.qbsoftware.business.domain.methodcall.process.set.destroy.DestroyEmail;
+import it.qbsoftware.business.domain.methodcall.process.set.destroy.DestroyIdentity;
+import it.qbsoftware.business.domain.methodcall.process.set.destroy.DestroyMailbox;
 import it.qbsoftware.business.domain.methodcall.process.set.destroy.StandardDestroyEmail;
+import it.qbsoftware.business.domain.methodcall.process.set.destroy.StandardDestroyIdentity;
+import it.qbsoftware.business.domain.methodcall.process.set.destroy.StandardDestroyMailbox;
 import it.qbsoftware.business.domain.methodcall.process.set.update.StandardUpdateEmail;
+import it.qbsoftware.business.domain.methodcall.process.set.update.StandardUpdateIdentity;
+import it.qbsoftware.business.domain.methodcall.process.set.update.StandardUpdateMailbox;
 import it.qbsoftware.business.domain.methodcall.process.set.update.UpdateEmail;
+import it.qbsoftware.business.domain.methodcall.process.set.update.UpdateIdentity;
+import it.qbsoftware.business.domain.methodcall.process.set.update.UpdateMailbox;
 import it.qbsoftware.business.domain.methodcall.statematch.IfInStateMatch;
 import it.qbsoftware.business.domain.methodcall.statematch.StandardIfInStateMatch;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailBuilderPort;
@@ -40,6 +52,9 @@ import it.qbsoftware.business.ports.in.jmap.method.response.get.GetEmailSubmissi
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetIdentityMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetMailboxMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetThreadMethodResponseBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.method.response.set.SetEmailMethodResponseBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.method.response.set.SetIdentityMethodResponseBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.method.response.set.SetMailboxMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.util.ResultReferenceResolverPort;
 import it.qbsoftware.business.ports.in.usecase.SessionUsecase;
 import it.qbsoftware.business.ports.in.usecase.changes.ChangesEmailMethodCallUsecase;
@@ -52,6 +67,9 @@ import it.qbsoftware.business.ports.in.usecase.get.GetEmailSubmissionMethodCallU
 import it.qbsoftware.business.ports.in.usecase.get.GetIdentityMethodCallUsecase;
 import it.qbsoftware.business.ports.in.usecase.get.GetMailboxMethodCallUsecase;
 import it.qbsoftware.business.ports.in.usecase.get.GetThreadMethodCallUsecase;
+import it.qbsoftware.business.ports.in.usecase.set.SetEmailMethodCallUsecase;
+import it.qbsoftware.business.ports.in.usecase.set.SetIdentityMethodCallUsecase;
+import it.qbsoftware.business.ports.in.usecase.set.SetMailboxMethodCallUsecase;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.business.ports.out.domain.EmailChangesTrackerRepository;
 import it.qbsoftware.business.ports.out.domain.EmailSubmissionChangesTrackerRepository;
@@ -75,6 +93,9 @@ import it.qbsoftware.business.services.get.GetEmailSubmissionMethodCallService;
 import it.qbsoftware.business.services.get.GetIdentityMethodCallService;
 import it.qbsoftware.business.services.get.GetMailboxMethodCallService;
 import it.qbsoftware.business.services.get.GetThreadMethodCallService;
+import it.qbsoftware.business.services.set.SetEmailMethodCallService;
+import it.qbsoftware.business.services.set.SetIdentityMethodCallService;
+import it.qbsoftware.business.services.set.SetMailboxMethodCallService;
 
 public class ControllerModule extends AbstractModule {
         @Override
@@ -144,24 +165,43 @@ public class ControllerModule extends AbstractModule {
         }
 
         // Service>/Set
-        /*
-         * @Provides
-         * SetEmailMethodCallUsecase provideSetEmailMethodCallService(final
-         * AccountStateRepository accountStateRepository,
-         * final IfInStateMatch ifInStateMatch,
-         * final StateMismatchMethodErrorResponsePort
-         * stateMismatchMethodErrorResponsePort,
-         * final CreateEmail createEmail,
-         * final UpdateEmail updateEmail,
-         * final DestroyEmail destroyEmail,
-         * final SetEmailMethodResponseBuilderPort setEmailMethodResponseBuilderPort,
-         * final AccountNotFoundMethodErrorResponsePort
-         * accountNotFoundMethodErrorResponsePort) {
-         * return new SetEmailMethodCallService(accountStateRepository, ifInStateMatch,
-         * stateMismatchMethodErrorResponsePort, createEmail, updateEmail, destroyEmail,
-         * setEmailMethodResponseBuilderPort, accountNotFoundMethodErrorResponsePort);
-         * }
-         */
+
+        @Provides
+        SetEmailMethodCallUsecase provideSetEmailMethodCallService(
+                        final AccountStateRepository accountStateRepository,
+                        final IfInStateMatch ifInStateMatch,
+                        final CreateEmail createEmail,
+                        final UpdateEmail updateEmail,
+                        final DestroyEmail destroyEmail,
+                        final SetEmailMethodResponseBuilderPort setEmailMethodResponseBuilderPort) {
+                return new SetEmailMethodCallService(accountStateRepository, ifInStateMatch,
+                                createEmail, updateEmail, destroyEmail,
+                                setEmailMethodResponseBuilderPort);
+        }
+
+        @Provides
+        SetMailboxMethodCallUsecase provideSetMailboxMethodCallService(
+                        final AccountStateRepository accountStateRepository,
+                        final IfInStateMatch ifInStateMatch,
+                        final SetMailboxMethodResponseBuilderPort setMailboxMethodResponseBuilderPort,
+                        final CreateMailbox createMailbox,
+                        final DestroyMailbox destroyMailbox,
+                        final UpdateMailbox updateMailbox) {
+                return new SetMailboxMethodCallService(accountStateRepository, ifInStateMatch,
+                                setMailboxMethodResponseBuilderPort, createMailbox, destroyMailbox, updateMailbox);
+        }
+
+        @Provides
+        SetIdentityMethodCallUsecase provideSetIdentityMethodCallServide(
+                        final AccountStateRepository accountStateRepository,
+                        final CreateIdentity createIndetity,
+                        final DestroyIdentity destroyIdentity,
+                        final IfInStateMatch ifInStateMatch,
+                        final SetIdentityMethodResponseBuilderPort setIdentityMethodResponseBuilderPort,
+                        final UpdateIdentity updateIdentity) {
+                return new SetIdentityMethodCallService(accountStateRepository, createIndetity, destroyIdentity,
+                                ifInStateMatch, setIdentityMethodResponseBuilderPort, updateIdentity);
+        }
 
         // Service>/Changes
         @Provides
@@ -265,7 +305,7 @@ public class ControllerModule extends AbstractModule {
         }
 
         @Provides
-        DestroyEmail provideDestroyEmail(final EmailRepository emailRepository,
+        DestroyEmail provideStandardDestroyEmail(final EmailRepository emailRepository,
                         final EmailChangesTrackerRepository emailChangesTrackerRepository,
                         final MailboxChangesTrackerRepository mailboxChangesTrackerRepository,
                         final SetErrorEnumPort setErrorEnumPort,
@@ -274,6 +314,51 @@ public class ControllerModule extends AbstractModule {
                 return new StandardDestroyEmail(emailRepository, emailChangesTrackerRepository,
                                 mailboxChangesTrackerRepository, setErrorEnumPort, accountStateRepository,
                                 threadChangesTrackerRepository);
+        }
+
+        @Provides
+        CreateMailbox provideStandardCreateMailbox(final AccountStateRepository accountStateRepository,
+                        final MailboxChangesTrackerRepository mailboxChangesTrackerRepository,
+                        final MailboxRepository mailboxRepository,
+                        final SetErrorEnumPort setErrorEnumPort) {
+                return new StandardCreateMailbox(accountStateRepository, mailboxChangesTrackerRepository,
+                                mailboxRepository, setErrorEnumPort);
+        }
+
+        @Provides
+        UpdateMailbox provideStandardUpdateMailbox() {
+                return new StandardUpdateMailbox();
+        }
+
+        @Provides
+        DestroyMailbox provideStandardDestroyMailbox(final AccountStateRepository accountStateRepository,
+                        final MailboxChangesTrackerRepository mailboxChangesTrackerRepository,
+                        final MailboxRepository mailboxRepository, final SetErrorEnumPort setErrorEnumPort) {
+                return new StandardDestroyMailbox(accountStateRepository, mailboxChangesTrackerRepository,
+                                mailboxRepository, setErrorEnumPort);
+        }
+
+        @Provides
+        CreateIdentity provideStandardCreateIdentity(final AccountStateRepository accountStateRepository,
+                        final IdentityChangesTrackerRepository identityChangesTrackerRepository,
+                        final IdentityRepository identityRepository,
+                        final SetErrorEnumPort setErrorEnumPort) {
+                return new StandardCreateIdentity(accountStateRepository, identityChangesTrackerRepository,
+                                identityRepository, setErrorEnumPort);
+        }
+
+        @Provides
+        UpdateIdentity provideStandardUpdateIdentity() {
+                return new StandardUpdateIdentity();
+        }
+
+        @Provides
+        DestroyIdentity provideStandardDestroyIdentity(final AccountStateRepository accountStateRepository,
+                        final IdentityChangesTrackerRepository identityChangesTrackerRepository,
+                        final IdentityRepository identityRepository,
+                        final SetErrorEnumPort setErrorEnumPort) {
+                return new StandardDestroyIdentity(accountStateRepository, identityChangesTrackerRepository,
+                                identityRepository, setErrorEnumPort);
         }
 
         // Domain>Other
