@@ -39,7 +39,7 @@ public class ChangesMailboxMethodCallService implements ChangesMailboxMethodCall
         final Long maxChanges = changesMailboxMethodCallPort.getMaxChanges();
         final AccountState accountState = accountStateRepository.retrive(accountId);
 
-        if (maxChanges != null && maxChanges <= 0) {
+        if (maxChanges != null && maxChanges < 0) {
             throw new InvalidArgumentsException();
         }
 

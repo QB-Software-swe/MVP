@@ -40,7 +40,7 @@ public class ChangesEmailSubmissionMethodCallService implements ChangesEmailSubm
         final Long maxChanges = changesSubmissionMethodCallPort.getMaxChanges();
         final AccountState accountState = accountStateRepository.retrive(accountId);
 
-        if (maxChanges != null && maxChanges <= 0) {
+        if (maxChanges != null && maxChanges < 0) {
             throw new InvalidArgumentsException();
         }
 

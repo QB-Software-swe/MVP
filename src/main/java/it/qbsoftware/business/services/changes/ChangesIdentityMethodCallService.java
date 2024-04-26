@@ -39,7 +39,7 @@ public class ChangesIdentityMethodCallService implements ChangesIdentityMethodCa
         final Long maxChanges = changesIdentityMethodCallPort.getMaxChanges();
         final AccountState accountState = accountStateRepository.retrive(accountId);
 
-        if (maxChanges != null && maxChanges <= 0) {
+        if (maxChanges != null && maxChanges < 0) {
             throw new InvalidArgumentsException();
         }
 

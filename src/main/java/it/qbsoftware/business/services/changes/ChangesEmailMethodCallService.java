@@ -39,7 +39,7 @@ public class ChangesEmailMethodCallService implements ChangesEmailMethodCallUsec
         final Long maxChanges = changesEmailMethodCallPort.getMaxChanges();
         final AccountState accountState = accountStateRepository.retrive(accountId);
 
-        if (maxChanges != null && maxChanges <= 0) {
+        if (maxChanges != null && maxChanges < 0) {
             throw new InvalidArgumentsException();
         }
 
