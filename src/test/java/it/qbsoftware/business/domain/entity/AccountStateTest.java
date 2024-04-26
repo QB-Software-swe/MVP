@@ -3,58 +3,80 @@ package it.qbsoftware.business.domain.entity;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import it.qbsoftware.business.domain.entity.changes.AccountState;
 
+@RunWith(org.mockito.junit.MockitoJUnitRunner.class)
 public class AccountStateTest {
 
-    private final String id = "id";
-    private String mailboxState = "mailboxState";
-    private String emailState = "emailState";
-    private String identityState = "identityState";
-    private String emailSubmissionState = "emailSubmissionState";
-
-
-    //FIXME: implementare il test
-    /*AccountState accountState = new AccountState(id, mailboxState, emailState, identityState, emailSubmissionState);
-
     @Test
-    public void testEmailState() {
-        assertEquals(emailState, accountState.emailState());
+    public void testConstructorWithAllParameters() {
+        AccountState accountState = new AccountState("id", "1", "2", "3", "4", "5");
+
+        assertEquals("id", accountState.id());
+        assertEquals("1", accountState.mailboxState());
+        assertEquals("2", accountState.emailState());
+        assertEquals("3", accountState.identityState());
+        assertEquals("4", accountState.emailSubmissionState());
+        assertEquals("5", accountState.threadState());
     }
 
     @Test
-    public void testEmailSubmissionState() {
-        assertEquals(emailSubmissionState, accountState.emailSubmissionState());
+    public void testConstructorWithIdOnly() {
+        AccountState accountState = new AccountState("id");
+
+        assertEquals("id", accountState.id());
+        assertEquals("0", accountState.mailboxState());
+        assertEquals("0", accountState.emailState());
+        assertEquals("0", accountState.identityState());
+        assertEquals("0", accountState.emailSubmissionState());
+        assertEquals("0", accountState.threadState());
     }
 
     @Test
-    public void testId() {
-        assertEquals(id, accountState.id());
-    }
-
-    @Test
-    public void testIdentityState() {
-        assertEquals(identityState, accountState.identityState());
-    }
-
-    @Test  //fixme: implementare il test
-    public void testIncreaseEmailState() {
-       
-    }
-
-    @Test  //fixme: implementare il test
-    public void testIncreaseIdentityState() {
-
-    }
-
-    @Test  //fixme: implementare il test
     public void testIncreaseMailboxState() {
+        AccountState accountState = new AccountState("id", "1", "2", "3", "4", "5");
 
+        AccountState increasedAccountState = accountState.increaseMailboxState();
+
+        assertEquals("2", increasedAccountState.mailboxState());
     }
 
-    @Test  //fixme: implementare il test
-    public void testMailboxState() {
+    @Test
+    public void testIncreaseEmailState() {
+        AccountState accountState = new AccountState("id", "1", "2", "3", "4", "5");
 
-    }*/
+        AccountState increasedAccountState = accountState.increaseEmailState();
+
+        assertEquals("3", increasedAccountState.emailState());
+    }
+
+    @Test
+    public void testIncreaseIdentityState() {
+        AccountState accountState = new AccountState("id", "1", "2", "3", "4", "5");
+
+        AccountState increasedAccountState = accountState.increaseIdentityState();
+
+        assertEquals("4", increasedAccountState.identityState());
+    }
+
+    @Test
+    public void testIncreaseEmailSubmissionState() {
+        AccountState accountState = new AccountState("id", "1", "2", "3", "4", "5");
+
+        AccountState increasedAccountState = accountState.increaseEmailSubmissionState();
+
+        assertEquals("5", increasedAccountState.emailSubmissionState());
+    }
+
+    @Test
+    public void testIncreaseThreadState() {
+        AccountState accountState = new AccountState("id", "1", "2", "3", "4", "5");
+
+        AccountState increasedAccountState = accountState.increaseThreadState();
+
+        assertEquals("6", increasedAccountState.threadState());
+    }
+
 }
