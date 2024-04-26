@@ -20,6 +20,7 @@ import it.qbsoftware.adapters.in.jmaplib.error.StateMismatchMethodErrorResponseA
 import it.qbsoftware.adapters.in.jmaplib.method.response.changes.ChangesEmailMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.changes.ChangesEmailSubmissionMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.changes.ChangesIdentityMethodResponseBuilderAdapter;
+import it.qbsoftware.adapters.in.jmaplib.method.response.changes.ChangesMailboxMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetEmailMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetEmailSubmissionMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetIdentityMethodResponseBuilderAdapter;
@@ -44,6 +45,7 @@ import it.qbsoftware.business.ports.in.jmap.error.StateMismatchMethodErrorRespon
 import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesEmailMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesEmailSubmissionMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesIdentityMethodResponseBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesMailboxMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetEmailMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetEmailSubmissionMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetIdentityMethodResponseBuilderPort;
@@ -85,6 +87,7 @@ public class JmapLibAdapterModule extends AbstractModule {
         bind(ChangesEmailSubmissionMethodResponseBuilderPort.class)
                 .to(ChangesEmailSubmissionMethodResponseBuilderAdapter.class);
         bind(ChangesIdentityMethodResponseBuilderPort.class).to(ChangesIdentityMethodResponseBuilderAdapter.class);
+        bind(ChangesMailboxMethodResponseBuilderPort.class).to(ChangesMailboxMethodResponseBuilderAdapter.class);
 
         // Util
         bind(ResultReferenceResolverPort.class).to(ResultReferenceResolverAdapter.class);

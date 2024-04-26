@@ -10,6 +10,7 @@ import it.qbsoftware.application.controllers.HandlerRequest;
 import it.qbsoftware.application.controllers.changes.ChangesEmailMethodCallController;
 import it.qbsoftware.application.controllers.changes.ChangesEmailSubmissionMethodCallController;
 import it.qbsoftware.application.controllers.changes.ChangesIdentityMethodCallController;
+import it.qbsoftware.application.controllers.changes.ChangesMailboxMethodCallController;
 import it.qbsoftware.application.controllers.get.GetEmailMethodCallController;
 import it.qbsoftware.application.controllers.get.GetEmailSubmissionMethodCallController;
 import it.qbsoftware.application.controllers.get.GetIdentityMethodCallController;
@@ -37,6 +38,7 @@ public class CorRequestDispatch implements ApiRequestDispatch {
     private final ChangesEmailMethodCallController changesEmailMethodCallController;
     private final ChangesEmailSubmissionMethodCallController changesEmailSubmissionMethodCallController;
     private final ChangesIdentityMethodCallController changesIdentityMethodCallController;
+    private final ChangesMailboxMethodCallController changesMailboxMethodCallController;
 
     private final Gson gson;
 
@@ -49,7 +51,8 @@ public class CorRequestDispatch implements ApiRequestDispatch {
             final GetEmailSubmissionMethodCallController getEmailSubmissionMethodCallController,
             final ChangesEmailMethodCallController changesEmailMethodCallController,
             final ChangesEmailSubmissionMethodCallController changesEmailSubmissionMethodCallController,
-            final ChangesIdentityMethodCallController changesIdentityMethodCallController) {
+            final ChangesIdentityMethodCallController changesIdentityMethodCallController,
+            final ChangesMailboxMethodCallController changesMailboxMethodCallController) {
 
         this.echoMethodCallController = echoMethodCallController;
 
@@ -62,6 +65,7 @@ public class CorRequestDispatch implements ApiRequestDispatch {
         this.changesEmailMethodCallController = changesEmailMethodCallController;
         this.changesEmailSubmissionMethodCallController = changesEmailSubmissionMethodCallController;
         this.changesIdentityMethodCallController = changesIdentityMethodCallController;
+        this.changesMailboxMethodCallController = changesMailboxMethodCallController;
 
         this.gson = gson;
 
@@ -75,10 +79,11 @@ public class CorRequestDispatch implements ApiRequestDispatch {
         getIdentityMethodCallController.setNext(getMailboxMethodCallController);
         getMailboxMethodCallController.setNext(getThreadMethodCallController);
         getThreadMethodCallController.setNext(getEmailSubmissionMethodCallController);
-
         getEmailSubmissionMethodCallController.setNext(changesEmailMethodCallController);
+        
         changesEmailMethodCallController.setNext(changesEmailSubmissionMethodCallController);
         changesEmailSubmissionMethodCallController.setNext(changesIdentityMethodCallController);
+        changesIdentityMethodCallController.setNext(changesMailboxMethodCallController);
     }
 
     @Override

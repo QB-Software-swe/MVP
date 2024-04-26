@@ -1,38 +1,48 @@
 package it.qbsoftware.application.controllers.changes;
 
 import it.qbsoftware.adapters.in.jmaplib.method.call.changes.ChangesMailboxMethodCallAdapter;
-import it.qbsoftware.adapters.in.jmaplib.method.response.AbstracMethodResponseAdapter;
+import it.qbsoftware.adapters.in.jmaplib.method.response.changes.ChangesMailboxMethodResponseAdapter;
 import it.qbsoftware.application.controllers.ControllerHandlerBase;
 import it.qbsoftware.application.controllers.HandlerRequest;
+import it.qbsoftware.business.domain.exception.AccountNotFoundException;
+import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
+import it.qbsoftware.business.domain.exception.changes.CannotCalculateChangesException;
 import it.qbsoftware.business.ports.in.usecase.changes.ChangesMailboxMethodCallUsecase;
 import rs.ltt.jmap.common.method.MethodResponse;
 import rs.ltt.jmap.common.method.call.mailbox.ChangesMailboxMethodCall;
+import rs.ltt.jmap.common.method.error.CannotCalculateChangesMethodErrorResponse;
+import rs.ltt.jmap.common.method.error.InvalidArgumentsMethodErrorResponse;
 
 import java.util.ArrayList;
+
+import com.google.inject.Inject;
 
 public class ChangesMailboxMethodCallController extends ControllerHandlerBase {
     private final ChangesMailboxMethodCallUsecase changesMailboxMethodCallUsecase;
 
+    @Inject
     public ChangesMailboxMethodCallController(final ChangesMailboxMethodCallUsecase changesMailboxMethodCallUsecase) {
         this.changesMailboxMethodCallUsecase = changesMailboxMethodCallUsecase;
     }
 
     @Override
-    public MethodResponse[] handle(final HandlerRequest handlerRequest) {
+    public MethodResponse handle(final HandlerRequest handlerRequest) {
         if (handlerRequest.methodCall() instanceof ChangesMailboxMethodCall changesMailboxMethodCall) {
             final ChangesMailboxMethodCallAdapter changesMailboxMethodCallAdapter = new ChangesMailboxMethodCallAdapter(
                     changesMailboxMethodCall);
 
-            final AbstracMethodResponseAdapter[] methodResponseAdapters = (AbstracMethodResponseAdapter[]) changesMailboxMethodCallUsecase
-                    .call(changesMailboxMethodCallAdapter, handlerRequest.previousResponses());
+            try {
+                final ChangesMailboxMethodResponseAdapter changesMailboxMethodResponseAdapter = (ChangesMailboxMethodResponseAdapter) changesMailboxMethodCallUsecase
+                        .call(changesMailboxMethodCallAdapter, handlerRequest.previousResponses());
 
-            ArrayList<MethodResponse> methodResponseList = new ArrayList<>();
-
-            for (AbstracMethodResponseAdapter methodResponseAdapter : methodResponseAdapters) {
-                methodResponseList.add(methodResponseAdapter.adaptee());
+                return changesMailboxMethodResponseAdapter.adaptee();
+            } catch (final AccountNotFoundException accountNotFoundException) {
+                return new InvalidArgumentsMethodErrorResponse();
+            } catch (final CannotCalculateChangesException CannotCalculateChangesException) {
+                return new CannotCalculateChangesMethodErrorResponse();
+            } catch (final InvalidArgumentsException invalidArgumentsException) {
+                return new InvalidArgumentsMethodErrorResponse();
             }
-
-            return methodResponseList.toArray(MethodResponse[]::new);
         }
         return super.handle(handlerRequest);
     }

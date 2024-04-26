@@ -48,6 +48,7 @@ public class MongoRepositoryAdapterModule extends AbstractModule {
         bind(EmailSubmissionRepository.class).to(EmailSubmissionRepositoryAdapter.class);
         bind(EmailSubmissionChangesTrackerRepository.class).to(EmailSubmissionChangesTrackerRepositoryAdapter.class);
         bind(IdentityChangesTrackerRepository.class).to(IdentityChangesTrackerRepositoryAdapter.class);
+        bind(MailboxChangesTrackerRepository.class).to(MailboxChangesTrackerRepositoryAdapter.class);
     }
 
     @Singleton
