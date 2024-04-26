@@ -1,7 +1,5 @@
 package it.qbsoftware.application.controllers.get;
 
-import java.util.ArrayList;
-
 import com.google.inject.Inject;
 
 import it.qbsoftware.adapters.in.jmaplib.method.call.get.GetEmailSubmissionMethodCallAdapter;
@@ -16,7 +14,6 @@ import rs.ltt.jmap.common.method.MethodResponse;
 import rs.ltt.jmap.common.method.call.submission.GetEmailSubmissionMethodCall;
 import rs.ltt.jmap.common.method.error.InvalidArgumentsMethodErrorResponse;
 import rs.ltt.jmap.common.method.error.InvalidResultReferenceMethodErrorResponse;
-import rs.ltt.jmap.common.method.response.submission.GetEmailSubmissionMethodResponse;
 
 public class GetEmailSubmissionMethodCallController extends ControllerHandlerBase {
     private final GetEmailSubmissionMethodCallUsecase getEmailSubmissionMethodCallUsecase;

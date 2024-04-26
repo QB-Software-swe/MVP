@@ -1,5 +1,7 @@
 package it.qbsoftware.application.controllers.changes;
 
+import com.google.inject.Inject;
+
 import it.qbsoftware.adapters.in.jmaplib.method.call.changes.ChangesMailboxMethodCallAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.changes.ChangesMailboxMethodResponseAdapter;
 import it.qbsoftware.application.controllers.ControllerHandlerBase;
@@ -12,10 +14,6 @@ import rs.ltt.jmap.common.method.MethodResponse;
 import rs.ltt.jmap.common.method.call.mailbox.ChangesMailboxMethodCall;
 import rs.ltt.jmap.common.method.error.CannotCalculateChangesMethodErrorResponse;
 import rs.ltt.jmap.common.method.error.InvalidArgumentsMethodErrorResponse;
-
-import java.util.ArrayList;
-
-import com.google.inject.Inject;
 
 public class ChangesMailboxMethodCallController extends ControllerHandlerBase {
     private final ChangesMailboxMethodCallUsecase changesMailboxMethodCallUsecase;

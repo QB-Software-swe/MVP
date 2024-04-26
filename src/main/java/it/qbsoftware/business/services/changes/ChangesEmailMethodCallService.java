@@ -9,11 +9,7 @@ import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
 import it.qbsoftware.business.domain.exception.changes.CannotCalculateChangesException;
 import it.qbsoftware.business.ports.in.guava.ListMultimapPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
-import it.qbsoftware.business.ports.in.jmap.error.AccountNotFoundMethodErrorResponsePort;
-import it.qbsoftware.business.ports.in.jmap.error.CannotCalculateChangesMethodErrorResponsePort;
-import it.qbsoftware.business.ports.in.jmap.error.InvalidArgumentsMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.call.changes.ChangesEmailMethodCallPort;
-import it.qbsoftware.business.ports.in.jmap.method.response.MethodResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesEmailMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesEmailMethodResponsePort;
 import it.qbsoftware.business.ports.in.usecase.changes.ChangesEmailMethodCallUsecase;
@@ -43,7 +39,7 @@ public class ChangesEmailMethodCallService implements ChangesEmailMethodCallUsec
         final Long maxChanges = changesEmailMethodCallPort.getMaxChanges();
         final AccountState accountState = accountStateRepository.retrive(accountId);
 
-        if (maxChanges != null && maxChanges <= 0) {
+        if (maxChanges != null && maxChanges < 0) {
             throw new InvalidArgumentsException();
         }
 

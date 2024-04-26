@@ -1,5 +1,7 @@
 package it.qbsoftware.business.services.changes;
 
+import java.util.Map;
+
 import it.qbsoftware.business.domain.entity.changes.AccountState;
 import it.qbsoftware.business.domain.entity.changes.tracker.EmailSubmissionChangesTracker;
 import it.qbsoftware.business.domain.exception.AccountNotFoundException;
@@ -7,18 +9,12 @@ import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
 import it.qbsoftware.business.domain.exception.changes.CannotCalculateChangesException;
 import it.qbsoftware.business.ports.in.guava.ListMultimapPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
-import it.qbsoftware.business.ports.in.jmap.error.AccountNotFoundMethodErrorResponsePort;
-import it.qbsoftware.business.ports.in.jmap.error.CannotCalculateChangesMethodErrorResponsePort;
-import it.qbsoftware.business.ports.in.jmap.error.InvalidArgumentsMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.call.changes.ChangesEmailSubmissionMethodCallPort;
-import it.qbsoftware.business.ports.in.jmap.method.response.MethodResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesEmailSubmissionMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesEmailSubmissionMethodResponsePort;
 import it.qbsoftware.business.ports.in.usecase.changes.ChangesEmailSubmissionMethodCallUsecase;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.business.ports.out.domain.EmailSubmissionChangesTrackerRepository;
-
-import java.util.Map;
 
 public class ChangesEmailSubmissionMethodCallService implements ChangesEmailSubmissionMethodCallUsecase {
     private final AccountStateRepository accountStateRepository;
@@ -44,7 +40,7 @@ public class ChangesEmailSubmissionMethodCallService implements ChangesEmailSubm
         final Long maxChanges = changesSubmissionMethodCallPort.getMaxChanges();
         final AccountState accountState = accountStateRepository.retrive(accountId);
 
-        if (maxChanges != null && maxChanges <= 0) {
+        if (maxChanges != null && maxChanges < 0) {
             throw new InvalidArgumentsException();
         }
 

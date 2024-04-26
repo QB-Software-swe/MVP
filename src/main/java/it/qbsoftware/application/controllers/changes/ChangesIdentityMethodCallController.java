@@ -1,5 +1,7 @@
 package it.qbsoftware.application.controllers.changes;
 
+import com.google.inject.Inject;
+
 import it.qbsoftware.adapters.in.jmaplib.method.call.changes.ChangesIdentityMethodCallAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.changes.ChangesIdentityMethodResponseAdapter;
 import it.qbsoftware.application.controllers.ControllerHandlerBase;
@@ -12,11 +14,6 @@ import rs.ltt.jmap.common.method.MethodResponse;
 import rs.ltt.jmap.common.method.call.identity.ChangesIdentityMethodCall;
 import rs.ltt.jmap.common.method.error.CannotCalculateChangesMethodErrorResponse;
 import rs.ltt.jmap.common.method.error.InvalidArgumentsMethodErrorResponse;
-import rs.ltt.jmap.common.method.response.identity.ChangesIdentityMethodResponse;
-
-import java.util.ArrayList;
-
-import com.google.inject.Inject;
 
 public class ChangesIdentityMethodCallController extends ControllerHandlerBase {
     private final ChangesIdentityMethodCallUsecase changesIdentityMethodCallUsecase;

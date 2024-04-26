@@ -1,7 +1,5 @@
 package it.qbsoftware.application.controllers.changes;
 
-import java.util.ArrayList;
-
 import com.google.inject.Inject;
 
 import it.qbsoftware.adapters.in.jmaplib.method.call.changes.ChangesEmailSubmissionMethodCallAdapter;

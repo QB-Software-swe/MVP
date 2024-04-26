@@ -13,16 +13,13 @@ import com.google.inject.Inject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Filters;
 
-import it.qbsoftware.adapters.in.jmaplib.entity.EmailAdapter;
 import it.qbsoftware.adapters.in.jmaplib.entity.IdentityAdapter;
 import it.qbsoftware.business.domain.exception.set.SetNotFoundException;
 import it.qbsoftware.business.domain.exception.set.SetSingletonException;
 import it.qbsoftware.business.domain.util.get.RetrivedEntity;
-import it.qbsoftware.business.ports.in.jmap.entity.EmailPort;
 import it.qbsoftware.business.ports.in.jmap.entity.IdentityPort;
 import it.qbsoftware.business.ports.out.jmap.IdentityRepository;
 import it.qbsoftware.persistance.MongoConnection;
-import rs.ltt.jmap.common.entity.Email;
 import rs.ltt.jmap.common.entity.Identity;
 
 public class IdentityRepositoryAdapter implements IdentityRepository {

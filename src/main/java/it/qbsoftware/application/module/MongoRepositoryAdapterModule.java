@@ -17,7 +17,6 @@ import it.qbsoftware.adapters.out.MailboxRepositoryAdapter;
 import it.qbsoftware.adapters.out.ThreadChangesTrackerRepositoryAdapter;
 import it.qbsoftware.adapters.out.ThreadRepositoryAdapter;
 import it.qbsoftware.adapters.out.UserSessionResourceRepositoryAdapter;
-import it.qbsoftware.business.domain.entity.changes.tracker.EmailSubmissionChangesTracker;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.business.ports.out.domain.EmailChangesTrackerRepository;
 import it.qbsoftware.business.ports.out.domain.EmailSubmissionChangesTrackerRepository;

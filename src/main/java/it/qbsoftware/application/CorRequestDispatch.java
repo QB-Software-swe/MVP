@@ -23,9 +23,6 @@ import rs.ltt.jmap.common.GenericResponse;
 import rs.ltt.jmap.common.Request;
 import rs.ltt.jmap.common.Response;
 import rs.ltt.jmap.common.method.MethodResponse;
-import rs.ltt.jmap.common.method.call.submission.GetEmailSubmissionMethodCall;
-
-import java.util.Arrays;
 
 public class CorRequestDispatch implements ApiRequestDispatch {
     private final EchoMethodCallController echoMethodCallController;
