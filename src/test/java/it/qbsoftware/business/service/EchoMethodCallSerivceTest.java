@@ -18,7 +18,7 @@ import it.qbsoftware.business.ports.in.jmap.method.response.MethodResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.response.other.EchoMethodResponseBuilderPort;
 
 @RunWith(org.mockito.junit.MockitoJUnitRunner.class)
-public class EchoMethodCallServiceTest {
+public class EchoMethodCallSerivceTest {
 
     @Mock
     private MethodResponsePort methodResponsePort;

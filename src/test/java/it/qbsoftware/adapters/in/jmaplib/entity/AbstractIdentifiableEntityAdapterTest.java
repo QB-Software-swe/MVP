@@ -7,7 +7,7 @@ import static org.mockito.Mockito.*;
 
 public class AbstractIdentifiableEntityAdapterTest {
 
-    @Test //fixme
+    @Test
     public void testGetId() {
         AbstractIdentifiableEntity abstractIdentifiableEntity = mock(AbstractIdentifiableEntity.class);
         when(abstractIdentifiableEntity.getId()).thenReturn("id");

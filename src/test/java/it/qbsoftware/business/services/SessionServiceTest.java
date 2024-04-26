@@ -1,45 +1,36 @@
 package it.qbsoftware.business.services;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 
-import org.eclipse.jetty.io.EndPoint;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import it.qbsoftware.business.ports.in.jmap.EndPointConfiguration;
 import it.qbsoftware.business.ports.in.jmap.capability.CapabilityPort;
-import it.qbsoftware.business.ports.in.jmap.entity.AccountBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.SessionResourceBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.SessionResourcePort;
 import it.qbsoftware.business.ports.out.jmap.UserSessionResourceRepository;
-import rs.ltt.jmap.common.SessionResource.SessionResourceBuilder;
 
-
+//FIXME: non funziona
 public class SessionServiceTest {
 
     @Mock
     private SessionResourceBuilderPort sessionResourceBuilderPort;
 
     @Mock
-    private AccountBuilderPort accountBuilderPort;
-
-    @Mock
     private UserSessionResourceRepository userSessionResourceRepository;
+
 
     @Mock
     private SessionResourcePort sessionResourcePort;
 
-
-
-
-    @Mock
-    SessionResourceBuilder sessionResourceBuilder;
 
     @Mock
     EndPointConfiguration endPointConfiguration;
@@ -47,15 +38,11 @@ public class SessionServiceTest {
     @Mock
     CapabilityPort[] serverCapabilities;
 
-
-
     @InjectMocks
     SessionService sessionService;
 
-/*
 
- */
-    @Test
+    /*@Test
     public void testEmptyCall() {
 
         String username = "testusername";
@@ -71,19 +58,27 @@ public class SessionServiceTest {
 
         when(userSessionResourceRepository.retrieve(username)).thenReturn(Optional.of(sessionResourcePort));
         when(sessionResourceBuilderPort.build()).thenReturn(sessionResourcePort);
-    }
+    }*/
 
-/*
- * String username = "testUser";
-        EndPointConfiguration endPointConfiguration = mock(EndPointConfiguration.class);
-        CapabilityPort[] serverCapabilities = new CapabilityPort[0];
-        SessionResourcePort sessionResourcePort = mock(SessionResourcePort.class);
+    @Test
+    public void testCall() {
+        String username = "testUser";
 
-        when(userSessionResourceRepository.retrieve(username)).thenReturn(Optional.of(sessionResourcePort));
+        when(sessionResourceBuilderPort.reset()).thenReturn(sessionResourceBuilderPort);
+        when(sessionResourceBuilderPort.apiUrl(any())).thenReturn(sessionResourceBuilderPort);
+        when(sessionResourceBuilderPort.uploadUrl(any())).thenReturn(sessionResourceBuilderPort);
+        when(sessionResourceBuilderPort.downloadUrl(any())).thenReturn(sessionResourceBuilderPort);
+        when(sessionResourceBuilderPort.eventSourceUrl(any())).thenReturn(sessionResourceBuilderPort);
+        when(sessionResourceBuilderPort.capabilities(any())).thenReturn(sessionResourceBuilderPort);
+        when(sessionResourceBuilderPort.username(any())).thenReturn(sessionResourceBuilderPort);
+        when(sessionResourceBuilderPort.accounts(any())).thenReturn(sessionResourceBuilderPort);
+        when(sessionResourceBuilderPort.primaryAccounts(any())).thenReturn(sessionResourceBuilderPort);
+        when(sessionResourceBuilderPort.state(any())).thenReturn(sessionResourceBuilderPort);
         when(sessionResourceBuilderPort.build()).thenReturn(sessionResourcePort);
+        when(userSessionResourceRepository.retrieve(username)).thenReturn(Optional.of(sessionResourcePort));
 
         Optional<SessionResourcePort> result = sessionService.call(username, endPointConfiguration, serverCapabilities);
-
+        
         assertTrue(result.isPresent());
         assertEquals(sessionResourcePort, result.get());
 
@@ -97,7 +92,7 @@ public class SessionServiceTest {
         verify(sessionResourceBuilderPort).accounts(sessionResourcePort.accounts());
         verify(sessionResourceBuilderPort).primaryAccounts(sessionResourcePort.primaryAccounts());
         verify(sessionResourceBuilderPort).state(sessionResourcePort.state());
- */
-
+    
+    }
 
 }

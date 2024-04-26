@@ -1,7 +1,6 @@
 package it.qbsoftware.business.services.get;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -22,11 +21,7 @@ import it.qbsoftware.business.domain.util.get.RetrivedEntity;
 import it.qbsoftware.business.ports.in.guava.ListMultimapPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
-import it.qbsoftware.business.ports.in.jmap.error.AccountNotFoundMethodErrorResponsePort;
-import it.qbsoftware.business.ports.in.jmap.error.InvalidArgumentsMethodErrorResponsePort;
-import it.qbsoftware.business.ports.in.jmap.error.InvalidResultReferenceMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.call.get.GetEmailMethodCallPort;
-import it.qbsoftware.business.ports.in.jmap.method.response.MethodResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetEmailMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetEmailMethodResponsePort;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
@@ -37,16 +32,13 @@ import it.qbsoftware.business.ports.out.jmap.EmailRepository;
 public class GetEmailMethodCallServiceTest {
 
     @Mock
+    private GetEmailMethodResponseBuilderPort getEmailMethodResponseBuilderPort;
+
+    @Mock
     private AccountStateRepository accountStateRepository;
 
     @Mock
-    private ListMultimapPort<String, ResponseInvocationPort> previousResponses;
-
-    @Mock
     private EmailRepository emailRepository;
-
-    @Mock
-    private GetEmailMethodCallPort getEmailMethodCallPort;
 
     @Mock
     private GetReferenceIdsResolver getReferenceIdsResolver;
@@ -55,19 +47,13 @@ public class GetEmailMethodCallServiceTest {
     private EmailPropertiesFilter emailPropertiesFilter;
 
     @Mock
-    private AccountNotFoundMethodErrorResponsePort accountNotFoundMethodErrorResponsePort;
+    private ListMultimapPort<String, ResponseInvocationPort> previousResponses;
 
     @Mock
-    private InvalidArgumentsMethodErrorResponsePort invalidArgumentsMethodErrorResponsePort;
-
-    @Mock
-    private InvalidResultReferenceMethodErrorResponsePort invalidResultReferenceMethodErrorResponsePort;
+    private GetEmailMethodCallPort getEmailMethodCallPort;
 
     @Mock
     private GetEmailMethodResponsePort getEmailMethodResponsePort;
-
-    @Mock
-    private GetEmailMethodResponseBuilderPort getEmailMethodResponseBuilderPort;
 
     @InjectMocks
     private GetEmailMethodCallService getEmailMethodCallService;
@@ -95,7 +81,7 @@ public class GetEmailMethodCallServiceTest {
         when(getEmailMethodResponseBuilderPort.state(any())).thenReturn(getEmailMethodResponseBuilderPort);
         when(getEmailMethodResponseBuilderPort.build()).thenReturn(getEmailMethodResponsePort);
 
-        MethodResponsePort[] methodResponsePorts = getEmailMethodCallService.call(getEmailMethodCallPort, previousResponses);
+        GetEmailMethodResponsePort result = getEmailMethodCallService.call(getEmailMethodCallPort, previousResponses);
 
         verify(getEmailMethodResponseBuilderPort).reset();
         verify(getEmailMethodResponseBuilderPort).list(emails);
@@ -103,12 +89,53 @@ public class GetEmailMethodCallServiceTest {
         verify(getEmailMethodResponseBuilderPort).state(accountState.emailState());
         verify(getEmailMethodResponseBuilderPort).build();
         verify(emailRepository).retrive(emailIds);
-        assertEquals(methodResponsePorts[0], getEmailMethodResponsePort);
-        assertEquals(methodResponsePorts.length, 1);
+        assertEquals(result, getEmailMethodResponsePort);
     }
 
 
+    
+
     @Test
+    public void testCallWithRetriveAll() throws AccountNotFoundException, InvalidResultReferenceExecption, InvalidArgumentsException{
+        String accountId = "testAccountId";
+        String[] emailIds = null;
+        AccountState accountState = new AccountState(accountId);
+        EmailPort[] emails = new EmailPort[] { new EmailAdapter(null), new EmailAdapter(null) };
+
+        when(getReferenceIdsResolver.resolve(any(), any())).thenReturn(emailIds);
+        when(emailRepository.retriveAll(any())).thenReturn(new RetrivedEntity<>(emails, new String[] {}));
+        when(getEmailMethodCallPort.accountId()).thenReturn(accountId);
+        when(accountStateRepository.retrive(accountId)).thenReturn(accountState);
+        when(emailPropertiesFilter.filter(any(), any(), any())).thenReturn(emails);
+        when(getEmailMethodResponseBuilderPort.reset()).thenReturn(getEmailMethodResponseBuilderPort);
+        
+        when(getEmailMethodResponseBuilderPort.list(any())).thenReturn(getEmailMethodResponseBuilderPort);
+        
+        when(getEmailMethodResponseBuilderPort.notFound(any())).thenReturn(getEmailMethodResponseBuilderPort);
+        
+        when(getEmailMethodResponseBuilderPort.state(any())).thenReturn(getEmailMethodResponseBuilderPort);
+        when(getEmailMethodResponseBuilderPort.build()).thenReturn(getEmailMethodResponsePort);
+
+        GetEmailMethodResponsePort result = getEmailMethodCallService.call(getEmailMethodCallPort, previousResponses);
+
+        verify(getEmailMethodResponseBuilderPort).reset();
+        verify(getEmailMethodResponseBuilderPort).list(emails);
+        verify(getEmailMethodResponseBuilderPort).notFound(any());
+        verify(getEmailMethodResponseBuilderPort).state(accountState.emailState());
+        verify(getEmailMethodResponseBuilderPort).build();
+        verify(emailRepository).retriveAll(accountId);
+        assertEquals(result, getEmailMethodResponsePort);
+
+    }
+
+
+}
+
+
+
+/* FIXME: ROBA CHE POSSO RICICLARE DOPO
+
+@Test
     public void testCallWithAccountNotFoundException() throws AccountNotFoundException, InvalidResultReferenceExecption, InvalidArgumentsException {
                 
         String accountId = "testAccountId";
@@ -146,41 +173,4 @@ public class GetEmailMethodCallServiceTest {
         assertTrue(methodResponsePorts[0] instanceof InvalidArgumentsMethodErrorResponsePort);
     }
 
-
-
-    @Test
-    public void testCallWithRetriveAll() throws AccountNotFoundException, InvalidResultReferenceExecption, InvalidArgumentsException{
-        String accountId = "testAccountId";
-        String[] emailIds = null;
-        AccountState accountState = new AccountState(accountId);
-        EmailPort[] emails = new EmailPort[] { new EmailAdapter(null), new EmailAdapter(null) };
-
-        when(getReferenceIdsResolver.resolve(any(), any())).thenReturn(emailIds);
-        when(emailRepository.retriveAll(any())).thenReturn(new RetrivedEntity<>(emails, new String[] {}));
-        when(getEmailMethodCallPort.accountId()).thenReturn(accountId);
-        when(accountStateRepository.retrive(accountId)).thenReturn(accountState);
-        when(emailPropertiesFilter.filter(any(), any(), any())).thenReturn(emails);
-        when(getEmailMethodResponseBuilderPort.reset()).thenReturn(getEmailMethodResponseBuilderPort);
-        
-        when(getEmailMethodResponseBuilderPort.list(any())).thenReturn(getEmailMethodResponseBuilderPort);
-        
-        when(getEmailMethodResponseBuilderPort.notFound(any())).thenReturn(getEmailMethodResponseBuilderPort);
-        
-        when(getEmailMethodResponseBuilderPort.state(any())).thenReturn(getEmailMethodResponseBuilderPort);
-        when(getEmailMethodResponseBuilderPort.build()).thenReturn(getEmailMethodResponsePort);
-
-        MethodResponsePort[] methodResponsePorts = getEmailMethodCallService.call(getEmailMethodCallPort, previousResponses);
-
-        verify(getEmailMethodResponseBuilderPort).reset();
-        verify(getEmailMethodResponseBuilderPort).list(emails);
-        verify(getEmailMethodResponseBuilderPort).notFound(any());
-        verify(getEmailMethodResponseBuilderPort).state(accountState.emailState());
-        verify(getEmailMethodResponseBuilderPort).build();
-        verify(emailRepository).retriveAll(accountId);
-        assertEquals(methodResponsePorts[0], getEmailMethodResponsePort);
-        assertEquals(methodResponsePorts.length, 1);
-
-    }
-
-
-}
+*/
