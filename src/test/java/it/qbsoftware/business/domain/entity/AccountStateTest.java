@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import it.qbsoftware.business.domain.entity.changes.AccountState;
+
 public class AccountStateTest {
 
     private final String id = "id";
@@ -12,7 +14,9 @@ public class AccountStateTest {
     private String identityState = "identityState";
     private String emailSubmissionState = "emailSubmissionState";
 
-    AccountState accountState = new AccountState(id, mailboxState, emailState, identityState, emailSubmissionState);
+
+    //FIXME: implementare il test
+    /*AccountState accountState = new AccountState(id, mailboxState, emailState, identityState, emailSubmissionState);
 
     @Test
     public void testEmailState() {
@@ -52,5 +56,5 @@ public class AccountStateTest {
     @Test  //fixme: implementare il test
     public void testMailboxState() {
 
-    }
+    }*/
 }

@@ -12,17 +12,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import it.qbsoftware.adapters.in.jmaplib.entity.EmailAdapter;
-import it.qbsoftware.business.domain.entity.AccountState;
+import it.qbsoftware.business.domain.entity.changes.AccountState;
 import it.qbsoftware.business.domain.exception.AccountNotFoundException;
 import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
 import it.qbsoftware.business.domain.exception.InvalidResultReferenceExecption;
 import it.qbsoftware.business.domain.methodcall.filter.EmailPropertiesFilter;
 import it.qbsoftware.business.domain.methodcall.process.get.GetReferenceIdsResolver;
-import it.qbsoftware.business.domain.methodcall.response.AccountNotFoundMethodErrorResponse;
 import it.qbsoftware.business.domain.util.get.RetrivedEntity;
 import it.qbsoftware.business.ports.in.guava.ListMultimapPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
+import it.qbsoftware.business.ports.in.jmap.error.AccountNotFoundMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.error.InvalidArgumentsMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.error.InvalidResultReferenceMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.call.get.GetEmailMethodCallPort;
@@ -53,6 +53,9 @@ public class GetEmailMethodCallServiceTest {
 
     @Mock
     private EmailPropertiesFilter emailPropertiesFilter;
+
+    @Mock
+    private AccountNotFoundMethodErrorResponsePort accountNotFoundMethodErrorResponsePort;
 
     @Mock
     private InvalidArgumentsMethodErrorResponsePort invalidArgumentsMethodErrorResponsePort;
@@ -115,7 +118,7 @@ public class GetEmailMethodCallServiceTest {
         
         MethodResponsePort[] methodResponsePorts = getEmailMethodCallService.call(getEmailMethodCallPort, previousResponses);
         
-        assertTrue(methodResponsePorts[0] instanceof AccountNotFoundMethodErrorResponse);
+        assertTrue(methodResponsePorts[0] instanceof AccountNotFoundMethodErrorResponsePort);
     }
 
     @Test

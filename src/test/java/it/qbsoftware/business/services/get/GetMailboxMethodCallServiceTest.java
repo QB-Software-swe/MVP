@@ -12,13 +12,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import it.qbsoftware.adapters.in.jmaplib.entity.MailboxAdapter;
-import it.qbsoftware.business.domain.entity.AccountState;
+import it.qbsoftware.business.domain.entity.changes.AccountState;
 import it.qbsoftware.business.domain.exception.AccountNotFoundException;
 import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
 import it.qbsoftware.business.domain.exception.InvalidResultReferenceExecption;
 import it.qbsoftware.business.domain.methodcall.filter.MailboxPropertiesFilter;
 import it.qbsoftware.business.domain.methodcall.process.get.GetReferenceIdsResolver;
-import it.qbsoftware.business.domain.methodcall.response.AccountNotFoundMethodErrorResponse;
+import it.qbsoftware.business.ports.in.jmap.error.AccountNotFoundMethodErrorResponsePort;
 import it.qbsoftware.business.domain.util.get.RetrivedEntity;
 import it.qbsoftware.business.ports.in.guava.ListMultimapPort;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxPort;
@@ -53,6 +53,9 @@ public class GetMailboxMethodCallServiceTest {
 
     @Mock
     private MailboxPropertiesFilter mailboxPropertiesFilter;
+
+    @Mock
+    private AccountNotFoundMethodErrorResponsePort accountNotFoundMethodErrorResponsePort;
 
     @Mock
     private InvalidArgumentsMethodErrorResponsePort invalidArgumentsMethodErrorResponsePort;
@@ -115,7 +118,7 @@ public class GetMailboxMethodCallServiceTest {
         
         MethodResponsePort[] methodResponsePorts = getMailboxMethodCallService.call(getMailboxMethodCallPort, previousResponses);
         
-        assertTrue(methodResponsePorts[0] instanceof AccountNotFoundMethodErrorResponse);
+        assertTrue(methodResponsePorts[0] instanceof AccountNotFoundMethodErrorResponsePort);
     }
 
     @Test
