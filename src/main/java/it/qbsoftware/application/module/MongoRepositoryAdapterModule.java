@@ -10,6 +10,7 @@ import it.qbsoftware.adapters.out.EmailChangesTrackerRepositoryAdapter;
 import it.qbsoftware.adapters.out.EmailRepositoryAdapter;
 import it.qbsoftware.adapters.out.EmailSubmissionChangesTrackerRepositoryAdapter;
 import it.qbsoftware.adapters.out.EmailSubmissionRepositoryAdapter;
+import it.qbsoftware.adapters.out.IdentityChangesTrackerRepositoryAdapter;
 import it.qbsoftware.adapters.out.IdentityRepositoryAdapter;
 import it.qbsoftware.adapters.out.MailboxChangesTrackerRepositoryAdapter;
 import it.qbsoftware.adapters.out.MailboxRepositoryAdapter;
@@ -20,6 +21,7 @@ import it.qbsoftware.business.domain.entity.changes.tracker.EmailSubmissionChang
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.business.ports.out.domain.EmailChangesTrackerRepository;
 import it.qbsoftware.business.ports.out.domain.EmailSubmissionChangesTrackerRepository;
+import it.qbsoftware.business.ports.out.domain.IdentityChangesTrackerRepository;
 import it.qbsoftware.business.ports.out.domain.MailboxChangesTrackerRepository;
 import it.qbsoftware.business.ports.out.domain.ThreadChangesTrackerRepository;
 import it.qbsoftware.business.ports.out.jmap.EmailRepository;
@@ -45,6 +47,7 @@ public class MongoRepositoryAdapterModule extends AbstractModule {
         bind(ThreadRepository.class).to(ThreadRepositoryAdapter.class);
         bind(EmailSubmissionRepository.class).to(EmailSubmissionRepositoryAdapter.class);
         bind(EmailSubmissionChangesTrackerRepository.class).to(EmailSubmissionChangesTrackerRepositoryAdapter.class);
+        bind(IdentityChangesTrackerRepository.class).to(IdentityChangesTrackerRepositoryAdapter.class);
     }
 
     @Singleton
