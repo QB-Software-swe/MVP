@@ -9,17 +9,12 @@ import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
 import it.qbsoftware.business.domain.exception.changes.CannotCalculateChangesException;
 import it.qbsoftware.business.ports.in.guava.ListMultimapPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
-import it.qbsoftware.business.ports.in.jmap.error.AccountNotFoundMethodErrorResponsePort;
-import it.qbsoftware.business.ports.in.jmap.error.CannotCalculateChangesMethodErrorResponsePort;
-import it.qbsoftware.business.ports.in.jmap.error.InvalidArgumentsMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.call.changes.ChangesThreadMethodCallPort;
-import it.qbsoftware.business.ports.in.jmap.method.response.MethodResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesThreadMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesThreadMethodResponsePort;
 import it.qbsoftware.business.ports.in.usecase.changes.ChangesThreadMethodCallUsecase;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.business.ports.out.domain.ThreadChangesTrackerRepository;
-import rs.ltt.jmap.common.method.response.thread.ChangesThreadMethodResponse;
 
 public class ChangesThreadMethodCallService implements ChangesThreadMethodCallUsecase {
     private final AccountStateRepository accountStateRepository;

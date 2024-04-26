@@ -1,6 +1,5 @@
 package it.qbsoftware.application.controllers.get;
 
-import java.util.ArrayList;
 import com.google.inject.Inject;
 
 import it.qbsoftware.adapters.in.jmaplib.method.call.get.GetEmailMethodCallAdapter;
@@ -10,7 +9,6 @@ import it.qbsoftware.application.controllers.HandlerRequest;
 import it.qbsoftware.business.domain.exception.AccountNotFoundException;
 import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
 import it.qbsoftware.business.domain.exception.InvalidResultReferenceExecption;
-import it.qbsoftware.business.ports.in.jmap.method.response.MethodResponsePort;
 import it.qbsoftware.business.ports.in.usecase.get.GetEmailMethodCallUsecase;
 import rs.ltt.jmap.common.method.MethodResponse;
 import rs.ltt.jmap.common.method.call.email.GetEmailMethodCall;

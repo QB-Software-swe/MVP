@@ -17,7 +17,6 @@ import it.qbsoftware.adapters.in.jmaplib.entity.MailboxAdapter;
 import it.qbsoftware.business.domain.exception.set.SetNotFoundException;
 import it.qbsoftware.business.domain.exception.set.SetSingletonException;
 import it.qbsoftware.business.domain.util.get.RetrivedEntity;
-import it.qbsoftware.business.ports.in.jmap.entity.EmailPort;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxPort;
 import it.qbsoftware.business.ports.out.jmap.MailboxRepository;
 import it.qbsoftware.persistance.MongoConnection;

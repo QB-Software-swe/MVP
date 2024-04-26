@@ -9,17 +9,12 @@ import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
 import it.qbsoftware.business.domain.exception.changes.CannotCalculateChangesException;
 import it.qbsoftware.business.ports.in.guava.ListMultimapPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
-import it.qbsoftware.business.ports.in.jmap.error.AccountNotFoundMethodErrorResponsePort;
-import it.qbsoftware.business.ports.in.jmap.error.CannotCalculateChangesMethodErrorResponsePort;
-import it.qbsoftware.business.ports.in.jmap.error.InvalidArgumentsMethodErrorResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.call.changes.ChangesMailboxMethodCallPort;
-import it.qbsoftware.business.ports.in.jmap.method.response.MethodResponsePort;
 import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesMailboxMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesMailboxMethodResponsePort;
 import it.qbsoftware.business.ports.in.usecase.changes.ChangesMailboxMethodCallUsecase;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.business.ports.out.domain.MailboxChangesTrackerRepository;
-import rs.ltt.jmap.common.method.response.mailbox.ChangesMailboxMethodResponse;
 
 public class ChangesMailboxMethodCallService implements ChangesMailboxMethodCallUsecase {
     private final AccountStateRepository accountStateRepository;

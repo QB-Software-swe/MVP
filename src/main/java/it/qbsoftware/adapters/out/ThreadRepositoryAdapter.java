@@ -13,14 +13,11 @@ import com.google.inject.Inject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Filters;
 
-import it.qbsoftware.adapters.in.jmaplib.entity.MailboxAdapter;
 import it.qbsoftware.adapters.in.jmaplib.entity.ThreadAdapter;
 import it.qbsoftware.business.domain.util.get.RetrivedEntity;
-import it.qbsoftware.business.ports.in.jmap.entity.MailboxPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ThreadPort;
 import it.qbsoftware.business.ports.out.jmap.ThreadRepository;
 import it.qbsoftware.persistance.MongoConnection;
-import rs.ltt.jmap.common.entity.Mailbox;
 import rs.ltt.jmap.common.entity.Thread;
 
 public class ThreadRepositoryAdapter implements ThreadRepository {
