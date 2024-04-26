@@ -24,7 +24,9 @@ public class GetThreadMethodCallAdapter implements GetThreadMethodCallPort {
 
     @Override
     public InvocationResultReferencePort getIdsReference() {
-        return new InvocationResultReferenceAdapter(getThreadMethodCall.getIdsReference());
+        return getThreadMethodCall.getIdsReference() != null
+                ? new InvocationResultReferenceAdapter(getThreadMethodCall.getIdsReference())
+                : null;
     }
 
     @Override

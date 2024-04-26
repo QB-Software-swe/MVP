@@ -1,7 +1,7 @@
 package it.qbsoftware.application.controllers.changes;
 
 import it.qbsoftware.adapters.in.jmaplib.method.call.changes.ChangesMailboxMethodCallAdapter;
-import it.qbsoftware.adapters.in.jmaplib.method.response.MethodResponseAdapter;
+import it.qbsoftware.adapters.in.jmaplib.method.response.AbstracMethodResponseAdapter;
 import it.qbsoftware.application.controllers.ControllerHandlerBase;
 import it.qbsoftware.application.controllers.HandlerRequest;
 import it.qbsoftware.business.ports.in.usecase.changes.ChangesMailboxMethodCallUsecase;
@@ -23,12 +23,12 @@ public class ChangesMailboxMethodCallController extends ControllerHandlerBase {
             final ChangesMailboxMethodCallAdapter changesMailboxMethodCallAdapter = new ChangesMailboxMethodCallAdapter(
                     changesMailboxMethodCall);
 
-            final MethodResponseAdapter[] methodResponseAdapters = (MethodResponseAdapter[]) changesMailboxMethodCallUsecase
+            final AbstracMethodResponseAdapter[] methodResponseAdapters = (AbstracMethodResponseAdapter[]) changesMailboxMethodCallUsecase
                     .call(changesMailboxMethodCallAdapter, handlerRequest.previousResponses());
 
             ArrayList<MethodResponse> methodResponseList = new ArrayList<>();
 
-            for (MethodResponseAdapter methodResponseAdapter : methodResponseAdapters) {
+            for (AbstracMethodResponseAdapter methodResponseAdapter : methodResponseAdapters) {
                 methodResponseList.add(methodResponseAdapter.adaptee());
             }
 

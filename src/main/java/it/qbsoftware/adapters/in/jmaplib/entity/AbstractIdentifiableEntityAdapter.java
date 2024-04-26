@@ -4,9 +4,9 @@ import it.qbsoftware.business.ports.in.jmap.entity.AbstractIdentifiableEntityPor
 import rs.ltt.jmap.common.entity.AbstractIdentifiableEntity;
 
 public class AbstractIdentifiableEntityAdapter implements AbstractIdentifiableEntityPort{
-    AbstractIdentifiableEntity abstractIdentifiableEntity;
+    private AbstractIdentifiableEntity abstractIdentifiableEntity;
 
-    public AbstractIdentifiableEntityAdapter(AbstractIdentifiableEntity abstractIdentifiableEntity){
+    public AbstractIdentifiableEntityAdapter(final AbstractIdentifiableEntity abstractIdentifiableEntity){
         this.abstractIdentifiableEntity = abstractIdentifiableEntity;
     }
 

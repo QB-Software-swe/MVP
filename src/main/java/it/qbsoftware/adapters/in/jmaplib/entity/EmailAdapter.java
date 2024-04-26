@@ -15,7 +15,7 @@ import rs.ltt.jmap.common.entity.Email;
 public class EmailAdapter implements EmailPort {
     private Email email;
 
-    public EmailAdapter(Email email) {
+    public EmailAdapter(final Email email) {
         this.email = email;
     }
 
@@ -41,13 +41,15 @@ public class EmailAdapter implements EmailPort {
 
     @Override
     public List<EmailBodyPartPort> getAttachments() {
-        return email.getAttachments().stream().map(EmailBodyPartAdapter::new).collect(Collectors.toList());
+        return email.getAttachments() != null
+                ? email.getAttachments().stream().map(EmailBodyPartAdapter::new).collect(Collectors.toList())
+                : null;
     }
 
     @Override
     public Map<String, EmailBodyValuePort> getBodyValues() {
-        return email.getBodyValues().entrySet().stream()
-                .collect(Collectors.toMap(Entry::getKey, e -> new EmailBodyValueAdapter(e.getValue())));
+        return email.getBodyValues() != null ? email.getBodyValues().entrySet().stream()
+                .collect(Collectors.toMap(Entry::getKey, e -> new EmailBodyValueAdapter(e.getValue()))) : null;
     }
 
     @Override
@@ -70,5 +72,7 @@ public class EmailAdapter implements EmailPort {
         return this.email.getSize();
     }
 
-    public Email adaptee() {return this.email;}
+    public Email adaptee() {
+        return this.email;
+    }
 }

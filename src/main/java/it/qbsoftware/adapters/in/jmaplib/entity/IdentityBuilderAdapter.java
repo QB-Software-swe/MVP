@@ -39,15 +39,24 @@ public class IdentityBuilderAdapter implements IdentityBuilderPort {
 
     @Override
     public IdentityBuilderPort replyTo(final EmailAddressPort[] emailAddressPorts) {
-        identityBuilder.replyTo(Arrays.asList(emailAddressPorts).stream().map(e -> ((EmailAddressAdapter) e).adaptee())
-                .toList());
+        if (emailAddressPorts != null) {
+            identityBuilder
+                    .replyTo(Arrays.asList(emailAddressPorts).stream().map(e -> ((EmailAddressAdapter) e).adaptee())
+                            .toList());
+        } else {
+            identityBuilder.replyTo(null);
+        }
         return this;
     }
 
     @Override
     public IdentityBuilderPort bcc(final EmailAddressPort[] emailAddressPorts) {
-        identityBuilder.bcc(Arrays.asList(emailAddressPorts).stream().map(e -> ((EmailAddressAdapter) e).adaptee())
-                .toList());
+        if (emailAddressPorts != null) {
+            identityBuilder.bcc(Arrays.asList(emailAddressPorts).stream().map(e -> ((EmailAddressAdapter) e).adaptee())
+                    .toList());
+        } else {
+            identityBuilder.bcc(null);
+        }
         return this;
     }
 

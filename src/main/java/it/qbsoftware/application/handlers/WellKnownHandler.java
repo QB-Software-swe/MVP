@@ -43,7 +43,7 @@ public class WellKnownHandler extends Handler.Abstract {
                 byte[] credDecod = Base64.getDecoder().decode(base64Cred);
                 String creds = new String(credDecod, StandardCharsets.UTF_8);
                 final String[] values = creds.split(":", 2);
-                user = values[0].split("@")[0];
+                user = values[0];
                 //password = values[1];
             }
         }

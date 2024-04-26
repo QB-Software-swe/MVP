@@ -16,13 +16,14 @@ public class StandardIdentityPropertiesFilter implements IdentityPropertiesFilte
     }
 
     @Override
-    public IdentityPort[] filter(IdentityPort[] identityPorts, String[] properties) throws InvalidArgumentsException {
-        if (identityPorts == null) {
+    public IdentityPort[] filter(final IdentityPort[] identityPorts, final String[] properties)
+            throws InvalidArgumentsException {
+        if (properties == null) {
             return identityPorts;
         }
 
         final List<IdentityPort> filtredIdenities = new ArrayList<IdentityPort>();
-        for (IdentityPort identityPort : identityPorts) {
+        for (final IdentityPort identityPort : identityPorts) {
             filtredIdenities.add(identityFilter(identityPort, properties));
         }
 

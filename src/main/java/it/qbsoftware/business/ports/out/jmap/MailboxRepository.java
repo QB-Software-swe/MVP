@@ -13,5 +13,5 @@ public interface MailboxRepository {
 
     public boolean destroy(final String id) throws SetNotFoundException;
 
-    public boolean save(final MailboxPort mailboxPort) throws SetSingletonException;
+    public void save(final MailboxPort mailboxPort) throws SetSingletonException;
 }

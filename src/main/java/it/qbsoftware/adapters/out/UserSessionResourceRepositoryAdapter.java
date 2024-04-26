@@ -16,7 +16,7 @@ import it.qbsoftware.persistance.MongoConnection;
 import rs.ltt.jmap.common.SessionResource;
 
 public class UserSessionResourceRepositoryAdapter implements UserSessionResourceRepository {
-    private final static String COLLECTION = "Session";
+    private final static String COLLECTION = "session";
     private final MongoConnection mongoConnection;
     private final Gson gson;
 
@@ -27,7 +27,8 @@ public class UserSessionResourceRepositoryAdapter implements UserSessionResource
     }
 
     @Override
-    public Optional<SessionResourcePort> retrieve(String username) {
+    //FIXME: AccountNotfound
+    public Optional<SessionResourcePort> retrieve(final String username) {
         FindIterable<Document> docs = mongoConnection.getDatabase().getCollection(COLLECTION)
                 .find(Filters.eq("_id", username));
 
@@ -37,6 +38,7 @@ public class UserSessionResourceRepositoryAdapter implements UserSessionResource
                         gson.fromJson(docs.first().toJson(), SessionResource.class)));
             }
         } catch (final Exception e) {
+            e.printStackTrace(); //REMOVEME
         }
 
         return Optional.empty();
@@ -54,7 +56,7 @@ public class UserSessionResourceRepositoryAdapter implements UserSessionResource
 
         sessionDoc.put("_id", username);
         try {
-            mongoConnection.getDatabase().getCollection("Session").insertOne(sessionDoc);
+            mongoConnection.getDatabase().getCollection(COLLECTION).insertOne(sessionDoc);
         } catch (final Exception e) {
             return false;
         }

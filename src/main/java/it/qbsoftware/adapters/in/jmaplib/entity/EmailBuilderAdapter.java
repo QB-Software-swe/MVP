@@ -10,7 +10,7 @@ import rs.ltt.jmap.common.entity.Email.EmailBuilder;
 import rs.ltt.jmap.common.entity.Email;
 
 public class EmailBuilderAdapter implements EmailBuilderPort {
-    EmailBuilder emailBuilder;
+    private EmailBuilder emailBuilder;
 
     public EmailBuilderAdapter() {
         this.emailBuilder = Email.builder();
@@ -21,32 +21,36 @@ public class EmailBuilderAdapter implements EmailBuilderPort {
     }
 
     @Override
-    public EmailBuilderPort id(String id) {
+    public EmailBuilderPort id(final String id) {
         this.emailBuilder.id(id);
         return this;
     }
 
     @Override
-    public EmailBuilderPort threadId(String threadId) {
+    public EmailBuilderPort threadId(final String threadId) {
         this.emailBuilder.threadId(threadId);
         return this;
     }
 
     @Override
-    public EmailBuilderPort receivedAt(Instant instant) {
+    public EmailBuilderPort receivedAt(final Instant instant) {
         this.emailBuilder.receivedAt(instant);
         return this;
     }
 
     @Override
-    public EmailBuilderPort mailboxId(String mailboxIdKey, Boolean mailboxIdValue) {
+    public EmailBuilderPort mailboxId(final String mailboxIdKey, final Boolean mailboxIdValue) {
         this.emailBuilder.mailboxId(mailboxIdKey, mailboxIdValue);
         return this;
     }
 
     @Override
-    public EmailBuilderPort attachment(EmailBodyPartPort emailBodyPartPort) {
-        this.emailBuilder.attachment(((EmailBodyPartAdapter) emailBodyPartPort).emailBodyPart);
+    public EmailBuilderPort attachment(final EmailBodyPartPort emailBodyPartPort) {
+        if (emailBodyPartPort != null) {
+            this.emailBuilder.attachment(((EmailBodyPartAdapter) emailBodyPartPort).emailBodyPart);
+        } else {
+            this.emailBuilder.attachment(null);
+        }
         return this;
     }
 

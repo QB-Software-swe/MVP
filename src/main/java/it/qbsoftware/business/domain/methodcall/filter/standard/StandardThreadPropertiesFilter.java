@@ -16,7 +16,8 @@ public class StandardThreadPropertiesFilter implements ThreadPropertiesFilter {
     }
 
     @Override
-    public ThreadPort[] filter(ThreadPort[] threadPorts, String[] properties) throws InvalidArgumentsException {
+    public ThreadPort[] filter(final ThreadPort[] threadPorts, final String[] properties)
+            throws InvalidArgumentsException {
         if (properties == null) {
             return threadPorts;
         }

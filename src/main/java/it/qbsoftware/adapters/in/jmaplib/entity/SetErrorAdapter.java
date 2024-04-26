@@ -1,14 +1,14 @@
-package it.qbsoftware.adapters.in.jmaplib.error;
+package it.qbsoftware.adapters.in.jmaplib.entity;
 
 import it.qbsoftware.business.ports.in.jmap.entity.SetErrorPort;
 import rs.ltt.jmap.common.entity.SetError;
 import rs.ltt.jmap.common.entity.SetErrorType;
 
 public class SetErrorAdapter implements SetErrorPort {
-    SetError setError;
+    private SetError setError;
 
-    public SetErrorAdapter() {
-        this.setError = new SetError(null, null);
+    public SetErrorAdapter(final SetError setError) {
+        this.setError = setError;
     }
 
     @Override

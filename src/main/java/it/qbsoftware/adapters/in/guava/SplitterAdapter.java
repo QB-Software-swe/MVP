@@ -6,12 +6,12 @@ import com.google.common.base.Splitter;
 
 import it.qbsoftware.business.ports.in.guava.SplitterPort;
 
-public class SplitterAdapter implements SplitterPort{
-    Splitter splitter;
+public class SplitterAdapter implements SplitterPort {
+    private Splitter splitter = null;
 
     @Override
     public SplitterPort on(char separator) {
-        Splitter.on(separator);
+        this.splitter = Splitter.on(separator);
         return this;
     }
 

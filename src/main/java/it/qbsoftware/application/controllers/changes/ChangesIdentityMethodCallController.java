@@ -1,7 +1,7 @@
 package it.qbsoftware.application.controllers.changes;
 
 import it.qbsoftware.adapters.in.jmaplib.method.call.changes.ChangesIdentityMethodCallAdapter;
-import it.qbsoftware.adapters.in.jmaplib.method.response.MethodResponseAdapter;
+import it.qbsoftware.adapters.in.jmaplib.method.response.AbstracMethodResponseAdapter;
 import it.qbsoftware.application.controllers.ControllerHandlerBase;
 import it.qbsoftware.application.controllers.HandlerRequest;
 import it.qbsoftware.business.ports.in.usecase.changes.ChangesIdentityMethodCallUsecase;
@@ -24,12 +24,12 @@ public class ChangesIdentityMethodCallController extends ControllerHandlerBase {
             final ChangesIdentityMethodCallAdapter changesIdentityMethodCallAdapter = new ChangesIdentityMethodCallAdapter(
                     changesIdentityMethodCall);
 
-            final MethodResponseAdapter[] methodResponseAdapters = (MethodResponseAdapter[]) changesIdentityMethodCallUsecase
+            final AbstracMethodResponseAdapter[] methodResponseAdapters = (AbstracMethodResponseAdapter[]) changesIdentityMethodCallUsecase
                     .call(changesIdentityMethodCallAdapter, handlerRequest.previousResponses());
 
             ArrayList<MethodResponse> methodResponseList = new ArrayList<>();
 
-            for (MethodResponseAdapter methodResponseAdapter : methodResponseAdapters) {
+            for (AbstracMethodResponseAdapter methodResponseAdapter : methodResponseAdapters) {
                 methodResponseList.add(methodResponseAdapter.adaptee());
             }
 

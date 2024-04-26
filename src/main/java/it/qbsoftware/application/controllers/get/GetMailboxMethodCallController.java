@@ -5,12 +5,17 @@ import java.util.ArrayList;
 import com.google.inject.Inject;
 
 import it.qbsoftware.adapters.in.jmaplib.method.call.get.GetMailboxMethodCallAdapter;
-import it.qbsoftware.adapters.in.jmaplib.method.response.MethodResponseAdapter;
+import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetMailboxMethodResponseAdapter;
 import it.qbsoftware.application.controllers.ControllerHandlerBase;
 import it.qbsoftware.application.controllers.HandlerRequest;
+import it.qbsoftware.business.domain.exception.AccountNotFoundException;
+import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
+import it.qbsoftware.business.domain.exception.InvalidResultReferenceExecption;
 import it.qbsoftware.business.ports.in.usecase.get.GetMailboxMethodCallUsecase;
 import rs.ltt.jmap.common.method.MethodResponse;
 import rs.ltt.jmap.common.method.call.mailbox.GetMailboxMethodCall;
+import rs.ltt.jmap.common.method.error.InvalidArgumentsMethodErrorResponse;
+import rs.ltt.jmap.common.method.error.InvalidResultReferenceMethodErrorResponse;
 
 public class GetMailboxMethodCallController extends ControllerHandlerBase {
     private final GetMailboxMethodCallUsecase getMailboxMethodCallService;
@@ -21,22 +26,24 @@ public class GetMailboxMethodCallController extends ControllerHandlerBase {
     }
 
     @Override
-    public MethodResponse[] handle(final HandlerRequest handlerRequest) {
+    public MethodResponse handle(final HandlerRequest handlerRequest) {
         if (handlerRequest.methodCall() instanceof GetMailboxMethodCall getMailboxMethodCall) {
 
-            GetMailboxMethodCallAdapter getMailboxMethodCallAdapter = new GetMailboxMethodCallAdapter(
+            final GetMailboxMethodCallAdapter getMailboxMethodCallAdapter = new GetMailboxMethodCallAdapter(
                     getMailboxMethodCall);
 
-            MethodResponseAdapter[] methodResponseAdapters = (MethodResponseAdapter[]) getMailboxMethodCallService
-                    .call(getMailboxMethodCallAdapter, handlerRequest.previousResponses());
-
-            ArrayList<MethodResponse> methodResponseList = new ArrayList<>();
-
-            for (MethodResponseAdapter methodResponseAdapter : methodResponseAdapters) {
-                methodResponseList.add(methodResponseAdapter.adaptee());
+            GetMailboxMethodResponseAdapter getMailboxMethodResponseAdapter = null;
+            try {
+                getMailboxMethodResponseAdapter = (GetMailboxMethodResponseAdapter) getMailboxMethodCallService
+                        .call(getMailboxMethodCallAdapter, handlerRequest.previousResponses());
+            } catch (final AccountNotFoundException accountNotFoundException) {
+                return new InvalidArgumentsMethodErrorResponse();
+            } catch (final InvalidResultReferenceExecption invalidResultReferenceExecption) {
+                return new InvalidResultReferenceMethodErrorResponse();
+            } catch (final InvalidArgumentsException invalidArgumentsException) {
+                return new InvalidArgumentsMethodErrorResponse();
             }
-
-            return methodResponseList.toArray(MethodResponse[]::new);
+            return getMailboxMethodResponseAdapter.adaptee();
         }
 
         return super.handle(handlerRequest);

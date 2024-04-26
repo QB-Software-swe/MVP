@@ -32,4 +32,7 @@ public class GetEmailSubmissionMethodCallAdapter implements GetEmailSubmissionMe
         return getEmailSubmissionMethodCall.getProperties();
     }
 
+    public GetEmailSubmissionMethodCall adapee() {
+        return getEmailSubmissionMethodCall;
+    }
 }

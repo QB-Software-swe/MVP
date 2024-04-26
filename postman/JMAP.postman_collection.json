@@ -1,0 +1,481 @@
+{
+	"info": {
+		"_postman_id": "7b5b84ba-92aa-4763-8097-e73668229431",
+		"name": "JMAP",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33077683"
+	},
+	"item": [
+		{
+			"name": "Core",
+			"item": [
+				{
+					"name": "Echo",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"methodCalls\": [\n        [\n            \"Core/echo\",\n            {\n                \"hello\": true\n            },\n            \"0\"\n        ]\n    ],\n    \"using\": [\n        \"urn:ietf:params:jmap:core\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9999/api",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9999",
+							"path": [
+								"api"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InvalidSession (No Auth)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9999/.well-known/jmap",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9999",
+							"path": [
+								".well-known",
+								"jmap"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InvalidSession (Bad Auth)",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "ddwemdeidmewod",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "ddwemdeidmewod",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9999/.well-known/jmap",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9999",
+							"path": [
+								".well-known",
+								"jmap"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test Valid Session",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "team@qbsoftware.swe.it",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "team@qbsoftware.swe.it",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9999/.well-known/jmap",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9999",
+							"path": [
+								".well-known",
+								"jmap"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GetMethodCall",
+			"item": [
+				{
+					"name": "Email",
+					"item": [
+						{
+							"name": "GetEmailMethodCall (No filter, Ids=null)",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "username",
+											"value": "team@qsoftware.swe.it",
+											"type": "string"
+										},
+										{
+											"key": "password",
+											"value": "qbsoftware",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"methodCalls\": [\n        [\n            \"Email/get\",\n            {\n                \"accountId\": \"team@qbsoftware.swe.it\"\n            },\n            \"0\"\n        ]\n    ],\n    \"using\": [\n        \"urn:ietf:params:jmap:core\",\n        \"urn:ietf:params:jmap:mail\"\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9999/api",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9999",
+									"path": [
+										"api"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetEmailMethodCall (Filter)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"",
+											"pm.test(\"Response status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});",
+											"",
+											"",
+											"pm.test(\"MethodResponses array and sessionState field exist in the response\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    pm.expect(responseData).to.be.an('object');",
+											"    pm.expect(responseData.methodResponses).to.exist.and.to.be.an('array');",
+											"    pm.expect(responseData.sessionState).to.exist;",
+											"});",
+											"",
+											"pm.test(\"Content-Type is application/json\", function () {",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+											"});",
+											"",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "username",
+											"value": "team@qsoftware.swe.it",
+											"type": "string"
+										},
+										{
+											"key": "password",
+											"value": "qbsoftware",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"methodCalls\": [\n        [\n            \"Email/get\",\n            {\n                \"accountId\": \"team@qbsoftware.swe.it\",\n                \"properties\": [\n                    \"mailboxIds\"\n                ]\n            },\n            \"0\"\n        ]\n    ],\n    \"using\": [\n        \"urn:ietf:params:jmap:core\",\n        \"urn:ietf:params:jmap:mail\"\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9999/api",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9999",
+									"path": [
+										"api"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetEmailMethodCall (Bad Filter)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"",
+											"pm.test(\"Response status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});",
+											"",
+											"",
+											"pm.test(\"MethodResponses array and sessionState field exist in the response\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    pm.expect(responseData).to.be.an('object');",
+											"    pm.expect(responseData.methodResponses).to.exist.and.to.be.an('array');",
+											"    pm.expect(responseData.sessionState).to.exist;",
+											"});",
+											"",
+											"pm.test(\"Content-Type is application/json\", function () {",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+											"});",
+											"",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "username",
+											"value": "team@qsoftware.swe.it",
+											"type": "string"
+										},
+										{
+											"key": "password",
+											"value": "qbsoftware",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"methodCalls\": [\n        [\n            \"Email/get\",\n            {\n                \"accountId\": \"team@qbsoftware.swe.it\",\n                \"properties\": [\n                    \"Java++\"\n                ]\n            },\n            \"0\"\n        ]\n    ],\n    \"using\": [\n        \"urn:ietf:params:jmap:core\",\n        \"urn:ietf:params:jmap:mail\"\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9999/api",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9999",
+									"path": [
+										"api"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Identity",
+					"item": [
+						{
+							"name": "GetIdentityMethodCall (No filter, Ids=null)",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "username",
+											"value": "team@qsoftware.swe.it",
+											"type": "string"
+										},
+										{
+											"key": "password",
+											"value": "qbsoftware",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"methodCalls\": [\n        [\n            \"Identity/get\",\n            {\n                \"accountId\": \"team@qbsoftware.swe.it\"\n            },\n            \"0\"\n        ]\n    ],\n    \"using\": [\n        \"urn:ietf:params:jmap:core\",\n        \"urn:ietf:params:jmap:mail\"\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9999/api",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9999",
+									"path": [
+										"api"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetIdentityMethodCall (Filter)",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "username",
+											"value": "team@qsoftware.swe.it",
+											"type": "string"
+										},
+										{
+											"key": "password",
+											"value": "qbsoftware",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"methodCalls\": [\n        [\n            \"Identity/get\",\n            {\n                \"accountId\": \"team@qbsoftware.swe.it\",\n                \"properties\": [\n                    \"name\",\n                    \"bcc\"\n                ]\n            },\n            \"0\"\n        ]\n    ],\n    \"using\": [\n        \"urn:ietf:params:jmap:core\",\n        \"urn:ietf:params:jmap:mail\"\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9999/api",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9999",
+									"path": [
+										"api"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetIdentityMethodCall (Bad Filter)",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "username",
+											"value": "team@qsoftware.swe.it",
+											"type": "string"
+										},
+										{
+											"key": "password",
+											"value": "qbsoftware",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"methodCalls\": [\n        [\n            \"Identity/get\",\n            {\n                \"accountId\": \"team@qbsoftware.swe.it\",\n                \"properties\": [\n                    \"name\",\n                    \"bcc\",\n                    \"invalidName\"\n                ]\n            },\n            \"0\"\n        ]\n    ],\n    \"using\": [\n        \"urn:ietf:params:jmap:core\",\n        \"urn:ietf:params:jmap:mail\"\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9999/api",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9999",
+									"path": [
+										"api"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}
