@@ -35,7 +35,7 @@ public class CreationIdResolverTest {
     private ResponseInvocationPort responseInvocationPort;
 
     @Test
-    public void test(){
+    public void testCreation(){
         new CreationIdResolver();
     }
 
