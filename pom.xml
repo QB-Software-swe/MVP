@@ -6,7 +6,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>it.qbsoftware</groupId>
-  <artifactId>poc</artifactId>
+  <artifactId>demo_jmap_server</artifactId>
   <version>0.1-SNAPSHOT</version>
 
   <name>MVP</name>
