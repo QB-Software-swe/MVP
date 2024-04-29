@@ -71,16 +71,46 @@ public class EmailRepositoryAdapter implements EmailRepository {
     }
 
     @Override
+    public EmailPort retriveOne(final String emailId) throws SetNotFoundException {
+        final Bson filter = Filters.eq("_id", emailId);
+        final FindIterable<Document> findIterable = connection.getDatabase().getCollection(COLLECTION).find(filter);
+
+        final Document emailDocRetrived = findIterable.first();
+        if (emailDocRetrived == null) {
+            throw new SetNotFoundException();
+        }
+
+        return new EmailAdapter(gson.fromJson(emailDocRetrived.toJson(), Email.class));
+    }
+
+    @Override
     public EmailPort destroy(final String emailId) throws SetNotFoundException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'destroy'");
+        final Bson filter = Filters.eq("_id", emailId);
+        final Document emailDeleteResult = connection.getDatabase().getCollection(COLLECTION)
+                .findOneAndDelete(filter);
+
+        if (emailDeleteResult == null) {
+            throw new SetNotFoundException();
+        }
+
+        return new EmailAdapter(gson.fromJson(emailDeleteResult.toJson(), Email.class));
     }
 
     @Override
     public void save(final EmailPort emailPort) throws SetSingletonException {
-        //FIXME: singleton
+        // FIXME: singleton
         final Document emailDoc = Document.parse(gson.toJson(((EmailAdapter) emailPort).adaptee()));
         emailDoc.put("_id", emailPort.getId());
         var i = connection.getDatabase().getCollection(COLLECTION).insertOne(emailDoc);
+    }
+
+    @Override
+    public void overwrite(final EmailPort emailPort) throws SetNotFoundException {
+        final Bson filter = Filters.eq("_id", emailPort.getId());
+        final Document emailDoc = Document.parse(gson.toJson(emailPort));
+        emailDoc.put("_id", emailPort.getId());
+
+        final var i = connection.getDatabase().getCollection(COLLECTION).findOneAndReplace(filter,
+                emailDoc);
     }
 }

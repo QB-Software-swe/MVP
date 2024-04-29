@@ -1,5 +1,10 @@
 package it.qbsoftware.business.domain.methodcall.process.set.create;
 
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 import it.qbsoftware.business.domain.entity.changes.AccountState;
 import it.qbsoftware.business.domain.entity.changes.tracker.EmailChangesTracker;
 import it.qbsoftware.business.domain.entity.changes.tracker.MailboxChangesTracker;
@@ -20,12 +25,6 @@ import it.qbsoftware.business.ports.out.domain.EmailChangesTrackerRepository;
 import it.qbsoftware.business.ports.out.domain.MailboxChangesTrackerRepository;
 import it.qbsoftware.business.ports.out.domain.ThreadChangesTrackerRepository;
 import it.qbsoftware.business.ports.out.jmap.EmailRepository;
-
-import java.util.Map;
-import java.util.UUID;
-
-import java.time.Instant;
-import java.util.HashMap;
 
 public class StandardCreateEmail implements CreateEmail {
     private final EmailRepository emailRepository;
@@ -56,18 +55,22 @@ public class StandardCreateEmail implements CreateEmail {
     public CreatedResult<EmailPort> create(final SetEmailMethodCallPort setEmailMethodCallPort,
             final ListMultimapPort<String, ResponseInvocationPort> previousResponses)
             throws AccountNotFoundException {
+        final Map<String, EmailPort> mapEmailToCreate = setEmailMethodCallPort.getCreate();
+
         final HashMap<String, EmailPort> created = new HashMap<String, EmailPort>();
         final HashMap<String, SetErrorPort> notCreated = new HashMap<String, SetErrorPort>();
 
-        for (final Map.Entry<String, EmailPort> mailToCreate : setEmailMethodCallPort.getCreate().entrySet()) {
+        if (mapEmailToCreate != null) {
+            for (final Map.Entry<String, EmailPort> mailToCreate : mapEmailToCreate.entrySet()) {
 
-            try {
-                EmailPort emailDiff = email(mailToCreate.getValue(), previousResponses,
-                        setEmailMethodCallPort.accountId());
-                created.put(mailToCreate.getKey(), emailDiff);
-            } catch (final InvalidArgumentsException invalidArgumentsException) {
-                notCreated.put(mailToCreate.getKey(), setErrorEnumPort.invalidProperties());
-                continue;
+                try {
+                    final EmailPort emailDiff = email(mailToCreate.getValue(), previousResponses,
+                            setEmailMethodCallPort.accountId());
+                    created.put(mailToCreate.getKey(), emailDiff);
+                } catch (final InvalidArgumentsException invalidArgumentsException) {
+                    notCreated.put(mailToCreate.getKey(), setErrorEnumPort.invalidProperties());
+                    continue;
+                }
             }
         }
 
@@ -118,6 +121,7 @@ public class StandardCreateEmail implements CreateEmail {
 
         try {
             emailRepository.save(emailToSaveBuilder.build());
+            accountStateRepository.save(accountStateRepository.retrive(accountId).increaseEmailState());
             updateEmailChanges(emailId, accountId);
             updateThread(emailPort.getThreadId(), threadId, accountId);
             updateMailbox(mailboxIds.keySet().toArray(String[]::new), accountId);
@@ -160,7 +164,7 @@ public class StandardCreateEmail implements CreateEmail {
         AccountState accountState = accountStateRepository.retrive(accountId);
         accountState = accountState.increaseThreadState();
 
-        if (clientThread.equals(threadId)) {
+        if (clientThread != null && clientThread.equals(threadId)) {
             threadChangesTracker = threadChangesTracker.threadHasBeenUpdated(accountState.threadState(), threadId);
         } else {
             threadChangesTracker = threadChangesTracker.threadHasBeenCreated(accountState.threadState(), threadId);

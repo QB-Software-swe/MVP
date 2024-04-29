@@ -11,7 +11,11 @@ public interface EmailRepository {
 
     public RetrivedEntity<EmailPort> retrive(final String[] ids);
 
+    public EmailPort retriveOne(final String emailId) throws SetNotFoundException;
+
     public EmailPort destroy(final String emailId) throws SetNotFoundException;
 
     public void save(final EmailPort emailPort) throws SetSingletonException;
+
+    public void overwrite(final EmailPort emailPort) throws SetNotFoundException;
 }

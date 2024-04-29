@@ -1,15 +1,21 @@
 package it.qbsoftware.adapters.out;
 
+import org.bson.Document;
+import org.bson.conversions.Bson;
+
 import com.google.gson.Gson;
 import com.google.inject.Inject;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.FindOneAndReplaceOptions;
 
+import it.qbsoftware.business.domain.entity.changes.tracker.SimpleThreadChangesTracker;
 import it.qbsoftware.business.domain.entity.changes.tracker.ThreadChangesTracker;
 import it.qbsoftware.business.ports.out.domain.ThreadChangesTrackerRepository;
 import it.qbsoftware.persistance.MongoConnection;
 
 public class ThreadChangesTrackerRepositoryAdapter implements ThreadChangesTrackerRepository {
-    private final static String COLLECTION = "submission_changes";
-    private final static String TYPE_NAME = "SUBMISSION";
+    private final static String COLLECTION = "thread_changes";
     private final MongoConnection mongoConnection;
     private final Gson gson;
 
@@ -21,14 +27,27 @@ public class ThreadChangesTrackerRepositoryAdapter implements ThreadChangesTrack
 
     @Override
     public ThreadChangesTracker retrive(final String accountId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'retrive'");
+        final Bson filter = Filters.eq("_id", accountId + "/" + "THREAD");
+        final FindIterable<Document> findIterable = mongoConnection.getDatabase().getCollection(COLLECTION)
+                .find(filter);
+
+        final var threadChangesTrackerDoc = findIterable.first();
+
+        if (threadChangesTrackerDoc != null) {
+            return gson.fromJson(threadChangesTrackerDoc.toJson(), SimpleThreadChangesTracker.class);
+        } else {
+            return new SimpleThreadChangesTracker(accountId + "/" + "THREAD");
+        }
     }
 
     @Override
     public void save(final ThreadChangesTracker threadChangesTracker) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'save'");
+        // FIXME: interfaccia?
+        final Document threadChangesTrackerDoc = Document.parse(gson.toJson(threadChangesTracker));
+        threadChangesTrackerDoc.put("_id", threadChangesTracker.id());
+        FindOneAndReplaceOptions options = new FindOneAndReplaceOptions().upsert(true);
+        var i = mongoConnection.getDatabase().getCollection(COLLECTION)
+                .findOneAndReplace(Filters.eq("_id", threadChangesTracker.id()), threadChangesTrackerDoc, options);
     }
 
 }

@@ -300,8 +300,9 @@ public class ControllerModule extends AbstractModule {
         }
 
         @Provides
-        UpdateEmail provideStandardUpdateEmail() {
-                return new StandardUpdateEmail();
+        UpdateEmail provideStandardUpdateEmail(final EmailRepository emailRepository,
+                        final SetErrorEnumPort setErrorEnumPort) {
+                return new StandardUpdateEmail(emailRepository, setErrorEnumPort);
         }
 
         @Provides

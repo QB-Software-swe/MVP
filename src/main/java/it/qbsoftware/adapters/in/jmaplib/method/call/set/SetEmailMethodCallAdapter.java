@@ -6,10 +6,11 @@ import java.util.stream.Collectors;
 import it.qbsoftware.adapters.in.jmaplib.entity.EmailAdapter;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailPort;
 import it.qbsoftware.business.ports.in.jmap.method.call.set.SetEmailMethodCallPort;
+import rs.ltt.jmap.common.entity.Email;
 import rs.ltt.jmap.common.method.call.email.SetEmailMethodCall;
 
 public class SetEmailMethodCallAdapter implements SetEmailMethodCallPort {
-    private SetEmailMethodCall setEmailMethodCall;
+    private final SetEmailMethodCall setEmailMethodCall;
 
     public SetEmailMethodCallAdapter(final SetEmailMethodCall setEmailMethodCall) {
         this.setEmailMethodCall = setEmailMethodCall;
@@ -32,8 +33,9 @@ public class SetEmailMethodCallAdapter implements SetEmailMethodCallPort {
 
     @Override
     public Map<String, EmailPort> getCreate() {
-        return setEmailMethodCall.getCreate().entrySet().stream()
-                .collect(Collectors.toMap(e -> e.getKey(), e -> new EmailAdapter(e.getValue())));
+        Map<String, Email> emailMap = setEmailMethodCall.getCreate();
+        return emailMap != null ? emailMap.entrySet().stream()
+                .collect(Collectors.toMap(e -> e.getKey(), e -> new EmailAdapter(e.getValue()))) : null;
     }
 
     @Override

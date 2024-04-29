@@ -22,4 +22,9 @@ public class SetErrorEnumAdapter implements SetErrorEnumPort {
         return new SetErrorAdapter(new SetError(SetErrorType.NOT_FOUND, ""));
     }
 
+    @Override
+    public SetErrorPort invalidPatch() {
+        return new SetErrorAdapter(new SetError(SetErrorType.INVALID_PATCH, ""));
+    }
+
 }

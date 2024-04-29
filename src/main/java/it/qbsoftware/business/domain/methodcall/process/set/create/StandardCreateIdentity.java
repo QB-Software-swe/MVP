@@ -38,8 +38,12 @@ public class StandardCreateIdentity implements CreateIdentity {
         final Map<String, IdentityPort> created = new HashMap<>();
         final Map<String, SetErrorPort> notCreated = new HashMap<>();
 
-        for (final Map.Entry<String, IdentityPort> entryIdentityToCreate : setIdentityMethodCallPort.getCreate()
-                .entrySet()) {
+        final var x = setIdentityMethodCallPort.getCreate();
+        if(x==null) {
+            return new CreatedResult<>(null, null);
+        }
+
+        for (final Map.Entry<String, IdentityPort> entryIdentityToCreate : x.entrySet()) {
             try {
                 IdentityPort createdIdentityPort = createIdentity(entryIdentityToCreate.getValue(),
                         setIdentityMethodCallPort.accountId());
