@@ -80,7 +80,7 @@ public class SetEmailMethodCallServiceTest {
         when(setEmailMethodCallPort.accountId()).thenReturn(accountId);
         when(accountStateRepository.retrive(accountId)).thenReturn(accountState, accountState);
         when(createEmail.create(setEmailMethodCallPort, previousResponses)).thenReturn(createdResult);
-        when(updateEmail.update(setEmailMethodCallPort)).thenReturn(updatedResult);
+        when(updateEmail.update(setEmailMethodCallPort, previousResponses)).thenReturn(updatedResult);
         when(destroyEmail.destroy(setEmailMethodCallPort)).thenReturn(destroyedResult);
         when(setEmailMethodResponseBuilderPort.reset()).thenReturn(setEmailMethodResponseBuilderPort);
         when(setEmailMethodResponseBuilderPort.oldState(any())).thenReturn(setEmailMethodResponseBuilderPort);

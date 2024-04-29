@@ -6,7 +6,7 @@ public class StandardIfInStateMatch implements IfInStateMatch {
     @Override
     public void methodStateMatchCurrent(final String methodCallState, final String currentObjectState)
             throws StateMismatchException {
-        if (methodCallState != null && methodCallState != currentObjectState) {
+        if (methodCallState != null && !methodCallState.equals(currentObjectState)) {
             throw new StateMismatchException();
         }
     }

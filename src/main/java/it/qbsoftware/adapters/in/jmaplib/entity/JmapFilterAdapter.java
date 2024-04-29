@@ -24,18 +24,10 @@ public class JmapFilterAdapter<EntityType> implements JmapFilterPort<EntityType>
     public Stream<EmailPort> apply(final Stream<EmailPort> emails) {
         {
             var emailStream = emails.map(e -> ((EmailAdapter) e).adaptee());
-            if (filter instanceof EmailFilterCondition) {
-                final EmailFilterCondition emailFilterCondition = (EmailFilterCondition) filter;
+            if (filter instanceof EmailFilterCondition emailFilterCondition) {
                 final String inMailbox = emailFilterCondition.getInMailbox();
                 if (inMailbox != null) {
                     emailStream = emailStream.filter(email -> email.getMailboxIds().containsKey(inMailbox));
-                }
-                final String[] header = emailFilterCondition.getHeader();
-                if (header != null
-                        && header.length == 2
-                        && header[0].equals("Autocrypt-Setup-Message")) {
-                    emailStream = emailStream.filter(
-                            email -> header[1].equals(email.getAutocryptSetupMessage()));
                 }
             }
             return emailStream.map(e -> new EmailAdapter(e));

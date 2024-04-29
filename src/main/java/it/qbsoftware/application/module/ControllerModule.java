@@ -317,8 +317,13 @@ public class ControllerModule extends AbstractModule {
 
         @Provides
         UpdateEmail provideStandardUpdateEmail(final EmailRepository emailRepository,
-                        final SetErrorEnumPort setErrorEnumPort) {
-                return new StandardUpdateEmail(emailRepository, setErrorEnumPort);
+                        final SetErrorEnumPort setErrorEnumPort,
+                        final AccountStateRepository accountStateRepository,
+                        final EmailChangesTrackerRepository emailChangesTrackerRepository,
+                        final MailboxChangesTrackerRepository mailboxChangesTrackerRepository,
+                        final CreationIdResolverPort creationIdResolverPort) {
+                return new StandardUpdateEmail(emailRepository, setErrorEnumPort, accountStateRepository,
+                                emailChangesTrackerRepository, mailboxChangesTrackerRepository, creationIdResolverPort);
         }
 
         @Provides

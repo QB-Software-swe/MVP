@@ -6,6 +6,7 @@ import it.qbsoftware.business.domain.methodcall.filter.EmailPropertiesFilter;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailPort;
 
+//FIXME: TODO
 public class StandardEmailPropertiesFilter implements EmailPropertiesFilter {
     final EmailBuilderPort emailBuilderPort;
 

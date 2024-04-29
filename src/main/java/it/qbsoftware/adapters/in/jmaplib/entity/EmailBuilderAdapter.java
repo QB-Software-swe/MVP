@@ -6,8 +6,8 @@ import java.util.Map;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailBodyPartPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailPort;
-import rs.ltt.jmap.common.entity.Email.EmailBuilder;
 import rs.ltt.jmap.common.entity.Email;
+import rs.ltt.jmap.common.entity.Email.EmailBuilder;
 
 public class EmailBuilderAdapter implements EmailBuilderPort {
     private EmailBuilder emailBuilder;
@@ -98,6 +98,12 @@ public class EmailBuilderAdapter implements EmailBuilderPort {
     @Override
     public EmailBuilderPort size(Long size) {
         this.emailBuilder.size(size);
+        return this;
+    }
+
+    @Override
+    public EmailBuilderPort keywords(final String string, final Boolean mBoolean) {
+        this.emailBuilder.keyword(string, mBoolean);
         return this;
     }
 

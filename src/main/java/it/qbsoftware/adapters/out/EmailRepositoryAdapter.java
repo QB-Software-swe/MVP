@@ -107,7 +107,7 @@ public class EmailRepositoryAdapter implements EmailRepository {
     @Override
     public void overwrite(final EmailPort emailPort) throws SetNotFoundException {
         final Bson filter = Filters.eq("_id", emailPort.getId());
-        final Document emailDoc = Document.parse(gson.toJson(emailPort));
+        final Document emailDoc = Document.parse(gson.toJson(((EmailAdapter) emailPort).adaptee()));
         emailDoc.put("_id", emailPort.getId());
 
         final var i = connection.getDatabase().getCollection(COLLECTION).findOneAndReplace(filter,

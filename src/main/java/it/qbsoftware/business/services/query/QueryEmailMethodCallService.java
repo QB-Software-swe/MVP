@@ -15,6 +15,7 @@ import it.qbsoftware.business.domain.exception.AccountNotFoundException;
 import it.qbsoftware.business.domain.exception.query.QueryAnchorNotFoundException;
 import it.qbsoftware.business.ports.in.guava.ListMultimapPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailPort;
+import it.qbsoftware.business.ports.in.jmap.entity.JmapFilterPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
 import it.qbsoftware.business.ports.in.jmap.method.call.query.QueryEmailMethodCallPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.query.QueryEmailMethodResponseBuilderPort;
@@ -42,11 +43,11 @@ public class QueryEmailMethodCallService implements QueryEmailMethodCallUsecase 
             throws QueryAnchorNotFoundException, AccountNotFoundException {
         final AccountState accountState = accountStateRepository.retrive(queryEmailMethodCallPort.getAccountId());
 
-        //final JmapFilterPort<EmailPort> queryFilter = queryEmailMethodCallPort.getFilter();
+        final JmapFilterPort<EmailPort> queryFilter = queryEmailMethodCallPort.getFilter();
         Stream<EmailPort> emails = Arrays.asList(emailRepository.retriveAll(queryEmailMethodCallPort.getAccountId()).found())
                 .stream();
 
-        //emails = queryFilter.apply(emails);
+        emails = queryFilter.apply(emails);
         emails = emails.sorted(Comparator.comparing(EmailPort::getReceivedAt).reversed());
 
 

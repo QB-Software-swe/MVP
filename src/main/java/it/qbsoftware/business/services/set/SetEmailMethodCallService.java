@@ -55,7 +55,7 @@ public class SetEmailMethodCallService implements SetEmailMethodCallUsecase {
                 final CreatedResult<EmailPort> createdEmailResult = createEmail.create(setEmailMethodCallPort,
                                 previousResponses);
 
-                final UpdatedResult<EmailPort> updatedEmailResult = updateEmail.update(setEmailMethodCallPort);
+                final UpdatedResult<EmailPort> updatedEmailResult = updateEmail.update(setEmailMethodCallPort, previousResponses);
 
                 final DestroyedResult destroyedEmailResult = destroyEmail.destroy(setEmailMethodCallPort);
 
