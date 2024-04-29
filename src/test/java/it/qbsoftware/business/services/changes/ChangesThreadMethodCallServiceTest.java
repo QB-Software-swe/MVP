@@ -88,7 +88,7 @@ public class ChangesThreadMethodCallServiceTest {
         verify(changesThreadMethodResponseBuilderPort).reset();
         verify(changesThreadMethodResponseBuilderPort).accountId(accountId);
         verify(changesThreadMethodResponseBuilderPort).oldState(any());
-        verify(changesThreadMethodResponseBuilderPort).newState(accountState.threadState());
+        verify(changesThreadMethodResponseBuilderPort).newState(accountState.state());
         verify(changesThreadMethodResponseBuilderPort).created(any());
         verify(changesThreadMethodResponseBuilderPort).updated(any());
         verify(changesThreadMethodResponseBuilderPort).destroyed(any());

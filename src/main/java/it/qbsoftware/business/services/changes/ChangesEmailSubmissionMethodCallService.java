@@ -58,7 +58,7 @@ public class ChangesEmailSubmissionMethodCallService implements ChangesEmailSubm
                     .reset()
                     .accountId(accountId)
                     .oldState(changesSubmissionMethodCallPort.getSinceState())
-                    .newState(accountState.emailState())
+                    .newState(accountState.state())
                     .created(created.values().stream().toArray(String[]::new))
                     .updated(updated.values().stream().toArray(String[]::new))
                     .destroyed(destroyed.values().stream().toArray(String[]::new))

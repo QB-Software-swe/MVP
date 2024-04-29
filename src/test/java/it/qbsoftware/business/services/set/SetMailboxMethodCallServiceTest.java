@@ -96,8 +96,8 @@ public class SetMailboxMethodCallServiceTest {
         SetMailboxMethodResponsePort result = setMailboxMethodCallService.call(setMailboxMethodCallPort, previousResponses);
 
         verify(setMailboxMethodResponseBuilderPort).reset();
-        verify(setMailboxMethodResponseBuilderPort).oldState(accountState.mailboxState());
-        verify(setMailboxMethodResponseBuilderPort).newState(accountState.mailboxState());
+        verify(setMailboxMethodResponseBuilderPort).oldState(accountState.state());
+        verify(setMailboxMethodResponseBuilderPort).newState(accountState.state());
         verify(setMailboxMethodResponseBuilderPort).created(createdResult.created());
         verify(setMailboxMethodResponseBuilderPort).notCreated(createdResult.notCreated());
         verify(setMailboxMethodResponseBuilderPort).updated(updatedResult.updated());

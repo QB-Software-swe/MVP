@@ -88,7 +88,7 @@ public class ChangesEmailSubmissionMethodCallServiceTest {
         verify(changesEmailSubmissionMethodResponseBuilderPort).reset();
         verify(changesEmailSubmissionMethodResponseBuilderPort).accountId(accountId);
         verify(changesEmailSubmissionMethodResponseBuilderPort).oldState(any());
-        verify(changesEmailSubmissionMethodResponseBuilderPort).newState(accountState.emailSubmissionState());
+        verify(changesEmailSubmissionMethodResponseBuilderPort).newState(accountState.state());
         verify(changesEmailSubmissionMethodResponseBuilderPort).created(any());
         verify(changesEmailSubmissionMethodResponseBuilderPort).updated(any());
         verify(changesEmailSubmissionMethodResponseBuilderPort).destroyed(any());

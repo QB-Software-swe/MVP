@@ -1,5 +1,8 @@
 package it.qbsoftware.adapters.in.jmaplib.method.call.query;
 
+import java.util.Arrays;
+
+import it.qbsoftware.adapters.in.jmaplib.entity.JmapComparatorAdapter;
 import it.qbsoftware.adapters.in.jmaplib.entity.JmapFilterAdapter;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailPort;
 import it.qbsoftware.business.ports.in.jmap.entity.JmapComparatorPort;
@@ -26,8 +29,11 @@ public class QueryEmailMethodCallAdapter implements QueryEmailMethodCallPort {
 
     @Override
     public JmapComparatorPort[] getSort() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getSort'");
+        if (queryEmailMethodCall.getSort() != null) {
+            return Arrays.asList(queryEmailMethodCall.getSort()).stream().map(c -> new JmapComparatorAdapter(c))
+                    .toArray(JmapComparatorAdapter[]::new);
+        }
+        return null;
     }
 
     @Override

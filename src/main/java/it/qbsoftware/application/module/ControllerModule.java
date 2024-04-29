@@ -35,6 +35,7 @@ import it.qbsoftware.business.domain.methodcall.process.set.update.UpdateIdentit
 import it.qbsoftware.business.domain.methodcall.process.set.update.UpdateMailbox;
 import it.qbsoftware.business.domain.methodcall.statematch.IfInStateMatch;
 import it.qbsoftware.business.domain.methodcall.statematch.StandardIfInStateMatch;
+import it.qbsoftware.business.domain.util.get.CreationIdResolverPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailSubmissionBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.IdentityBuilderPort;
@@ -255,10 +256,12 @@ public class ControllerModule extends AbstractModule {
 
         // Service>/Query
         @Provides
-        QueryEmailMethodCallUsecase provideQueryEmailMethodCallService(final AccountStateRepository accountStateRepository,
-            final EmailRepository emailRepository,
-            final QueryEmailMethodResponseBuilderPort queryEmailMethodResponseBuilderPort) {
-                return new QueryEmailMethodCallService(accountStateRepository, emailRepository, queryEmailMethodResponseBuilderPort);
+        QueryEmailMethodCallUsecase provideQueryEmailMethodCallService(
+                        final AccountStateRepository accountStateRepository,
+                        final EmailRepository emailRepository,
+                        final QueryEmailMethodResponseBuilderPort queryEmailMethodResponseBuilderPort) {
+                return new QueryEmailMethodCallService(accountStateRepository, emailRepository,
+                                queryEmailMethodResponseBuilderPort);
         }
 
         // Domain>util
@@ -304,10 +307,12 @@ public class ControllerModule extends AbstractModule {
                         final EmailChangesTrackerRepository emailChangesTrackerRepository,
                         final MailboxChangesTrackerRepository mailboxChangesTrackerRepository,
                         final ThreadChangesTrackerRepository threadChangesTrackerRepository,
-                        final SetErrorEnumPort setErrorEnumPort) {
+                        final SetErrorEnumPort setErrorEnumPort, final ThreadRepository threadRepository,
+                        final CreationIdResolverPort creationIdResolverPort) {
                 return new StandardCreateEmail(emailBuilderPort, emailRepository, accountStateRepository,
                                 emailChangesTrackerRepository, mailboxChangesTrackerRepository,
-                                threadChangesTrackerRepository, setErrorEnumPort);
+                                threadChangesTrackerRepository, setErrorEnumPort, threadRepository,
+                                creationIdResolverPort);
         }
 
         @Provides

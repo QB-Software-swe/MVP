@@ -78,9 +78,9 @@ public class GenData {
                 mongoConnection.getDatabase().drop();
                 generateSession();
                 generateIdentity();
-                final List<String> mailboxIds = generateMailbox();
-                genEmails(mailboxIds);
-                genMailbox(mailboxIds);
+                //final List<String> mailboxIds = generateMailbox();
+                //genEmails(mailboxIds);
+                //genMailbox(mailboxIds);
         }
 
         public void genMailbox(final List<String> mailboxIds) {

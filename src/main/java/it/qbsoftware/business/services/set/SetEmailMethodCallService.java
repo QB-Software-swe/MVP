@@ -50,7 +50,7 @@ public class SetEmailMethodCallService implements SetEmailMethodCallUsecase {
                 final AccountState preSetAccountState = accountStateRepository.retrive(accountId);
 
                 ifInStateMatch.methodStateMatchCurrent(setEmailMethodCallPort.ifInState(),
-                                preSetAccountState.emailState());
+                                preSetAccountState.state());
 
                 final CreatedResult<EmailPort> createdEmailResult = createEmail.create(setEmailMethodCallPort,
                                 previousResponses);
@@ -63,8 +63,8 @@ public class SetEmailMethodCallService implements SetEmailMethodCallUsecase {
 
                 return setEmailMethodResponseBuilderPort
                                 .reset()
-                                .oldState(preSetAccountState.emailState())
-                                .newState(postSetAccountState.emailState())
+                                .oldState(preSetAccountState.state())
+                                .newState(postSetAccountState.state())
                                 .created(createdEmailResult.created())
                                 .notCreated(createdEmailResult.notCreated())
                                 .updated(updatedEmailResult.updated())

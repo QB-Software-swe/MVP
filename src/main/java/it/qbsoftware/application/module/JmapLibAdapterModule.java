@@ -6,6 +6,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 
 import it.qbsoftware.adapters.in.jmaplib.entity.AccountBuilderAdapter;
+import it.qbsoftware.adapters.in.jmaplib.entity.CreationalIdResolverAdapter;
 import it.qbsoftware.adapters.in.jmaplib.entity.EmailBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.entity.EmailSubmissionBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.entity.IdentityBuilderAdapter;
@@ -28,6 +29,7 @@ import it.qbsoftware.adapters.in.jmaplib.method.response.set.SetEmailMethodRespo
 import it.qbsoftware.adapters.in.jmaplib.method.response.set.SetIdentityMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.set.SetMailboxMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.util.ResultReferenceResolverAdapter;
+import it.qbsoftware.business.domain.util.get.CreationIdResolverPort;
 import it.qbsoftware.business.ports.in.jmap.entity.AccountBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailSubmissionBuilderPort;
@@ -88,6 +90,7 @@ public class JmapLibAdapterModule extends AbstractModule {
 
         // Util
         bind(ResultReferenceResolverPort.class).to(ResultReferenceResolverAdapter.class);
+        bind(CreationIdResolverPort.class).to(CreationalIdResolverAdapter.class);
 
         // GSON
         bind(Gson.class).toInstance(jmapGsonConfig());

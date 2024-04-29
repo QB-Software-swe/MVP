@@ -56,7 +56,7 @@ public class GetIdentityMethodCallService implements GetIdentityMethodCallUsecas
                 .reset()
                 .list(identityFiltred)
                 .notFound(retrivedIdentities.notFound())
-                .state(accountState.identityState())
+                .state(accountState.state())
                 .build();
     }
 }

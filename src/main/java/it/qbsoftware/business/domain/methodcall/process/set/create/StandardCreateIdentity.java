@@ -74,8 +74,8 @@ public class StandardCreateIdentity implements CreateIdentity {
         AccountState accountState = accountStateRepository.retrive(accountId);
         final IdentityChangesTracker identityChangesTracker = identityChangesTrackerRepository.retrive(accountId);
 
-        accountState = accountState.increaseIdentityState();
-        identityChangesTracker.identityHasBeenCreated(accountState.identityState(), identityId);
+        accountState = accountState.increaseState();
+        identityChangesTracker.identityHasBeenCreated(accountState.state(), identityId);
 
         accountStateRepository.save(accountState);
         identityChangesTrackerRepository.save(identityChangesTracker);

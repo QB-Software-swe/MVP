@@ -43,6 +43,23 @@ public class ChangesMailboxMethodCallService implements ChangesMailboxMethodCall
             throw new InvalidArgumentsException();
         }
 
+        if (changesMailboxMethodCallPort.getSinceState() != null
+                && changesMailboxMethodCallPort.getSinceState() == accountState.state()) {
+            final String[] empty = new String[] {};
+
+            return changesMailboxMethodResponseBuilderPort
+                    .reset()
+                    .accountId(accountId)
+                    .oldState(changesMailboxMethodCallPort.getSinceState())
+                    .newState(accountState.state())
+                    .created(empty)
+                    .updated(empty)
+                    .destroyed(empty)
+                    .hasMoreChanges(false)
+                    .updatedProperties(empty)
+                    .build();
+        }
+
         final MailboxChangesTracker mailboxChangesTracker = mailboxChangesTrackerRepository.retrive(accountId);
 
         final Map<String, String> created = mailboxChangesTracker.created();
@@ -56,7 +73,7 @@ public class ChangesMailboxMethodCallService implements ChangesMailboxMethodCall
                     .reset()
                     .accountId(accountId)
                     .oldState(changesMailboxMethodCallPort.getSinceState())
-                    .newState(accountState.emailState())
+                    .newState(accountState.state())
                     .created(created.values().stream().toArray(String[]::new))
                     .updated(updated.values().stream().toArray(String[]::new))
                     .destroyed(destroyed.values().stream().toArray(String[]::new))

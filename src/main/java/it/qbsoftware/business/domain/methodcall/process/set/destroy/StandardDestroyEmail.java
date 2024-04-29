@@ -74,8 +74,8 @@ public class StandardDestroyEmail implements DestroyEmail {
         AccountState accountState = accountStateRepository.retrive(accountId);
         final EmailChangesTracker emailChangesTracker = emailChangesTrackerRepository.retrive(accountId);
 
-        accountState = accountState.increaseEmailState();
-        emailChangesTracker.emailHasBeenDestroyed(accountState.emailState(), emailDestroyed.getId());
+        accountState = accountState.increaseState();
+        emailChangesTracker.emailHasBeenDestroyed(accountState.state(), emailDestroyed.getId());
 
         accountStateRepository.save(accountState);
         emailChangesTrackerRepository.save(emailChangesTracker);
@@ -86,8 +86,8 @@ public class StandardDestroyEmail implements DestroyEmail {
         AccountState accountState = accountStateRepository.retrive(accountId);
         final ThreadChangesTracker threadChangesTracker = threadChangesTrackerRepository.retrive(accountId);
 
-        accountState = accountState.increaseThreadState();
-        threadChangesTracker.threadHasBeenUpdated(accountState.threadState(), emailDestroyed.getThreadId());
+        accountState = accountState.increaseState();
+        threadChangesTracker.threadHasBeenUpdated(accountState.state(), emailDestroyed.getThreadId());
 
         accountStateRepository.save(accountState);
         threadChangesTrackerRepository.save(threadChangesTracker);
@@ -99,8 +99,8 @@ public class StandardDestroyEmail implements DestroyEmail {
         final MailboxChangesTracker mailboxChangesTracker = mailboxChangesTrackerRepository.retrive(accountId);
 
         for (final String mailboxId : emailDestroyed.getMailboxIds().keySet()) {
-            accountState = accountState.increaseMailboxState();
-            mailboxChangesTracker.mailboxHasBeenUpdated(accountState.mailboxState(), mailboxId);
+            accountState = accountState.increaseState();
+            mailboxChangesTracker.mailboxHasBeenUpdated(accountState.state(), mailboxId);
         }
 
         accountStateRepository.save(accountState);

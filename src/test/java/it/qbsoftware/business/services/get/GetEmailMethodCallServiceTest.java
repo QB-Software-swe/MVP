@@ -85,7 +85,7 @@ public class GetEmailMethodCallServiceTest {
         verify(getEmailMethodResponseBuilderPort).reset();
         verify(getEmailMethodResponseBuilderPort).list(emails);
         verify(getEmailMethodResponseBuilderPort).notFound(any());
-        verify(getEmailMethodResponseBuilderPort).state(accountState.emailState());
+        verify(getEmailMethodResponseBuilderPort).state(accountState.state());
         verify(getEmailMethodResponseBuilderPort).build();
         verify(emailRepository).retrive(emailIds);
         assertEquals(result, getEmailMethodResponsePort);
@@ -118,7 +118,7 @@ public class GetEmailMethodCallServiceTest {
         verify(getEmailMethodResponseBuilderPort).reset();
         verify(getEmailMethodResponseBuilderPort).list(emails);
         verify(getEmailMethodResponseBuilderPort).notFound(any());
-        verify(getEmailMethodResponseBuilderPort).state(accountState.emailState());
+        verify(getEmailMethodResponseBuilderPort).state(accountState.state());
         verify(getEmailMethodResponseBuilderPort).build();
         verify(emailRepository).retriveAll(accountId);
         assertEquals(result, getEmailMethodResponsePort);

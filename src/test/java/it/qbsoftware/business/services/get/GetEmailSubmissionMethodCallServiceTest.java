@@ -83,7 +83,7 @@ public class GetEmailSubmissionMethodCallServiceTest {
         verify(getEmailSubmissionMethodResponseBuilderPort).reset();
         verify(getEmailSubmissionMethodResponseBuilderPort).list(emailSubmissions);
         verify(getEmailSubmissionMethodResponseBuilderPort).notFound(any());
-        verify(getEmailSubmissionMethodResponseBuilderPort).state(accountState.emailSubmissionState());
+        verify(getEmailSubmissionMethodResponseBuilderPort).state(accountState.state());
         verify(getEmailSubmissionMethodResponseBuilderPort).build();
         verify(emailSubmissionRepository).retrive(emailSubmissionIds);
         assertEquals(result, getEmailSubmissionMethodResponsePort);
@@ -112,7 +112,7 @@ public class GetEmailSubmissionMethodCallServiceTest {
         verify(getEmailSubmissionMethodResponseBuilderPort).reset();
         verify(getEmailSubmissionMethodResponseBuilderPort).list(emailSubmissions);
         verify(getEmailSubmissionMethodResponseBuilderPort).notFound(any());
-        verify(getEmailSubmissionMethodResponseBuilderPort).state(accountState.emailSubmissionState());
+        verify(getEmailSubmissionMethodResponseBuilderPort).state(accountState.state());
         verify(getEmailSubmissionMethodResponseBuilderPort).build();
         verify(emailSubmissionRepository).retriveAll(accountId);
         assertEquals(result, getEmailSubmissionMethodResponsePort);

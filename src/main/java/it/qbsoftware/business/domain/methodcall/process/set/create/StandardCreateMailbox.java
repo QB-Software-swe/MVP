@@ -70,8 +70,8 @@ public class StandardCreateMailbox implements CreateMailbox {
         AccountState accountState = accountStateRepository.retrive(accountId);
         final MailboxChangesTracker mailboxChangesTracker = mailboxChangesTrackerRepository.retrive(accountId);
 
-        accountState = accountState.increaseMailboxState();
-        mailboxChangesTracker.mailboxHasBeenCreated(accountState.mailboxState(), mailboxId);
+        accountState = accountState.increaseState();
+        mailboxChangesTracker.mailboxHasBeenCreated(accountState.state(), mailboxId);
 
         accountStateRepository.save(accountState);
         mailboxChangesTrackerRepository.save(mailboxChangesTracker);

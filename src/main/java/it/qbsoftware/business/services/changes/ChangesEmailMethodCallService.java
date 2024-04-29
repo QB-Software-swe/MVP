@@ -43,6 +43,22 @@ public class ChangesEmailMethodCallService implements ChangesEmailMethodCallUsec
             throw new InvalidArgumentsException();
         }
 
+        if (changesEmailMethodCallPort.getSinceState() != null
+                && changesEmailMethodCallPort.getSinceState() == accountState.state()) {
+            final String[] empty = new String[] {};
+
+            return changesEmailMethodResponseBuilderPort
+                    .reset()
+                    .accountId(accountId)
+                    .oldState(changesEmailMethodCallPort.getSinceState())
+                    .newState(accountState.state())
+                    .created(empty)
+                    .updated(empty)
+                    .destroyed(empty)
+                    .hasMoreChanges(false)
+                    .build();
+        }
+
         final EmailChangesTracker emailChangesTracker = emailChangesTrackerRepository.retrive(accountId);
 
         final Map<String, String> created = emailChangesTracker.created();
@@ -56,7 +72,7 @@ public class ChangesEmailMethodCallService implements ChangesEmailMethodCallUsec
                     .reset()
                     .accountId(accountId)
                     .oldState(changesEmailMethodCallPort.getSinceState())
-                    .newState(accountState.emailState())
+                    .newState(accountState.state())
                     .created(created.values().stream().toArray(String[]::new))
                     .updated(updated.values().stream().toArray(String[]::new))
                     .destroyed(destroyed.values().stream().toArray(String[]::new))

@@ -96,8 +96,8 @@ public class SetEmailMethodCallServiceTest {
         SetEmailMethodResponsePort result = setEmailMethodCallService.call(setEmailMethodCallPort, previousResponses);
 
         verify(setEmailMethodResponseBuilderPort).reset();
-        verify(setEmailMethodResponseBuilderPort).oldState(accountState.emailState());
-        verify(setEmailMethodResponseBuilderPort).newState(accountState.emailState());
+        verify(setEmailMethodResponseBuilderPort).oldState(accountState.state());
+        verify(setEmailMethodResponseBuilderPort).newState(accountState.state());
         verify(setEmailMethodResponseBuilderPort).created(createdResult.created());
         verify(setEmailMethodResponseBuilderPort).notCreated(createdResult.notCreated());
         verify(setEmailMethodResponseBuilderPort).updated(updatedResult.updated());

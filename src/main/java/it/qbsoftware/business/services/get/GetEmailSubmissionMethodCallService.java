@@ -59,7 +59,7 @@ public class GetEmailSubmissionMethodCallService implements GetEmailSubmissionMe
                 .reset()
                 .list(emailSubmissionFiltred)
                 .notFound(emailSubmissionRetrived.notFound())
-                .state(accountState.emailSubmissionState())
+                .state(accountState.state())
                 .build();
     }
 }

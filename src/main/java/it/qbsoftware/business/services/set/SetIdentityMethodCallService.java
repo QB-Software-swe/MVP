@@ -50,7 +50,7 @@ public class SetIdentityMethodCallService implements SetIdentityMethodCallUsecas
         final AccountState preSetAccountState = accountStateRepository.retrive(accountId);
 
         ifInStateMatch.methodStateMatchCurrent(setIdentityMethodCallPort.ifInState(),
-                preSetAccountState.emailState());
+                preSetAccountState.state());
 
         final CreatedResult<IdentityPort> createdIdentityResult = createIndetity.create(setIdentityMethodCallPort);
 
@@ -62,8 +62,8 @@ public class SetIdentityMethodCallService implements SetIdentityMethodCallUsecas
 
         return setIdentityMethodResponseBuilderPort
                 .reset()
-                .oldState(preSetAccountState.emailState())
-                .newState(postSetAccountState.emailState())
+                .oldState(preSetAccountState.state())
+                .newState(postSetAccountState.state())
                 .created(createdIdentityResult.created())
                 .notCreated(createdIdentityResult.notCreated())
                 .updated(updatedIdentityResult.updated())

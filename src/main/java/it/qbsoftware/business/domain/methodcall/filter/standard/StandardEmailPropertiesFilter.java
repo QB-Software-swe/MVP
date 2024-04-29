@@ -1,8 +1,5 @@
 package it.qbsoftware.business.domain.methodcall.filter.standard;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
 import it.qbsoftware.business.domain.methodcall.filter.EmailFilterBodyPartSettings;
 import it.qbsoftware.business.domain.methodcall.filter.EmailPropertiesFilter;
@@ -19,16 +16,18 @@ public class StandardEmailPropertiesFilter implements EmailPropertiesFilter {
     @Override
     public EmailPort[] filter(final EmailPort[] emails, final String[] properties,
             EmailFilterBodyPartSettings emailFilterBodyPartSettings) throws InvalidArgumentsException {
-        if (properties == null) {
+        //if (properties == null) {
             return emails;
-        }
+        //}
 
+        /* 
         final List<EmailPort> filtredEmail = new ArrayList<EmailPort>();
         for (final EmailPort emailPort : emails) {
             filtredEmail.add(emailFilter(emailPort, properties));
         }
 
         return filtredEmail.toArray(EmailPort[]::new);
+        */
     }
 
     private EmailPort emailFilter(final EmailPort emailPort, final String[] properties)

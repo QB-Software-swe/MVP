@@ -63,7 +63,7 @@ public class GetEmailMethodCallService implements GetEmailMethodCallUsecase {
                 .reset()
                 .list(emailsFiltred)
                 .notFound(retrivedEmailsResult.notFound())
-                .state(accountState.emailState())
+                .state(accountState.state())
                 .build();
     }
 }

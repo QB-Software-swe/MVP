@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.FindOneAndReplaceOptions;
 
 import it.qbsoftware.adapters.in.jmaplib.entity.ThreadAdapter;
 import it.qbsoftware.business.domain.util.get.RetrivedEntity;
@@ -68,4 +69,23 @@ public class ThreadRepositoryAdapter implements ThreadRepository {
                 notFound.toArray(String[]::new));
     }
 
+    @Override
+    public ThreadPort retriveOne(final String id) {
+        final Bson filter = Filters.eq("_id", id);
+        var x = connection.getDatabase().getCollection(COLLECTION).find(filter);
+
+        if (x.first() != null) {
+            return new ThreadAdapter(gson.fromJson(x.first().toJson(), Thread.class));
+        }
+
+        return new ThreadAdapter(Thread.builder().id(id).build());
+    }
+
+    @Override
+    public void save(final ThreadPort threadPort) {
+        final Document threadDoc = Document.parse(gson.toJson(((ThreadAdapter) threadPort).adaptee()));
+        threadDoc.put("_id", threadPort.getId());
+        connection.getDatabase().getCollection(COLLECTION).findOneAndReplace(Filters.eq("_id", threadPort.getId()),
+                threadDoc, new FindOneAndReplaceOptions().upsert(true));
+    }
 }
