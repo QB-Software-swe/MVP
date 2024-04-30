@@ -1,6 +1,7 @@
 package it.qbsoftware.business.services.get;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -122,67 +123,17 @@ public class GetEmailMethodCallServiceTest {
         verify(getEmailMethodResponseBuilderPort).build();
         verify(emailRepository).retriveAll(accountId);
         assertEquals(result, getEmailMethodResponsePort);
+    }
 
+    @Test
+    public void testCallWithAccountNotFoundException() throws Exception {
+        String accountId = "testAccountId";
+
+        when(accountStateRepository.retrive(accountId)).thenThrow(new AccountNotFoundException());
+        when(getEmailMethodCallPort.accountId()).thenReturn(accountId);
+
+        assertThrows(AccountNotFoundException.class,
+                () -> getEmailMethodCallService.call(getEmailMethodCallPort, previousResponses));
     }
 
 }
-
-/*
- * FIXME: ROBA CHE POSSO RICICLARE DOPO
- * 
- * @Test
- * public void testCallWithAccountNotFoundException() throws
- * AccountNotFoundException, InvalidResultReferenceExecption,
- * InvalidArgumentsException {
- * 
- * String accountId = "testAccountId";
- * 
- * when(accountStateRepository.retrive(accountId)).thenThrow(new
- * AccountNotFoundException());
- * when(getEmailMethodCallPort.accountId()).thenReturn(accountId);
- * 
- * MethodResponsePort[] methodResponsePorts =
- * getEmailMethodCallService.call(getEmailMethodCallPort, previousResponses);
- * 
- * assertTrue(methodResponsePorts[0] instanceof
- * AccountNotFoundMethodErrorResponsePort);
- * }
- * 
- * @Test
- * public void testCallWithInvalidResultReferenceException() throws
- * AccountNotFoundException, InvalidResultReferenceExecption,
- * InvalidArgumentsException {
- * 
- * when(getReferenceIdsResolver.resolve(any(), any())).thenThrow(new
- * InvalidResultReferenceExecption());
- * 
- * MethodResponsePort[] methodResponsePorts =
- * getEmailMethodCallService.call(getEmailMethodCallPort, previousResponses);
- * 
- * assertTrue(methodResponsePorts[0] instanceof
- * InvalidResultReferenceMethodErrorResponsePort);
- * }
- * 
- * @Test
- * public void testCallWithInvalidArgumentsException() throws
- * AccountNotFoundException, InvalidResultReferenceExecption,
- * InvalidArgumentsException {
- * 
- * String[] emailIds = new String[] { "emailId1", "emailId2" };
- * EmailPort[] emails = new EmailPort[] { new EmailAdapter(null), new
- * EmailAdapter(null) };
- * 
- * when(getReferenceIdsResolver.resolve(any(), any())).thenReturn(emailIds);
- * when(emailPropertiesFilter.filter(any(), any(), any())).thenThrow(new
- * InvalidArgumentsException());
- * when(emailRepository.retrive(any())).thenReturn(new RetrivedEntity<>(emails,
- * new String[] {}));
- * 
- * MethodResponsePort[] methodResponsePorts =
- * getEmailMethodCallService.call(getEmailMethodCallPort, previousResponses);
- * 
- * assertTrue(methodResponsePorts[0] instanceof
- * InvalidArgumentsMethodErrorResponsePort);
- * }
- * 
- */
