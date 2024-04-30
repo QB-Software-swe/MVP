@@ -56,7 +56,7 @@ public class StandardEmailPropertiesFilter implements EmailPropertiesFilter {
                     yield emailBuilder.receivedAt(emailPort.getReceivedAt());
 
                 default:
-                    yield emailBuilder; // throw new InvalidArgumentsException();
+                    throw new InvalidArgumentsException();
             };
         }
 

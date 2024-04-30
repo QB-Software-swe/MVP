@@ -1,9 +1,9 @@
 package it.qbsoftware.business.domain.methodcall.process.set.create;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.UUID;
 
@@ -133,7 +133,7 @@ public class StandardCreateEmail implements CreateEmail {
             accountStateRepository.save(accountStateRepository.retrive(accountId).increaseState());
 
             ThreadPort x = threadRepository.retriveOne(threadId);
-            var p = new ArrayList<>(x.getEmailIds());
+            HashSet<String> p = new HashSet<>(x.getEmailIds());
             p.add(emailId);
             threadRepository.save(x.toBuilder().emailIds(p).build()); // In ogni caso
 

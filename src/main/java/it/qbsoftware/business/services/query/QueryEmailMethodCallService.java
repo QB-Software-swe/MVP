@@ -84,7 +84,7 @@ public class QueryEmailMethodCallService implements QueryEmailMethodCallUsecase 
                 : null;
 
         return queryEmailMethodResponseBuilderPort.reset()
-                .canCalculateChanges(false)
+                .canCalculateChanges(true)
                 .queryState(accountState.state())
                 .total(total)
                 .ids(page)
