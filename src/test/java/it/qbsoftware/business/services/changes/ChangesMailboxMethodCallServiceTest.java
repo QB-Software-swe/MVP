@@ -27,7 +27,6 @@ import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
 import it.qbsoftware.business.ports.in.jmap.method.call.changes.ChangesMailboxMethodCallPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesMailboxMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesMailboxMethodResponsePort;
-import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesThreadMethodResponsePort;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.business.ports.out.domain.MailboxChangesTrackerRepository;
 
@@ -189,7 +188,6 @@ public class ChangesMailboxMethodCallServiceTest {
     public void testCallWithValidSinceState() throws Exception {
         String accountId = "testAccountId";
         String sinceState = "sinceState";
-        Map<String, String> changesMap = new HashMap<>();
         Long maxChanges = 10L;
 
         when(changesMailboxMethodCallPort.getSinceState()).thenReturn(sinceState);
