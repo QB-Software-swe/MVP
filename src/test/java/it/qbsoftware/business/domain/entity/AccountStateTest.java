@@ -1,11 +1,6 @@
 package it.qbsoftware.business.domain.entity;
 
-import static org.junit.Assert.assertEquals;
-
-import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import it.qbsoftware.business.domain.entity.changes.AccountState;
 
 @RunWith(org.mockito.junit.MockitoJUnitRunner.class)
 public class AccountStateTest {

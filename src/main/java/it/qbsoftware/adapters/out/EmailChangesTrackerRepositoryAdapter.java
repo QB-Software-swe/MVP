@@ -42,11 +42,10 @@ public class EmailChangesTrackerRepositoryAdapter implements EmailChangesTracker
 
     @Override
     public void save(final EmailChangesTracker emailChangesTracker) {
-        // FIXME: interfaccia?
         final Document emailChangesTrackerDoc = Document.parse(gson.toJson(emailChangesTracker));
         emailChangesTrackerDoc.put("_id", emailChangesTracker.id());
         FindOneAndReplaceOptions options = new FindOneAndReplaceOptions().upsert(true);
-        var i = mongoConnection.getDatabase().getCollection(COLLECTION)
+        mongoConnection.getDatabase().getCollection(COLLECTION)
                 .findOneAndReplace(Filters.eq("_id", emailChangesTracker.id()), emailChangesTrackerDoc, options);
     }
 

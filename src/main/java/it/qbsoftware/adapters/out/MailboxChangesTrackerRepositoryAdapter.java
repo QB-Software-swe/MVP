@@ -42,11 +42,10 @@ public class MailboxChangesTrackerRepositoryAdapter implements MailboxChangesTra
 
     @Override
     public void save(final MailboxChangesTracker mailboxChangesTracker) {
-        // FIXME: interfaccia?
         final Document mailboxChangesTrackerDoc = Document.parse(gson.toJson(mailboxChangesTracker));
         mailboxChangesTrackerDoc.put("_id", mailboxChangesTracker.id());
         FindOneAndReplaceOptions options = new FindOneAndReplaceOptions().upsert(true);
-        var i = mongoConnection.getDatabase().getCollection(COLLECTION)
+        mongoConnection.getDatabase().getCollection(COLLECTION)
                 .findOneAndReplace(Filters.eq("_id", mailboxChangesTracker.id()), mailboxChangesTrackerDoc, options);
     }
 

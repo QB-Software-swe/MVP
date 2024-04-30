@@ -35,7 +35,8 @@ public class StandardUpdateEmail implements UpdateEmail {
     public StandardUpdateEmail(final EmailRepository emailRepository, final SetErrorEnumPort setErrorEnumPort,
             final AccountStateRepository accountStateRepository,
             final EmailChangesTrackerRepository emailChangesTrackerRepository,
-            final MailboxChangesTrackerRepository mailboxChangesTrackerRepository, final CreationIdResolverPort creationIdResolverPort) {
+            final MailboxChangesTrackerRepository mailboxChangesTrackerRepository,
+            final CreationIdResolverPort creationIdResolverPort) {
         this.emailRepository = emailRepository;
         this.setErrorEnumPort = setErrorEnumPort;
         this.accountStateRepository = accountStateRepository;
@@ -45,7 +46,8 @@ public class StandardUpdateEmail implements UpdateEmail {
     }
 
     @Override
-    public UpdatedResult<EmailPort> update(final SetEmailMethodCallPort setEmailMethodCall, final ListMultimapPort<String, ResponseInvocationPort> previousResponses) throws AccountNotFoundException {
+    public UpdatedResult<EmailPort> update(final SetEmailMethodCallPort setEmailMethodCall,
+            final ListMultimapPort<String, ResponseInvocationPort> previousResponses) throws AccountNotFoundException {
         final String accountId = setEmailMethodCall.accountId();
         final HashMap<String, EmailPort> updated = new HashMap<>();
         final HashMap<String, SetErrorPort> notUpdated = new HashMap<>();
@@ -72,7 +74,8 @@ public class StandardUpdateEmail implements UpdateEmail {
     }
 
     private EmailPort applayPatches(final String accountId, final String emailIdToPatch,
-            final Map<String, Object> patchObjects, final ListMultimapPort<String, ResponseInvocationPort> previousResponses)
+            final Map<String, Object> patchObjects,
+            final ListMultimapPort<String, ResponseInvocationPort> previousResponses)
             throws SetNotFoundException, SetInvalidPatchException, AccountNotFoundException {
         EmailPort emailTarget = emailRepository.retriveOne(emailIdToPatch);
         final EmailBuilderPort emailSideEffectDiffBuilder = emailTarget.toBuilder();
@@ -84,7 +87,6 @@ public class StandardUpdateEmail implements UpdateEmail {
 
             final List<String> pathParts = Arrays.asList(path.split("/"));
             emailToPatchBuilder = switch (pathParts.get(0)) {
-                // TODO: aggiungere le parti man mano che le richiede il client
                 case "keywords":
                     if (pathParts.size() == 2 && modification instanceof Boolean mBoolean) {
                         updateEmailChanges(emailIdToPatch, accountId);
@@ -94,17 +96,21 @@ public class StandardUpdateEmail implements UpdateEmail {
 
                 case "mailboxIds":
                     if (pathParts.size() == 2 && modification instanceof Boolean mBoolean) {
-                           final String mailboxId = pathParts.get(1);
-                    yield emailToPatchBuilder.mailboxId(mailboxId, mBoolean);
-                } else if (modification instanceof Map) {
-                    final Map<String, Boolean> mailboxMap = (Map<String, Boolean>) modification;
-                    emailToPatchBuilder.clearMailboxIds();
-                    for (Map.Entry<String, Boolean> mailboxEntry : mailboxMap.entrySet()) {
-                        final String mailboxId =
-                                creationIdResolverPort.resolveIfNecessary(
-                                        mailboxEntry.getKey(), previousResponses);
-                                        yield emailToPatchBuilder.mailboxId(mailboxId, mailboxEntry.getValue());
-                    }}
+                        final String mailboxId = pathParts.get(1);
+                        updateMailbox(new String[] { mailboxId }, accountId);
+                        yield emailToPatchBuilder.mailboxId(mailboxId, mBoolean);
+                    } else if (modification instanceof Map) {
+                        @SuppressWarnings("unchecked")
+                        final Map<String, Boolean> mailboxMap = (Map<String, Boolean>) modification;
+                        emailToPatchBuilder.clearMailboxIds();
+                        for (Map.Entry<String, Boolean> mailboxEntry : mailboxMap.entrySet()) {
+                            final String mailboxId = creationIdResolverPort.resolveIfNecessary(
+                                    mailboxEntry.getKey(), previousResponses);
+                            emailToPatchBuilder.mailboxId(mailboxId, mailboxEntry.getValue());
+                        }
+                        updateMailbox(mailboxMap.keySet().toArray(String[]::new), accountId);
+                        yield emailToPatchBuilder;
+                    }
                     throw new SetInvalidPatchException();
 
                 default:
@@ -131,7 +137,6 @@ public class StandardUpdateEmail implements UpdateEmail {
         AccountState accountState = accountStateRepository.retrive(accountId);
         final MailboxChangesTracker mailboxChangesTracker = mailboxChangesTrackerRepository.retrive(accountId);
 
-        // NOTA: mailboxIds == #di?
         for (final String id : mailboxIds) {
             accountState = accountState.increaseState();
             mailboxChangesTracker.mailboxHasBeenUpdated(accountState.state(), id);

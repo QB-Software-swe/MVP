@@ -35,8 +35,7 @@ public class StandardIdentityPropertiesFilter implements IdentityPropertiesFilte
         IdentityBuilderPort identityBuilder = identityBuilderPort.reset();
         identityBuilder.id(identityPort.getId());
 
-        for (final String property : properties) { // FIXME: check completezza. Nel caso in cui fosse incompleto allora
-                                                   // completarlo
+        for (final String property : properties) { 
             identityBuilder = switch (property) {
                 case "name":
                     yield identityBuilder.name(identityPort.getName());

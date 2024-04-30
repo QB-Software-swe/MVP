@@ -33,8 +33,7 @@ public class StandardMailboxPropertiesFilter implements MailboxPropertiesFilter 
             throws InvalidArgumentsException {
         MailboxBuilderPort mailboxBuilder = mailboxBuilderPort.reset().id(mailboxPort.getId());
 
-        for (final String property : properties) { // FIXME: check della aderenza allo standard, nel caso terminare con
-                                                   // quello che manca
+        for (final String property : properties) {
             mailboxBuilder = switch (property) {
                 case "name":
                     yield mailboxBuilder.name(mailboxPort.getName());

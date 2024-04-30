@@ -1,5 +1,6 @@
 package it.qbsoftware.business.ports.out.jmap;
 
+import it.qbsoftware.business.domain.exception.set.SetNotFoundException;
 import it.qbsoftware.business.domain.util.get.RetrivedEntity;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailSubmissionPort;
 
@@ -10,5 +11,5 @@ public interface EmailSubmissionRepository {
 
     public EmailSubmissionPort destroy(final String emailId);
 
-    public void save(final EmailSubmissionPort emailPort);
+    public void save(final EmailSubmissionPort emailPort) throws SetNotFoundException;
 }

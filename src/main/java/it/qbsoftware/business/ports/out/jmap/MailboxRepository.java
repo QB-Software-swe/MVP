@@ -11,7 +11,7 @@ public interface MailboxRepository {
 
     public RetrivedEntity<MailboxPort> retrive(final String[] ids);
 
-    public boolean destroy(final String id) throws SetNotFoundException;
+    public void destroy(final String id) throws SetNotFoundException;
 
     public void save(final MailboxPort mailboxPort) throws SetSingletonException;
 }

@@ -15,11 +15,6 @@ public class JmapFilterAdapter<EntityType> implements JmapFilterPort<EntityType>
         this.filter = filter;
     }
 
-    // FIXME: rimuovere se non utilizzato
-    public Filter<Email> adapee() {
-        return filter;
-    }
-
     @Override
     public Stream<EmailPort> apply(final Stream<EmailPort> emails) {
         {

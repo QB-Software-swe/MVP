@@ -10,6 +10,7 @@ import org.bson.conversions.Bson;
 
 import com.google.gson.Gson;
 import com.google.inject.Inject;
+import com.mongodb.MongoException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Filters;
 
@@ -98,10 +99,13 @@ public class EmailRepositoryAdapter implements EmailRepository {
 
     @Override
     public void save(final EmailPort emailPort) throws SetSingletonException {
-        // FIXME: singleton
         final Document emailDoc = Document.parse(gson.toJson(((EmailAdapter) emailPort).adaptee()));
         emailDoc.put("_id", emailPort.getId());
-        var i = connection.getDatabase().getCollection(COLLECTION).insertOne(emailDoc);
+        try {
+            connection.getDatabase().getCollection(COLLECTION).insertOne(emailDoc);
+        } catch (final MongoException mongoException) {
+            throw new SetSingletonException();
+        }
     }
 
     @Override
@@ -110,7 +114,7 @@ public class EmailRepositoryAdapter implements EmailRepository {
         final Document emailDoc = Document.parse(gson.toJson(((EmailAdapter) emailPort).adaptee()));
         emailDoc.put("_id", emailPort.getId());
 
-        final var i = connection.getDatabase().getCollection(COLLECTION).findOneAndReplace(filter,
+        connection.getDatabase().getCollection(COLLECTION).findOneAndReplace(filter,
                 emailDoc);
     }
 }

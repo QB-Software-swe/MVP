@@ -14,7 +14,6 @@ import it.qbsoftware.business.ports.in.jmap.capability.CapabilityPort;
 import it.qbsoftware.business.ports.in.jmap.entity.AccountBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.SessionResourceBuilderPort;
 
-//TODO: check
 public class JettyHandlerModule extends AbstractModule {
     @Override
     protected void configure() {

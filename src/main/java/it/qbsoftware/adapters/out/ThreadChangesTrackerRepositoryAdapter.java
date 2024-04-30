@@ -42,11 +42,10 @@ public class ThreadChangesTrackerRepositoryAdapter implements ThreadChangesTrack
 
     @Override
     public void save(final ThreadChangesTracker threadChangesTracker) {
-        // FIXME: interfaccia?
         final Document threadChangesTrackerDoc = Document.parse(gson.toJson(threadChangesTracker));
         threadChangesTrackerDoc.put("_id", threadChangesTracker.id());
         FindOneAndReplaceOptions options = new FindOneAndReplaceOptions().upsert(true);
-        var i = mongoConnection.getDatabase().getCollection(COLLECTION)
+        mongoConnection.getDatabase().getCollection(COLLECTION)
                 .findOneAndReplace(Filters.eq("_id", threadChangesTracker.id()), threadChangesTrackerDoc, options);
     }
 

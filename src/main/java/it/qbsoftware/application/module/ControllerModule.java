@@ -37,7 +37,6 @@ import it.qbsoftware.business.domain.methodcall.statematch.IfInStateMatch;
 import it.qbsoftware.business.domain.methodcall.statematch.StandardIfInStateMatch;
 import it.qbsoftware.business.domain.util.get.CreationIdResolverPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailBuilderPort;
-import it.qbsoftware.business.ports.in.jmap.entity.EmailSubmissionBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.IdentityBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.SessionResourceBuilderPort;
@@ -294,9 +293,8 @@ public class ControllerModule extends AbstractModule {
         }
 
         @Provides
-        EmailSubmissionPropertiesFilter provideStandardEmailSubmissionPropertiesFilter(
-                        final EmailSubmissionBuilderPort emailSubmissionBuilderPort) {
-                return new StandardEmailSubmissionPropertiesFilter(emailSubmissionBuilderPort);
+        EmailSubmissionPropertiesFilter provideStandardEmailSubmissionPropertiesFilter() {
+                return new StandardEmailSubmissionPropertiesFilter();
         }
 
         // Domain>methodcall>process>[Create, Update, Destroy]
