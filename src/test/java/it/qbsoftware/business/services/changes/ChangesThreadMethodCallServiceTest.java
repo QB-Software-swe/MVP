@@ -1,8 +1,12 @@
 package it.qbsoftware.business.services.changes;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -179,5 +183,63 @@ public class ChangesThreadMethodCallServiceTest {
 
         assertThrows(CannotCalculateChangesException.class, () -> changesThreadMethodCallService.call(changesThreadMethodCallPort, null));
     }
+
+    @Test
+    public void testCallWithValidSinceState() throws Exception {
+        String accountId = "testAccountId";
+        String sinceState = "sinceState";
+        Long maxChanges = 10L;
+
+        when(changesThreadMethodCallPort.getSinceState()).thenReturn(sinceState);
+        when(changesThreadMethodCallPort.getMaxChanges()).thenReturn(maxChanges);
+        when(changesThreadMethodCallPort.accountId()).thenReturn(accountId);
+        when(accountState.state()).thenReturn(sinceState);
+        when(accountStateRepository.retrive(anyString())).thenReturn(accountState);
+        when(changesThreadMethodResponseBuilderPort.reset()).thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.accountId(accountId)).thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.oldState(any())).thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.newState(any())).thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.created(any())).thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.updated(any())).thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.destroyed(any())).thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.hasMoreChanges(anyBoolean())).thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.build()).thenReturn(mock(ChangesThreadMethodResponsePort.class));
+
+        ChangesThreadMethodResponsePort result = changesThreadMethodCallService.call(changesThreadMethodCallPort, null);
+
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testCallWithDifferentState() throws Exception {
+        String accountId = "testAccountId";
+        String sinceState = "sinceState";
+        Long maxChanges = 10L;
+        Map<String, String> changesMap = new HashMap<>();
+
+        when(changesThreadMethodCallPort.getSinceState()).thenReturn(sinceState);
+        when(changesThreadMethodCallPort.getMaxChanges()).thenReturn(maxChanges);
+        when(changesThreadMethodCallPort.accountId()).thenReturn(accountId);
+        when(accountState.state()).thenReturn("notSinceState");
+        when(accountStateRepository.retrive(anyString())).thenReturn(accountState);
+        when(changesThreadMethodResponseBuilderPort.reset()).thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.accountId(accountId)).thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.oldState(any())).thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.newState(any())).thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.created(any())).thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.updated(any())).thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.destroyed(any())).thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.hasMoreChanges(anyBoolean())).thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.build()).thenReturn(mock(ChangesThreadMethodResponsePort.class));
+        when(threadChangesTrackerRepository.retrive(accountId)).thenReturn(threadChangesTracker);
+        when(threadChangesTracker.created()).thenReturn(changesMap);
+        when(threadChangesTracker.updated()).thenReturn(changesMap);
+        when(threadChangesTracker.destroyed()).thenReturn(changesMap);
+
+        ChangesThreadMethodResponsePort result = changesThreadMethodCallService.call(changesThreadMethodCallPort, null);
+
+        assertNotNull(result);
+    }
+
 
 }

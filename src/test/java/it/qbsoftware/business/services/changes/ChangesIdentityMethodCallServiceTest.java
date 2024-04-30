@@ -1,8 +1,12 @@
 package it.qbsoftware.business.services.changes;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -178,6 +182,63 @@ public class ChangesIdentityMethodCallServiceTest {
         when(identityChangesTracker.destroyed()).thenReturn(changesMap);
 
         assertThrows(CannotCalculateChangesException.class, () -> changesIdentityMethodCallService.call(changesIdentityMethodCallPort, null));
+    }
+
+        @Test
+    public void testCallWithValidSinceState() throws Exception {
+        String accountId = "testAccountId";
+        String sinceState = "sinceState";
+        Long maxChanges = 10L;
+
+        when(changesIdentityMethodCallPort.getSinceState()).thenReturn(sinceState);
+        when(changesIdentityMethodCallPort.getMaxChanges()).thenReturn(maxChanges);
+        when(changesIdentityMethodCallPort.accountId()).thenReturn(accountId);
+        when(accountState.state()).thenReturn(sinceState);
+        when(accountStateRepository.retrive(anyString())).thenReturn(accountState);
+        when(changesIdentityMethodResponseBuilderPort.reset()).thenReturn(changesIdentityMethodResponseBuilderPort);
+        when(changesIdentityMethodResponseBuilderPort.accountId(accountId)).thenReturn(changesIdentityMethodResponseBuilderPort);
+        when(changesIdentityMethodResponseBuilderPort.oldState(any())).thenReturn(changesIdentityMethodResponseBuilderPort);
+        when(changesIdentityMethodResponseBuilderPort.newState(any())).thenReturn(changesIdentityMethodResponseBuilderPort);
+        when(changesIdentityMethodResponseBuilderPort.created(any())).thenReturn(changesIdentityMethodResponseBuilderPort);
+        when(changesIdentityMethodResponseBuilderPort.updated(any())).thenReturn(changesIdentityMethodResponseBuilderPort);
+        when(changesIdentityMethodResponseBuilderPort.destroyed(any())).thenReturn(changesIdentityMethodResponseBuilderPort);
+        when(changesIdentityMethodResponseBuilderPort.hasMoreChanges(anyBoolean())).thenReturn(changesIdentityMethodResponseBuilderPort);
+        when(changesIdentityMethodResponseBuilderPort.build()).thenReturn(mock(ChangesIdentityMethodResponsePort.class));
+
+        ChangesIdentityMethodResponsePort result = changesIdentityMethodCallService.call(changesIdentityMethodCallPort, null);
+
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testCallWithDifferentState() throws Exception {
+        String accountId = "testAccountId";
+        String sinceState = "sinceState";
+        Long maxChanges = 10L;
+        Map<String, String> changesMap = new HashMap<>();
+
+        when(changesIdentityMethodCallPort.getSinceState()).thenReturn(sinceState);
+        when(changesIdentityMethodCallPort.getMaxChanges()).thenReturn(maxChanges);
+        when(changesIdentityMethodCallPort.accountId()).thenReturn(accountId);
+        when(accountState.state()).thenReturn("notSinceState");
+        when(accountStateRepository.retrive(anyString())).thenReturn(accountState);
+        when(changesIdentityMethodResponseBuilderPort.reset()).thenReturn(changesIdentityMethodResponseBuilderPort);
+        when(changesIdentityMethodResponseBuilderPort.accountId(accountId)).thenReturn(changesIdentityMethodResponseBuilderPort);
+        when(changesIdentityMethodResponseBuilderPort.oldState(any())).thenReturn(changesIdentityMethodResponseBuilderPort);
+        when(changesIdentityMethodResponseBuilderPort.newState(any())).thenReturn(changesIdentityMethodResponseBuilderPort);
+        when(changesIdentityMethodResponseBuilderPort.created(any())).thenReturn(changesIdentityMethodResponseBuilderPort);
+        when(changesIdentityMethodResponseBuilderPort.updated(any())).thenReturn(changesIdentityMethodResponseBuilderPort);
+        when(changesIdentityMethodResponseBuilderPort.destroyed(any())).thenReturn(changesIdentityMethodResponseBuilderPort);
+        when(changesIdentityMethodResponseBuilderPort.hasMoreChanges(anyBoolean())).thenReturn(changesIdentityMethodResponseBuilderPort);
+        when(changesIdentityMethodResponseBuilderPort.build()).thenReturn(mock(ChangesIdentityMethodResponsePort.class));
+        when(identityChangesTrackerRepository.retrive(accountId)).thenReturn(identityChangesTracker);
+        when(identityChangesTracker.created()).thenReturn(changesMap);
+        when(identityChangesTracker.updated()).thenReturn(changesMap);
+        when(identityChangesTracker.destroyed()).thenReturn(changesMap);
+
+        ChangesIdentityMethodResponsePort result = changesIdentityMethodCallService.call(changesIdentityMethodCallPort, null);
+
+        assertNotNull(result);
     }
 
 }

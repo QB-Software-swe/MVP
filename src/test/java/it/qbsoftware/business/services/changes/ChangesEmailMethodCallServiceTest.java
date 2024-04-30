@@ -1,8 +1,12 @@
 package it.qbsoftware.business.services.changes;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -178,6 +182,63 @@ public class ChangesEmailMethodCallServiceTest {
         when(emailChangesTracker.destroyed()).thenReturn(changesMap);
 
         assertThrows(CannotCalculateChangesException.class, () -> changesEmailMethodCallService.call(changesEmailMethodCallPort, null));
+    }
+
+    @Test
+    public void testCallWithValidSinceState() throws Exception {
+        String accountId = "testAccountId";
+        String sinceState = "sinceState";
+        Long maxChanges = 10L;
+
+        when(changesEmailMethodCallPort.getSinceState()).thenReturn(sinceState);
+        when(changesEmailMethodCallPort.getMaxChanges()).thenReturn(maxChanges);
+        when(changesEmailMethodCallPort.accountId()).thenReturn(accountId);
+        when(accountState.state()).thenReturn(sinceState);
+        when(accountStateRepository.retrive(anyString())).thenReturn(accountState);
+        when(changesEmailMethodResponseBuilderPort.reset()).thenReturn(changesEmailMethodResponseBuilderPort);
+        when(changesEmailMethodResponseBuilderPort.accountId(accountId)).thenReturn(changesEmailMethodResponseBuilderPort);
+        when(changesEmailMethodResponseBuilderPort.oldState(any())).thenReturn(changesEmailMethodResponseBuilderPort);
+        when(changesEmailMethodResponseBuilderPort.newState(any())).thenReturn(changesEmailMethodResponseBuilderPort);
+        when(changesEmailMethodResponseBuilderPort.created(any())).thenReturn(changesEmailMethodResponseBuilderPort);
+        when(changesEmailMethodResponseBuilderPort.updated(any())).thenReturn(changesEmailMethodResponseBuilderPort);
+        when(changesEmailMethodResponseBuilderPort.destroyed(any())).thenReturn(changesEmailMethodResponseBuilderPort);
+        when(changesEmailMethodResponseBuilderPort.hasMoreChanges(anyBoolean())).thenReturn(changesEmailMethodResponseBuilderPort);
+        when(changesEmailMethodResponseBuilderPort.build()).thenReturn(mock(ChangesEmailMethodResponsePort.class));
+
+        ChangesEmailMethodResponsePort result = changesEmailMethodCallService.call(changesEmailMethodCallPort, null);
+
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testCallWithDifferentState() throws Exception {
+        String accountId = "testAccountId";
+        String sinceState = "sinceState";
+        Long maxChanges = 10L;
+        Map<String, String> changesMap = new HashMap<>();
+
+        when(changesEmailMethodCallPort.getSinceState()).thenReturn(sinceState);
+        when(changesEmailMethodCallPort.getMaxChanges()).thenReturn(maxChanges);
+        when(changesEmailMethodCallPort.accountId()).thenReturn(accountId);
+        when(accountState.state()).thenReturn("notSinceState");
+        when(accountStateRepository.retrive(anyString())).thenReturn(accountState);
+        when(changesEmailMethodResponseBuilderPort.reset()).thenReturn(changesEmailMethodResponseBuilderPort);
+        when(changesEmailMethodResponseBuilderPort.accountId(accountId)).thenReturn(changesEmailMethodResponseBuilderPort);
+        when(changesEmailMethodResponseBuilderPort.oldState(any())).thenReturn(changesEmailMethodResponseBuilderPort);
+        when(changesEmailMethodResponseBuilderPort.newState(any())).thenReturn(changesEmailMethodResponseBuilderPort);
+        when(changesEmailMethodResponseBuilderPort.created(any())).thenReturn(changesEmailMethodResponseBuilderPort);
+        when(changesEmailMethodResponseBuilderPort.updated(any())).thenReturn(changesEmailMethodResponseBuilderPort);
+        when(changesEmailMethodResponseBuilderPort.destroyed(any())).thenReturn(changesEmailMethodResponseBuilderPort);
+        when(changesEmailMethodResponseBuilderPort.hasMoreChanges(anyBoolean())).thenReturn(changesEmailMethodResponseBuilderPort);
+        when(changesEmailMethodResponseBuilderPort.build()).thenReturn(mock(ChangesEmailMethodResponsePort.class));
+        when(emailChangesTrackerRepository.retrive(accountId)).thenReturn(emailChangesTracker);
+        when(emailChangesTracker.created()).thenReturn(changesMap);
+        when(emailChangesTracker.updated()).thenReturn(changesMap);
+        when(emailChangesTracker.destroyed()).thenReturn(changesMap);
+
+        ChangesEmailMethodResponsePort result = changesEmailMethodCallService.call(changesEmailMethodCallPort, null);
+
+        assertNotNull(result);
     }
 
 }
