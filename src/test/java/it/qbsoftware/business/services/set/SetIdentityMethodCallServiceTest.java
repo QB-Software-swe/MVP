@@ -96,8 +96,8 @@ public class SetIdentityMethodCallServiceTest {
         SetIdentityMethodResponsePort result = setIdentityMethodCallService.call(setIdentityMethodCallPort, previousResponses);
 
         verify(setIdentityMethodResponseBuilderPort).reset();
-        verify(setIdentityMethodResponseBuilderPort).oldState(accountState.identityState());
-        verify(setIdentityMethodResponseBuilderPort).newState(accountState.identityState());
+        verify(setIdentityMethodResponseBuilderPort).oldState(accountState.state());
+        verify(setIdentityMethodResponseBuilderPort).newState(accountState.state());
         verify(setIdentityMethodResponseBuilderPort).created(createdResult.created());
         verify(setIdentityMethodResponseBuilderPort).notCreated(createdResult.notCreated());
         verify(setIdentityMethodResponseBuilderPort).updated(updatedResult.updated());

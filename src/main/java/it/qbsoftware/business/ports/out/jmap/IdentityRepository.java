@@ -11,7 +11,7 @@ public interface IdentityRepository {
 
     public RetrivedEntity<IdentityPort> retrive(final String[] ids);
 
-    public boolean destroy(final String id) throws SetNotFoundException;
-
     public void save(final IdentityPort identityPort) throws SetSingletonException;
+
+    public void destroy(final String idToDestroy) throws SetNotFoundException;
 }

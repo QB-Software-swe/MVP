@@ -21,6 +21,6 @@ public class JmapEndpoint implements EndPointConfiguration {
 
     @Override
     public String eventSourceEndPoint() {
-        return "/eventsource";
+        return null;
     }
 }

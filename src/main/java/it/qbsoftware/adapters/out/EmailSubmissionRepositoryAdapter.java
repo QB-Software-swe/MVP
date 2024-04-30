@@ -10,10 +10,12 @@ import org.bson.conversions.Bson;
 
 import com.google.gson.Gson;
 import com.google.inject.Inject;
+import com.mongodb.MongoException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Filters;
 
 import it.qbsoftware.adapters.in.jmaplib.entity.EmailSubmissionAdapter;
+import it.qbsoftware.business.domain.exception.set.SetNotFoundException;
 import it.qbsoftware.business.domain.util.get.RetrivedEntity;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailSubmissionPort;
 import it.qbsoftware.business.ports.out.jmap.EmailSubmissionRepository;
@@ -76,11 +78,16 @@ public class EmailSubmissionRepositoryAdapter implements EmailSubmissionReposito
     }
 
     @Override
-    public void save(final EmailSubmissionPort emailSubmissionPort) {
-        // FIXME: singleton
+    public void save(final EmailSubmissionPort emailSubmissionPort) throws SetNotFoundException {
+
         final Document emailDoc = Document.parse(gson.toJson(((EmailSubmissionAdapter) emailSubmissionPort).adaptee()));
         emailDoc.put("_id", emailSubmissionPort.getId());
-        var i = connection.getDatabase().getCollection(COLLECTION).insertOne(emailDoc);
+
+        try {
+            connection.getDatabase().getCollection(COLLECTION).insertOne(emailDoc);
+        } catch (final MongoException mongoException) {
+            throw new SetNotFoundException();
+        }
     }
 
 }

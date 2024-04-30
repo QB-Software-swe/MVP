@@ -1,5 +1,10 @@
 package it.qbsoftware.business.domain.methodcall.process.set.destroy;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import it.qbsoftware.business.domain.entity.changes.AccountState;
 import it.qbsoftware.business.domain.entity.changes.tracker.EmailChangesTracker;
 import it.qbsoftware.business.domain.entity.changes.tracker.MailboxChangesTracker;
@@ -15,10 +20,6 @@ import it.qbsoftware.business.ports.out.domain.EmailChangesTrackerRepository;
 import it.qbsoftware.business.ports.out.domain.MailboxChangesTrackerRepository;
 import it.qbsoftware.business.ports.out.domain.ThreadChangesTrackerRepository;
 import it.qbsoftware.business.ports.out.jmap.EmailRepository;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
 
 public class StandardDestroyEmail implements DestroyEmail {
     private final EmailRepository emailRepository;
@@ -51,50 +52,55 @@ public class StandardDestroyEmail implements DestroyEmail {
         final List<String> destroyed = new ArrayList<String>();
         final Map<String, SetErrorPort> notDestroyed = new HashMap<String, SetErrorPort>();
 
-        for (final String idToDestroy : idsToDestroy) {
-            try {
-                EmailPort emailDestroyed = emailRepository.destroy(idToDestroy);
-                updateEmailChanges(emailDestroyed, accountId);
-                updateThreadChanges(emailDestroyed, accountId);
-                mailboxUpdateChanges(emailDestroyed, accountId);
-                destroyed.add(idToDestroy);
-            } catch (final SetNotFoundException SetNotFoundException) {
-                notDestroyed.put(idToDestroy, setErrorEnumPort.notFound());
+        if (idsToDestroy != null) {
+            for (final String idToDestroy : idsToDestroy) {
+                try {
+                    EmailPort emailDestroyed = emailRepository.destroy(idToDestroy);
+                    updateEmailChanges(emailDestroyed, accountId);
+                    updateThreadChanges(emailDestroyed, accountId);
+                    mailboxUpdateChanges(emailDestroyed, accountId);
+                    destroyed.add(idToDestroy);
+                } catch (final SetNotFoundException SetNotFoundException) {
+                    notDestroyed.put(idToDestroy, setErrorEnumPort.notFound());
+                }
             }
         }
 
         return new DestroyedResult(destroyed.toArray(String[]::new), notDestroyed);
     }
 
-    private void updateEmailChanges(final EmailPort emailDestroyed, final String accountId) throws AccountNotFoundException {
+    private void updateEmailChanges(final EmailPort emailDestroyed, final String accountId)
+            throws AccountNotFoundException {
         AccountState accountState = accountStateRepository.retrive(accountId);
         final EmailChangesTracker emailChangesTracker = emailChangesTrackerRepository.retrive(accountId);
 
-        accountState = accountState.increaseEmailState();
-        emailChangesTracker.emailHasBeenDestroyed(accountState.emailState(), emailDestroyed.getId());
+        accountState = accountState.increaseState();
+        emailChangesTracker.emailHasBeenDestroyed(accountState.state(), emailDestroyed.getId());
 
         accountStateRepository.save(accountState);
         emailChangesTrackerRepository.save(emailChangesTracker);
     }
 
-    private void updateThreadChanges(final EmailPort emailDestroyed, final String accountId) throws AccountNotFoundException {
+    private void updateThreadChanges(final EmailPort emailDestroyed, final String accountId)
+            throws AccountNotFoundException {
         AccountState accountState = accountStateRepository.retrive(accountId);
         final ThreadChangesTracker threadChangesTracker = threadChangesTrackerRepository.retrive(accountId);
 
-        accountState = accountState.increaseThreadState();
-        threadChangesTracker.threadHasBeenUpdated(accountState.threadState(), emailDestroyed.getThreadId());
+        accountState = accountState.increaseState();
+        threadChangesTracker.threadHasBeenUpdated(accountState.state(), emailDestroyed.getThreadId());
 
         accountStateRepository.save(accountState);
         threadChangesTrackerRepository.save(threadChangesTracker);
     }
 
-    private void mailboxUpdateChanges(final EmailPort emailDestroyed, final String accountId) throws AccountNotFoundException {
+    private void mailboxUpdateChanges(final EmailPort emailDestroyed, final String accountId)
+            throws AccountNotFoundException {
         AccountState accountState = accountStateRepository.retrive(accountId);
         final MailboxChangesTracker mailboxChangesTracker = mailboxChangesTrackerRepository.retrive(accountId);
 
         for (final String mailboxId : emailDestroyed.getMailboxIds().keySet()) {
-            accountState = accountState.increaseMailboxState();
-            mailboxChangesTracker.mailboxHasBeenUpdated(accountState.mailboxState(), mailboxId);
+            accountState = accountState.increaseState();
+            mailboxChangesTracker.mailboxHasBeenUpdated(accountState.state(), mailboxId);
         }
 
         accountStateRepository.save(accountState);

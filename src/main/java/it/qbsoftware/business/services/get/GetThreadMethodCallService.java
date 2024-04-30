@@ -56,6 +56,6 @@ public class GetThreadMethodCallService implements GetThreadMethodCallUsecase {
                 .reset()
                 .list(threadsFiltred)
                 .notFound(threadsRetrived.notFound())
-                .state(accountState.emailState()).build();
+                .state(accountState.state()).build();
     }
 }

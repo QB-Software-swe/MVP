@@ -59,7 +59,7 @@ public class GetMailboxMethodCallService implements GetMailboxMethodCallUsecase 
                                 .reset()
                                 .list(mailboxesFiltred)
                                 .notFound(maibloxesRetrived.notFound())
-                                .state(accountState.mailboxState()).build();
+                                .state(accountState.state()).build();
 
         }
 

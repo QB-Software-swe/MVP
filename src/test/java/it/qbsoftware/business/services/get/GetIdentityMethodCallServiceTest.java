@@ -86,7 +86,7 @@ public class GetIdentityMethodCallServiceTest {
         verify(getIdentityMethodResponseBuilderPort).reset();
         verify(getIdentityMethodResponseBuilderPort).list(identitys);
         verify(getIdentityMethodResponseBuilderPort).notFound(any());
-        verify(getIdentityMethodResponseBuilderPort).state(accountState.identityState());
+        verify(getIdentityMethodResponseBuilderPort).state(accountState.state());
         verify(getIdentityMethodResponseBuilderPort).build();
         verify(identityRepository).retrive(identityIds);
         assertEquals(result, getIdentityMethodResponsePort);
@@ -118,7 +118,7 @@ public class GetIdentityMethodCallServiceTest {
         verify(getIdentityMethodResponseBuilderPort).reset();
         verify(getIdentityMethodResponseBuilderPort).list(identitys);
         verify(getIdentityMethodResponseBuilderPort).notFound(any());
-        verify(getIdentityMethodResponseBuilderPort).state(accountState.identityState());
+        verify(getIdentityMethodResponseBuilderPort).state(accountState.state());
         verify(getIdentityMethodResponseBuilderPort).build();
         verify(identityRepository).retriveAll(accountId);
         assertEquals(result, getIdentityMethodResponsePort);

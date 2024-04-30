@@ -88,7 +88,7 @@ public class ChangesIdentityMethodCallServiceTest {
         verify(changesIdentityMethodResponseBuilderPort).reset();
         verify(changesIdentityMethodResponseBuilderPort).accountId(accountId);
         verify(changesIdentityMethodResponseBuilderPort).oldState(any());
-        verify(changesIdentityMethodResponseBuilderPort).newState(accountState.identityState());
+        verify(changesIdentityMethodResponseBuilderPort).newState(accountState.state());
         verify(changesIdentityMethodResponseBuilderPort).created(any());
         verify(changesIdentityMethodResponseBuilderPort).updated(any());
         verify(changesIdentityMethodResponseBuilderPort).destroyed(any());

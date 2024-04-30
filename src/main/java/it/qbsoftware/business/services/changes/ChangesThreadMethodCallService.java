@@ -43,6 +43,22 @@ public class ChangesThreadMethodCallService implements ChangesThreadMethodCallUs
             throw new InvalidArgumentsException();
         }
 
+        if (changesThreadMethodCallPort.getSinceState() != null
+                && changesThreadMethodCallPort.getSinceState() == accountState.state()) {
+            final String[] empty = new String[] {};
+
+            return changesThreadMethodResponseBuilderPort
+                    .reset()
+                    .accountId(accountId)
+                    .oldState(changesThreadMethodCallPort.getSinceState())
+                    .newState(accountState.state())
+                    .created(empty)
+                    .updated(empty)
+                    .destroyed(empty)
+                    .hasMoreChanges(false)
+                    .build();
+        }
+
         final ThreadChangesTracker threadChangesTracker = threadChangesTrackerRepository.retrive(accountId);
 
         final Map<String, String> created = threadChangesTracker.created();
@@ -56,7 +72,7 @@ public class ChangesThreadMethodCallService implements ChangesThreadMethodCallUs
                     .reset()
                     .accountId(accountId)
                     .oldState(changesThreadMethodCallPort.getSinceState())
-                    .newState(accountState.emailState())
+                    .newState(accountState.state())
                     .created(created.values().stream().toArray(String[]::new))
                     .updated(updated.values().stream().toArray(String[]::new))
                     .destroyed(destroyed.values().stream().toArray(String[]::new))

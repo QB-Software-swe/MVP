@@ -50,7 +50,7 @@ public class SetMailboxMethodCallService implements SetMailboxMethodCallUsecase 
         final AccountState preSetAccountState = accountStateRepository.retrive(accountId);
 
         ifInStateMatch.methodStateMatchCurrent(setMailboxMethodCallPort.ifInState(),
-                preSetAccountState.mailboxState());
+                preSetAccountState.state());
 
         final CreatedResult<MailboxPort> createdMailboxResult = createMailbox.create(setMailboxMethodCallPort);
         final UpdatedResult<MailboxPort> updatedMailboxResult = updateMailbox.update(setMailboxMethodCallPort);
@@ -60,8 +60,8 @@ public class SetMailboxMethodCallService implements SetMailboxMethodCallUsecase 
 
         return setMailboxMethodResponseBuilderPort
                 .reset()
-                .oldState(preSetAccountState.emailState())
-                .newState(postSetAccountState.emailState())
+                .oldState(preSetAccountState.state())
+                .newState(postSetAccountState.state())
                 .created(createdMailboxResult.created())
                 .notCreated(createdMailboxResult.notCreated())
                 .updated(updatedMailboxResult.updated())

@@ -86,7 +86,7 @@ public class GetMailboxMethodCallServiceTest {
         verify(getMailboxMethodResponseBuilderPort).reset();
         verify(getMailboxMethodResponseBuilderPort).list(mailboxs);
         verify(getMailboxMethodResponseBuilderPort).notFound(any());
-        verify(getMailboxMethodResponseBuilderPort).state(accountState.mailboxState());
+        verify(getMailboxMethodResponseBuilderPort).state(accountState.state());
         verify(getMailboxMethodResponseBuilderPort).build();
         verify(mailboxRepository).retrive(mailboxIds);
         assertEquals(result, getMailboxMethodResponsePort);
@@ -120,7 +120,7 @@ public class GetMailboxMethodCallServiceTest {
         verify(getMailboxMethodResponseBuilderPort).reset();
         verify(getMailboxMethodResponseBuilderPort).list(mailboxs);
         verify(getMailboxMethodResponseBuilderPort).notFound(any());
-        verify(getMailboxMethodResponseBuilderPort).state(accountState.mailboxState());
+        verify(getMailboxMethodResponseBuilderPort).state(accountState.state());
         verify(getMailboxMethodResponseBuilderPort).build();
         verify(mailboxRepository).retriveAll(accountId);
         assertEquals(result, getMailboxMethodResponsePort);

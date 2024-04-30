@@ -61,8 +61,8 @@ public class StandardDestroyIdentity implements DestroyIdentity {
         AccountState accountState = accountStateRepository.retrive(accountId);
         final IdentityChangesTracker identityChangesTracker = identityChangesTrackerRepository.retrive(accountId);
 
-        accountState = accountState.increaseIdentityState();
-        identityChangesTracker.identityHasBeenDestroyed(accountState.identityState(), identityId);
+        accountState = accountState.increaseState();
+        identityChangesTracker.identityHasBeenDestroyed(accountState.state(), identityId);
 
         accountStateRepository.save(accountState);
         identityChangesTrackerRepository.save(identityChangesTracker);

@@ -6,16 +6,12 @@ import rs.ltt.jmap.common.entity.Role;
 public class RoleAdapter implements RolePort{
     Role role;
 
-    public RoleAdapter(Role role) {
+    public RoleAdapter(final Role role) {
         this.role = role;
-    }
-
-    public RoleAdapter() {
-        this.role = null; //FIXME: Non può esserci un RoleAdapter con null, 
     }
     
     @Override
-    public RolePort valueOf(String name) {
+    public RolePort valueOf(final String name) {
         return new RoleAdapter(Role.valueOf(name));
     }
 

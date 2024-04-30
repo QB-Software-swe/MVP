@@ -86,7 +86,7 @@ public class GetThreadMethodCallServiceTest {
         verify(getThreadMethodResponseBuilderPort).reset();
         verify(getThreadMethodResponseBuilderPort).list(threads);
         verify(getThreadMethodResponseBuilderPort).notFound(any());
-        verify(getThreadMethodResponseBuilderPort).state(accountState.emailState());
+        verify(getThreadMethodResponseBuilderPort).state(accountState.state());
         verify(getThreadMethodResponseBuilderPort).build();
         verify(threadRepository).retrive(threadIds);
         assertEquals(result, getThreadMethodResponsePort);
@@ -118,7 +118,7 @@ public class GetThreadMethodCallServiceTest {
         verify(getThreadMethodResponseBuilderPort).reset();
         verify(getThreadMethodResponseBuilderPort).list(threads);
         verify(getThreadMethodResponseBuilderPort).notFound(any());
-        verify(getThreadMethodResponseBuilderPort).state(accountState.emailState());
+        verify(getThreadMethodResponseBuilderPort).state(accountState.state());
         verify(getThreadMethodResponseBuilderPort).build();
         verify(threadRepository).retriveAll(accountId);
         assertEquals(result, getThreadMethodResponsePort);

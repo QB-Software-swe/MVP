@@ -6,6 +6,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 
 import it.qbsoftware.adapters.in.jmaplib.entity.AccountBuilderAdapter;
+import it.qbsoftware.adapters.in.jmaplib.entity.CreationalIdResolverAdapter;
 import it.qbsoftware.adapters.in.jmaplib.entity.EmailBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.entity.EmailSubmissionBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.entity.IdentityBuilderAdapter;
@@ -23,10 +24,12 @@ import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetEmailSubmissionM
 import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetIdentityMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetMailboxMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetThreadMethodResponseBuilderAdapter;
+import it.qbsoftware.adapters.in.jmaplib.method.response.query.QueryEmailMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.set.SetEmailMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.set.SetIdentityMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.set.SetMailboxMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.util.ResultReferenceResolverAdapter;
+import it.qbsoftware.business.domain.util.get.CreationIdResolverPort;
 import it.qbsoftware.business.ports.in.jmap.entity.AccountBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailSubmissionBuilderPort;
@@ -45,6 +48,7 @@ import it.qbsoftware.business.ports.in.jmap.method.response.get.GetEmailSubmissi
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetIdentityMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetMailboxMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetThreadMethodResponseBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.method.response.query.QueryEmailMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.set.SetEmailMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.set.SetIdentityMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.set.SetMailboxMethodResponseBuilderPort;
@@ -82,9 +86,11 @@ public class JmapLibAdapterModule extends AbstractModule {
         bind(ChangesIdentityMethodResponseBuilderPort.class).to(ChangesIdentityMethodResponseBuilderAdapter.class);
         bind(ChangesMailboxMethodResponseBuilderPort.class).to(ChangesMailboxMethodResponseBuilderAdapter.class);
         bind(ChangesThreadMethodResponseBuilderPort.class).to(ChangesThreadMethodResponseBuilderAdapter.class);
+        bind(QueryEmailMethodResponseBuilderPort.class).to(QueryEmailMethodResponseBuilderAdapter.class);
 
         // Util
         bind(ResultReferenceResolverPort.class).to(ResultReferenceResolverAdapter.class);
+        bind(CreationIdResolverPort.class).to(CreationalIdResolverAdapter.class);
 
         // GSON
         bind(Gson.class).toInstance(jmapGsonConfig());

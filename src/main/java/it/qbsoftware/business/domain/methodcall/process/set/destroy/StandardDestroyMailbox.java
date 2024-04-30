@@ -37,12 +37,14 @@ public class StandardDestroyMailbox implements DestroyMailbox {
         final List<String> destroyed = new ArrayList<>();
         final HashMap<String, SetErrorPort> notDestroyed = new HashMap<>();
 
-        for (final String idMailbox : setMailboxMethodCallPort.getDestroy()) {
-            try {
-                destroyMailbox(idMailbox, setMailboxMethodCallPort.accountId());
-                destroyed.add(idMailbox);
-            } catch (final SetNotFoundException setNotFoundException) {
-                notDestroyed.put(idMailbox, setErrorEnumPort.notFound());
+        if (setMailboxMethodCallPort.getDestroy() != null) {
+            for (final String idMailbox : setMailboxMethodCallPort.getDestroy()) {
+                try {
+                    destroyMailbox(idMailbox, setMailboxMethodCallPort.accountId());
+                    destroyed.add(idMailbox);
+                } catch (final SetNotFoundException setNotFoundException) {
+                    notDestroyed.put(idMailbox, setErrorEnumPort.notFound());
+                }
             }
         }
 
@@ -59,8 +61,8 @@ public class StandardDestroyMailbox implements DestroyMailbox {
         AccountState accountState = accountStateRepository.retrive(accountId);
         final MailboxChangesTracker mailboxChangesTracker = mailboxChangesTrackerRepository.retrive(accountId);
 
-        accountState = accountState.increaseMailboxState();
-        mailboxChangesTracker.mailboxHasBeenCreated(accountState.mailboxState(), idMailbox);
+        accountState = accountState.increaseState();
+        mailboxChangesTracker.mailboxHasBeenCreated(accountState.state(), idMailbox);
 
         accountStateRepository.save(accountState);
         mailboxChangesTrackerRepository.save(mailboxChangesTracker);

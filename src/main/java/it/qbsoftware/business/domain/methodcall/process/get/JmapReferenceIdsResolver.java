@@ -8,7 +8,7 @@ import it.qbsoftware.business.ports.in.jmap.method.call.get.GetMethodCallPort;
 import it.qbsoftware.business.ports.in.jmap.util.ResultReferenceResolverPort;
 
 public class JmapReferenceIdsResolver implements GetReferenceIdsResolver {
-    final ResultReferenceResolverPort resultReferenceResolverPort;
+    private final ResultReferenceResolverPort resultReferenceResolverPort;
 
     public JmapReferenceIdsResolver(final ResultReferenceResolverPort resultReferenceResolverPort) {
         this.resultReferenceResolverPort = resultReferenceResolverPort;

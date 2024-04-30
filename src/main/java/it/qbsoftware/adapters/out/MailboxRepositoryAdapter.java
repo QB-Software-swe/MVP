@@ -10,6 +10,7 @@ import org.bson.conversions.Bson;
 
 import com.google.gson.Gson;
 import com.google.inject.Inject;
+import com.mongodb.MongoException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Filters;
 
@@ -71,17 +72,24 @@ public class MailboxRepositoryAdapter implements MailboxRepository {
     }
 
     @Override
-    public boolean destroy(final String id) throws SetNotFoundException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'destroy'");
+    public void destroy(final String id) throws SetNotFoundException {
+        final Bson filter = Filters.eq("_id", id);
+        try {
+            connection.getDatabase().getCollection(COLLECTION).deleteOne(filter);
+        } catch (final MongoException mongoException) {
+            throw new SetNotFoundException();
+        }
     }
 
     @Override
     public void save(final MailboxPort mailboxPort) throws SetSingletonException {
-        // FIXME: singleton
         final Document mailboxDoc = Document.parse(gson.toJson(((MailboxAdapter) mailboxPort).adaptee()));
         mailboxDoc.put("_id", mailboxPort.getId());
-        var i = connection.getDatabase().getCollection(COLLECTION).insertOne(mailboxDoc);
+        try {
+            connection.getDatabase().getCollection(COLLECTION).insertOne(mailboxDoc);
+        } catch (final MongoException mongoException) {
+            throw new SetSingletonException();
+        }
     }
 
 }

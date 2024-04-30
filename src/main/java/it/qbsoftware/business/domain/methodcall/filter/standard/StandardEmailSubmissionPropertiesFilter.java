@@ -5,16 +5,9 @@ import java.util.List;
 
 import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
 import it.qbsoftware.business.domain.methodcall.filter.EmailSubmissionPropertiesFilter;
-import it.qbsoftware.business.ports.in.jmap.entity.EmailSubmissionBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailSubmissionPort;
 
 public class StandardEmailSubmissionPropertiesFilter implements EmailSubmissionPropertiesFilter {
-    private final EmailSubmissionBuilderPort emailSubmissionBuilderPort;
-
-    public StandardEmailSubmissionPropertiesFilter(final EmailSubmissionBuilderPort emailSubmissionBuilderPort) {
-        this.emailSubmissionBuilderPort = emailSubmissionBuilderPort;
-    }
-
     @Override
     public EmailSubmissionPort[] filter(final EmailSubmissionPort[] emailSubmissionPorts, final String[] properties)
             throws InvalidArgumentsException {
@@ -32,7 +25,7 @@ public class StandardEmailSubmissionPropertiesFilter implements EmailSubmissionP
 
     private EmailSubmissionPort emailSubmissionFilter(final EmailSubmissionPort emailSubmissionPort,
             final String[] properties) {
-        return emailSubmissionPort; // TODO implementare il filtro
+        return emailSubmissionPort;
     }
 
 }

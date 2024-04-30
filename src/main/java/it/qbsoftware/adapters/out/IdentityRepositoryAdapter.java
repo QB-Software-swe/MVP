@@ -10,6 +10,7 @@ import org.bson.conversions.Bson;
 
 import com.google.gson.Gson;
 import com.google.inject.Inject;
+import com.mongodb.MongoException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Filters;
 
@@ -71,17 +72,24 @@ public class IdentityRepositoryAdapter implements IdentityRepository {
     }
 
     @Override
-    public boolean destroy(String id) throws SetNotFoundException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'destroy'");
+    public void destroy(final String id) throws SetNotFoundException {
+        final Bson filter = Filters.eq("_id", id);
+        try {
+            connection.getDatabase().getCollection(COLLECTION).find(filter);
+        } catch (final MongoException mongoException) {
+            throw new SetNotFoundException();
+        }
     }
 
     @Override
     public void save(final IdentityPort identityPort) throws SetSingletonException {
-        // FIXME: singleton
         final Document emailDoc = Document.parse(gson.toJson(((IdentityAdapter) identityPort).adaptee()));
         emailDoc.put("_id", identityPort.getId());
-        var i = connection.getDatabase().getCollection(COLLECTION).insertOne(emailDoc);
+        try {
+            connection.getDatabase().getCollection(COLLECTION).insertOne(emailDoc);
+        } catch (final MongoException mongoException) {
+            throw new SetSingletonException();
+        }
     }
 
 }

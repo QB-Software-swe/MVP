@@ -35,8 +35,8 @@ import it.qbsoftware.business.domain.methodcall.process.set.update.UpdateIdentit
 import it.qbsoftware.business.domain.methodcall.process.set.update.UpdateMailbox;
 import it.qbsoftware.business.domain.methodcall.statematch.IfInStateMatch;
 import it.qbsoftware.business.domain.methodcall.statematch.StandardIfInStateMatch;
+import it.qbsoftware.business.domain.util.get.CreationIdResolverPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailBuilderPort;
-import it.qbsoftware.business.ports.in.jmap.entity.EmailSubmissionBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.IdentityBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.SessionResourceBuilderPort;
@@ -52,6 +52,7 @@ import it.qbsoftware.business.ports.in.jmap.method.response.get.GetEmailSubmissi
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetIdentityMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetMailboxMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetThreadMethodResponseBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.method.response.query.QueryEmailMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.set.SetEmailMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.set.SetIdentityMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.set.SetMailboxMethodResponseBuilderPort;
@@ -67,6 +68,7 @@ import it.qbsoftware.business.ports.in.usecase.get.GetEmailSubmissionMethodCallU
 import it.qbsoftware.business.ports.in.usecase.get.GetIdentityMethodCallUsecase;
 import it.qbsoftware.business.ports.in.usecase.get.GetMailboxMethodCallUsecase;
 import it.qbsoftware.business.ports.in.usecase.get.GetThreadMethodCallUsecase;
+import it.qbsoftware.business.ports.in.usecase.query.QueryEmailMethodCallUsecase;
 import it.qbsoftware.business.ports.in.usecase.set.SetEmailMethodCallUsecase;
 import it.qbsoftware.business.ports.in.usecase.set.SetIdentityMethodCallUsecase;
 import it.qbsoftware.business.ports.in.usecase.set.SetMailboxMethodCallUsecase;
@@ -93,6 +95,7 @@ import it.qbsoftware.business.services.get.GetEmailSubmissionMethodCallService;
 import it.qbsoftware.business.services.get.GetIdentityMethodCallService;
 import it.qbsoftware.business.services.get.GetMailboxMethodCallService;
 import it.qbsoftware.business.services.get.GetThreadMethodCallService;
+import it.qbsoftware.business.services.query.QueryEmailMethodCallService;
 import it.qbsoftware.business.services.set.SetEmailMethodCallService;
 import it.qbsoftware.business.services.set.SetIdentityMethodCallService;
 import it.qbsoftware.business.services.set.SetMailboxMethodCallService;
@@ -250,6 +253,16 @@ public class ControllerModule extends AbstractModule {
                                 changesThreadMethodResponseBuilderPort, threadChangesTrackerRepository);
         }
 
+        // Service>/Query
+        @Provides
+        QueryEmailMethodCallUsecase provideQueryEmailMethodCallService(
+                        final AccountStateRepository accountStateRepository,
+                        final EmailRepository emailRepository,
+                        final QueryEmailMethodResponseBuilderPort queryEmailMethodResponseBuilderPort) {
+                return new QueryEmailMethodCallService(accountStateRepository, emailRepository,
+                                queryEmailMethodResponseBuilderPort);
+        }
+
         // Domain>util
         @Provides
         GetReferenceIdsResolver provideJmapReferenceIdsResolver(
@@ -280,9 +293,8 @@ public class ControllerModule extends AbstractModule {
         }
 
         @Provides
-        EmailSubmissionPropertiesFilter provideStandardEmailSubmissionPropertiesFilter(
-                        final EmailSubmissionBuilderPort emailSubmissionBuilderPort) {
-                return new StandardEmailSubmissionPropertiesFilter(emailSubmissionBuilderPort);
+        EmailSubmissionPropertiesFilter provideStandardEmailSubmissionPropertiesFilter() {
+                return new StandardEmailSubmissionPropertiesFilter();
         }
 
         // Domain>methodcall>process>[Create, Update, Destroy]
@@ -293,15 +305,23 @@ public class ControllerModule extends AbstractModule {
                         final EmailChangesTrackerRepository emailChangesTrackerRepository,
                         final MailboxChangesTrackerRepository mailboxChangesTrackerRepository,
                         final ThreadChangesTrackerRepository threadChangesTrackerRepository,
-                        final SetErrorEnumPort setErrorEnumPort) {
+                        final SetErrorEnumPort setErrorEnumPort, final ThreadRepository threadRepository,
+                        final CreationIdResolverPort creationIdResolverPort) {
                 return new StandardCreateEmail(emailBuilderPort, emailRepository, accountStateRepository,
                                 emailChangesTrackerRepository, mailboxChangesTrackerRepository,
-                                threadChangesTrackerRepository, setErrorEnumPort);
+                                threadChangesTrackerRepository, setErrorEnumPort, threadRepository,
+                                creationIdResolverPort);
         }
 
         @Provides
-        UpdateEmail provideStandardUpdateEmail() {
-                return new StandardUpdateEmail();
+        UpdateEmail provideStandardUpdateEmail(final EmailRepository emailRepository,
+                        final SetErrorEnumPort setErrorEnumPort,
+                        final AccountStateRepository accountStateRepository,
+                        final EmailChangesTrackerRepository emailChangesTrackerRepository,
+                        final MailboxChangesTrackerRepository mailboxChangesTrackerRepository,
+                        final CreationIdResolverPort creationIdResolverPort) {
+                return new StandardUpdateEmail(emailRepository, setErrorEnumPort, accountStateRepository,
+                                emailChangesTrackerRepository, mailboxChangesTrackerRepository, creationIdResolverPort);
         }
 
         @Provides

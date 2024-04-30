@@ -78,9 +78,9 @@ public class GenData {
                 mongoConnection.getDatabase().drop();
                 generateSession();
                 generateIdentity();
-                final List<String> mailboxIds = generateMailbox();
-                genEmails(mailboxIds);
-                genMailbox(mailboxIds);
+                //final List<String> mailboxIds = generateMailbox();
+                //genEmails(mailboxIds);
+                //genMailbox(mailboxIds);
         }
 
         public void genMailbox(final List<String> mailboxIds) {
@@ -191,7 +191,7 @@ public class GenData {
         private void generateSession() {
                 for (final String user : users) {
                         userSessionResourceRepositoryAdapter.save(user,
-                                        new SessionResourceAdapter(new JmapSession().generateSessionResources()));
+                                        new SessionResourceAdapter(new JmapSession().generateSessionResources(user)));
 
                         accountStateRepository.save(new AccountState(user));
                 }
@@ -227,7 +227,7 @@ class JmapSession {
                 state = "0";
         }
 
-        public SessionResource generateSessionResources() {
+        public SessionResource generateSessionResources(final String user) {
                 SessionResourceBuilder sessionResourceBuilder = SessionResource.builder();
 
                 sessionResourceBuilder
@@ -241,7 +241,7 @@ class JmapSession {
                 sessionResourceBuilder
                                 .username("qbsoftware")
                                 .account(
-                                                "0",
+                                                user,
                                                 Account.builder()
                                                                 .name("QB Software")
                                                                 .accountCapabilities(
@@ -264,7 +264,7 @@ class JmapSession {
                                                                 .isReadOnly(false)
                                                                 .build())
                                 .capabilities(serverCapability.build())
-                                .primaryAccounts(ImmutableMap.of(MailAccountCapability.class, "0"))
+                                .primaryAccounts(ImmutableMap.of(MailAccountCapability.class, user))
                                 .build();
 
                 return sessionResourceBuilder.build();

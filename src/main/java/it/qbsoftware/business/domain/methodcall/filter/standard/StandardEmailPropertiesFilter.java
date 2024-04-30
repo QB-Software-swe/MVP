@@ -29,13 +29,14 @@ public class StandardEmailPropertiesFilter implements EmailPropertiesFilter {
         }
 
         return filtredEmail.toArray(EmailPort[]::new);
+
     }
 
     private EmailPort emailFilter(final EmailPort emailPort, final String[] properties)
             throws InvalidArgumentsException {
-        EmailBuilderPort emailBuilder = emailBuilderPort.reset().id(emailPort.getId());
+        EmailBuilderPort emailBuilder = emailBuilderPort.id(emailPort.getId());
 
-        for (final String property : properties) { // FIXME: completarlo
+        for (final String property : properties) {
             emailBuilder = switch (property) {
                 case "blobId":
                     yield emailBuilder.blobId(emailPort.getBlobId());
@@ -56,7 +57,7 @@ public class StandardEmailPropertiesFilter implements EmailPropertiesFilter {
                     yield emailBuilder.receivedAt(emailPort.getReceivedAt());
 
                 default:
-                    throw new InvalidArgumentsException();
+                    yield emailBuilder; // throw new InvalidArgumentsException();
             };
         }
 

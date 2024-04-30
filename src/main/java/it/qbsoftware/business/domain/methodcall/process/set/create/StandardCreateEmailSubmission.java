@@ -13,15 +13,19 @@ public class StandardCreateEmailSubmission {
         final Map<String, EmailSubmissionPort> created = new HashMap<>();
         final Map<String, SetErrorPort> notCreated = new HashMap<>();
 
-        for (final Map.Entry<String, EmailSubmissionPort> emailSubmissionToCreate : setEmailSubmissionMethodCallPort
-                .getCreate().entrySet()) {
-//TODO
+        final var x = setEmailSubmissionMethodCallPort
+                .getCreate();
+
+        if (x != null) {
+            for (final Map.Entry<String, EmailSubmissionPort> emailSubmissionToCreate : x.entrySet()) {
+                // TODO
+            }
         }
 
         return new CreatedResult<>(null, null);
     }
 
     private EmailSubmissionPort createSubmission(final EmailSubmissionPort emailSubmissionPort) {
-        return null; //TODO
+        return null; // TODO
     }
 }

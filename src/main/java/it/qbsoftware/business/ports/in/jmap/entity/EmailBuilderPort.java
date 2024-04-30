@@ -29,4 +29,6 @@ public interface EmailBuilderPort {
     public EmailPort build();
 
     public EmailBuilderPort reset();
+
+    public EmailBuilderPort keywords(String string, Boolean mBoolean);
 }

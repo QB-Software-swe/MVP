@@ -2,7 +2,6 @@ package it.qbsoftware.business.domain.methodcall.process.set.create;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import java.util.UUID;
 
 import it.qbsoftware.business.domain.entity.changes.AccountState;
@@ -39,12 +38,16 @@ public class StandardCreateMailbox implements CreateMailbox {
         final HashMap<String, MailboxPort> created = new HashMap<>();
         final HashMap<String, SetErrorPort> notCreated = new HashMap<>();
 
-        for (final Map.Entry<String, MailboxPort> mailboxEntry : setMailboxMethodCallPort.getCreate().entrySet()) {
-            try {
-                MailboxPort mailboxDiff = createMailbox(mailboxEntry.getValue(), setMailboxMethodCallPort.accountId());
-                created.put(mailboxEntry.getKey(), mailboxDiff);
-            } catch (final SetSingletonException setSingletonException) {
-                notCreated.put(mailboxEntry.getKey(), setErrorEnumPort.singleton());
+        final var x = setMailboxMethodCallPort.getCreate();
+        if (x != null) {
+            for (final Map.Entry<String, MailboxPort> mailboxEntry : x.entrySet()) {
+                try {
+                    MailboxPort mailboxDiff = createMailbox(mailboxEntry.getValue(),
+                            setMailboxMethodCallPort.accountId());
+                    created.put(mailboxEntry.getKey(), mailboxDiff);
+                } catch (final SetSingletonException setSingletonException) {
+                    notCreated.put(mailboxEntry.getKey(), setErrorEnumPort.singleton());
+                }
             }
         }
 
@@ -67,8 +70,8 @@ public class StandardCreateMailbox implements CreateMailbox {
         AccountState accountState = accountStateRepository.retrive(accountId);
         final MailboxChangesTracker mailboxChangesTracker = mailboxChangesTrackerRepository.retrive(accountId);
 
-        accountState = accountState.increaseMailboxState();
-        mailboxChangesTracker.mailboxHasBeenCreated(accountState.mailboxState(), mailboxId);
+        accountState = accountState.increaseState();
+        mailboxChangesTracker.mailboxHasBeenCreated(accountState.state(), mailboxId);
 
         accountStateRepository.save(accountState);
         mailboxChangesTrackerRepository.save(mailboxChangesTracker);

@@ -43,6 +43,22 @@ public class ChangesIdentityMethodCallService implements ChangesIdentityMethodCa
             throw new InvalidArgumentsException();
         }
 
+        if (changesIdentityMethodCallPort.getSinceState() != null
+                && changesIdentityMethodCallPort.getSinceState() == accountState.state()) {
+            final String[] empty = new String[] {};
+
+            return changesIdentityMethodResponseBuilderPort
+                    .reset()
+                    .accountId(accountId)
+                    .oldState(changesIdentityMethodCallPort.getSinceState())
+                    .newState(accountState.state())
+                    .created(empty)
+                    .updated(empty)
+                    .destroyed(empty)
+                    .hasMoreChanges(false)
+                    .build();
+        }
+
         final var identityChangesTracker = identityChangesTrackerRepository.retrive(accountId);
 
         final Map<String, String> created = identityChangesTracker.created();
@@ -56,7 +72,7 @@ public class ChangesIdentityMethodCallService implements ChangesIdentityMethodCa
                     .reset()
                     .accountId(accountId)
                     .oldState(changesIdentityMethodCallPort.getSinceState())
-                    .newState(accountState.emailState())
+                    .newState(accountState.state())
                     .created(created.values().stream().toArray(String[]::new))
                     .updated(updated.values().stream().toArray(String[]::new))
                     .destroyed(destroyed.values().stream().toArray(String[]::new))
