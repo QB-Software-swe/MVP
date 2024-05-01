@@ -45,7 +45,7 @@ public interface EmailBuilderPort {
 
     public EmailBuilderPort subject(String subject);
 
-    public EmailBuilderPort bodyValues(Map<String, EmailBodyPartPort> bodyValues);
+    public EmailBuilderPort bodyValues(Map<String, EmailBodyValuePort> bodyValues);
 
     public EmailBuilderPort textBody(Collection<EmailBodyPartPort> textBody);
 
@@ -56,6 +56,8 @@ public interface EmailBuilderPort {
     public EmailBuilderPort sentAt(OffsetDateTime sentAt);
 
     public EmailBuilderPort bodyStructure(EmailBodyPartPort emailBodyPart);
+
+    public EmailBuilderPort headers(Collection<EmailHeaderPort> headers);
 
     public EmailBuilderPort clearMailboxIds();
 

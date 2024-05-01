@@ -1,5 +1,6 @@
 package it.qbsoftware.adapters.in.jmaplib.entity;
 
+import it.qbsoftware.business.ports.in.jmap.entity.EmailBodyPartBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailBodyPartPort;
 import rs.ltt.jmap.common.entity.EmailBodyPart;
 
@@ -37,6 +38,11 @@ public class EmailBodyPartAdapter implements EmailBodyPartPort {
 
     public EmailBodyPart adaptee() {
         return emailBodyPart;
+    }
+
+    @Override
+    public EmailBodyPartBuilderPort toBuilder() {
+        return new EmailBodyPartBuilderAdapter();
     }
 
 }

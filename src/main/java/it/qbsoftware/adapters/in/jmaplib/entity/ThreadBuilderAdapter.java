@@ -43,4 +43,10 @@ public class ThreadBuilderAdapter implements ThreadBuilderPort {
         threadBuilder = Thread.builder();
         return this;
     }
+
+    @Override
+    public ThreadBuilderPort clearEmailIds() {
+        threadBuilder.clearEmailIds();
+        return this;
+    }
 }

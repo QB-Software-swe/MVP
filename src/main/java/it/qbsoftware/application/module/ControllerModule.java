@@ -272,8 +272,8 @@ public class ControllerModule extends AbstractModule {
 
         // Domain>filter
         @Provides
-        EmailPropertiesFilter provideStandardEmailPropertiesFilter(final EmailBuilderPort emailBuilderPort) {
-                return new StandardEmailPropertiesFilter(emailBuilderPort);
+        EmailPropertiesFilter provideStandardEmailPropertiesFilter() {
+                return new StandardEmailPropertiesFilter();
         }
 
         @Provides

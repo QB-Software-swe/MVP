@@ -30,18 +30,23 @@ public class StandardThreadPropertiesFilter implements ThreadPropertiesFilter {
         return filtredMailboxes.toArray(ThreadPort[]::new);
     }
 
-    private ThreadPort threadFilter(final ThreadPort threadPort, final String[] properties) throws InvalidArgumentsException {
-        final ThreadBuilderPort threadBuilderPort =threadPort.toBuilder().reset().id(threadPort.getId());
+    private ThreadPort threadFilter(final ThreadPort threadPort, final String[] properties)
+            throws InvalidArgumentsException {
+        final ThreadBuilderPort threadBuilderPort = threadPort.toBuilder().reset().id(threadPort.getId());
 
         for (final String property : properties) {
             switch (property) {
                 case "emailIds":
-                threadBuilderPort.emailIds(threadPort.getEmailIds());
-                break;
+                    threadBuilderPort.emailIds(threadPort.getEmailIds());
+                    break;
+
+                case "id":
+                    break;
 
                 default:
                     throw new InvalidArgumentsException();
-            };
+            }
+            ;
         }
 
         return threadBuilderPort.build();

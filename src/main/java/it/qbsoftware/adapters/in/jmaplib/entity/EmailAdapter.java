@@ -164,4 +164,11 @@ public class EmailAdapter implements EmailPort {
                 ? email.getHeaders().stream().map(h -> new EmailHeaderAdapter(h)).collect(Collectors.toList())
                 : null;
     }
+
+    @Override
+    public List<EmailAddressPort> getReplyTo() {
+        return email.getReplyTo() != null
+                ? email.getReplyTo().stream().map(e -> new EmailAddressAdapter(e)).collect(Collectors.toList())
+                : null;
+    }
 }

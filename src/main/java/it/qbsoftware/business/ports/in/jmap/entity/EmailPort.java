@@ -32,6 +32,8 @@ public interface EmailPort {
 
     public List<String> getReferences();
 
+    public List<EmailAddressPort> getReplyTo();
+
     public List<EmailAddressPort> getSender();
 
     public List<EmailAddressPort> getFrom();

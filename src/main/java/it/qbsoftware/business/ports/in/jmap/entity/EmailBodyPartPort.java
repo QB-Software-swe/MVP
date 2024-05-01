@@ -11,4 +11,6 @@ public interface EmailBodyPartPort {
     public String getName();
 
     public Long getSize();
+
+    public EmailBodyPartBuilderPort toBuilder();
 }

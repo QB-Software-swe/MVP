@@ -32,7 +32,7 @@ public class StandardEmailPropertiesFilterTest {
     public void testFilterWithNullProperties() throws InvalidArgumentsException {
         EmailPort[] emails = new EmailPort[] {emailPort};
 
-        StandardEmailPropertiesFilter standardEmailPropertiesFilter = new StandardEmailPropertiesFilter(emailBuilderPort);
+        StandardEmailPropertiesFilter standardEmailPropertiesFilter = new StandardEmailPropertiesFilter();
 
         EmailPort[] result = standardEmailPropertiesFilter.filter(emails, null, null);
 
@@ -64,7 +64,7 @@ public class StandardEmailPropertiesFilterTest {
         when(emailBuilderPort.receivedAt(any())).thenReturn(emailBuilderPort);
         when(emailBuilderPort.build()).thenReturn(emailPort);
 
-        StandardEmailPropertiesFilter standardEmailPropertiesFilter = new StandardEmailPropertiesFilter(emailBuilderPort);
+        StandardEmailPropertiesFilter standardEmailPropertiesFilter = new StandardEmailPropertiesFilter();
 
         emailBuilderPort.reset().id(emailPort.getId());
 
@@ -82,7 +82,7 @@ public class StandardEmailPropertiesFilterTest {
         
         when(emailBuilderPort.reset()).thenReturn(emailBuilderPort);
   
-        StandardEmailPropertiesFilter standardEmailPropertiesFilter = new StandardEmailPropertiesFilter(emailBuilderPort);
+        StandardEmailPropertiesFilter standardEmailPropertiesFilter = new StandardEmailPropertiesFilter();
 
         assertThrows(InvalidArgumentsException.class, () -> standardEmailPropertiesFilter.filter(emails, properties, emailFilterBodyPartSettings));
     }

@@ -9,7 +9,9 @@ import java.util.stream.Collectors;
 
 import it.qbsoftware.business.ports.in.jmap.entity.EmailAddressPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailBodyPartPort;
+import it.qbsoftware.business.ports.in.jmap.entity.EmailBodyValuePort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.entity.EmailHeaderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailPort;
 import rs.ltt.jmap.common.entity.Email;
 import rs.ltt.jmap.common.entity.Email.EmailBuilder;
@@ -183,10 +185,10 @@ public class EmailBuilderAdapter implements EmailBuilderPort {
     }
 
     @Override
-    public EmailBuilderPort bodyValues(final Map<String, EmailBodyPartPort> bodyValues) {
+    public EmailBuilderPort bodyValues(final Map<String, EmailBodyValuePort> bodyValues) {
         emailBuilder.bodyValues(
                 bodyValues != null ? bodyValues.entrySet().stream()
-                        .collect(Collectors.toMap(e -> e.getKey(), e -> ((EmailBodyValueAdapter) e).adaptee())) : null);
+                        .collect(Collectors.toMap(e -> e.getKey(), e -> ((EmailBodyValueAdapter) e.getValue()).adaptee())) : null);
         return this;
     }
 
@@ -225,6 +227,14 @@ public class EmailBuilderAdapter implements EmailBuilderPort {
     @Override
     public EmailBuilderPort bodyStructure(final EmailBodyPartPort emailBodyPart) {
         emailBuilder.bodyStructure(emailBodyPart != null ? ((EmailBodyPartAdapter) emailBodyPart).adaptee() : null);
+        return this;
+    }
+
+    @Override
+    public EmailBuilderPort headers(final Collection<EmailHeaderPort> headers) {
+        emailBuilder.headers(headers != null
+                ? headers.stream().map(h -> ((EmailHeaderAdapter) h).adaptee()).collect(Collectors.toList())
+                : null);
         return this;
     }
 }
