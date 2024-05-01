@@ -1,11 +1,14 @@
 package it.qbsoftware.adapters.in.jmaplib.entity;
 
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import org.junit.Test;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+
 import java.time.Instant;
 import java.util.Map;
 import java.util.HashMap;
@@ -97,6 +100,16 @@ public class EmailBuilderAdapterTest {
     }
 
     @Test
+    public void testKeywordsNull() {
+        Map<String, Boolean> keywords = null;
+
+        EmailBuilder emailBuilder = mock(EmailBuilder.class);
+        EmailBuilderPort emailBuilderPort = new EmailBuilderAdapter(emailBuilder);
+
+        assertEquals(emailBuilderPort.keywords(keywords), emailBuilderPort);
+    }
+
+    @Test
     public void testKeywords2() {
         final String keyword = "keyword";
         final Boolean keywordValue = true;
@@ -152,12 +165,14 @@ public class EmailBuilderAdapterTest {
 
     @Test
     public void testReset() {
-        //TODO: Fix this test
         EmailBuilder emailBuilder = mock(EmailBuilder.class);
         EmailBuilderPort emailBuilderPort = new EmailBuilderAdapter(emailBuilder);
-
-        emailBuilderPort.reset();
-        verify(Email.class, times(1));
+        
+        try(MockedStatic<Email> emailStatic = Mockito.mockStatic(Email.class)){
+            emailStatic.when(Email::builder).thenReturn(emailBuilder);
+            assertEquals(emailBuilderPort.reset(), emailBuilderPort);
+            emailStatic.verify(Email::builder);
+        }
     }
 
     @Test
