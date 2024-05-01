@@ -50,5 +50,7 @@ public interface EmailPort {
 
     public EmailBodyPartPort getBodyStructure();
 
+    public List<EmailHeaderPort> getHeaders();
+
     public EmailBuilderPort toBuilder();
 }

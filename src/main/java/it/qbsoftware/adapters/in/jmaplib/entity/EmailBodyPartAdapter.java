@@ -3,10 +3,10 @@ package it.qbsoftware.adapters.in.jmaplib.entity;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailBodyPartPort;
 import rs.ltt.jmap.common.entity.EmailBodyPart;
 
-public class EmailBodyPartAdapter implements EmailBodyPartPort{
-    EmailBodyPart emailBodyPart;
+public class EmailBodyPartAdapter implements EmailBodyPartPort {
+    private EmailBodyPart emailBodyPart;
 
-    public EmailBodyPartAdapter(EmailBodyPart emailBodyPart){
+    public EmailBodyPartAdapter(final EmailBodyPart emailBodyPart) {
         this.emailBodyPart = emailBodyPart;
     }
 
@@ -35,6 +35,8 @@ public class EmailBodyPartAdapter implements EmailBodyPartPort{
         return emailBodyPart.getSize();
     }
 
-    
+    public EmailBodyPart adaptee() {
+        return emailBodyPart;
+    }
 
 }
