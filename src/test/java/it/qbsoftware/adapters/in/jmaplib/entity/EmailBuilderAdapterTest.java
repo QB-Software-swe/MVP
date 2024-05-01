@@ -21,12 +21,12 @@ public class EmailBuilderAdapterTest {
     @Test
     public void testAttachment() {
         //TODO: Fix this test
+        EmailBodyPartAdapter emailBodyPartAdapter = mock(EmailBodyPartAdapter.class);
         EmailBuilder emailBuilder = mock(EmailBuilder.class);
-        EmailBodyPartPort emailBodyPartPort = mock(EmailBodyPartPort.class);
         EmailBuilderPort emailBuilderPort = new EmailBuilderAdapter(emailBuilder);
 
-        emailBuilderPort.attachment(emailBodyPartPort);
-        verify(emailBuilder).attachment(((EmailBodyPartAdapter) emailBodyPartPort).emailBodyPart);
+        emailBuilderPort.attachment(emailBodyPartAdapter);
+        verify(emailBuilder).attachment(emailBodyPartAdapter.emailBodyPart);
     }
 
 
