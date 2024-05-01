@@ -286,7 +286,7 @@ public class StandardCreateEmailTest {
     }
 
     @Test
-    public void testCreateWithBoh() throws Exception {     
+    public void testCreateWithSameId() throws Exception {     
         EmailPort emailPort = mock(EmailPort.class);
         Map<String, EmailPort> mapEmailToCreate = new HashMap<>();
         mapEmailToCreate.put("key", emailPort);
@@ -330,7 +330,7 @@ public class StandardCreateEmailTest {
     }
 
     @Test
-    public void testCreateWithBah() throws Exception {     
+    public void testCreateWithNullIdrResolver() throws Exception {     
         EmailPort emailPort = mock(EmailPort.class);
         Map<String, EmailPort> mapEmailToCreate = new HashMap<>();
         mapEmailToCreate.put("key", emailPort);
