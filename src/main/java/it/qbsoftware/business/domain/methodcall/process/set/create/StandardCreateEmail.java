@@ -19,7 +19,6 @@ import it.qbsoftware.business.domain.exception.set.SetSingletonException;
 import it.qbsoftware.business.domain.util.get.CreationIdResolverPort;
 import it.qbsoftware.business.ports.in.guava.ListMultimapPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailBodyPartPort;
-import it.qbsoftware.business.ports.in.jmap.entity.EmailBodyValuePort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
@@ -135,22 +134,10 @@ public class StandardCreateEmail implements CreateEmail {
                 .mailboxIds(mailboxIds)
                 .receivedAt(recevidAt);
 
-        // STUFF
-        final List<EmailBodyPartPort> attachments = emailPort.getAttachments();
-        emailToSaveBuilder.clearAttachments();
-        if (attachments != null) {
-            for (final EmailBodyPartPort attachment : attachments) {
-                final String partId = attachment.getPartId();
-                final EmailBodyValuePort value = partId == null ? null : emailPort.getBodyValues().get(partId);
-                if (value != null) {
-                    final EmailBodyPartPort emailBodyPart = injectId(attachment);
-                    emailToSaveBuilder.attachment(emailBodyPart);
-                } else {
-                    emailToSaveBuilder.attachment(attachment);
-                }
-            }
+        if (emailPort.getBodyStructure() == null) {
+            final List<EmailBodyPartPort> x = emailPort.getTextBody();
+            emailToSaveBuilder.bodyStructure(x.get(0));
         }
-        //
 
         try {
             emailRepository.save(emailToSaveBuilder.build());
@@ -177,17 +164,6 @@ public class StandardCreateEmail implements CreateEmail {
         }
 
         return emailWithOnlyServerSetPropertiesBuilder.build();
-    }
-
-    private EmailBodyPartPort injectId(final EmailBodyPartPort attachment) {
-        return attachment
-        .toBuilder()
-            .reset()
-            .blobId(UUID.randomUUID().toString())
-            .charset(attachment.getCharset())
-            .name(attachment.getName())
-            .size(attachment.getSize())
-            .build();
     }
 
     private Map<String, Boolean> resolveMailboxIdsReference(final Map<String, Boolean> mailboxIds,

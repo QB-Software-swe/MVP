@@ -47,7 +47,7 @@ public class QueryEmailMethodCallService implements QueryEmailMethodCallUsecase 
         Stream<EmailPort> emails = Arrays.asList(emailRepository.retriveAll(queryEmailMethodCallPort.getAccountId()).found())
                 .stream();
 
-        //emails = queryFilter.apply(emails); //TODO: restore
+        emails = queryFilter.apply(emails); 
         emails = emails.sorted(Comparator.comparing(EmailPort::getReceivedAt).reversed());
 
 

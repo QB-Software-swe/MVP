@@ -222,13 +222,13 @@ public class ControllerModule extends AbstractModule {
         @Provides
         SetEmailSubmissionMethodCallUsecase provideSetEmailSubmissionMethodCallService(
                         final AccountStateRepository accountStateRepository,
-                        final EmailSubmissionRepository emailSubmissionRepository,
+                        final EmailSubmissionBuilderPort emailSubmissionBuilderPort,
                         final SetEmailMethodResponseBuilderPort setEmailMethodResponseBuilderPort,
                         final SetEmailSubmissionMethodResponseBuilderPort setEmailSubmissionMethodResponseBuilderPort,
-                        final UpdateEmail updateEmail, final EmailSubmissionBuilderPort emailSubmissionBuilderPort) {
-                return new SetEmailSubmissionMethodCallService(accountStateRepository, emailSubmissionRepository,
+                        final UpdateEmail updateEmail) {
+                return new SetEmailSubmissionMethodCallService(accountStateRepository, emailSubmissionBuilderPort,
                                 setEmailMethodResponseBuilderPort, setEmailSubmissionMethodResponseBuilderPort,
-                                updateEmail, emailSubmissionBuilderPort);
+                                updateEmail);
         }
 
         // Service>/Changes

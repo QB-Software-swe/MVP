@@ -8,9 +8,13 @@ import it.qbsoftware.business.ports.out.domain.EmailSubmissionChangesTrackerRepo
 import it.qbsoftware.persistance.MongoConnection;
 
 public class EmailSubmissionChangesTrackerRepositoryAdapter implements EmailSubmissionChangesTrackerRepository {
+    @SuppressWarnings("unused")
     private final static String COLLECTION = "submission_changes";
+    @SuppressWarnings("unused")
     private final static String TYPE_NAME = "SUBMISSION";
+    @SuppressWarnings("unused")
     private final MongoConnection mongoConnection;
+    @SuppressWarnings("unused")
     private final Gson gson;
 
     @Inject
@@ -21,7 +25,6 @@ public class EmailSubmissionChangesTrackerRepositoryAdapter implements EmailSubm
 
     @Override
     public EmailSubmissionChangesTracker retrive(final String accountId) {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'retrive'");
     }
 

@@ -7,6 +7,7 @@ import java.util.UUID;
 import it.qbsoftware.business.domain.entity.changes.AccountState;
 import it.qbsoftware.business.domain.entity.changes.tracker.MailboxChangesTracker;
 import it.qbsoftware.business.domain.exception.AccountNotFoundException;
+import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
 import it.qbsoftware.business.domain.exception.set.SetSingletonException;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxPort;
 import it.qbsoftware.business.ports.in.jmap.entity.SetErrorEnumPort;
@@ -47,6 +48,8 @@ public class StandardCreateMailbox implements CreateMailbox {
                     created.put(mailboxEntry.getKey(), mailboxDiff);
                 } catch (final SetSingletonException setSingletonException) {
                     notCreated.put(mailboxEntry.getKey(), setErrorEnumPort.singleton());
+                } catch (InvalidArgumentsException e) {
+                    notCreated.put(mailboxEntry.getKey(), setErrorEnumPort.invalidProperties());
                 }
             }
         }
@@ -55,8 +58,12 @@ public class StandardCreateMailbox implements CreateMailbox {
     }
 
     private MailboxPort createMailbox(final MailboxPort mailbox, final String accountId)
-            throws AccountNotFoundException, SetSingletonException {
+            throws AccountNotFoundException, SetSingletonException, InvalidArgumentsException {
         final String mailboxId = accountId + "/" + UUID.randomUUID().toString();
+
+        if(mailbox.getName()=="") {
+            throw new InvalidArgumentsException();
+        }
 
         final MailboxPort mailboxToSave = mailbox.getBuilder().id(mailboxId).build();
         final MailboxPort mailboxDiff = mailbox.getBuilder().reset().id(mailboxId).build();

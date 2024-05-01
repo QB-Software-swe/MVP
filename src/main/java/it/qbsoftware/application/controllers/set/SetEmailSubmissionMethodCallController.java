@@ -8,6 +8,7 @@ import it.qbsoftware.adapters.in.jmaplib.method.response.set.SetEmailSubmissionM
 import it.qbsoftware.application.controllers.ControllerHandlerBase;
 import it.qbsoftware.application.controllers.HandlerRequest;
 import it.qbsoftware.business.domain.exception.AccountNotFoundException;
+import it.qbsoftware.business.domain.exception.set.SetNotFoundException;
 import it.qbsoftware.business.domain.methodresponse.SetEmailSubmissionMethodResponse;
 import it.qbsoftware.business.ports.in.usecase.set.SetEmailSubmissionMethodCallUsecase;
 import rs.ltt.jmap.common.method.MethodResponse;
@@ -39,6 +40,8 @@ public class SetEmailSubmissionMethodCallController extends ControllerHandlerBas
                                 .adaptee()
                 };
             } catch (final AccountNotFoundException accountNotFoundException) {
+                return new MethodResponse[] { new InvalidArgumentsMethodErrorResponse() };
+            } catch (SetNotFoundException e) {
                 return new MethodResponse[] { new InvalidArgumentsMethodErrorResponse() };
             }
         }
