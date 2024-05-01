@@ -4,16 +4,12 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-
 import it.qbsoftware.business.ports.in.jmap.entity.AccountPort;
 import rs.ltt.jmap.common.entity.Account;
 import rs.ltt.jmap.common.entity.Account.AccountBuilder;
-
-import org.mockito.junit.MockitoJUnitRunner;
 
 
 

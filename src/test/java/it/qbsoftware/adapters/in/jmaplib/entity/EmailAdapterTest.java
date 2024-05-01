@@ -4,22 +4,16 @@ import rs.ltt.jmap.common.entity.Email;
 import rs.ltt.jmap.common.entity.Email.EmailBuilder;
 import rs.ltt.jmap.common.entity.EmailBodyPart;
 import rs.ltt.jmap.common.entity.EmailBodyValue;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import org.hamcrest.core.Is;
 import org.joda.time.Instant;
 import org.junit.Test;
-
 import it.qbsoftware.business.ports.in.jmap.entity.EmailBodyPartPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailBodyValuePort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailBuilderPort;
-
 import java.util.Map;
 import java.lang.reflect.Field;
 import java.util.HashMap;
