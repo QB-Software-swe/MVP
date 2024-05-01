@@ -73,7 +73,6 @@ public class EmailSubmissionRepositoryAdapter implements EmailSubmissionReposito
 
     @Override
     public EmailSubmissionPort destroy(final String emailId) {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'destroy'");
     }
 

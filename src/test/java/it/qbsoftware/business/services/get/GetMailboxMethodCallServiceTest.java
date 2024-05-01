@@ -23,7 +23,7 @@ import it.qbsoftware.business.ports.in.jmap.method.response.get.GetMailboxMethod
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetMailboxMethodResponsePort;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.business.ports.out.jmap.MailboxRepository;
-import it.qbsoftware.persistance.MongoConnection;
+
 
 
 @RunWith(org.mockito.junit.MockitoJUnitRunner.class)
@@ -52,9 +52,6 @@ public class GetMailboxMethodCallServiceTest {
 
     @Mock
     private GetMailboxMethodResponseBuilderPort getMailboxMethodResponseBuilderPort;
-
-    @Mock
-    private MongoConnection connection;
 
     @InjectMocks
     private GetMailboxMethodCallService getMailboxMethodCallService;

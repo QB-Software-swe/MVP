@@ -37,6 +37,7 @@ import it.qbsoftware.business.domain.methodcall.statematch.IfInStateMatch;
 import it.qbsoftware.business.domain.methodcall.statematch.StandardIfInStateMatch;
 import it.qbsoftware.business.domain.util.get.CreationIdResolverPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.entity.EmailSubmissionBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.IdentityBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.SessionResourceBuilderPort;
@@ -52,11 +53,14 @@ import it.qbsoftware.business.ports.in.jmap.method.response.get.GetEmailSubmissi
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetIdentityMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetMailboxMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetThreadMethodResponseBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.method.response.other.EchoMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.query.QueryEmailMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.set.SetEmailMethodResponseBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.method.response.set.SetEmailSubmissionMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.set.SetIdentityMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.set.SetMailboxMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.util.ResultReferenceResolverPort;
+import it.qbsoftware.business.ports.in.usecase.EchoMethodCallUsecase;
 import it.qbsoftware.business.ports.in.usecase.SessionUsecase;
 import it.qbsoftware.business.ports.in.usecase.changes.ChangesEmailMethodCallUsecase;
 import it.qbsoftware.business.ports.in.usecase.changes.ChangesEmailSubmissionMethodCallUsecase;
@@ -70,6 +74,7 @@ import it.qbsoftware.business.ports.in.usecase.get.GetMailboxMethodCallUsecase;
 import it.qbsoftware.business.ports.in.usecase.get.GetThreadMethodCallUsecase;
 import it.qbsoftware.business.ports.in.usecase.query.QueryEmailMethodCallUsecase;
 import it.qbsoftware.business.ports.in.usecase.set.SetEmailMethodCallUsecase;
+import it.qbsoftware.business.ports.in.usecase.set.SetEmailSubmissionMethodCallUsecase;
 import it.qbsoftware.business.ports.in.usecase.set.SetIdentityMethodCallUsecase;
 import it.qbsoftware.business.ports.in.usecase.set.SetMailboxMethodCallUsecase;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
@@ -84,6 +89,7 @@ import it.qbsoftware.business.ports.out.jmap.IdentityRepository;
 import it.qbsoftware.business.ports.out.jmap.MailboxRepository;
 import it.qbsoftware.business.ports.out.jmap.ThreadRepository;
 import it.qbsoftware.business.ports.out.jmap.UserSessionResourceRepository;
+import it.qbsoftware.business.services.EchoMethodCallSerivce;
 import it.qbsoftware.business.services.SessionService;
 import it.qbsoftware.business.services.changes.ChangesEmailMethodCallService;
 import it.qbsoftware.business.services.changes.ChangesEmailSubmissionMethodCallService;
@@ -97,6 +103,7 @@ import it.qbsoftware.business.services.get.GetMailboxMethodCallService;
 import it.qbsoftware.business.services.get.GetThreadMethodCallService;
 import it.qbsoftware.business.services.query.QueryEmailMethodCallService;
 import it.qbsoftware.business.services.set.SetEmailMethodCallService;
+import it.qbsoftware.business.services.set.SetEmailSubmissionMethodCallService;
 import it.qbsoftware.business.services.set.SetIdentityMethodCallService;
 import it.qbsoftware.business.services.set.SetMailboxMethodCallService;
 
@@ -109,6 +116,12 @@ public class ControllerModule extends AbstractModule {
         SessionUsecase provideSessionService(final SessionResourceBuilderPort sessionResourceBuilderPort,
                         final UserSessionResourceRepository userSessionResourceRepository) {
                 return new SessionService(sessionResourceBuilderPort, userSessionResourceRepository);
+        }
+
+        @Provides
+        EchoMethodCallUsecase provideEchoMethodCallService(
+                        final EchoMethodResponseBuilderPort echoMethodResponseBuilderPort) {
+                return new EchoMethodCallSerivce(echoMethodResponseBuilderPort);
         }
 
         // Service>/Get
@@ -206,6 +219,18 @@ public class ControllerModule extends AbstractModule {
                                 ifInStateMatch, setIdentityMethodResponseBuilderPort, updateIdentity);
         }
 
+        @Provides
+        SetEmailSubmissionMethodCallUsecase provideSetEmailSubmissionMethodCallService(
+                        final AccountStateRepository accountStateRepository,
+                        final EmailSubmissionBuilderPort emailSubmissionBuilderPort,
+                        final SetEmailMethodResponseBuilderPort setEmailMethodResponseBuilderPort,
+                        final SetEmailSubmissionMethodResponseBuilderPort setEmailSubmissionMethodResponseBuilderPort,
+                        final UpdateEmail updateEmail) {
+                return new SetEmailSubmissionMethodCallService(accountStateRepository, emailSubmissionBuilderPort,
+                                setEmailMethodResponseBuilderPort, setEmailSubmissionMethodResponseBuilderPort,
+                                updateEmail);
+        }
+
         // Service>/Changes
         @Provides
         ChangesEmailMethodCallUsecase provideChangesEmailMethodCallService(
@@ -272,8 +297,8 @@ public class ControllerModule extends AbstractModule {
 
         // Domain>filter
         @Provides
-        EmailPropertiesFilter provideStandardEmailPropertiesFilter(final EmailBuilderPort emailBuilderPort) {
-                return new StandardEmailPropertiesFilter(emailBuilderPort);
+        EmailPropertiesFilter provideStandardEmailPropertiesFilter() {
+                return new StandardEmailPropertiesFilter();
         }
 
         @Provides

@@ -1,6 +1,7 @@
 package it.qbsoftware.business.domain.methodcall.filter.standard;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
@@ -10,12 +11,6 @@ import it.qbsoftware.business.ports.in.jmap.entity.EmailBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailPort;
 
 public class StandardEmailPropertiesFilter implements EmailPropertiesFilter {
-    final EmailBuilderPort emailBuilderPort;
-
-    public StandardEmailPropertiesFilter(final EmailBuilderPort emailBuilderPort) {
-        this.emailBuilderPort = emailBuilderPort.reset();
-    }
-
     @Override
     public EmailPort[] filter(final EmailPort[] emails, final String[] properties,
             EmailFilterBodyPartSettings emailFilterBodyPartSettings) throws InvalidArgumentsException {
@@ -33,10 +28,10 @@ public class StandardEmailPropertiesFilter implements EmailPropertiesFilter {
 
     private EmailPort emailFilter(final EmailPort emailPort, final String[] properties)
             throws InvalidArgumentsException {
-        EmailBuilderPort emailBuilder = emailBuilderPort.id(emailPort.getId());
+        EmailBuilderPort emailBuilder = emailPort.toBuilder().reset().id(emailPort.getId());
 
         for (final String property : properties) {
-            emailBuilder = switch (property) {
+            emailBuilder = switch (Arrays.asList(property.split(":")).get(0)) {
                 case "blobId":
                     yield emailBuilder.blobId(emailPort.getBlobId());
 
@@ -55,8 +50,71 @@ public class StandardEmailPropertiesFilter implements EmailPropertiesFilter {
                 case "receivedAt":
                     yield emailBuilder.receivedAt(emailPort.getReceivedAt());
 
+                case "messageId":
+                    yield emailPort.getMessageId() != null ? emailBuilder.messageId(emailPort.getMessageId())
+                            : emailBuilder;
+
+                case "inReplyTo":
+                    yield emailPort.getInReplyTo() != null ? emailBuilder.inReplyTo(emailPort.getInReplyTo())
+                            : emailBuilder;
+
+                case "references":
+                    yield emailPort.getReferences() != null ? emailBuilder.references(emailPort.getReferences())
+                            : emailBuilder;
+
+                case "sender":
+                    yield emailPort.getSender() != null ? emailBuilder.sender(emailPort.getSender()) : emailBuilder;
+
+                case "from":
+                    yield emailPort.getFrom() != null ? emailBuilder.from(emailPort.getFrom()) : emailBuilder;
+
+                case "to":
+                    yield emailPort.getTo() != null ? emailBuilder.to(emailPort.getTo()) : emailBuilder;
+
+                case "cc":
+                    yield emailPort.getCc() != null ? emailBuilder.cc(emailPort.getCc()) : emailBuilder;
+
+                case "bcc":
+                    yield emailPort.getBcc() != null ? emailBuilder.bcc(emailPort.getBcc()) : emailBuilder;
+
+                case "replyTo":
+                    yield emailPort.getReplyTo() != null ? emailBuilder.replyTo(emailPort.getReplyTo()) : emailBuilder;
+
+                case "subject":
+                    yield emailBuilder.subject(emailPort.getSubject());
+
+                case "bodyValues":
+                    yield emailPort.getBodyValues() != null ? emailBuilder.bodyValues(emailPort.getBodyValues())
+                            : emailBuilder;
+
+                case "textBody":
+                    yield emailPort.getTextBody() != null ? emailBuilder.textBody(emailPort.getTextBody())
+                            : emailBuilder;
+
+                case "htmlBody":
+                    yield emailPort.getHtmlBody() != null ? emailBuilder.htmlBody(emailPort.getHtmlBody())
+                            : emailBuilder;
+
+                case "attachments":
+                    yield emailPort.getAttachments() != null ? emailBuilder.attachments(emailPort.getAttachments())
+                            : emailBuilder;
+
+                case "sentAt":
+                    yield emailPort.getSentAt() != null ? emailBuilder.sentAt(emailPort.getSentAt()) : emailBuilder;
+
+                case "bodyStructure":
+                    yield emailPort.getBodyStructure() != null
+                            ? emailBuilder.bodyStructure(emailPort.getBodyStructure())
+                            : emailBuilder;
+
+                case "header":
+                    yield emailPort.getHeaders() != null ? emailBuilder.headers(emailPort.getHeaders()) : emailBuilder;
+
+                case "id":
+                    yield emailBuilder;
+
                 default:
-                    yield emailBuilder; // throw new InvalidArgumentsException();
+                    throw new InvalidArgumentsException();
             };
         }
 

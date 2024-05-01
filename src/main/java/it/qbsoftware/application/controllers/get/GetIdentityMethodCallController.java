@@ -24,25 +24,24 @@ public class GetIdentityMethodCallController extends ControllerHandlerBase {
     }
 
     @Override
-    public MethodResponse handle(final HandlerRequest handlerRequest) {
+    public MethodResponse[] handle(final HandlerRequest handlerRequest) {
         if (handlerRequest.methodCall() instanceof GetIdentityMethodCall getIdentityMethodCall) {
 
             final GetIdentityMethodCallAdapter getIdentityMethodCallAdapter = new GetIdentityMethodCallAdapter(
                     getIdentityMethodCall);
 
-            GetIdentityMethodResponseAdapter getIdentityMethodResponseAdapter = null;
             try {
-                getIdentityMethodResponseAdapter = (GetIdentityMethodResponseAdapter) getIdentityMethodCallUsecase
+                final GetIdentityMethodResponseAdapter getIdentityMethodResponseAdapter = (GetIdentityMethodResponseAdapter) getIdentityMethodCallUsecase
                         .call(getIdentityMethodCallAdapter, handlerRequest.previousResponses());
-            } catch (final AccountNotFoundException accountNotFoundException) {
-                return new InvalidArgumentsMethodErrorResponse();
-            } catch (final InvalidResultReferenceExecption invalidResultReferenceExecption) {
-                return new InvalidResultReferenceMethodErrorResponse();
-            } catch (final InvalidArgumentsException invalidArgumentsException) {
-                return new InvalidArgumentsMethodErrorResponse();
-            }
 
-            return getIdentityMethodResponseAdapter.adaptee();
+                return new MethodResponse[] { getIdentityMethodResponseAdapter.adaptee() };
+            } catch (final AccountNotFoundException accountNotFoundException) {
+                return new MethodResponse[] { new InvalidArgumentsMethodErrorResponse() };
+            } catch (final InvalidResultReferenceExecption invalidResultReferenceExecption) {
+                return new MethodResponse[] { new InvalidResultReferenceMethodErrorResponse() };
+            } catch (final InvalidArgumentsException invalidArgumentsException) {
+                return new MethodResponse[] { new InvalidArgumentsMethodErrorResponse() };
+            }
         }
 
         return super.handle(handlerRequest);

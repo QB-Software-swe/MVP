@@ -24,25 +24,23 @@ public class ChangesEmailMethodCallController extends ControllerHandlerBase {
     }
 
     @Override
-    public MethodResponse handle(final HandlerRequest handlerRequest) {
+    public MethodResponse[] handle(final HandlerRequest handlerRequest) {
         if (handlerRequest.methodCall() instanceof ChangesEmailMethodCall changesEmailMethodCall) {
             final ChangesEmailMethodCallAdapter ChangesEmailMethodCallAdapter = new ChangesEmailMethodCallAdapter(
                     changesEmailMethodCall);
 
-            ChangesEmailMethodResponseAdapter changesEmailMethodResponseAdapter = null;
-
             try {
-                changesEmailMethodResponseAdapter = (ChangesEmailMethodResponseAdapter) changesEmailMethodCallUsecase
+                final ChangesEmailMethodResponseAdapter changesEmailMethodResponseAdapter = (ChangesEmailMethodResponseAdapter) changesEmailMethodCallUsecase
                         .call(ChangesEmailMethodCallAdapter, handlerRequest.previousResponses());
-            } catch (final AccountNotFoundException accountNotFoundException) {
-                return new InvalidArgumentsMethodErrorResponse();
-            } catch (final CannotCalculateChangesException CannotCalculateChangesException) {
-                return new CannotCalculateChangesMethodErrorResponse();
-            } catch (final InvalidArgumentsException invalidArgumentsException) {
-                return new InvalidArgumentsMethodErrorResponse();
-            }
 
-            return changesEmailMethodResponseAdapter.adaptee();
+                return new MethodResponse[] { changesEmailMethodResponseAdapter.adaptee() };
+            } catch (final AccountNotFoundException accountNotFoundException) {
+                return new MethodResponse[] { new InvalidArgumentsMethodErrorResponse() };
+            } catch (final CannotCalculateChangesException CannotCalculateChangesException) {
+                return new MethodResponse[] { new CannotCalculateChangesMethodErrorResponse() };
+            } catch (final InvalidArgumentsException invalidArgumentsException) {
+                return new MethodResponse[] { new InvalidArgumentsMethodErrorResponse() };
+            }
         }
         return super.handle(handlerRequest);
     }

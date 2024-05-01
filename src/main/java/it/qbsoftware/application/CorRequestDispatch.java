@@ -1,5 +1,7 @@
 package it.qbsoftware.application;
 
+import java.util.Arrays;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.inject.Inject;
@@ -20,6 +22,7 @@ import it.qbsoftware.application.controllers.get.GetThreadMethodCallController;
 import it.qbsoftware.application.controllers.other.EchoMethodCallController;
 import it.qbsoftware.application.controllers.query.QueryEmailMethodCallController;
 import it.qbsoftware.application.controllers.set.SetEmailMethodCallController;
+import it.qbsoftware.application.controllers.set.SetEmailSubmissionMethodCallController;
 import it.qbsoftware.application.controllers.set.SetIdentityMethodCallController;
 import it.qbsoftware.application.controllers.set.SetMailboxMethodCallController;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
@@ -46,6 +49,7 @@ public class CorRequestDispatch implements ApiRequestDispatch {
     private final SetEmailMethodCallController setEmailMethodCallController;
     private final SetMailboxMethodCallController setMailboxMethodCallController;
     private final SetIdentityMethodCallController setIdentityMethodCallController;
+    private final SetEmailSubmissionMethodCallController setEmailSubmissionMethodCallController;
 
     private final QueryEmailMethodCallController queryEmailMethodCallController;
 
@@ -66,6 +70,7 @@ public class CorRequestDispatch implements ApiRequestDispatch {
             final SetEmailMethodCallController setEmailMethodCallController,
             final SetIdentityMethodCallController setIdentityMethodCallController,
             final SetMailboxMethodCallController setMailboxMethodCallController,
+            final SetEmailSubmissionMethodCallController setEmailSubmissionMethodCallController,
             final QueryEmailMethodCallController queryEmailMethodCallController,
             final Gson gson) {
 
@@ -82,9 +87,12 @@ public class CorRequestDispatch implements ApiRequestDispatch {
         this.changesIdentityMethodCallController = changesIdentityMethodCallController;
         this.changesMailboxMethodCallController = changesMailboxMethodCallController;
         this.changesThreadMethodCallController = changesThreadMethodCallController;
+
         this.setEmailMethodCallController = setEmailMethodCallController;
         this.setMailboxMethodCallController = setMailboxMethodCallController;
         this.setIdentityMethodCallController = setIdentityMethodCallController;
+        this.setEmailSubmissionMethodCallController = setEmailSubmissionMethodCallController;
+
         this.queryEmailMethodCallController = queryEmailMethodCallController;
 
         this.gson = gson;
@@ -109,8 +117,9 @@ public class CorRequestDispatch implements ApiRequestDispatch {
 
         setEmailMethodCallController.setNext(setMailboxMethodCallController);
         setMailboxMethodCallController.setNext(setIdentityMethodCallController);
+        setIdentityMethodCallController.setNext(setEmailSubmissionMethodCallController);
 
-        setIdentityMethodCallController.setNext(queryEmailMethodCallController);
+        setEmailSubmissionMethodCallController.setNext(queryEmailMethodCallController);
     }
 
     @Override
@@ -124,11 +133,17 @@ public class CorRequestDispatch implements ApiRequestDispatch {
             final String invocationId = invocation.getId();
 
             // Rename
-            final MethodResponse methodResponses = echoMethodCallController.handle(
+            final MethodResponse[] methodResponses = echoMethodCallController.handle(
                     new HandlerRequest(invocation.getMethodCall(), previousResponses));
 
-            previousResponses.put(invocationId,
-                    new ResponseInvocationAdapter(new Response.Invocation(methodResponses, invocationId)));
+            final var responses = Arrays.asList(methodResponses).stream()
+                    .map(m -> new ResponseInvocationAdapter(new Response.Invocation(m, invocationId)))
+                    .toArray(ResponseInvocationAdapter[]::new);
+
+            for (final var resp : responses) {
+                previousResponses.put(invocationId, resp);
+            }
+
         }
 
         final GenericResponse genericResponse = new Response(

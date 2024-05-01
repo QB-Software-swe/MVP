@@ -1,7 +1,7 @@
 package it.qbsoftware.business.domain.entity.changes.tracker;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 public class SimpleThreadChangesTracker implements ThreadChangesTracker {
     final private String id;
@@ -49,20 +49,20 @@ public class SimpleThreadChangesTracker implements ThreadChangesTracker {
     public SimpleThreadChangesTracker threadHasBeenCreated(final String newState, final String threadId) {
         final Map<String, String> copyCreated = this.created;
         copyCreated.put(newState, threadId);
-        return new SimpleThreadChangesTracker(threadId, copyCreated, this.updated, this.destroyed);
+        return new SimpleThreadChangesTracker(this.id, copyCreated, this.updated, this.destroyed);
     }
 
     @Override
     public SimpleThreadChangesTracker threadHasBeenUpdated(final String newState, final String threadId) {
         final Map<String, String> copyUpdated = this.updated;
         copyUpdated.put(newState, threadId);
-        return new SimpleThreadChangesTracker(threadId, this.created, copyUpdated, this.destroyed);
+        return new SimpleThreadChangesTracker(this.id, this.created, copyUpdated, this.destroyed);
     }
 
     @Override
     public SimpleThreadChangesTracker threadHasBeenDestroyed(final String newState, final String threadId) {
         final Map<String, String> copyDestroyed = this.destroyed;
         copyDestroyed.put(newState, threadId);
-        return new SimpleThreadChangesTracker(threadId, this.created, this.updated, copyDestroyed);
+        return new SimpleThreadChangesTracker(this.id, this.created, this.updated, copyDestroyed);
     }
 }

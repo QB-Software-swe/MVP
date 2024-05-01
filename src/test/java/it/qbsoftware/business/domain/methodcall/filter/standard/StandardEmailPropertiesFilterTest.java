@@ -30,7 +30,7 @@ public class StandardEmailPropertiesFilterTest {
     public void testFilterWithNullProperties() throws InvalidArgumentsException {
         EmailPort[] emails = new EmailPort[] {emailPort};
 
-        StandardEmailPropertiesFilter standardEmailPropertiesFilter = new StandardEmailPropertiesFilter(emailBuilderPort);
+        StandardEmailPropertiesFilter standardEmailPropertiesFilter = new StandardEmailPropertiesFilter();
 
         EmailPort[] result = standardEmailPropertiesFilter.filter(emails, null, null);
 
@@ -62,7 +62,7 @@ public class StandardEmailPropertiesFilterTest {
         when(emailBuilderPort.receivedAt(any())).thenReturn(emailBuilderPort);
         when(emailBuilderPort.build()).thenReturn(emailPort);
 
-        StandardEmailPropertiesFilter standardEmailPropertiesFilter = new StandardEmailPropertiesFilter(emailBuilderPort);
+        StandardEmailPropertiesFilter standardEmailPropertiesFilter = new StandardEmailPropertiesFilter();
 
         EmailPort[] result = standardEmailPropertiesFilter.filter(emails, properties, null);
 
@@ -84,15 +84,8 @@ public class StandardEmailPropertiesFilterTest {
         when(emailPort.getReceivedAt()).thenReturn(Instant.now());
 
         when(emailBuilderPort.reset()).thenReturn(emailBuilderPort);
-        when(emailBuilderPort.id(any())).thenReturn(emailBuilderPort);
-        when(emailBuilderPort.blobId(any())).thenReturn(emailBuilderPort);
-        when(emailBuilderPort.mailboxIds(any())).thenReturn(emailBuilderPort);
-        when(emailBuilderPort.keywords(any())).thenReturn(emailBuilderPort);
-        when(emailBuilderPort.size(any())).thenReturn(emailBuilderPort);
-        when(emailBuilderPort.receivedAt(any())).thenReturn(emailBuilderPort);
-        when(emailBuilderPort.build()).thenReturn(emailPort);
-
-        StandardEmailPropertiesFilter standardEmailPropertiesFilter = new StandardEmailPropertiesFilter(emailBuilderPort);
+  
+        StandardEmailPropertiesFilter standardEmailPropertiesFilter = new StandardEmailPropertiesFilter();
 
         //TODO: utilizzare questa se si implementa la throw
         //assertThrows(InvalidArgumentsException.class, () -> standardEmailPropertiesFilter.filter(emails, properties, null));

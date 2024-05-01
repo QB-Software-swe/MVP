@@ -27,7 +27,6 @@ public class UserSessionResourceRepositoryAdapter implements UserSessionResource
     }
 
     @Override
-    //FIXME: AccountNotfound
     public Optional<SessionResourcePort> retrieve(final String username) {
         FindIterable<Document> docs = mongoConnection.getDatabase().getCollection(COLLECTION)
                 .find(Filters.eq("_id", username));

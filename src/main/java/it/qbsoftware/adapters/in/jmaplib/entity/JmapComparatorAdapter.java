@@ -9,4 +9,8 @@ public class JmapComparatorAdapter implements JmapComparatorPort {
     public JmapComparatorAdapter(final Comparator comparator) {
         this.comparator = comparator;
     }
+
+    public Comparator adaptee() {
+        return comparator;
+    }
 }

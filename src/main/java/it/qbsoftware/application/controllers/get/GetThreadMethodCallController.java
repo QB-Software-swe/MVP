@@ -24,24 +24,23 @@ public class GetThreadMethodCallController extends ControllerHandlerBase {
     }
 
     @Override
-    public MethodResponse handle(final HandlerRequest handlerRequest) {
+    public MethodResponse[] handle(final HandlerRequest handlerRequest) {
         if (handlerRequest.methodCall() instanceof GetThreadMethodCall getThreadMethodCall) {
             final GetThreadMethodCallAdapter getThreadMethodCallAdapter = new GetThreadMethodCallAdapter(
                     getThreadMethodCall);
 
-            GetThreadMethodResponseAdapter methodResponseAdapters = null;
-
             try {
-                methodResponseAdapters = (GetThreadMethodResponseAdapter) getThreadMethodCallUsecase
+                final GetThreadMethodResponseAdapter methodResponseAdapters = (GetThreadMethodResponseAdapter) getThreadMethodCallUsecase
                         .call(getThreadMethodCallAdapter, handlerRequest.previousResponses());
+
+                return new MethodResponse[] { methodResponseAdapters.adaptee() };
             } catch (final AccountNotFoundException accountNotFoundException) {
-                return new InvalidArgumentsMethodErrorResponse();
+                return new MethodResponse[] { new InvalidArgumentsMethodErrorResponse() };
             } catch (final InvalidResultReferenceExecption invalidResultReferenceExecption) {
-                return new InvalidResultReferenceMethodErrorResponse();
+                return new MethodResponse[] { new InvalidResultReferenceMethodErrorResponse() };
             } catch (final InvalidArgumentsException invalidArgumentsException) {
-                return new InvalidArgumentsMethodErrorResponse();
+                return new MethodResponse[] { new InvalidArgumentsMethodErrorResponse() };
             }
-            return methodResponseAdapters.adaptee();
         }
         return super.handle(handlerRequest);
     }

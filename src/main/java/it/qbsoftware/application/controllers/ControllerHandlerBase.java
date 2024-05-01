@@ -12,11 +12,11 @@ public abstract class ControllerHandlerBase implements ControllerHandler {
     }
 
     @Override
-    public MethodResponse handle(final HandlerRequest handlerRequest) {
+    public MethodResponse[] handle(final HandlerRequest handlerRequest) {
         if (nextHandler != null) {
             return nextHandler.handle(handlerRequest);
         }
 
-        return new UnknownMethodMethodErrorResponse();
+        return new MethodResponse[] { new UnknownMethodMethodErrorResponse() };
     }
 }

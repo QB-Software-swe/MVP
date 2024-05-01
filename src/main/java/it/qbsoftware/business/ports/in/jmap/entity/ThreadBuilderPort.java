@@ -8,6 +8,8 @@ public interface ThreadBuilderPort {
 
     public ThreadBuilderPort emailIds(final Collection<String> emailIds);
 
+    public ThreadBuilderPort clearEmailIds();
+
     public ThreadPort build();
 
     public ThreadBuilderPort reset();

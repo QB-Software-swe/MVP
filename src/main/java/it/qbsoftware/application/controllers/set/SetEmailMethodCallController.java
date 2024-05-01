@@ -23,7 +23,7 @@ public class SetEmailMethodCallController extends ControllerHandlerBase {
     }
 
     @Override
-    public MethodResponse handle(final HandlerRequest handlerRequest) {
+    public MethodResponse[] handle(final HandlerRequest handlerRequest) {
         if (handlerRequest.methodCall() instanceof SetEmailMethodCall setEmailMethodCall) {
             final SetEmailMethodCallAdapter setEmailMethodCallAdapter = new SetEmailMethodCallAdapter(
                     setEmailMethodCall);
@@ -31,14 +31,14 @@ public class SetEmailMethodCallController extends ControllerHandlerBase {
             try {
                 final SetEmailMethodResponseAdapter setEmailMethodResponseAdapter = (SetEmailMethodResponseAdapter) setEmailMethodCallUsecase
                         .call(setEmailMethodCallAdapter, handlerRequest.previousResponses());
-                return setEmailMethodResponseAdapter.adaptee();
+
+                return new MethodResponse[] { setEmailMethodResponseAdapter.adaptee() };
             } catch (final AccountNotFoundException accountNotFoundException) {
-                return new InvalidArgumentsMethodErrorResponse();
+                return new MethodResponse[] { new InvalidArgumentsMethodErrorResponse() };
             } catch (final StateMismatchException stateMismatchException) {
-                return new StateMismatchMethodErrorResponse();
+                return new MethodResponse[] { new StateMismatchMethodErrorResponse() };
             }
         }
-
         return super.handle(handlerRequest);
     }
 }

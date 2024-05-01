@@ -25,7 +25,7 @@ public class ChangesIdentityMethodCallController extends ControllerHandlerBase {
     }
 
     @Override
-    public MethodResponse handle(final HandlerRequest handlerRequest) {
+    public MethodResponse[] handle(final HandlerRequest handlerRequest) {
         if (handlerRequest.methodCall() instanceof ChangesIdentityMethodCall changesIdentityMethodCall) {
             final ChangesIdentityMethodCallAdapter changesIdentityMethodCallAdapter = new ChangesIdentityMethodCallAdapter(
                     changesIdentityMethodCall);
@@ -33,14 +33,14 @@ public class ChangesIdentityMethodCallController extends ControllerHandlerBase {
             try {
                 final ChangesIdentityMethodResponseAdapter changesIdentityMethodResponseAdapter = (ChangesIdentityMethodResponseAdapter) changesIdentityMethodCallUsecase
                         .call(changesIdentityMethodCallAdapter, handlerRequest.previousResponses());
-                return changesIdentityMethodResponseAdapter.adaptee();
+                return new MethodResponse[] { changesIdentityMethodResponseAdapter.adaptee() };
 
             } catch (final AccountNotFoundException accountNotFoundException) {
-                return new InvalidArgumentsMethodErrorResponse();
+                return new MethodResponse[] { new InvalidArgumentsMethodErrorResponse() };
             } catch (final CannotCalculateChangesException CannotCalculateChangesException) {
-                return new CannotCalculateChangesMethodErrorResponse();
+                return new MethodResponse[] { new CannotCalculateChangesMethodErrorResponse() };
             } catch (final InvalidArgumentsException invalidArgumentsException) {
-                return new InvalidArgumentsMethodErrorResponse();
+                return new MethodResponse[] { new InvalidArgumentsMethodErrorResponse() };
             }
         }
         return super.handle(handlerRequest);
