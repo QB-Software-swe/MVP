@@ -237,4 +237,9 @@ public class EmailBuilderAdapter implements EmailBuilderPort {
                 : null);
         return this;
     }
+
+    @Override
+    public EmailBuilderPort hasAttachment(final Boolean hasAttachment) {
+        emailBuilder.hasAttachment(hasAttachment); return this;
+    }
 }

@@ -121,6 +121,7 @@ public class StandardCreateEmail implements CreateEmail {
                 .id(emailId)
                 .blobId(blobId)
                 .threadId(threadId)
+                .hasAttachment(false)
                 .clearMailboxIds()
                 .mailboxIds(mailboxIds)
                 .receivedAt(recevidAt);

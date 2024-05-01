@@ -68,4 +68,6 @@ public interface EmailBuilderPort {
     public EmailBuilderPort reset();
 
     public EmailBuilderPort keywords(String string, Boolean mBoolean);
+
+    public EmailBuilderPort hasAttachment(Boolean hasAttachment);
 }
