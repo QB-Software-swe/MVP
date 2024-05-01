@@ -22,8 +22,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import it.qbsoftware.adapters.in.jmaplib.entity.EmailAdapter;
-import it.qbsoftware.adapters.in.jmaplib.entity.ThreadAdapter;
 import it.qbsoftware.business.domain.entity.changes.AccountState;
 import it.qbsoftware.business.domain.entity.changes.tracker.EmailChangesTracker;
 import it.qbsoftware.business.domain.entity.changes.tracker.MailboxChangesTracker;
@@ -204,6 +202,7 @@ public class StandardCreateEmailTest {
         Map<String, EmailPort> mapEmailToCreate = new HashMap<>();
         mapEmailToCreate.put("key", emailPort);
         List<String> emailIds = new ArrayList<>();
+        SetSingletonException singletonException = new SetSingletonException();
 
         when(setEmailMethodCallPort.getCreate()).thenReturn(mapEmailToCreate);
         when(emailPort.getThreadId()).thenReturn("threadId");
@@ -229,7 +228,7 @@ public class StandardCreateEmailTest {
         when(accountState.increaseState()).thenReturn(accountState);
         when(accountState.state()).thenReturn("state");
         
-        doThrow(SetSingletonException.class).doNothing().when(emailRepository).save(any());
+        doThrow(singletonException).doNothing().when(emailRepository).save(any());
         doNothing().when(accountStateRepository).save(any());
         doNothing().when(threadRepository).save(any());
 

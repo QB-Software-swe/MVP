@@ -170,6 +170,11 @@
             <groupId>org.jacoco</groupId>
             <artifactId>jacoco-maven-plugin</artifactId>
             <version>0.8.11</version>
+            <configuration>
+              <excludes>
+                <exclude>**/it/qbsoftware/application/**/*</exclude>
+              </excludes>
+            </configuration>
             <executions>
               <execution>
                 <id>prepare-agent</id>
