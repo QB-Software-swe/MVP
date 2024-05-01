@@ -24,7 +24,7 @@ public class ChangesMailboxMethodCallController extends ControllerHandlerBase {
     }
 
     @Override
-    public MethodResponse handle(final HandlerRequest handlerRequest) {
+    public MethodResponse[] handle(final HandlerRequest handlerRequest) {
         if (handlerRequest.methodCall() instanceof ChangesMailboxMethodCall changesMailboxMethodCall) {
             final ChangesMailboxMethodCallAdapter changesMailboxMethodCallAdapter = new ChangesMailboxMethodCallAdapter(
                     changesMailboxMethodCall);
@@ -33,13 +33,13 @@ public class ChangesMailboxMethodCallController extends ControllerHandlerBase {
                 final ChangesMailboxMethodResponseAdapter changesMailboxMethodResponseAdapter = (ChangesMailboxMethodResponseAdapter) changesMailboxMethodCallUsecase
                         .call(changesMailboxMethodCallAdapter, handlerRequest.previousResponses());
 
-                return changesMailboxMethodResponseAdapter.adaptee();
+                return new MethodResponse[] { changesMailboxMethodResponseAdapter.adaptee() };
             } catch (final AccountNotFoundException accountNotFoundException) {
-                return new InvalidArgumentsMethodErrorResponse();
+                return new MethodResponse[] { new InvalidArgumentsMethodErrorResponse() };
             } catch (final CannotCalculateChangesException CannotCalculateChangesException) {
-                return new CannotCalculateChangesMethodErrorResponse();
+                return new MethodResponse[] { new CannotCalculateChangesMethodErrorResponse() };
             } catch (final InvalidArgumentsException invalidArgumentsException) {
-                return new InvalidArgumentsMethodErrorResponse();
+                return new MethodResponse[] { new InvalidArgumentsMethodErrorResponse() };
             }
         }
         return super.handle(handlerRequest);

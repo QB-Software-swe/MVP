@@ -23,18 +23,18 @@ public class SetIdentityMethodCallController extends ControllerHandlerBase {
     }
 
     @Override
-    public MethodResponse handle(final HandlerRequest handlerRequest) {
+    public MethodResponse[] handle(final HandlerRequest handlerRequest) {
         if (handlerRequest.methodCall() instanceof SetIdentityMethodCall setIdentityMethodCall) {
             final SetIdentityMethodCallAdapter setIdentityMethodCallAdapter = new SetIdentityMethodCallAdapter(
                     setIdentityMethodCall);
             try {
                 final SetIdentityMethodResponseAdapter setIdentityMethodResponseAdapter = (SetIdentityMethodResponseAdapter) setIdentityMethodCallUsecase
                         .call(setIdentityMethodCallAdapter, handlerRequest.previousResponses());
-                return setIdentityMethodResponseAdapter.adaptee();
+                return new MethodResponse[] { setIdentityMethodResponseAdapter.adaptee() };
             } catch (final AccountNotFoundException accountNotFoundException) {
-                return new InvalidArgumentsMethodErrorResponse();
+                return new MethodResponse[] { new InvalidArgumentsMethodErrorResponse() };
             } catch (final StateMismatchException stateMismatchException) {
-                return new StateMismatchMethodErrorResponse();
+                return new MethodResponse[] { new StateMismatchMethodErrorResponse() };
             }
         }
         return super.handle(handlerRequest);

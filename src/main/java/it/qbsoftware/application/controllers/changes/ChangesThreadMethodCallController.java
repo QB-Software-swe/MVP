@@ -24,7 +24,7 @@ public class ChangesThreadMethodCallController extends ControllerHandlerBase {
     }
 
     @Override
-    public MethodResponse handle(final HandlerRequest handlerRequest) {
+    public MethodResponse[] handle(final HandlerRequest handlerRequest) {
         if (handlerRequest.methodCall() instanceof ChangesThreadMethodCall changesThreadMethodCall) {
             final ChangesThreadMethodCallAdapter changesThreadMethodCallAdapter = new ChangesThreadMethodCallAdapter(
                     changesThreadMethodCall);
@@ -32,13 +32,14 @@ public class ChangesThreadMethodCallController extends ControllerHandlerBase {
             try {
                 final ChangesThreadMethodResponseAdapter changesThreadMethodResponseAdapter = (ChangesThreadMethodResponseAdapter) changesThreadMethodCallUsecase
                         .call(changesThreadMethodCallAdapter, handlerRequest.previousResponses());
-                return changesThreadMethodResponseAdapter.adaptee();
+                        
+                return new MethodResponse[] { changesThreadMethodResponseAdapter.adaptee() };
             } catch (final AccountNotFoundException accountNotFoundException) {
-                return new InvalidArgumentsMethodErrorResponse();
+                return new MethodResponse[] { new InvalidArgumentsMethodErrorResponse() };
             } catch (final CannotCalculateChangesException CannotCalculateChangesException) {
-                return new CannotCalculateChangesMethodErrorResponse();
+                return new MethodResponse[] { new CannotCalculateChangesMethodErrorResponse() };
             } catch (final InvalidArgumentsException invalidArgumentsException) {
-                return new InvalidArgumentsMethodErrorResponse();
+                return new MethodResponse[] { new CannotCalculateChangesMethodErrorResponse() };
             }
         }
         return super.handle(handlerRequest);

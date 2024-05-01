@@ -11,6 +11,8 @@ public interface SetEmailSubmissionMethodCallPort {
 
     public Map<String, Map<String, Object>> getUpdate();
 
+    public Map<String, Map<String, Object>> getOnSuccessUpdateEmail();
+
     public Map<String, EmailSubmissionPort> getCreate();
 
     public String[] getDestroy();

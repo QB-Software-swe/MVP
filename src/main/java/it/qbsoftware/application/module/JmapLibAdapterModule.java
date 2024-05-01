@@ -24,8 +24,10 @@ import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetEmailSubmissionM
 import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetIdentityMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetMailboxMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetThreadMethodResponseBuilderAdapter;
+import it.qbsoftware.adapters.in.jmaplib.method.response.other.EchoMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.query.QueryEmailMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.set.SetEmailMethodResponseBuilderAdapter;
+import it.qbsoftware.adapters.in.jmaplib.method.response.set.SetEmailSubmissionMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.set.SetIdentityMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.set.SetMailboxMethodResponseBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.util.ResultReferenceResolverAdapter;
@@ -48,8 +50,10 @@ import it.qbsoftware.business.ports.in.jmap.method.response.get.GetEmailSubmissi
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetIdentityMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetMailboxMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetThreadMethodResponseBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.method.response.other.EchoMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.query.QueryEmailMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.set.SetEmailMethodResponseBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.method.response.set.SetEmailSubmissionMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.set.SetIdentityMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.set.SetMailboxMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.util.ResultReferenceResolverPort;
@@ -71,6 +75,8 @@ public class JmapLibAdapterModule extends AbstractModule {
                 .to(GetEmailSubmissionMethodResponseBuilderAdapter.class);
 
         // MethodResponse
+        bind(EchoMethodResponseBuilderPort.class).to(EchoMethodResponseBuilderAdapter.class);
+
         bind(GetEmailMethodResponseBuilderPort.class).to(GetEmailMethodResponseBuilderAdapter.class);
         bind(GetIdentityMethodResponseBuilderPort.class).to(GetIdentityMethodResponseBuilderAdapter.class);
         bind(GetMailboxMethodResponseBuilderPort.class).to(GetMailboxMethodResponseBuilderAdapter.class);
@@ -79,6 +85,8 @@ public class JmapLibAdapterModule extends AbstractModule {
         bind(SetEmailMethodResponseBuilderPort.class).to(SetEmailMethodResponseBuilderAdapter.class);
         bind(SetMailboxMethodResponseBuilderPort.class).to(SetMailboxMethodResponseBuilderAdapter.class);
         bind(SetIdentityMethodResponseBuilderPort.class).to(SetIdentityMethodResponseBuilderAdapter.class);
+        bind(SetEmailSubmissionMethodResponseBuilderPort.class)
+                .to(SetEmailSubmissionMethodResponseBuilderAdapter.class);
 
         bind(ChangesEmailMethodResponseBuilderPort.class).to(ChangesEmailMethodResponseBuilderAdapter.class);
         bind(ChangesEmailSubmissionMethodResponseBuilderPort.class)

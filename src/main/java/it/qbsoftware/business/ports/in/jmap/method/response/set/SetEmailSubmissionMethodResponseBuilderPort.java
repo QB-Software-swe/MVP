@@ -6,7 +6,7 @@ import it.qbsoftware.business.ports.in.jmap.entity.EmailSubmissionPort;
 import it.qbsoftware.business.ports.in.jmap.entity.SetErrorPort;
 
 public interface SetEmailSubmissionMethodResponseBuilderPort {
-    public SetEmailSubmissionMethodResponseBuilderPort accountId(final String state);
+    public SetEmailSubmissionMethodResponseBuilderPort accountId(final String accountId);
 
     public SetEmailSubmissionMethodResponseBuilderPort oldState(final String oldState);
 
