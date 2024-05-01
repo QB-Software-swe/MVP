@@ -1,5 +1,6 @@
 package it.qbsoftware.business.domain.methodcall.process.set.update;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +20,7 @@ import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
 import it.qbsoftware.business.ports.in.jmap.entity.SetErrorEnumPort;
 import it.qbsoftware.business.ports.in.jmap.entity.SetErrorPort;
 import it.qbsoftware.business.ports.in.jmap.method.call.set.SetEmailMethodCallPort;
+import it.qbsoftware.business.ports.in.jmap.method.call.set.SetEmailSubmissionMethodCallPort;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.business.ports.out.domain.EmailChangesTrackerRepository;
 import it.qbsoftware.business.ports.out.domain.MailboxChangesTrackerRepository;
@@ -46,13 +48,51 @@ public class StandardUpdateEmail implements UpdateEmail {
     }
 
     @Override
+    public UpdatedResult<EmailPort> update(final SetEmailSubmissionMethodCallPort setEmailSubmissionMethodCallPort,
+            final ListMultimapPort<String, ResponseInvocationPort> previousResponses,
+            final Map<String, String> successSubmissionEmailIdResolve) throws AccountNotFoundException {
+        final String accountId = setEmailSubmissionMethodCallPort.accountId();
+        final HashMap<String, EmailPort> updated = new HashMap<>();
+        final HashMap<String, SetErrorPort> notUpdated = new HashMap<>();
+
+        final Map<String, Map<String, Object>> mapEmailAndPatch = setEmailSubmissionMethodCallPort
+                .getOnSuccessUpdateEmail();
+
+        if (mapEmailAndPatch != null) {
+            for (final Map.Entry<String, Map<String, Object>> mapEmailIdPatchObject : mapEmailAndPatch.entrySet()) {
+                try {
+                    final String key = mapEmailIdPatchObject.getKey();
+                    String solvedKey = key;
+                    if (key.charAt(0) == '#') {
+                        final var resolveResult = successSubmissionEmailIdResolve.entrySet().stream()
+                                .filter(e -> e.getKey().equals(key)).map(e -> e.getValue()).findAny();
+                        solvedKey = resolveResult.isPresent() ? resolveResult.get() : key;
+                    }
+
+                    final EmailPort emailSideEffectDiff = applayPatches(accountId, solvedKey,
+                            mapEmailIdPatchObject.getValue(), previousResponses);
+
+                    updated.put(mapEmailIdPatchObject.getKey(), emailSideEffectDiff);
+
+                } catch (final SetNotFoundException setNotFoundException) {
+                    notUpdated.put(mapEmailIdPatchObject.getKey(), setErrorEnumPort.notFound());
+                } catch (final SetInvalidPatchException setInvalidPatchException) {
+                    notUpdated.put(mapEmailIdPatchObject.getKey(), setErrorEnumPort.invalidPatch());
+                }
+            }
+        }
+
+        return new UpdatedResult<EmailPort>(updated, notUpdated);
+    }
+
+    @Override
     public UpdatedResult<EmailPort> update(final SetEmailMethodCallPort setEmailMethodCall,
             final ListMultimapPort<String, ResponseInvocationPort> previousResponses) throws AccountNotFoundException {
         final String accountId = setEmailMethodCall.accountId();
         final HashMap<String, EmailPort> updated = new HashMap<>();
         final HashMap<String, SetErrorPort> notUpdated = new HashMap<>();
 
-        final var mapEmailAndPatch = setEmailMethodCall.getUpdate();
+        final Map<String, Map<String, Object>> mapEmailAndPatch = setEmailMethodCall.getUpdate();
 
         if (mapEmailAndPatch != null) {
             for (final Map.Entry<String, Map<String, Object>> mapEmailIdPatchObject : mapEmailAndPatch.entrySet()) {
@@ -77,7 +117,8 @@ public class StandardUpdateEmail implements UpdateEmail {
             final Map<String, Object> patchObjects,
             final ListMultimapPort<String, ResponseInvocationPort> previousResponses)
             throws SetNotFoundException, SetInvalidPatchException, AccountNotFoundException {
-        EmailPort emailTarget = emailRepository.retriveOne(emailIdToPatch);
+        EmailPort emailTarget = emailRepository
+                .retriveOne(creationIdResolverPort.resolveIfNecessary(emailIdToPatch, previousResponses));
         final EmailBuilderPort emailSideEffectDiffBuilder = emailTarget.toBuilder();
         EmailBuilderPort emailToPatchBuilder = emailTarget.toBuilder();
 
@@ -88,8 +129,9 @@ public class StandardUpdateEmail implements UpdateEmail {
             final List<String> pathParts = Arrays.asList(path.split("/"));
             emailToPatchBuilder = switch (pathParts.get(0)) {
                 case "keywords":
-                    if (pathParts.size() == 2 && modification instanceof Boolean mBoolean) {
-                        updateEmailChanges(emailIdToPatch, accountId);
+                    if (pathParts.size() == 2 && (modification instanceof Boolean || modification == null)) {
+                        final Boolean mBoolean = (Boolean) modification;
+                        updateEmailChanges(emailTarget.getId(), accountId);
                         yield emailToPatchBuilder.keywords(pathParts.get(1), mBoolean);
                     }
                     throw new SetInvalidPatchException();
@@ -103,12 +145,14 @@ public class StandardUpdateEmail implements UpdateEmail {
                         @SuppressWarnings("unchecked")
                         final Map<String, Boolean> mailboxMap = (Map<String, Boolean>) modification;
                         emailToPatchBuilder.clearMailboxIds();
+                        List<String> mailboxIdsResolve = new ArrayList<>();
                         for (Map.Entry<String, Boolean> mailboxEntry : mailboxMap.entrySet()) {
                             final String mailboxId = creationIdResolverPort.resolveIfNecessary(
                                     mailboxEntry.getKey(), previousResponses);
+                            mailboxIdsResolve.add(mailboxId);
                             emailToPatchBuilder.mailboxId(mailboxId, mailboxEntry.getValue());
                         }
-                        updateMailbox(mailboxMap.keySet().toArray(String[]::new), accountId);
+                        updateMailbox(mailboxIdsResolve.toArray(String[]::new), accountId);
                         yield emailToPatchBuilder;
                     }
                     throw new SetInvalidPatchException();
@@ -127,7 +171,7 @@ public class StandardUpdateEmail implements UpdateEmail {
         final EmailChangesTracker emailChangesTracker = emailChangesTrackerRepository.retrive(accountId);
 
         accountState = accountState.increaseState();
-        emailChangesTracker.emailHasBeenCreated(accountState.state(), emailId);
+        emailChangesTracker.emailHasBeenUpdated(accountState.state(), emailId);
 
         accountStateRepository.save(accountState);
         emailChangesTrackerRepository.save(emailChangesTracker);
@@ -145,5 +189,4 @@ public class StandardUpdateEmail implements UpdateEmail {
         mailboxChangesTrackerRepository.save(mailboxChangesTracker);
         accountStateRepository.save(accountState);
     }
-
 }

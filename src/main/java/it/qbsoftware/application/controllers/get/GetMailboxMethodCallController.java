@@ -24,24 +24,24 @@ public class GetMailboxMethodCallController extends ControllerHandlerBase {
     }
 
     @Override
-    public MethodResponse handle(final HandlerRequest handlerRequest) {
+    public MethodResponse[] handle(final HandlerRequest handlerRequest) {
         if (handlerRequest.methodCall() instanceof GetMailboxMethodCall getMailboxMethodCall) {
 
             final GetMailboxMethodCallAdapter getMailboxMethodCallAdapter = new GetMailboxMethodCallAdapter(
                     getMailboxMethodCall);
 
-            GetMailboxMethodResponseAdapter getMailboxMethodResponseAdapter = null;
             try {
-                getMailboxMethodResponseAdapter = (GetMailboxMethodResponseAdapter) getMailboxMethodCallService
+                final GetMailboxMethodResponseAdapter getMailboxMethodResponseAdapter = (GetMailboxMethodResponseAdapter) getMailboxMethodCallService
                         .call(getMailboxMethodCallAdapter, handlerRequest.previousResponses());
+
+                return new MethodResponse[] { getMailboxMethodResponseAdapter.adaptee() };
             } catch (final AccountNotFoundException accountNotFoundException) {
-                return new InvalidArgumentsMethodErrorResponse();
+                return new MethodResponse[] { new InvalidArgumentsMethodErrorResponse() };
             } catch (final InvalidResultReferenceExecption invalidResultReferenceExecption) {
-                return new InvalidResultReferenceMethodErrorResponse();
+                return new MethodResponse[] { new InvalidResultReferenceMethodErrorResponse() };
             } catch (final InvalidArgumentsException invalidArgumentsException) {
-                return new InvalidArgumentsMethodErrorResponse();
+                return new MethodResponse[] { new InvalidArgumentsMethodErrorResponse() };
             }
-            return getMailboxMethodResponseAdapter.adaptee();
         }
 
         return super.handle(handlerRequest);

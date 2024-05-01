@@ -25,24 +25,23 @@ public class GetEmailSubmissionMethodCallController extends ControllerHandlerBas
     }
 
     @Override
-    public MethodResponse handle(final HandlerRequest handlerRequest) {
+    public MethodResponse[] handle(final HandlerRequest handlerRequest) {
         if (handlerRequest.methodCall() instanceof GetEmailSubmissionMethodCall getEmailSubmissionMethodCall) {
             final GetEmailSubmissionMethodCallAdapter getEmailSubmissionMethodCallAdapter = new GetEmailSubmissionMethodCallAdapter(
                     getEmailSubmissionMethodCall);
 
-            GetEmailSubmissionMethodResponseAdapter getEmailSubmissionMethodResponseAdapter = null;
             try {
-                getEmailSubmissionMethodResponseAdapter = (GetEmailSubmissionMethodResponseAdapter) getEmailSubmissionMethodCallUsecase
+                final GetEmailSubmissionMethodResponseAdapter getEmailSubmissionMethodResponseAdapter = (GetEmailSubmissionMethodResponseAdapter) getEmailSubmissionMethodCallUsecase
                         .call(getEmailSubmissionMethodCallAdapter, handlerRequest.previousResponses());
-            } catch (final AccountNotFoundException accountNotFoundException) {
-                return new InvalidArgumentsMethodErrorResponse();
-            } catch (final InvalidResultReferenceExecption invalidResultReferenceExecption) {
-                return new InvalidResultReferenceMethodErrorResponse();
-            } catch (final InvalidArgumentsException invalidArgumentsException) {
-                return new InvalidArgumentsMethodErrorResponse();
-            }
 
-            return getEmailSubmissionMethodResponseAdapter.adaptee();
+                return new MethodResponse[] { getEmailSubmissionMethodResponseAdapter.adaptee() };
+            } catch (final AccountNotFoundException accountNotFoundException) {
+                return new MethodResponse[] { new InvalidArgumentsMethodErrorResponse() };
+            } catch (final InvalidResultReferenceExecption invalidResultReferenceExecption) {
+                return new MethodResponse[] { new InvalidResultReferenceMethodErrorResponse() };
+            } catch (final InvalidArgumentsException invalidArgumentsException) {
+                return new MethodResponse[] { new InvalidArgumentsMethodErrorResponse() };
+            }
         }
         return super.handle(handlerRequest);
     }

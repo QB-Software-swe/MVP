@@ -13,4 +13,6 @@ public interface EmailBodyPartBuilderPort {
     public EmailBodyPartBuilderPort size(final Long size);
 
     public EmailBodyPartPort build();
+
+    public EmailBodyPartBuilderPort reset();
 }

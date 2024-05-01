@@ -23,7 +23,7 @@ public class QueryEmailMethodCallController extends ControllerHandlerBase {
     }
 
     @Override
-    public MethodResponse handle(final HandlerRequest handlerRequest) {
+    public MethodResponse[] handle(final HandlerRequest handlerRequest) {
         if (handlerRequest.methodCall() instanceof QueryEmailMethodCall queryEmailMethodCall) {
             final QueryEmailMethodCallAdapter queryEmailMethodCallAdapter = new QueryEmailMethodCallAdapter(
                     queryEmailMethodCall);
@@ -31,11 +31,12 @@ public class QueryEmailMethodCallController extends ControllerHandlerBase {
             try {
                 final QueryEmailMethodResponseAdapter queryEmailMethodResponseAdapter = (QueryEmailMethodResponseAdapter) queryEmailMethodCallUsecase
                         .call(queryEmailMethodCallAdapter, handlerRequest.previousResponses());
-                return queryEmailMethodResponseAdapter.adaptee();
+
+                return new MethodResponse[] { queryEmailMethodResponseAdapter.adaptee() };
             } catch (final QueryAnchorNotFoundException queryAnchorNotFoundException) {
-                return new AnchorNotFoundMethodErrorResponse();
+                return new MethodResponse[] { new AnchorNotFoundMethodErrorResponse() };
             } catch (final AccountNotFoundException accountNotFoundException) {
-                return new InvalidArgumentsMethodErrorResponse();
+                return new MethodResponse[] { new InvalidArgumentsMethodErrorResponse() };
             }
         }
 

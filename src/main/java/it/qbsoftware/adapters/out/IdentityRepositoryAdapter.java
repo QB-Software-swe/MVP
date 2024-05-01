@@ -24,7 +24,7 @@ import it.qbsoftware.persistance.MongoConnection;
 import rs.ltt.jmap.common.entity.Identity;
 
 public class IdentityRepositoryAdapter implements IdentityRepository {
-    private static final String COLLECTION = "indetity";
+    private static final String COLLECTION = "identity";
     private final MongoConnection connection;
     private final Gson gson;
 

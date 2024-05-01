@@ -25,24 +25,23 @@ public class ChangesEmailSubmissionMethodCallController extends ControllerHandle
     }
 
     @Override
-    public MethodResponse handle(final HandlerRequest handlerRequest) {
+    public MethodResponse[] handle(final HandlerRequest handlerRequest) {
         if (handlerRequest.methodCall() instanceof ChangesEmailSubmissionMethodCall changesEmailSubmissionMethodCall) {
             final ChangesEmailSubmissionMethodCallAdapter changesEmailSubmissionMethodCallAdapter = new ChangesEmailSubmissionMethodCallAdapter(
                     changesEmailSubmissionMethodCall);
 
-            ChangesEmailSubmissionMethodResponseAdapter changesEmailSubmissionMethodResponseAdapter;
             try {
-                changesEmailSubmissionMethodResponseAdapter = (ChangesEmailSubmissionMethodResponseAdapter) changesEmailSubmissionMethodCallUsecase
+                final ChangesEmailSubmissionMethodResponseAdapter changesEmailSubmissionMethodResponseAdapter = (ChangesEmailSubmissionMethodResponseAdapter) changesEmailSubmissionMethodCallUsecase
                         .call(changesEmailSubmissionMethodCallAdapter, handlerRequest.previousResponses());
-            } catch (final AccountNotFoundException accountNotFoundException) {
-                return new InvalidArgumentsMethodErrorResponse();
-            } catch (final CannotCalculateChangesException CannotCalculateChangesException) {
-                return new CannotCalculateChangesMethodErrorResponse();
-            } catch (final InvalidArgumentsException invalidArgumentsException) {
-                return new InvalidArgumentsMethodErrorResponse();
-            }
 
-            return changesEmailSubmissionMethodResponseAdapter.adaptee();
+                return new MethodResponse[] { changesEmailSubmissionMethodResponseAdapter.adaptee() };
+            } catch (final AccountNotFoundException accountNotFoundException) {
+                return new MethodResponse[] { new InvalidArgumentsMethodErrorResponse() };
+            } catch (final CannotCalculateChangesException CannotCalculateChangesException) {
+                return new MethodResponse[] { new CannotCalculateChangesMethodErrorResponse() };
+            } catch (final InvalidArgumentsException invalidArgumentsException) {
+                return new MethodResponse[] { new InvalidArgumentsMethodErrorResponse() };
+            }
         }
         return super.handle(handlerRequest);
     }

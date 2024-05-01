@@ -1,10 +1,12 @@
 package it.qbsoftware.business.domain.methodcall.process.set.create;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import it.qbsoftware.business.domain.entity.changes.AccountState;
@@ -16,6 +18,8 @@ import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
 import it.qbsoftware.business.domain.exception.set.SetSingletonException;
 import it.qbsoftware.business.domain.util.get.CreationIdResolverPort;
 import it.qbsoftware.business.ports.in.guava.ListMultimapPort;
+import it.qbsoftware.business.ports.in.jmap.entity.EmailBodyPartPort;
+import it.qbsoftware.business.ports.in.jmap.entity.EmailBodyValuePort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
@@ -99,7 +103,10 @@ public class StandardCreateEmail implements CreateEmail {
                                                                               // dell'e-mail per i raw
         // email
         // NOTA data
-        final String threadId = resolveThread(emailPort.getSubject(), accountId);
+        final Optional<String> resolvedThread = resolveThread(emailPort.getSubject(), accountId);
+        final String threadId = resolvedThread.isPresent() ? resolvedThread.get()
+                : accountId + "/" + UUID.randomUUID().toString();
+        ;
 
         final Long size = 10L; // NOTA: finto
         final Instant recevidAt = Instant.now();
@@ -114,7 +121,7 @@ public class StandardCreateEmail implements CreateEmail {
                 .id(emailId)
                 .blobId(blobId)
                 .threadId(threadId)
-                .size(size)
+                .hasAttachment(false)
                 .clearMailboxIds()
                 .mailboxIds(mailboxIds)
                 .receivedAt(recevidAt);
@@ -128,23 +135,59 @@ public class StandardCreateEmail implements CreateEmail {
                 .mailboxIds(mailboxIds)
                 .receivedAt(recevidAt);
 
+        // STUFF
+        final List<EmailBodyPartPort> attachments = emailPort.getAttachments();
+        emailToSaveBuilder.clearAttachments();
+        if (attachments != null) {
+            for (final EmailBodyPartPort attachment : attachments) {
+                final String partId = attachment.getPartId();
+                final EmailBodyValuePort value = partId == null ? null : emailPort.getBodyValues().get(partId);
+                if (value != null) {
+                    final EmailBodyPartPort emailBodyPart = injectId(attachment);
+                    emailToSaveBuilder.attachment(emailBodyPart);
+                } else {
+                    emailToSaveBuilder.attachment(attachment);
+                }
+            }
+        }
+        //
+
         try {
             emailRepository.save(emailToSaveBuilder.build());
             accountStateRepository.save(accountStateRepository.retrive(accountId).increaseState());
 
             ThreadPort x = threadRepository.retriveOne(threadId);
-            var p = new ArrayList<>(x.getEmailIds());
-            p.add(emailId);
-            threadRepository.save(x.toBuilder().emailIds(p).build()); // In ogni caso
+            LinkedHashSet<String> setEmailBelongThisThread = new LinkedHashSet<>(x.getEmailIds());
+            if (!setEmailBelongThisThread.contains(emailId)) {
+                setEmailBelongThisThread.add(emailId);
+                threadRepository.save(x.toBuilder().clearEmailIds().emailIds(setEmailBelongThisThread).build());
+            }
 
             updateEmailChanges(emailId, accountId);
-            updateThread(emailPort.getThreadId(), threadId, accountId);
+
+            if (resolvedThread.isPresent()) {
+                updateThreadChanges(threadId, accountId);
+            } else {
+                createThreadChanges(threadId, accountId);
+            }
+
             updateMailbox(mailboxIds.keySet().toArray(String[]::new), accountId);
         } catch (final SetSingletonException setSingletonException) {
             return email(emailPort, previousResponses, accountId);
         }
 
         return emailWithOnlyServerSetPropertiesBuilder.build();
+    }
+
+    private EmailBodyPartPort injectId(final EmailBodyPartPort attachment) {
+        return attachment
+        .toBuilder()
+            .reset()
+            .blobId(UUID.randomUUID().toString())
+            .charset(attachment.getCharset())
+            .name(attachment.getName())
+            .size(attachment.getSize())
+            .build();
     }
 
     private Map<String, Boolean> resolveMailboxIdsReference(final Map<String, Boolean> mailboxIds,
@@ -173,17 +216,25 @@ public class StandardCreateEmail implements CreateEmail {
         emailChangesTrackerRepository.save(emailChangesTracker);
     }
 
-    private void updateThread(final String clientThread, final String threadId, final String accountId)
+    private void updateThreadChanges(final String threadId, final String accountId)
             throws AccountNotFoundException {
         ThreadChangesTracker threadChangesTracker = threadChangesTrackerRepository.retrive(accountId);
         AccountState accountState = accountStateRepository.retrive(accountId);
         accountState = accountState.increaseState();
 
-        if (clientThread != null && clientThread.equals(threadId)) {
-            threadChangesTracker = threadChangesTracker.threadHasBeenUpdated(accountState.state(), threadId);
-        } else {
-            threadChangesTracker = threadChangesTracker.threadHasBeenCreated(accountState.state(), threadId);
-        }
+        threadChangesTracker = threadChangesTracker.threadHasBeenUpdated(accountState.state(), threadId);
+
+        threadChangesTrackerRepository.save(threadChangesTracker);
+        accountStateRepository.save(accountState);
+    }
+
+    private void createThreadChanges(final String threadId, final String accountId)
+            throws AccountNotFoundException {
+        ThreadChangesTracker threadChangesTracker = threadChangesTrackerRepository.retrive(accountId);
+        AccountState accountState = accountStateRepository.retrive(accountId);
+        accountState = accountState.increaseState();
+
+        threadChangesTracker = threadChangesTracker.threadHasBeenCreated(accountState.state(), threadId);
 
         threadChangesTrackerRepository.save(threadChangesTracker);
         accountStateRepository.save(accountState);
@@ -203,15 +254,15 @@ public class StandardCreateEmail implements CreateEmail {
         accountStateRepository.save(accountState);
     }
 
-    private String resolveThread(final String subject, final String accountId) {
+    private Optional<String> resolveThread(final String subject, final String accountId) {
         if (subject.substring(0, 3).equals("Re:")) {
             final var x = Arrays.asList(emailRepository.retriveAll(accountId).found()).stream()
                     .filter(e -> e.getSubject().trim().equals(subject.substring(3).trim())).findAny();
             if (x.isPresent()) {
-                return x.get().getThreadId();
+                return Optional.of(x.get().getThreadId());
             }
         }
 
-        return accountId + "/" + UUID.randomUUID().toString();
+        return Optional.empty();
     }
 }
