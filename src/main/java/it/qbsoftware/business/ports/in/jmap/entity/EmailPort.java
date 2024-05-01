@@ -23,5 +23,7 @@ public interface EmailPort {
 
     public Instant getReceivedAt();
 
+    public String getSubject();
+
     public EmailBuilderPort toBuilder();
 }

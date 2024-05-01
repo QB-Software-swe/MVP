@@ -38,12 +38,15 @@ public class StandardDestroyIdentity implements DestroyIdentity {
         final List<String> destroyed = new ArrayList<>();
         final Map<String, SetErrorPort> notDestroyed = new HashMap<>();
 
-        for (final String identityIdToDestroy : setIdentityMethodCallPort.getDestroy()) {
-            try {
-                destroyIdentity(identityIdToDestroy, identityIdToDestroy);
-                destroyed.add(identityIdToDestroy);
-            } catch (final SetNotFoundException setNotFoundException) {
-                notDestroyed.put(identityIdToDestroy, setErrorEnumPort.notFound());
+        final var identitiesToDestroy = setIdentityMethodCallPort.getDestroy();
+        if (identitiesToDestroy != null) {
+            for (final String identityIdToDestroy : identitiesToDestroy) {
+                try {
+                    destroyIdentity(identityIdToDestroy, identityIdToDestroy);
+                    destroyed.add(identityIdToDestroy);
+                } catch (final SetNotFoundException setNotFoundException) {
+                    notDestroyed.put(identityIdToDestroy, setErrorEnumPort.notFound());
+                }
             }
         }
 

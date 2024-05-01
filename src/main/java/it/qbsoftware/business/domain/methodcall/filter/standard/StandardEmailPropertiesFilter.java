@@ -29,7 +29,6 @@ public class StandardEmailPropertiesFilter implements EmailPropertiesFilter {
         }
 
         return filtredEmail.toArray(EmailPort[]::new);
-
     }
 
     private EmailPort emailFilter(final EmailPort emailPort, final String[] properties)

@@ -152,8 +152,6 @@ public class StandardCreateEmailTest {
         doNothing().when(accountStateRepository).save(any());
         doNothing().when(threadRepository).save(any());
 
-        assertNotNull(accountStateRepository.retrive("accountId"));
-
         CreatedResult<EmailPort> result = standardCreateEmail.create(setEmailMethodCallPort, previousResponses);
 
         assertNotNull(result);
@@ -232,8 +230,6 @@ public class StandardCreateEmailTest {
         doNothing().when(accountStateRepository).save(any());
         doNothing().when(threadRepository).save(any());
 
-        assertNotNull(accountStateRepository.retrive("accountId"));
-
         CreatedResult<EmailPort> result = standardCreateEmail.create(setEmailMethodCallPort, previousResponses);
 
         assertNotNull(result);
@@ -280,8 +276,6 @@ public class StandardCreateEmailTest {
         doNothing().when(accountStateRepository).save(any());
         doNothing().when(threadRepository).save(any());
 
-        assertNotNull(accountStateRepository.retrive("accountId"));
-
         CreatedResult<EmailPort> result = standardCreateEmail.create(setEmailMethodCallPort, previousResponses);
 
         assertNotNull(result);
@@ -292,7 +286,7 @@ public class StandardCreateEmailTest {
     }
 
     @Test
-    public void testCreateWithBoh() throws Exception {     
+    public void testCreateWithSameId() throws Exception {     
         EmailPort emailPort = mock(EmailPort.class);
         Map<String, EmailPort> mapEmailToCreate = new HashMap<>();
         mapEmailToCreate.put("key", emailPort);
@@ -326,8 +320,6 @@ public class StandardCreateEmailTest {
         doNothing().when(accountStateRepository).save(any());
         doNothing().when(threadRepository).save(any());
 
-        assertNotNull(accountStateRepository.retrive("accountId"));
-
         CreatedResult<EmailPort> result = standardCreateEmail.create(setEmailMethodCallPort, previousResponses);
 
         assertNotNull(result);
@@ -338,7 +330,7 @@ public class StandardCreateEmailTest {
     }
 
     @Test
-    public void testCreateWithBah() throws Exception {     
+    public void testCreateWithNullIdrResolver() throws Exception {     
         EmailPort emailPort = mock(EmailPort.class);
         Map<String, EmailPort> mapEmailToCreate = new HashMap<>();
         mapEmailToCreate.put("key", emailPort);
@@ -371,8 +363,6 @@ public class StandardCreateEmailTest {
         doNothing().when(emailRepository).save(any());
         doNothing().when(accountStateRepository).save(any());
         doNothing().when(threadRepository).save(any());
-
-        assertNotNull(accountStateRepository.retrive("accountId"));
 
         CreatedResult<EmailPort> result = standardCreateEmail.create(setEmailMethodCallPort, previousResponses);
 

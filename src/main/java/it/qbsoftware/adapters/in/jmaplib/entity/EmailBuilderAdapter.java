@@ -55,13 +55,17 @@ public class EmailBuilderAdapter implements EmailBuilderPort {
     }
 
     @Override
-    public EmailBuilderPort keywords(Map<String, Boolean> keywords) {
+    public EmailBuilderPort keywords(final Map<String, Boolean> keywords) {
+        if (keywords == null) {
+            return this;
+        }
+
         this.emailBuilder.keywords(keywords);
         return this;
     }
 
     @Override
-    public EmailBuilderPort mailboxIds(Map<String, Boolean> mailboxIds) {
+    public EmailBuilderPort mailboxIds(final Map<String, Boolean> mailboxIds) {
         this.emailBuilder.mailboxIds(mailboxIds);
         return this;
     }
