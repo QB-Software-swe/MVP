@@ -75,4 +75,9 @@ public class EmailAdapter implements EmailPort {
     public Email adaptee() {
         return this.email;
     }
+
+    @Override
+    public String getSubject() {
+        return email.getSubject();
+    }
 }

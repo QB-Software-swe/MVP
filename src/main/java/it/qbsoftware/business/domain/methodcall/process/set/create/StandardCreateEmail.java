@@ -2,6 +2,7 @@ package it.qbsoftware.business.domain.methodcall.process.set.create;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -98,9 +99,8 @@ public class StandardCreateEmail implements CreateEmail {
                                                                               // dell'e-mail per i raw
         // email
         // NOTA data
-        final String threadId = emailPort.getThreadId() != null
-                ? creationIdResolverPort.resolveIfNecessary(emailPort.getThreadId(), previousResponses)
-                : accountId + "/" + UUID.randomUUID().toString(); // NOTA: funziona veramente così?
+        final String threadId = resolveThread(emailPort.getSubject(), accountId);
+
         final Long size = 10L; // NOTA: finto
         final Instant recevidAt = Instant.now();
         // final Boolean hasAttachment = false; // NOTA: A prescindere, non rientra tra
@@ -115,6 +115,7 @@ public class StandardCreateEmail implements CreateEmail {
                 .blobId(blobId)
                 .threadId(threadId)
                 .size(size)
+                .clearMailboxIds()
                 .mailboxIds(mailboxIds)
                 .receivedAt(recevidAt);
 
@@ -200,5 +201,17 @@ public class StandardCreateEmail implements CreateEmail {
 
         mailboxChangesTrackerRepository.save(mailboxChangesTracker);
         accountStateRepository.save(accountState);
+    }
+
+    private String resolveThread(final String subject, final String accountId) {
+        if (subject.substring(0, 3).equals("Re:")) {
+            final var x = Arrays.asList(emailRepository.retriveAll(accountId).found()).stream()
+                    .filter(e -> e.getSubject().trim().equals(subject.substring(3).trim())).findAny();
+            if (x.isPresent()) {
+                return x.get().getThreadId();
+            }
+        }
+
+        return accountId + "/" + UUID.randomUUID().toString();
     }
 }
