@@ -10,6 +10,11 @@ public class EmailAddressAdapter implements EmailAddressPort {
         this.emailAddress = emailAddress;
     }
 
+    @Override
+    public String getEmail() {
+        return emailAddress.getEmail();
+    }
+
     public EmailAddress adaptee() {
         return emailAddress;
     }

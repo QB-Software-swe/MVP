@@ -83,6 +83,15 @@ public class MailboxRepositoryAdapter implements MailboxRepository {
 
     @Override
     public void save(final MailboxPort mailboxPort) throws SetSingletonException {
+        final Bson nameCheck = Filters.eq("name", mailboxPort.getName());
+        final Bson parentCheck = Filters.eq("parentId", mailboxPort.getParentId());
+
+        final var finds = connection.getDatabase().getCollection(COLLECTION).find(Filters.and(nameCheck, parentCheck));
+        for (final var duplicate : finds) {
+            duplicate.clear();;
+            throw new SetSingletonException();
+        }
+
         final Document mailboxDoc = Document.parse(gson.toJson(((MailboxAdapter) mailboxPort).adaptee()));
         mailboxDoc.put("_id", mailboxPort.getId());
         try {
