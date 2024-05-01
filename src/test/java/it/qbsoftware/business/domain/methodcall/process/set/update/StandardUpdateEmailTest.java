@@ -26,6 +26,7 @@ import it.qbsoftware.business.ports.in.jmap.entity.EmailPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
 import it.qbsoftware.business.ports.in.jmap.entity.SetErrorEnumPort;
 import it.qbsoftware.business.ports.in.jmap.method.call.set.SetEmailMethodCallPort;
+import it.qbsoftware.business.ports.in.jmap.method.call.set.SetEmailSubmissionMethodCallPort;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.business.ports.out.domain.EmailChangesTrackerRepository;
 import it.qbsoftware.business.ports.out.domain.MailboxChangesTrackerRepository;
@@ -71,13 +72,86 @@ public class StandardUpdateEmailTest {
     SetEmailMethodCallPort setEmailMethodCallPort;
 
     @Mock
+    SetEmailSubmissionMethodCallPort setEmailSubmissionMethodCallPort;
+
+    @Mock
+    Map<String, String> successSubmissionEmailIdResolve;
+
+    @Mock
     ListMultimapPort<String, ResponseInvocationPort> previousResponses;
 
     @InjectMocks
     StandardUpdateEmail standardUpdateEmail;
 
     @Test
-    public void testUpdateWithNullIdsToUpdate() throws AccountNotFoundException {     
+    public void testUpdateEmailSubmissionWithNullGetOnSuccessUpdateEmail() throws AccountNotFoundException {
+
+        when(setEmailSubmissionMethodCallPort.getOnSuccessUpdateEmail()).thenReturn(null);
+
+        UpdatedResult<EmailPort> result = standardUpdateEmail.update(setEmailSubmissionMethodCallPort, previousResponses, successSubmissionEmailIdResolve);
+
+        assertTrue(result.updated().isEmpty());
+        assertTrue(result.notUpdated().isEmpty());
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testUpdateEmailSubmissionWithNotNullGetOnSuccessUpdateEmail() throws Exception {
+        Map<String,Boolean> map = new HashMap<>();
+        map.put("#", true);
+        Map<String, Object> mapObj = new HashMap<>();
+        mapObj.put("#", map);
+        Map<String, Map<String, Object>> mapEmailToUpdate = new HashMap<>();
+        mapEmailToUpdate.put("#", mapObj);
+
+        when(setEmailSubmissionMethodCallPort.getOnSuccessUpdateEmail()).thenReturn(mapEmailToUpdate);
+        when(emailRepository.retriveOne(any())).thenReturn(emailPort);
+        when(emailPort.toBuilder()).thenReturn(emailBuilderPort);
+
+        UpdatedResult<EmailPort> result = standardUpdateEmail.update(setEmailSubmissionMethodCallPort, previousResponses, successSubmissionEmailIdResolve);
+
+        assertTrue(result.updated().isEmpty());
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testUpdateEmailSubmissionWithSetInvalidPatchException() throws Exception {     
+
+        Map<String, Object> mapObj = new HashMap<>();
+        mapObj.put("/keywords", true);
+        Map<String, Map<String, Object>> mapEmailToUpdate = new HashMap<>();
+        mapEmailToUpdate.put("/keywords", mapObj);
+
+        when(setEmailSubmissionMethodCallPort.accountId()).thenReturn("accountId");
+        
+        UpdatedResult<EmailPort> result = standardUpdateEmail.update(setEmailSubmissionMethodCallPort, previousResponses, successSubmissionEmailIdResolve);
+
+        assertNotNull(result);
+    }
+
+    /*
+    //TODO TEST: NON FA QUELLO CHE DOVREBBE
+    @Test
+    public void testUpdateEmailSubmissionWithSetNotFoundException() throws Exception {     
+
+        Map<String, Object> mapObj = new HashMap<>();
+        mapObj.put("keywords/qualcosa", true);
+        Map<String, Map<String, Object>> mapEmailToUpdate = new HashMap<>();
+        mapEmailToUpdate.put("/keywords", mapObj);
+
+        SetNotFoundException setNotFoundException = new SetNotFoundException();
+        
+        when(setEmailSubmissionMethodCallPort.getUpdate()).thenReturn(mapEmailToUpdate);
+        when(emailRepository.retriveOne(any())).thenThrow(setNotFoundException);
+        when(setEmailSubmissionMethodCallPort.accountId()).thenReturn("accountId");
+
+        UpdatedResult<EmailPort> result = standardUpdateEmail.update(setEmailSubmissionMethodCallPort, previousResponses, successSubmissionEmailIdResolve);
+
+        assertNotNull(result);
+    }*/
+
+    @Test
+    public void testUpdateEmailMethodCallWithNullIdsToUpdate() throws AccountNotFoundException {     
         
         when(setEmailMethodCallPort.getUpdate()).thenReturn(null);
 
@@ -89,7 +163,7 @@ public class StandardUpdateEmailTest {
     }
 
     @Test
-    public void testUpdateWithMailboxMap() throws Exception {     
+    public void testUpdateEmailMethodCallWithMailboxMap() throws Exception {     
         Map<String,Boolean> map = new HashMap<>();
         map.put("key", true);
         Map<String, Object> mapObj = new HashMap<>();
@@ -112,9 +186,10 @@ public class StandardUpdateEmailTest {
 
         assertNotNull(result);
     }
+    
 
     @Test
-    public void testUpdateWithSetInvalidPatchException() throws Exception {     
+    public void testUpdateEmailMethodCallWithSetInvalidPatchException() throws Exception {     
 
         Map<String, Object> mapObj = new HashMap<>();
         mapObj.put("/keywords", true);
@@ -133,7 +208,7 @@ public class StandardUpdateEmailTest {
     }
 
     @Test
-    public void testUpdateWithSetNotFoundException() throws Exception {     
+    public void testUpdateEmailMethodCallWithSetNotFoundException() throws Exception {     
 
         Map<String, Object> mapObj = new HashMap<>();
         mapObj.put("/keywords", true);
