@@ -166,17 +166,6 @@ public class StandardCreateEmail implements CreateEmail {
         return emailWithOnlyServerSetPropertiesBuilder.build();
     }
 
-    private EmailBodyPartPort injectId(final EmailBodyPartPort attachment) {
-        return attachment
-                .toBuilder()
-                .reset()
-                .blobId(UUID.randomUUID().toString())
-                .charset(attachment.getCharset())
-                .name(attachment.getName())
-                .size(attachment.getSize())
-                .build();
-    }
-
     private Map<String, Boolean> resolveMailboxIdsReference(final Map<String, Boolean> mailboxIds,
             final ListMultimapPort<String, ResponseInvocationPort> previousResponses) throws InvalidArgumentsException {
         if (mailboxIds == null) {

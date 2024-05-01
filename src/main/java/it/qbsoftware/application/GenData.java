@@ -1,17 +1,12 @@
 package it.qbsoftware.application;
 
-import java.time.Instant;
-import java.time.ZoneOffset;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 
-import it.qbsoftware.adapters.in.jmaplib.entity.EmailAdapter;
 import it.qbsoftware.adapters.in.jmaplib.entity.IdentityAdapter;
 import it.qbsoftware.adapters.in.jmaplib.entity.MailboxAdapter;
 import it.qbsoftware.adapters.in.jmaplib.entity.SessionResourceAdapter;
@@ -27,39 +22,25 @@ import rs.ltt.jmap.common.SessionResource;
 import rs.ltt.jmap.common.SessionResource.SessionResourceBuilder;
 import rs.ltt.jmap.common.entity.Account;
 import rs.ltt.jmap.common.entity.Capability;
-import rs.ltt.jmap.common.entity.Email;
-import rs.ltt.jmap.common.entity.EmailAddress;
-import rs.ltt.jmap.common.entity.EmailBodyPart;
-import rs.ltt.jmap.common.entity.EmailBodyValue;
 import rs.ltt.jmap.common.entity.Identity;
 import rs.ltt.jmap.common.entity.Mailbox;
-import rs.ltt.jmap.common.entity.Mailbox.MailboxBuilder;
 import rs.ltt.jmap.common.entity.Role;
 import rs.ltt.jmap.common.entity.capability.CoreCapability;
 import rs.ltt.jmap.common.entity.capability.MailAccountCapability;
 import rs.ltt.jmap.common.entity.capability.MailCapability;
 
-//TODO: remove me
-//NOTA: accountid == user per questo caso
 public class GenData {
         private final MongoConnection mongoConnection;
         private final UserSessionResourceRepositoryAdapter userSessionResourceRepositoryAdapter;
-        private final EmailRepository emailRepository;
         private final MailboxRepository mailboxRepository;
         private final AccountStateRepository accountStateRepository;
         private final IdentityRepository identityRepository;
-        private final Random random = new Random();
 
         private final List<String> users = Arrays.asList(new String[] {
                         "team@qbsoftware.swe.it",
                         "example.email@example.net",
                         "alphabravo@delta.a3x",
         });
-        private final List<MailboxBuilder> mailboxs = Arrays.asList(new MailboxBuilder[] {
-                        Mailbox.builder().name("Arrivati").role(Role.INBOX),
-                        Mailbox.builder().name("Roba").role(Role.ARCHIVE)
-        });
-        private final Long howManyEmailsPerAccount = 20L;
 
         @Inject
         public GenData(final UserSessionResourceRepositoryAdapter userSessionResourceRepositoryAdapter,
@@ -68,7 +49,6 @@ public class GenData {
                         final IdentityRepository identityRepository, final MailboxRepository mailboxRepository) {
                 this.mongoConnection = mongoConnection;
                 this.userSessionResourceRepositoryAdapter = userSessionResourceRepositoryAdapter;
-                this.emailRepository = emailRepository;
                 this.mailboxRepository = mailboxRepository;
                 this.accountStateRepository = accountStateRepository;
                 this.identityRepository = identityRepository;
@@ -77,10 +57,6 @@ public class GenData {
         public void generate() {
                 mongoConnection.getDatabase().drop();
                 generateSession();
-                generateIdentity();
-                //final List<String> mailboxIds = generateMailbox();
-                //genEmails(mailboxIds);
-                //genMailbox(mailboxIds);
         }
 
         public void genMailbox(final List<String> mailboxIds) {
@@ -96,7 +72,6 @@ public class GenData {
 
                                 ));
                         } catch (SetSingletonException e) {
-                                // TODO Auto-generated catch block
                                 e.printStackTrace();
                         }
                 }
@@ -115,73 +90,6 @@ public class GenData {
                                                                                         .name("Identità d'esempio")
                                                                                         .build()));
                                 } catch (final SetSingletonException e) {
-                                        e.printStackTrace();
-                                }
-                        }
-                }
-        }
-
-        private List<String> generateMailbox() {
-                final List<String> mailboxids = new ArrayList<>();
-
-                for (String user : users) {
-                        for (MailboxBuilder mailboxBuilder : mailboxs) {
-                                final String mailboxId = user + "/" + UUID.randomUUID().toString();
-                                mailboxids.add(mailboxId);
-                                /*
-                                 * try {
-                                 * mailboxRepository .save(new
-                                 * MailboxAdapter(mailboxBuilder.id(mailboxId).build()));
-                                 * } catch (SetSingletonException e) {
-                                 * e.printStackTrace();
-                                 * }
-                                 */
-                        }
-                }
-
-                return mailboxids;
-        }
-
-        private void genEmails(final List<String> mailboxIds) {
-                for (final String user : users) {
-                        for (Long x = 0L; x < howManyEmailsPerAccount; x++) {
-                                Email email = Email.builder()
-                                                .id(user + "/" + UUID.randomUUID().toString())
-                                                .threadId(user + "/" + UUID.randomUUID().toString())
-                                                .sentAt(Instant.now().atOffset(ZoneOffset.ofHours(1)))
-                                                .receivedAt(Instant.now())
-                                                .to(
-                                                                EmailAddress.builder()
-                                                                                .email("team@qbsoftware.org")
-                                                                                .name("QB Software")
-                                                                                .build())
-                                                .mailboxId(mailboxIds.get(random.nextInt(mailboxIds.size())), true)
-                                                .from(
-                                                                EmailAddress.builder()
-                                                                                .email("example@mail.org")
-                                                                                .name("Nome del mittente")
-                                                                                .build())
-                                                .subject("Esempio oggetto dell'e-mail")
-                                                .preview("Una breve preview dell'e-mail")
-                                                .bodyStructure(
-                                                                EmailBodyPart.builder().partId("0").type("text/plain")
-                                                                                .build())
-                                                .bodyValue(
-                                                                "0",
-                                                                EmailBodyValue.builder()
-                                                                                .value(
-                                                                                                "Ciao, questo è un esempio di contenuto (body)"
-                                                                                                                + " di un e-mail.")
-                                                                                .build())
-                                                .textBody(
-                                                                EmailBodyPart.builder().partId("0").type("text/plain")
-                                                                                .build())
-                                                .keyword("$seen", true)
-                                                .build();
-
-                                try {
-                                        emailRepository.save(new EmailAdapter(email));
-                                } catch (SetSingletonException e) {
                                         e.printStackTrace();
                                 }
                         }
