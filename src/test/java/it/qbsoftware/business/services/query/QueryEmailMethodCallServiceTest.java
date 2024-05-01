@@ -109,7 +109,6 @@ public class QueryEmailMethodCallServiceTest {
 
     @Test
     public void testCallWithAnchorNull() throws Exception{
-        //TODO
         EmailPort[] emails = new EmailPort[] {emailPort};
 
         when(queryEmailMethodCallPort.getAccountId()).thenReturn("accountId");
