@@ -4,6 +4,7 @@ import static org.junit.Assert.assertArrayEquals;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
@@ -19,10 +20,12 @@ public class StandardEmailSubmissionPropertiesFilterTest {
     @Mock
     private EmailSubmissionPort emailSubmissionPort;
 
+    @InjectMocks
+    private StandardEmailSubmissionPropertiesFilter standardEmailSubmissionPropertiesFilter;
+
     @Test
     public void testFilterWithNullProperties() throws InvalidArgumentsException {
         EmailSubmissionPort[] emailSubmissionPorts = new EmailSubmissionPort[] {emailSubmissionPort};
-        StandardEmailSubmissionPropertiesFilter standardEmailSubmissionPropertiesFilter = new StandardEmailSubmissionPropertiesFilter(emailSubmissionBuilderPort);
 
         EmailSubmissionPort[] result = standardEmailSubmissionPropertiesFilter.filter(emailSubmissionPorts, null);
 
@@ -33,8 +36,6 @@ public class StandardEmailSubmissionPropertiesFilterTest {
     public void testFilterWithValidProperties() throws InvalidArgumentsException {
         EmailSubmissionPort[] emailSubmissionPorts = new EmailSubmissionPort[] {emailSubmissionPort};
         String[] properties = new String[] {"blobId", "threadId", "mailboxIds", "keywords", "size", "receivedAt"};
-
-        StandardEmailSubmissionPropertiesFilter standardEmailSubmissionPropertiesFilter = new StandardEmailSubmissionPropertiesFilter(emailSubmissionBuilderPort);
 
         EmailSubmissionPort[] result = standardEmailSubmissionPropertiesFilter.filter(emailSubmissionPorts, properties);
 

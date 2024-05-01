@@ -52,7 +52,7 @@ public class StandardIdentityPropertiesFilter implements IdentityPropertiesFilte
                 case "textSignature":
                     yield identityBuilder.textSignature(identityPort.getTextSignature());
 
-                case "htmlSingature":
+                case "htmlSignature":
                     yield identityBuilder.htmlSignature(identityPort.getHtmlSignature());
 
                 case "mayDelete":

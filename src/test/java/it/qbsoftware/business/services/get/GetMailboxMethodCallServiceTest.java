@@ -12,9 +12,6 @@ import org.mockito.Mock;
 
 import it.qbsoftware.adapters.in.jmaplib.entity.MailboxAdapter;
 import it.qbsoftware.business.domain.entity.changes.AccountState;
-import it.qbsoftware.business.domain.exception.AccountNotFoundException;
-import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
-import it.qbsoftware.business.domain.exception.InvalidResultReferenceExecption;
 import it.qbsoftware.business.domain.methodcall.filter.MailboxPropertiesFilter;
 import it.qbsoftware.business.domain.methodcall.process.get.GetReferenceIdsResolver;
 import it.qbsoftware.business.domain.util.get.RetrivedEntity;
@@ -64,8 +61,7 @@ public class GetMailboxMethodCallServiceTest {
 
 
     @Test
-    public void testCallWithRetrive() throws AccountNotFoundException, InvalidResultReferenceExecption, InvalidArgumentsException {
-
+    public void testCallWithRetrive() throws Exception {
         String accountId = "testAccountId";
         String[] mailboxIds = new String[] { "mailboxId1", "mailboxId2" };
         AccountState accountState = new AccountState(accountId);
@@ -77,11 +73,8 @@ public class GetMailboxMethodCallServiceTest {
         when(accountStateRepository.retrive(accountId)).thenReturn(accountState);
         when(mailboxPropertiesFilter.filter(any(), any())).thenReturn(mailboxs);
         when(getMailboxMethodResponseBuilderPort.reset()).thenReturn(getMailboxMethodResponseBuilderPort);
-        
         when(getMailboxMethodResponseBuilderPort.list(any())).thenReturn(getMailboxMethodResponseBuilderPort);
-        
         when(getMailboxMethodResponseBuilderPort.notFound(any())).thenReturn(getMailboxMethodResponseBuilderPort);
-        
         when(getMailboxMethodResponseBuilderPort.state(any())).thenReturn(getMailboxMethodResponseBuilderPort);
         when(getMailboxMethodResponseBuilderPort.build()).thenReturn(getMailboxMethodResponsePort);
 
@@ -98,7 +91,7 @@ public class GetMailboxMethodCallServiceTest {
 
 
     @Test
-    public void testCallWithRetriveAll() throws AccountNotFoundException, InvalidResultReferenceExecption, InvalidArgumentsException{
+    public void testCallWithRetriveAll() throws Exception{
         String accountId = "testAccountId";
         String[] mailboxIds = null;
         AccountState accountState = new AccountState(accountId);
@@ -110,11 +103,8 @@ public class GetMailboxMethodCallServiceTest {
         when(accountStateRepository.retrive(accountId)).thenReturn(accountState);
         when(mailboxPropertiesFilter.filter(any(), any())).thenReturn(mailboxs);
         when(getMailboxMethodResponseBuilderPort.reset()).thenReturn(getMailboxMethodResponseBuilderPort);
-        
         when(getMailboxMethodResponseBuilderPort.list(any())).thenReturn(getMailboxMethodResponseBuilderPort);
-        
         when(getMailboxMethodResponseBuilderPort.notFound(any())).thenReturn(getMailboxMethodResponseBuilderPort);
-        
         when(getMailboxMethodResponseBuilderPort.state(any())).thenReturn(getMailboxMethodResponseBuilderPort);
         when(getMailboxMethodResponseBuilderPort.build()).thenReturn(getMailboxMethodResponsePort);
 
@@ -127,7 +117,6 @@ public class GetMailboxMethodCallServiceTest {
         verify(getMailboxMethodResponseBuilderPort).build();
         verify(mailboxRepository).retriveAll(accountId);
         assertEquals(result, getMailboxMethodResponsePort);
-
     }
 
 
