@@ -59,8 +59,7 @@ public class GetEmailMethodCallServiceTest {
     private GetEmailMethodCallService getEmailMethodCallService;
 
     @Test
-    public void testCallWithRetrive()
-            throws AccountNotFoundException, InvalidResultReferenceExecption, InvalidArgumentsException {
+    public void testCallWithRetrive() throws Exception {
 
         String accountId = "testAccountId";
         String[] emailIds = new String[] { "emailId1", "emailId2" };
@@ -93,8 +92,7 @@ public class GetEmailMethodCallServiceTest {
     }
 
     @Test
-    public void testCallWithRetriveAll()
-            throws AccountNotFoundException, InvalidResultReferenceExecption, InvalidArgumentsException {
+    public void testCallWithRetriveAll() throws Exception {
         String accountId = "testAccountId";
         String[] emailIds = null;
         AccountState accountState = new AccountState(accountId);
