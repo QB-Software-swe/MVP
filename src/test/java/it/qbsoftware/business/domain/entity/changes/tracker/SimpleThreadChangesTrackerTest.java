@@ -42,7 +42,7 @@ public class SimpleThreadChangesTrackerTest {
 
         ThreadChangesTracker updatedTracker = tracker.threadHasBeenCreated("newState", "newThreadId");
 
-        assertEquals("newThreadId", updatedTracker.id());
+        assertEquals("id", updatedTracker.id());
         assertEquals("newThreadId", updatedTracker.created().get("newState"));
     }
 
@@ -52,7 +52,7 @@ public class SimpleThreadChangesTrackerTest {
 
         ThreadChangesTracker updatedTracker = tracker.threadHasBeenUpdated("newState", "newThreadId");
 
-        assertEquals("newThreadId", updatedTracker.id());
+        assertEquals("id", updatedTracker.id());
         assertEquals("newThreadId", updatedTracker.updated().get("newState"));
     }
 
@@ -62,7 +62,7 @@ public class SimpleThreadChangesTrackerTest {
 
         ThreadChangesTracker updatedTracker = tracker.threadHasBeenDestroyed("newState", "newThreadId");
 
-        assertEquals("newThreadId", updatedTracker.id());
+        assertEquals("id", updatedTracker.id());
         assertEquals("newThreadId", updatedTracker.destroyed().get("newState"));
     }
 }
