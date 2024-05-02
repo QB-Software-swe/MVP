@@ -1,5 +1,8 @@
 package it.qbsoftware.application.controllers.changes;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.inject.Inject;
 
 import it.qbsoftware.adapters.in.jmaplib.method.call.changes.ChangesIdentityMethodCallAdapter;
@@ -16,6 +19,7 @@ import rs.ltt.jmap.common.method.error.CannotCalculateChangesMethodErrorResponse
 import rs.ltt.jmap.common.method.error.InvalidArgumentsMethodErrorResponse;
 
 public class ChangesIdentityMethodCallController extends ControllerHandlerBase {
+    private final Logger logger = LoggerFactory.getLogger(ChangesIdentityMethodCallController.class);
     private final ChangesIdentityMethodCallUsecase changesIdentityMethodCallUsecase;
 
     @Inject
@@ -29,7 +33,7 @@ public class ChangesIdentityMethodCallController extends ControllerHandlerBase {
         if (handlerRequest.methodCall() instanceof ChangesIdentityMethodCall changesIdentityMethodCall) {
             final ChangesIdentityMethodCallAdapter changesIdentityMethodCallAdapter = new ChangesIdentityMethodCallAdapter(
                     changesIdentityMethodCall);
-
+                    logger.info("Match and handle method call recived");
             try {
                 final ChangesIdentityMethodResponseAdapter changesIdentityMethodResponseAdapter = (ChangesIdentityMethodResponseAdapter) changesIdentityMethodCallUsecase
                         .call(changesIdentityMethodCallAdapter, handlerRequest.previousResponses());

@@ -2,11 +2,13 @@ version: "3.8"
 services:
   mvp:
     build: .
-    container_name: mvo-qbsoftware
+    container_name: mvp-qbsoftware
     ports:
       - 9999:9999
     links:
       - mongodb
+    environment:
+      - DB_CONNECTION_STRING=mongodb://rootuser:rootpass@dbhost:27017/
 
   mongodb:
     image: mongo

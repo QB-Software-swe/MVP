@@ -13,6 +13,6 @@ public class EmailBodyValueAdapterTest {
         EmailBodyValue emailBodyValue = mock(EmailBodyValue.class);
         EmailBodyValueAdapter emailBodyValueAdapter = new EmailBodyValueAdapter(emailBodyValue);
         
-        assertEquals(emailBodyValue, emailBodyValueAdapter.emailBodyValue);
+        assertEquals(emailBodyValue, emailBodyValueAdapter.adaptee());
     }
 }

@@ -1,5 +1,8 @@
 package it.qbsoftware.application.controllers.changes;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.inject.Inject;
 
 import it.qbsoftware.adapters.in.jmaplib.method.call.changes.ChangesThreadMethodCallAdapter;
@@ -16,6 +19,7 @@ import rs.ltt.jmap.common.method.error.CannotCalculateChangesMethodErrorResponse
 import rs.ltt.jmap.common.method.error.InvalidArgumentsMethodErrorResponse;
 
 public class ChangesThreadMethodCallController extends ControllerHandlerBase {
+    private final Logger logger = LoggerFactory.getLogger(ChangesThreadMethodCallController.class);
     private final ChangesThreadMethodCallUsecase changesThreadMethodCallUsecase;
 
     @Inject
@@ -28,7 +32,7 @@ public class ChangesThreadMethodCallController extends ControllerHandlerBase {
         if (handlerRequest.methodCall() instanceof ChangesThreadMethodCall changesThreadMethodCall) {
             final ChangesThreadMethodCallAdapter changesThreadMethodCallAdapter = new ChangesThreadMethodCallAdapter(
                     changesThreadMethodCall);
-
+                    logger.info("Match and handle method call recived");
             try {
                 final ChangesThreadMethodResponseAdapter changesThreadMethodResponseAdapter = (ChangesThreadMethodResponseAdapter) changesThreadMethodCallUsecase
                         .call(changesThreadMethodCallAdapter, handlerRequest.previousResponses());

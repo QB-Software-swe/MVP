@@ -92,26 +92,16 @@ public class StandardCreateEmail implements CreateEmail {
     private EmailPort email(final EmailPort emailPort,
             final ListMultimapPort<String, ResponseInvocationPort> previousResponses, final String accountId)
             throws InvalidArgumentsException, AccountNotFoundException {
-        /*
-         * NOTA REMOVE ME
-         * boldId != emailId, e allo stesso
-         */
-        final String emailId = accountId + "/" + UUID.randomUUID().toString(); // NOTA Questo è l'id secondo la
-                                                                               // specifica JMAP
-        final String blobId = accountId + "/" + UUID.randomUUID().toString(); // NOTA Questo è l'id secondo RFC5322
-                                                                              // dell'e-mail per i raw
-        // email
-        // NOTA data
+  
+        final String emailId = accountId + "/" + UUID.randomUUID().toString();
+        final String blobId = accountId + "/" + UUID.randomUUID().toString();
         final Optional<String> resolvedThread = resolveThread(emailPort.getSubject(), accountId);
         final String threadId = resolvedThread.isPresent() ? resolvedThread.get()
                 : accountId + "/" + UUID.randomUUID().toString();
         ;
 
-        final Long size = 10L; // NOTA: finto
+        final Long size = 10L;
         final Instant recevidAt = Instant.now();
-        // final Boolean hasAttachment = false; // NOTA: A prescindere, non rientra tra
-        // i requisiti?
-        // final String preview = ""; // NOTA: niente preview
         final Map<String, Boolean> mailboxIds = resolveMailboxIdsReference(emailPort.getMailboxIds(),
                 previousResponses);
 

@@ -1,11 +1,15 @@
 package it.qbsoftware.application.controllers.get;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.inject.Inject;
 
 import it.qbsoftware.adapters.in.jmaplib.method.call.get.GetEmailMethodCallAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetEmailMethodResponseAdapter;
 import it.qbsoftware.application.controllers.ControllerHandlerBase;
 import it.qbsoftware.application.controllers.HandlerRequest;
+import it.qbsoftware.application.controllers.changes.ChangesEmailSubmissionMethodCallController;
 import it.qbsoftware.business.domain.exception.AccountNotFoundException;
 import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
 import it.qbsoftware.business.domain.exception.InvalidResultReferenceExecption;
@@ -16,6 +20,7 @@ import rs.ltt.jmap.common.method.error.InvalidArgumentsMethodErrorResponse;
 import rs.ltt.jmap.common.method.error.InvalidResultReferenceMethodErrorResponse;
 
 public class GetEmailMethodCallController extends ControllerHandlerBase {
+    private final Logger logger = LoggerFactory.getLogger(GetEmailMethodCallController.class);
     private final GetEmailMethodCallUsecase getEmailMethodCallUsecase;
 
     @Inject
@@ -29,7 +34,7 @@ public class GetEmailMethodCallController extends ControllerHandlerBase {
 
             final GetEmailMethodCallAdapter getEmailMethodCallAdapter = new GetEmailMethodCallAdapter(
                     getEmailMethodCall);
-
+                    logger.info("Match and handle method call recived");
             try {
                 final GetEmailMethodResponseAdapter getEmailMethodResponseAdapter = (GetEmailMethodResponseAdapter) getEmailMethodCallUsecase
                         .call(getEmailMethodCallAdapter, handlerRequest.previousResponses());

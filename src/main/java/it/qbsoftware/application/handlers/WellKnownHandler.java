@@ -9,6 +9,8 @@ import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Response;
 import org.eclipse.jetty.util.Callback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 
@@ -17,6 +19,7 @@ import it.qbsoftware.application.controllers.other.SessionController;
 public class WellKnownHandler extends Handler.Abstract {
     final SessionController sessionController;
 
+    private final Logger logger = LoggerFactory.getLogger(WellKnownHandler.class);
     public static String CONTEXT_PATH = "/.well-known";
     private static String ENDPOINT_PATH = "/jmap";
 
@@ -34,6 +37,8 @@ public class WellKnownHandler extends Handler.Abstract {
             return false;
         }
 
+
+        logger.info("Request to /.well-known");
         String user = null;
         //String password = null;
         {
@@ -48,7 +53,10 @@ public class WellKnownHandler extends Handler.Abstract {
             }
         }
 
+        logger.debug("Request basic auth, user = " + user);
+
         if (user == null) {
+            logger.info("Request response 401, invalid user name");
             response.setStatus(401);
             Content.Sink.write(response, true, "Invalid Auth", callback);
             return true;
@@ -56,11 +64,13 @@ public class WellKnownHandler extends Handler.Abstract {
 
         String responsePayload = sessionController.call(user);
         if (responsePayload == null) {
+            logger.info("Request response 401, user not found");
             response.setStatus(401);
             Content.Sink.write(response, true, "Invalid Auth", callback);
             return true;
         }
 
+        logger.info("Request response: user session resource");
         response.getHeaders().put(HttpHeader.CONTENT_TYPE, "application/json; charset=UTF-8");
         Content.Sink.write(response, true, responsePayload, callback);
         return true;

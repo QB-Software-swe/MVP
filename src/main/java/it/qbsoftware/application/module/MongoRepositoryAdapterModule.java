@@ -53,6 +53,6 @@ public class MongoRepositoryAdapterModule extends AbstractModule {
     @Singleton
     @Provides
     static MongoConnection mongoConnection() {
-        return new MongoConnection(MongoClients.create("mongodb://rootuser:rootpass@localhost:27017/")); // TODO: envs
+        return new MongoConnection(MongoClients.create(System.getenv("DB_CONNECTION_STRING")));
     }
 }

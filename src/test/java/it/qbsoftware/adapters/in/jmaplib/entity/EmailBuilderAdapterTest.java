@@ -5,13 +5,15 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
-import java.time.Instant;
-import java.util.Map;
-import java.util.HashMap;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailBodyPartPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailBuilderPort;
 import rs.ltt.jmap.common.entity.Email;
@@ -25,8 +27,8 @@ public class EmailBuilderAdapterTest {
         EmailBuilder emailBuilder = mock(EmailBuilder.class);
         EmailBuilderPort emailBuilderPort = new EmailBuilderAdapter(emailBuilder);
 
-        emailBuilderPort.attachment(emailBodyPartAdapter);
-        verify(emailBuilder).attachment(emailBodyPartAdapter.emailBodyPart);
+        emailBuilderPort.attachment(emailBodyPartPort);
+        verify(emailBuilder).attachment(((EmailBodyPartAdapter) emailBodyPartPort).adaptee());
     }
 
 
