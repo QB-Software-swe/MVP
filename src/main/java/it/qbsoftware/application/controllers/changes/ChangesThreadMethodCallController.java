@@ -39,7 +39,7 @@ public class ChangesThreadMethodCallController extends ControllerHandlerBase {
             } catch (final CannotCalculateChangesException CannotCalculateChangesException) {
                 return new MethodResponse[] { new CannotCalculateChangesMethodErrorResponse() };
             } catch (final InvalidArgumentsException invalidArgumentsException) {
-                return new MethodResponse[] { new CannotCalculateChangesMethodErrorResponse() };
+                return new MethodResponse[] { new InvalidArgumentsMethodErrorResponse() };
             }
         }
         return super.handle(handlerRequest);

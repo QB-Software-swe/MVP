@@ -156,8 +156,6 @@ public class StandardCreateEmailTest {
 
         when(emailPort.toBuilder()).thenReturn(emailBuilderPort);
         when(emailPort.getSubject()).thenReturn("subject");
-        when(emailPort.getAttachments()).thenReturn(attachments);
-        when(emailPort.getBodyValues()).thenReturn(bodyValue);
         when(emailPort.getBodyStructure()).thenReturn(emailBodyPartPort);
         
         when(threadRepository.retriveOne(any())).thenReturn(threadPort);
@@ -173,16 +171,6 @@ public class StandardCreateEmailTest {
         when(accountStateRepository.retrive(anyString())).thenReturn(accountState);
         when(accountState.increaseState()).thenReturn(accountState);
         when(accountState.state()).thenReturn("state");
-
-        when(emailBodyPartPort.getPartId()).thenReturn("partId");
-        when(emailBodyPartPort.toBuilder()).thenReturn(emailBodyPartBuilderPort);
-
-        when(emailBodyPartBuilderPort.reset()).thenReturn(emailBodyPartBuilderPort);
-        when(emailBodyPartBuilderPort.blobId(any())).thenReturn(emailBodyPartBuilderPort);
-        when(emailBodyPartBuilderPort.charset(any())).thenReturn(emailBodyPartBuilderPort);
-        when(emailBodyPartBuilderPort.name(any())).thenReturn(emailBodyPartBuilderPort);
-        when(emailBodyPartBuilderPort.size(any())).thenReturn(emailBodyPartBuilderPort);
-        when(emailBodyPartBuilderPort.build()).thenReturn(emailBodyPartPort);
 
         doNothing().when(emailRepository).save(any());
         doNothing().when(accountStateRepository).save(any());
@@ -222,7 +210,6 @@ public class StandardCreateEmailTest {
         when(emailBuilderPort.receivedAt(any())).thenReturn(emailBuilderPort);
         when(emailPort.toBuilder()).thenReturn(emailBuilderPort);
         when(emailPort.getSubject()).thenReturn("subject");
-        when(emailPort.getAttachments()).thenReturn(null);
         when(setEmailMethodCallPort.accountId()).thenReturn("accountId");
         when(threadRepository.retriveOne(any())).thenReturn(threadPort);
         when(threadPort.getEmailIds()).thenReturn(emailIds);
@@ -236,6 +223,10 @@ public class StandardCreateEmailTest {
         when(accountState.state()).thenReturn("state");
         when(threadBuilderPort.clearEmailIds()).thenReturn(threadBuilderPort);
         when(emailBuilderPort.hasAttachment(any())).thenReturn(emailBuilderPort);
+
+        when(emailPort.toBuilder()).thenReturn(emailBuilderPort);
+        when(emailPort.getSubject()).thenReturn("subject");
+        when(emailPort.getBodyStructure()).thenReturn(emailBodyPartPort);
 
         doNothing().when(emailRepository).save(any());
         doNothing().when(accountStateRepository).save(any());
@@ -276,7 +267,6 @@ public class StandardCreateEmailTest {
         when(emailBuilderPort.receivedAt(any())).thenReturn(emailBuilderPort);
         when(emailPort.toBuilder()).thenReturn(emailBuilderPort);
         when(emailPort.getSubject()).thenReturn("subject");
-        when(emailPort.getAttachments()).thenReturn(null);
         when(setEmailMethodCallPort.accountId()).thenReturn("accountId");
         when(threadRepository.retriveOne(any())).thenReturn(threadPort);
         when(threadPort.toBuilder()).thenReturn(threadBuilderPort);
@@ -290,6 +280,10 @@ public class StandardCreateEmailTest {
         when(threadBuilderPort.clearEmailIds()).thenReturn(threadBuilderPort);
         when(emailBuilderPort.clearMailboxIds()).thenReturn(emailBuilderPort);
         when(emailBuilderPort.hasAttachment(any())).thenReturn(emailBuilderPort);
+
+        when(emailPort.toBuilder()).thenReturn(emailBuilderPort);
+        when(emailPort.getSubject()).thenReturn("subject");
+        when(emailPort.getBodyStructure()).thenReturn(emailBodyPartPort);
 
         doNothing().when(emailRepository).save(any());
         doNothing().when(accountStateRepository).save(any());
@@ -314,6 +308,9 @@ public class StandardCreateEmailTest {
         EmailBodyPartPort emailBodyPartPort = mock(EmailBodyPartPort.class);
         List<EmailBodyPartPort> attachments = new ArrayList<>();
         attachments.add(emailBodyPartPort);
+        EmailBodyValuePort emailBodyValuePort = mock(EmailBodyValuePort.class);
+        Map<String, EmailBodyValuePort> bodyValue = new HashMap<>();
+        bodyValue.put("partId", emailBodyValuePort);
 
         when(setEmailMethodCallPort.getCreate()).thenReturn(mapEmailToCreate);
         when(emailBuilderPort.reset()).thenReturn(emailBuilderPort);
@@ -326,7 +323,6 @@ public class StandardCreateEmailTest {
         when(emailBuilderPort.receivedAt(any())).thenReturn(emailBuilderPort);
         when(emailPort.toBuilder()).thenReturn(emailBuilderPort);
         when(emailPort.getSubject()).thenReturn("subject");
-        when(emailPort.getAttachments()).thenReturn(attachments);
         when(setEmailMethodCallPort.accountId()).thenReturn("accountId");
         when(threadRepository.retriveOne(any())).thenReturn(threadPort);
         when(threadPort.getEmailIds()).thenReturn(emailIds);
@@ -341,7 +337,9 @@ public class StandardCreateEmailTest {
         when(threadBuilderPort.clearEmailIds()).thenReturn(threadBuilderPort);
         when(emailBuilderPort.clearMailboxIds()).thenReturn(emailBuilderPort);
         when(emailBuilderPort.hasAttachment(any())).thenReturn(emailBuilderPort);
-        when(emailBodyPartPort.getPartId()).thenReturn(null);
+        when(emailPort.toBuilder()).thenReturn(emailBuilderPort);
+        when(emailPort.getSubject()).thenReturn("subject");
+        when(emailPort.getBodyStructure()).thenReturn(emailBodyPartPort);
 
         doNothing().when(emailRepository).save(any());
         doNothing().when(accountStateRepository).save(any());
@@ -398,6 +396,12 @@ public class StandardCreateEmailTest {
         mapEmailToCreate.put("key", emailPort);
         List<String> emailIds = new ArrayList<>();
         SetSingletonException singletonException = new SetSingletonException();
+        EmailBodyPartPort emailBodyPartPort = mock(EmailBodyPartPort.class);
+        List<EmailBodyPartPort> attachments = new ArrayList<>();
+        attachments.add(emailBodyPartPort);
+        EmailBodyValuePort emailBodyValuePort = mock(EmailBodyValuePort.class);
+        Map<String, EmailBodyValuePort> bodyValue = new HashMap<>();
+        bodyValue.put("partId", emailBodyValuePort);
 
         when(setEmailMethodCallPort.getCreate()).thenReturn(mapEmailToCreate);
         when(emailPort.getSubject()).thenReturn("subject");
@@ -424,6 +428,10 @@ public class StandardCreateEmailTest {
         when(threadBuilderPort.clearEmailIds()).thenReturn(threadBuilderPort);
         when(emailBuilderPort.clearMailboxIds()).thenReturn(emailBuilderPort);
         when(emailBuilderPort.hasAttachment(any())).thenReturn(emailBuilderPort);
+
+        when(emailPort.toBuilder()).thenReturn(emailBuilderPort);
+        when(emailPort.getSubject()).thenReturn("subject");
+        when(emailPort.getBodyStructure()).thenReturn(emailBodyPartPort);
         
         doThrow(singletonException).doNothing().when(emailRepository).save(any());
         doNothing().when(accountStateRepository).save(any());
@@ -444,6 +452,12 @@ public class StandardCreateEmailTest {
         Map<String, EmailPort> mapEmailToCreate = new HashMap<>();
         mapEmailToCreate.put("key", emailPort);
         List<String> emailIds = new ArrayList<>();
+        EmailBodyPartPort emailBodyPartPort = mock(EmailBodyPartPort.class);
+        List<EmailBodyPartPort> attachments = new ArrayList<>();
+        attachments.add(emailBodyPartPort);
+        EmailBodyValuePort emailBodyValuePort = mock(EmailBodyValuePort.class);
+        Map<String, EmailBodyValuePort> bodyValue = new HashMap<>();
+        bodyValue.put("partId", emailBodyValuePort);
 
         when(setEmailMethodCallPort.getCreate()).thenReturn(mapEmailToCreate);
         when(creationIdResolverPort.resolveIfNecessary(anyString(), any())).thenReturn("resolvedThreadId");
@@ -474,6 +488,10 @@ public class StandardCreateEmailTest {
         when(emailBuilderPort.clearMailboxIds()).thenReturn(emailBuilderPort);
         when(emailBuilderPort.hasAttachment(any())).thenReturn(emailBuilderPort);
 
+        when(emailPort.toBuilder()).thenReturn(emailBuilderPort);
+        when(emailPort.getSubject()).thenReturn("subject");
+        when(emailPort.getBodyStructure()).thenReturn(emailBodyPartPort);
+
         doNothing().when(emailRepository).save(any());
         doNothing().when(accountStateRepository).save(any());
         doNothing().when(threadRepository).save(any());
@@ -493,6 +511,12 @@ public class StandardCreateEmailTest {
         Map<String, EmailPort> mapEmailToCreate = new HashMap<>();
         mapEmailToCreate.put("key", emailPort);
         List<String> emailIds = new ArrayList<>();
+        EmailBodyPartPort emailBodyPartPort = mock(EmailBodyPartPort.class);
+        List<EmailBodyPartPort> attachments = new ArrayList<>();
+        attachments.add(emailBodyPartPort);
+        EmailBodyValuePort emailBodyValuePort = mock(EmailBodyValuePort.class);
+        Map<String, EmailBodyValuePort> bodyValue = new HashMap<>();
+        bodyValue.put("partId", emailBodyValuePort);
 
         when(setEmailMethodCallPort.getCreate()).thenReturn(mapEmailToCreate);
         when(emailPort.getSubject()).thenReturn("subject");
@@ -523,6 +547,10 @@ public class StandardCreateEmailTest {
         when(emailBuilderPort.clearMailboxIds()).thenReturn(emailBuilderPort);
         when(emailBuilderPort.hasAttachment(any())).thenReturn(emailBuilderPort);
 
+        when(emailPort.toBuilder()).thenReturn(emailBuilderPort);
+        when(emailPort.getSubject()).thenReturn("subject");
+        when(emailPort.getBodyStructure()).thenReturn(emailBodyPartPort);
+
         doNothing().when(emailRepository).save(any());
         doNothing().when(accountStateRepository).save(any());
         doNothing().when(threadRepository).save(any());
@@ -542,6 +570,12 @@ public class StandardCreateEmailTest {
         Map<String, EmailPort> mapEmailToCreate = new HashMap<>();
         mapEmailToCreate.put("key", emailPort);
         List<String> emailIds = new ArrayList<>();
+        EmailBodyPartPort emailBodyPartPort = mock(EmailBodyPartPort.class);
+        List<EmailBodyPartPort> attachments = new ArrayList<>();
+        attachments.add(emailBodyPartPort);
+        EmailBodyValuePort emailBodyValuePort = mock(EmailBodyValuePort.class);
+        Map<String, EmailBodyValuePort> bodyValue = new HashMap<>();
+        bodyValue.put("partId", emailBodyValuePort);
 
         when(setEmailMethodCallPort.getCreate()).thenReturn(mapEmailToCreate);
         when(emailPort.getSubject()).thenReturn("subject");
@@ -569,6 +603,10 @@ public class StandardCreateEmailTest {
         when(emailBuilderPort.clearMailboxIds()).thenReturn(emailBuilderPort);
         when(emailBuilderPort.hasAttachment(any())).thenReturn(emailBuilderPort);
 
+        when(emailPort.toBuilder()).thenReturn(emailBuilderPort);
+        when(emailPort.getSubject()).thenReturn("subject");
+        when(emailPort.getBodyStructure()).thenReturn(emailBodyPartPort);
+
         doNothing().when(emailRepository).save(any());
         doNothing().when(accountStateRepository).save(any());
         doNothing().when(threadRepository).save(any());
@@ -590,11 +628,16 @@ public class StandardCreateEmailTest {
         String accountId = "accountId";
         EmailPort emailPort2 = mock(EmailPort.class);
         EmailPort[] emails = new EmailPort[] {emailPort2};
+        EmailBodyPartPort emailBodyPartPort = mock(EmailBodyPartPort.class);
+        List<EmailBodyPartPort> attachments = new ArrayList<>();
+        attachments.add(emailBodyPartPort);
+        EmailBodyValuePort emailBodyValuePort = mock(EmailBodyValuePort.class);
+        Map<String, EmailBodyValuePort> bodyValue = new HashMap<>();
+        bodyValue.put("partId", emailBodyValuePort);
 
 
         when(setEmailMethodCallPort.getCreate()).thenReturn(mapEmailToCreate);
         when(emailPort.getSubject()).thenReturn("Re:qualcosa");
-        when(emailPort2.getSubject()).thenReturn("qualcosa");
         when(emailPort.toBuilder()).thenReturn(emailBuilderPort);
         when(emailBuilderPort.clearMailboxIds()).thenReturn(emailBuilderPort);
         when(emailBuilderPort.reset()).thenReturn(emailBuilderPort);
@@ -615,14 +658,16 @@ public class StandardCreateEmailTest {
         when(accountStateRepository.retrive(anyString())).thenReturn(accountState);
         when(accountState.increaseState()).thenReturn(accountState);
         when(accountState.state()).thenReturn("state");
-        when(emailRepository.retriveAll(any())).thenReturn(new RetrivedEntity<>(emails, new String[] {}));
-        when(emailPort2.getThreadId()).thenReturn("threadId");
         when(threadBuilderPort.clearEmailIds()).thenReturn(threadBuilderPort);
         when(emailBuilderPort.clearMailboxIds()).thenReturn(emailBuilderPort);
         when(emailBuilderPort.hasAttachment(any())).thenReturn(emailBuilderPort);
         when(threadBuilderPort.clearEmailIds()).thenReturn(threadBuilderPort);
         when(emailBuilderPort.clearMailboxIds()).thenReturn(emailBuilderPort);
         when(emailBuilderPort.hasAttachment(any())).thenReturn(emailBuilderPort);
+
+        when(emailPort.toBuilder()).thenReturn(emailBuilderPort);
+        when(emailPort.getSubject()).thenReturn("subject");
+        when(emailPort.getBodyStructure()).thenReturn(emailBodyPartPort);
         
         doNothing().when(emailRepository).save(any());
         doNothing().when(accountStateRepository).save(any());
