@@ -1,5 +1,8 @@
 package it.qbsoftware.application.controllers.changes;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.inject.Inject;
 
 import it.qbsoftware.adapters.in.jmaplib.method.call.changes.ChangesEmailMethodCallAdapter;
@@ -16,6 +19,7 @@ import rs.ltt.jmap.common.method.error.CannotCalculateChangesMethodErrorResponse
 import rs.ltt.jmap.common.method.error.InvalidArgumentsMethodErrorResponse;
 
 public class ChangesEmailMethodCallController extends ControllerHandlerBase {
+    private final Logger logger = LoggerFactory.getLogger(ChangesEmailMethodCallController.class);
     private final ChangesEmailMethodCallUsecase changesEmailMethodCallUsecase;
 
     @Inject
@@ -28,7 +32,7 @@ public class ChangesEmailMethodCallController extends ControllerHandlerBase {
         if (handlerRequest.methodCall() instanceof ChangesEmailMethodCall changesEmailMethodCall) {
             final ChangesEmailMethodCallAdapter ChangesEmailMethodCallAdapter = new ChangesEmailMethodCallAdapter(
                     changesEmailMethodCall);
-
+            logger.info("Match and handle method call recived");
             try {
                 final ChangesEmailMethodResponseAdapter changesEmailMethodResponseAdapter = (ChangesEmailMethodResponseAdapter) changesEmailMethodCallUsecase
                         .call(ChangesEmailMethodCallAdapter, handlerRequest.previousResponses());

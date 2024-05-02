@@ -1,11 +1,15 @@
 package it.qbsoftware.application.controllers.get;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.inject.Inject;
 
 import it.qbsoftware.adapters.in.jmaplib.method.call.get.GetEmailSubmissionMethodCallAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetEmailSubmissionMethodResponseAdapter;
 import it.qbsoftware.application.controllers.ControllerHandlerBase;
 import it.qbsoftware.application.controllers.HandlerRequest;
+import it.qbsoftware.application.controllers.changes.ChangesEmailSubmissionMethodCallController;
 import it.qbsoftware.business.domain.exception.AccountNotFoundException;
 import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
 import it.qbsoftware.business.domain.exception.InvalidResultReferenceExecption;
@@ -16,6 +20,7 @@ import rs.ltt.jmap.common.method.error.InvalidArgumentsMethodErrorResponse;
 import rs.ltt.jmap.common.method.error.InvalidResultReferenceMethodErrorResponse;
 
 public class GetEmailSubmissionMethodCallController extends ControllerHandlerBase {
+    private final Logger logger = LoggerFactory.getLogger(GetEmailSubmissionMethodCallController.class);
     private final GetEmailSubmissionMethodCallUsecase getEmailSubmissionMethodCallUsecase;
 
     @Inject
@@ -29,7 +34,7 @@ public class GetEmailSubmissionMethodCallController extends ControllerHandlerBas
         if (handlerRequest.methodCall() instanceof GetEmailSubmissionMethodCall getEmailSubmissionMethodCall) {
             final GetEmailSubmissionMethodCallAdapter getEmailSubmissionMethodCallAdapter = new GetEmailSubmissionMethodCallAdapter(
                     getEmailSubmissionMethodCall);
-
+                    logger.info("Match and handle method call recived");
             try {
                 final GetEmailSubmissionMethodResponseAdapter getEmailSubmissionMethodResponseAdapter = (GetEmailSubmissionMethodResponseAdapter) getEmailSubmissionMethodCallUsecase
                         .call(getEmailSubmissionMethodCallAdapter, handlerRequest.previousResponses());

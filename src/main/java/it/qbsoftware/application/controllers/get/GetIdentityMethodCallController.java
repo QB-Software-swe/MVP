@@ -1,11 +1,15 @@
 package it.qbsoftware.application.controllers.get;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.inject.Inject;
 
 import it.qbsoftware.adapters.in.jmaplib.method.call.get.GetIdentityMethodCallAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetIdentityMethodResponseAdapter;
 import it.qbsoftware.application.controllers.ControllerHandlerBase;
 import it.qbsoftware.application.controllers.HandlerRequest;
+import it.qbsoftware.application.controllers.changes.ChangesEmailSubmissionMethodCallController;
 import it.qbsoftware.business.domain.exception.AccountNotFoundException;
 import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
 import it.qbsoftware.business.domain.exception.InvalidResultReferenceExecption;
@@ -16,6 +20,7 @@ import rs.ltt.jmap.common.method.error.InvalidArgumentsMethodErrorResponse;
 import rs.ltt.jmap.common.method.error.InvalidResultReferenceMethodErrorResponse;
 
 public class GetIdentityMethodCallController extends ControllerHandlerBase {
+    private final Logger logger = LoggerFactory.getLogger(GetIdentityMethodCallController.class);
     private final GetIdentityMethodCallUsecase getIdentityMethodCallUsecase;
 
     @Inject
@@ -29,7 +34,7 @@ public class GetIdentityMethodCallController extends ControllerHandlerBase {
 
             final GetIdentityMethodCallAdapter getIdentityMethodCallAdapter = new GetIdentityMethodCallAdapter(
                     getIdentityMethodCall);
-
+                    logger.info("Match and handle method call recived");
             try {
                 final GetIdentityMethodResponseAdapter getIdentityMethodResponseAdapter = (GetIdentityMethodResponseAdapter) getIdentityMethodCallUsecase
                         .call(getIdentityMethodCallAdapter, handlerRequest.previousResponses());
