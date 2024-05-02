@@ -64,9 +64,13 @@ public class IdentityBuilderAdapterTest {
     @Test
     public void testConstructor() {
         IdentityBuilder identityBuilder = mock(IdentityBuilder.class);
-        IdentityBuilderAdapter identityBuilderAdapter = new IdentityBuilderAdapter(identityBuilder);
+        IdentityBuilderAdapter identityBuilderAdapter = new IdentityBuilderAdapter();
 
-        assertNotNull(identityBuilderAdapter);
+         try(MockedStatic<Identity> identityStatic = Mockito.mockStatic(Identity.class)){
+            identityStatic.when(Identity::builder).thenReturn(identityBuilder);
+            assertEquals(identityBuilderAdapter.reset(), identityBuilderAdapter);
+            identityStatic.verify(Identity::builder);
+        }
     }
 
     @Test
