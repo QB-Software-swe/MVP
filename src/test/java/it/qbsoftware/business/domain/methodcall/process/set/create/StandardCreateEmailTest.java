@@ -141,6 +141,8 @@ public class StandardCreateEmailTest {
         bodyValue.put("partId", emailBodyValuePort);
 
         when(setEmailMethodCallPort.getCreate()).thenReturn(mapEmailToCreate);
+        when(setEmailMethodCallPort.accountId()).thenReturn("accountId");
+
         when(emailBuilderPort.reset()).thenReturn(emailBuilderPort);
         when(emailBuilderPort.id(anyString())).thenReturn(emailBuilderPort);
         when(emailBuilderPort.blobId(anyString())).thenReturn(emailBuilderPort);
@@ -149,26 +151,32 @@ public class StandardCreateEmailTest {
         when(emailBuilderPort.mailboxIds(any())).thenReturn(emailBuilderPort);
         when(emailBuilderPort.clearMailboxIds()).thenReturn(emailBuilderPort);
         when(emailBuilderPort.receivedAt(any())).thenReturn(emailBuilderPort);
+        when(emailBuilderPort.clearMailboxIds()).thenReturn(emailBuilderPort);
+        when(emailBuilderPort.hasAttachment(any())).thenReturn(emailBuilderPort);
+
         when(emailPort.toBuilder()).thenReturn(emailBuilderPort);
         when(emailPort.getSubject()).thenReturn("subject");
         when(emailPort.getAttachments()).thenReturn(attachments);
         when(emailPort.getBodyValues()).thenReturn(bodyValue);
-        when(setEmailMethodCallPort.accountId()).thenReturn("accountId");
+        when(emailPort.getBodyStructure()).thenReturn(emailBodyPartPort);
+        
         when(threadRepository.retriveOne(any())).thenReturn(threadPort);
         when(threadPort.getEmailIds()).thenReturn(emailIds);
         when(threadPort.toBuilder()).thenReturn(threadBuilderPort);
+
         when(threadBuilderPort.build()).thenReturn(threadPort);
         when(threadBuilderPort.emailIds(any())).thenReturn(threadBuilderPort);
+        when(threadBuilderPort.clearEmailIds()).thenReturn(threadBuilderPort);
+        
         when(emailChangesTrackerRepository.retrive(any())).thenReturn(emailChangesTracker);
         when(threadChangesTrackerRepository.retrive(any())).thenReturn(threadChangesTracker);
         when(accountStateRepository.retrive(anyString())).thenReturn(accountState);
         when(accountState.increaseState()).thenReturn(accountState);
         when(accountState.state()).thenReturn("state");
-        when(threadBuilderPort.clearEmailIds()).thenReturn(threadBuilderPort);
-        when(emailBuilderPort.clearMailboxIds()).thenReturn(emailBuilderPort);
-        when(emailBuilderPort.hasAttachment(any())).thenReturn(emailBuilderPort);
+
         when(emailBodyPartPort.getPartId()).thenReturn("partId");
         when(emailBodyPartPort.toBuilder()).thenReturn(emailBodyPartBuilderPort);
+
         when(emailBodyPartBuilderPort.reset()).thenReturn(emailBodyPartBuilderPort);
         when(emailBodyPartBuilderPort.blobId(any())).thenReturn(emailBodyPartBuilderPort);
         when(emailBodyPartBuilderPort.charset(any())).thenReturn(emailBodyPartBuilderPort);

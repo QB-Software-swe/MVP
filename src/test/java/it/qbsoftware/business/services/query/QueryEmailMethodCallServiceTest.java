@@ -8,6 +8,8 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
+import java.util.stream.Stream;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -58,6 +60,10 @@ public class QueryEmailMethodCallServiceTest {
     public void testCallWithAnchorNotNullAndPresentInIds() throws Exception{
         EmailPort[] emails = new EmailPort[] {emailPort};
 
+        Stream<EmailPort> emailStream = Stream.of(emails);
+
+        when(queryFilter.apply(any())).thenReturn(emailStream);
+
         when(queryEmailMethodCallPort.getAccountId()).thenReturn("accountId");
         when(queryEmailMethodCallPort.getFilter()).thenReturn(queryFilter);
         when(queryEmailMethodCallPort.getCollapseThreads()).thenReturn(true);
@@ -85,6 +91,9 @@ public class QueryEmailMethodCallServiceTest {
     public void testCallWithNulCollapseThread() throws Exception{
         EmailPort[] emails = new EmailPort[] {emailPort};
 
+        Stream<EmailPort> emailStream = Stream.of(emails);
+
+        when(queryFilter.apply(any())).thenReturn(emailStream);
         when(queryEmailMethodCallPort.getAccountId()).thenReturn("accountId");
         when(queryEmailMethodCallPort.getFilter()).thenReturn(queryFilter);
         when(queryEmailMethodCallPort.getCollapseThreads()).thenReturn(false);
@@ -117,8 +126,6 @@ public class QueryEmailMethodCallServiceTest {
         when(queryEmailMethodCallPort.getAnchor()).thenReturn("id");
         when(accountStateRepository.retrive(anyString())).thenReturn(accountState);
         when(emailRepository.retriveAll(anyString())).thenReturn(new RetrivedEntity<>(emails, new String[] {}));
-        when(emailPort.getThreadId()).thenReturn("threadId");
-        when(emailPort.getId()).thenReturn(null);
 
         assertThrows(QueryAnchorNotFoundException.class, () -> {
             queryEmailMethodCallService.call(queryEmailMethodCallPort, null);
@@ -129,16 +136,19 @@ public class QueryEmailMethodCallServiceTest {
     public void testCallWithAnchorOffsetNull() throws Exception{
         EmailPort[] emails = new EmailPort[] {emailPort};
 
+        Stream<EmailPort> emailStream = Stream.of(emails);
+
+        when(queryFilter.apply(any())).thenReturn(emailStream);
         when(queryEmailMethodCallPort.getAccountId()).thenReturn("accountId");
         when(queryEmailMethodCallPort.getFilter()).thenReturn(queryFilter);
         when(queryEmailMethodCallPort.getCollapseThreads()).thenReturn(true);
         when(queryEmailMethodCallPort.getAnchor()).thenReturn("id");
+        when(emailPort.getId()).thenReturn("id");
         when(queryEmailMethodCallPort.getLimit()).thenReturn(40L);
         when(queryEmailMethodCallPort.getCalculateTotal()).thenReturn(true);
         when(accountStateRepository.retrive(anyString())).thenReturn(accountState);
         when(emailRepository.retriveAll(anyString())).thenReturn(new RetrivedEntity<>(emails, new String[] {}));
         when(emailPort.getThreadId()).thenReturn("threadId");
-        when(emailPort.getId()).thenReturn("id");
         when(accountState.state()).thenReturn("state");
         when(queryEmailMethodResponseBuilderPort.reset()).thenReturn(queryEmailMethodResponseBuilderPort);
         when(queryEmailMethodResponseBuilderPort.canCalculateChanges(anyBoolean())).thenReturn(queryEmailMethodResponseBuilderPort);
@@ -167,8 +177,6 @@ public class QueryEmailMethodCallServiceTest {
         when(queryEmailMethodCallPort.getCalculateTotal()).thenReturn(true);
         when(accountStateRepository.retrive(anyString())).thenReturn(accountState);
         when(emailRepository.retriveAll(anyString())).thenReturn(new RetrivedEntity<>(emails, new String[] {}));
-        when(emailPort.getThreadId()).thenReturn("threadId");
-        when(emailPort.getId()).thenReturn("id");
         when(accountState.state()).thenReturn("state");
         when(queryEmailMethodResponseBuilderPort.reset()).thenReturn(queryEmailMethodResponseBuilderPort);
         when(queryEmailMethodResponseBuilderPort.canCalculateChanges(anyBoolean())).thenReturn(queryEmailMethodResponseBuilderPort);

@@ -1,6 +1,12 @@
 package it.qbsoftware.business.domain.methodcall.filter.standard;
 
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,11 +41,38 @@ public class StandardThreadPropertiesFilterTest {
     @Test
     public void testFilterWithValidProperties() throws InvalidArgumentsException {
         ThreadPort[] threadPorts = new ThreadPort[] {threadPort};
-        String[] properties = new String[] {"blobId", "threadId", "mailboxIds", "keywords", "size", "receivedAt"};
+        String[] properties = new String[] {"emailIds", "id"};
+        List<String> emailIds = new ArrayList<>();
+
+        when(threadPort.getId()).thenReturn("id");
+        when(threadPort.getEmailIds()).thenReturn(emailIds);
+        when(threadPort.toBuilder()).thenReturn(threadBuilderPort);
+
+        when(threadBuilderPort.id(any())).thenReturn(threadBuilderPort);
+        when(threadBuilderPort.emailIds(any())).thenReturn(threadBuilderPort);
+        when(threadBuilderPort.build()).thenReturn(threadPort);
+        when(threadBuilderPort.reset()).thenReturn(threadBuilderPort);
 
         ThreadPort[] result = standardThreadPropertiesFilter.filter(threadPorts, properties);
 
         assertArrayEquals(threadPorts, result);
+    }
+
+    @Test
+    public void testFilterWithInvalidArgumentsException() throws InvalidArgumentsException {
+        ThreadPort[] threadPorts = new ThreadPort[] {threadPort};
+        String[] properties = new String[] {"emailIds", "invalidProperties"};
+        List<String> emailIds = new ArrayList<>();
+
+        when(threadPort.getId()).thenReturn("id");
+        when(threadPort.getEmailIds()).thenReturn(emailIds);
+        when(threadPort.toBuilder()).thenReturn(threadBuilderPort);
+
+        when(threadBuilderPort.id(any())).thenReturn(threadBuilderPort);
+        when(threadBuilderPort.emailIds(any())).thenReturn(threadBuilderPort);
+        when(threadBuilderPort.reset()).thenReturn(threadBuilderPort);
+
+        assertThrows(InvalidArgumentsException.class, () -> standardThreadPropertiesFilter.filter(threadPorts, properties));
     }
 
 
