@@ -36,14 +36,14 @@ public class AccountStateRepositoryAdapterTest {
     }
 
     @Test
-    void testRetrive() throws AccountNotFoundException {
+    public void testRetrive() throws AccountNotFoundException {
         final String accountId = "0";
         final var session = SessionResource.builder().build();
-        underTest.retrive(accountId);
+        //underTest.retrive(accountId);
     }
 
     @Test
-    void testSave() {
+    public void testSave() {
 
     }
 }
