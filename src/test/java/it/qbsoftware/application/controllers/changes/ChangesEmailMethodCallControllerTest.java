@@ -56,9 +56,9 @@ public class ChangesEmailMethodCallControllerTest {
         when(changesEmailMethodCallUsecase.call(any(),any())).thenReturn(changesEmailMethodResponseAdapter);
         when(changesEmailMethodResponseAdapter.adaptee()).thenReturn(changesEmailMethodResponse);
 
-        MethodResponse result = changesEmailMethodCallController.handle(handlerRequest);
+        MethodResponse[] result = changesEmailMethodCallController.handle(handlerRequest);
 
-        assertEquals(changesEmailMethodResponse, result);
+        assertEquals(changesEmailMethodResponse, result[0]);
     }
 
     
@@ -69,9 +69,9 @@ public class ChangesEmailMethodCallControllerTest {
 
         when(changesEmailMethodCallUsecase.call(any(),any())).thenThrow(AccountNotFoundException.class);
 
-        MethodResponse result = changesEmailMethodCallController.handle(handlerRequest);
+        MethodResponse[] result = changesEmailMethodCallController.handle(handlerRequest);
 
-        assertTrue(result instanceof InvalidArgumentsMethodErrorResponse);
+        assertTrue(result[0] instanceof InvalidArgumentsMethodErrorResponse);
     }
 
     @Test
@@ -81,9 +81,9 @@ public class ChangesEmailMethodCallControllerTest {
 
         when(changesEmailMethodCallUsecase.call(any(),any())).thenThrow(CannotCalculateChangesException.class);
 
-        MethodResponse result = changesEmailMethodCallController.handle(handlerRequest);
+        MethodResponse[] result = changesEmailMethodCallController.handle(handlerRequest);
 
-        assertTrue(result instanceof CannotCalculateChangesMethodErrorResponse);
+        assertTrue(result[0] instanceof CannotCalculateChangesMethodErrorResponse);
     }
 
     @Test
@@ -93,9 +93,9 @@ public class ChangesEmailMethodCallControllerTest {
 
         when(changesEmailMethodCallUsecase.call(any(),any())).thenThrow(InvalidArgumentsException.class);
 
-        MethodResponse result = changesEmailMethodCallController.handle(handlerRequest);
+        MethodResponse[] result = changesEmailMethodCallController.handle(handlerRequest);
 
-        assertTrue(result instanceof InvalidArgumentsMethodErrorResponse);
+        assertTrue(result[0] instanceof InvalidArgumentsMethodErrorResponse);
     }
 
     @Test
@@ -103,9 +103,9 @@ public class ChangesEmailMethodCallControllerTest {
 
         HandlerRequest handlerRequest = new HandlerRequest(methodCall, previousResponses);
 
-        MethodResponse result = changesEmailMethodCallController.handle(handlerRequest);
+        MethodResponse[] result = changesEmailMethodCallController.handle(handlerRequest);
 
-        assertTrue(result instanceof UnknownMethodMethodErrorResponse);
+        assertTrue(result[0] instanceof UnknownMethodMethodErrorResponse);
     }
 
 
