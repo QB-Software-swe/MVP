@@ -1,12 +1,12 @@
 # Build
 FROM maven:3-eclipse-temurin-21-alpine as Build
-WORKDIR /poc
+WORKDIR /mvp
 COPY pom.xml .
 COPY src ./src
-RUN mvn clean package
+RUN mvn clean package -DskipTests
 
 # Image
 FROM openjdk:21
-WORKDIR /poc
-COPY --from=Build /poc/target/poc-*-jar-with-dependencies.jar poc.jar
-CMD ["java", "-jar", "poc.jar"]
+WORKDIR /mvp
+COPY --from=Build /mvp/target/demo_jmap_server-*-jar-with-dependencies.jar mvp.jar
+CMD ["java", "-jar", "mvp.jar"]
