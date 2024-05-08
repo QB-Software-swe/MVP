@@ -5,11 +5,10 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.junit.Test;
 
 public class SimpleThreadChangesTrackerTest {
-        @Test
+    @Test
     public void testConstructorWithIdOnly() {
         SimpleThreadChangesTracker tracker = new SimpleThreadChangesTracker("id");
 
@@ -28,7 +27,8 @@ public class SimpleThreadChangesTrackerTest {
         Map<String, String> destroyed = new HashMap<>();
         destroyed.put("destroyedState", "destroyedThreadId");
 
-        SimpleThreadChangesTracker tracker = new SimpleThreadChangesTracker("id", created, updated, destroyed);
+        SimpleThreadChangesTracker tracker =
+                new SimpleThreadChangesTracker("id", created, updated, destroyed);
 
         assertEquals("id", tracker.id());
         assertEquals(created, tracker.created());
@@ -40,7 +40,8 @@ public class SimpleThreadChangesTrackerTest {
     public void testThreadHasBeenCreated() {
         SimpleThreadChangesTracker tracker = new SimpleThreadChangesTracker("id");
 
-        ThreadChangesTracker updatedTracker = tracker.threadHasBeenCreated("newState", "newThreadId");
+        ThreadChangesTracker updatedTracker =
+                tracker.threadHasBeenCreated("newState", "newThreadId");
 
         assertEquals("id", updatedTracker.id());
         assertEquals("newThreadId", updatedTracker.created().get("newState"));
@@ -50,7 +51,8 @@ public class SimpleThreadChangesTrackerTest {
     public void testThreadHasBeenUpdated() {
         SimpleThreadChangesTracker tracker = new SimpleThreadChangesTracker("id");
 
-        ThreadChangesTracker updatedTracker = tracker.threadHasBeenUpdated("newState", "newThreadId");
+        ThreadChangesTracker updatedTracker =
+                tracker.threadHasBeenUpdated("newState", "newThreadId");
 
         assertEquals("id", updatedTracker.id());
         assertEquals("newThreadId", updatedTracker.updated().get("newState"));
@@ -60,7 +62,8 @@ public class SimpleThreadChangesTrackerTest {
     public void testThreadHasBeenDestroyed() {
         SimpleThreadChangesTracker tracker = new SimpleThreadChangesTracker("id");
 
-        ThreadChangesTracker updatedTracker = tracker.threadHasBeenDestroyed("newState", "newThreadId");
+        ThreadChangesTracker updatedTracker =
+                tracker.threadHasBeenDestroyed("newState", "newThreadId");
 
         assertEquals("id", updatedTracker.id());
         assertEquals("newThreadId", updatedTracker.destroyed().get("newState"));

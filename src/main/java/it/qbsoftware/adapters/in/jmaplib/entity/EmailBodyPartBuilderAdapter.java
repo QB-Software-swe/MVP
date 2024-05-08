@@ -48,5 +48,4 @@ public class EmailBodyPartBuilderAdapter implements EmailBodyPartBuilderPort {
         emailBodyPartBuilder = EmailBodyPart.builder();
         return this;
     }
-
 }

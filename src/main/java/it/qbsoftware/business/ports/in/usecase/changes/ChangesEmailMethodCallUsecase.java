@@ -9,6 +9,10 @@ import it.qbsoftware.business.ports.in.jmap.method.call.changes.ChangesEmailMeth
 import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesEmailMethodResponsePort;
 
 public interface ChangesEmailMethodCallUsecase {
-    public ChangesEmailMethodResponsePort call(ChangesEmailMethodCallPort changesEmailMethodCallPort,
-            ListMultimapPort<String, ResponseInvocationPort> previousresponses) throws AccountNotFoundException, InvalidArgumentsException, CannotCalculateChangesException;
+    public ChangesEmailMethodResponsePort call(
+            ChangesEmailMethodCallPort changesEmailMethodCallPort,
+            ListMultimapPort<String, ResponseInvocationPort> previousresponses)
+            throws AccountNotFoundException,
+                    InvalidArgumentsException,
+                    CannotCalculateChangesException;
 }

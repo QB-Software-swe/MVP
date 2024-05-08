@@ -1,19 +1,16 @@
 package it.qbsoftware.application.controllers.get;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.inject.Inject;
-
 import it.qbsoftware.adapters.in.jmaplib.method.call.get.GetIdentityMethodCallAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetIdentityMethodResponseAdapter;
 import it.qbsoftware.application.controllers.ControllerHandlerBase;
 import it.qbsoftware.application.controllers.HandlerRequest;
-import it.qbsoftware.application.controllers.changes.ChangesEmailSubmissionMethodCallController;
 import it.qbsoftware.business.domain.exception.AccountNotFoundException;
 import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
 import it.qbsoftware.business.domain.exception.InvalidResultReferenceExecption;
 import it.qbsoftware.business.ports.in.usecase.get.GetIdentityMethodCallUsecase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import rs.ltt.jmap.common.method.MethodResponse;
 import rs.ltt.jmap.common.method.call.identity.GetIdentityMethodCall;
 import rs.ltt.jmap.common.method.error.InvalidArgumentsMethodErrorResponse;
@@ -24,7 +21,8 @@ public class GetIdentityMethodCallController extends ControllerHandlerBase {
     private final GetIdentityMethodCallUsecase getIdentityMethodCallUsecase;
 
     @Inject
-    public GetIdentityMethodCallController(final GetIdentityMethodCallUsecase getIdentityMethodCallUsecase) {
+    public GetIdentityMethodCallController(
+            final GetIdentityMethodCallUsecase getIdentityMethodCallUsecase) {
         this.getIdentityMethodCallUsecase = getIdentityMethodCallUsecase;
     }
 
@@ -32,24 +30,26 @@ public class GetIdentityMethodCallController extends ControllerHandlerBase {
     public MethodResponse[] handle(final HandlerRequest handlerRequest) {
         if (handlerRequest.methodCall() instanceof GetIdentityMethodCall getIdentityMethodCall) {
 
-            final GetIdentityMethodCallAdapter getIdentityMethodCallAdapter = new GetIdentityMethodCallAdapter(
-                    getIdentityMethodCall);
-                    logger.info("Match and handle method call recived");
+            final GetIdentityMethodCallAdapter getIdentityMethodCallAdapter =
+                    new GetIdentityMethodCallAdapter(getIdentityMethodCall);
+            logger.info("Match and handle method call recived");
             try {
-                final GetIdentityMethodResponseAdapter getIdentityMethodResponseAdapter = (GetIdentityMethodResponseAdapter) getIdentityMethodCallUsecase
-                        .call(getIdentityMethodCallAdapter, handlerRequest.previousResponses());
+                final GetIdentityMethodResponseAdapter getIdentityMethodResponseAdapter =
+                        (GetIdentityMethodResponseAdapter)
+                                getIdentityMethodCallUsecase.call(
+                                        getIdentityMethodCallAdapter,
+                                        handlerRequest.previousResponses());
 
-                return new MethodResponse[] { getIdentityMethodResponseAdapter.adaptee() };
+                return new MethodResponse[] {getIdentityMethodResponseAdapter.adaptee()};
             } catch (final AccountNotFoundException accountNotFoundException) {
-                return new MethodResponse[] { new InvalidArgumentsMethodErrorResponse() };
+                return new MethodResponse[] {new InvalidArgumentsMethodErrorResponse()};
             } catch (final InvalidResultReferenceExecption invalidResultReferenceExecption) {
-                return new MethodResponse[] { new InvalidResultReferenceMethodErrorResponse() };
+                return new MethodResponse[] {new InvalidResultReferenceMethodErrorResponse()};
             } catch (final InvalidArgumentsException invalidArgumentsException) {
-                return new MethodResponse[] { new InvalidArgumentsMethodErrorResponse() };
+                return new MethodResponse[] {new InvalidArgumentsMethodErrorResponse()};
             }
         }
 
         return super.handle(handlerRequest);
     }
-
 }

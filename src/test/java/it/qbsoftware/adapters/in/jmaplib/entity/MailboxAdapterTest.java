@@ -6,11 +6,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.junit.Test;
-
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxRightsPort;
 import it.qbsoftware.business.ports.in.jmap.entity.RolePort;
+import org.junit.Test;
 import rs.ltt.jmap.common.entity.Mailbox;
 import rs.ltt.jmap.common.entity.MailboxRights;
 import rs.ltt.jmap.common.entity.Role;
@@ -42,8 +41,8 @@ public class MailboxAdapterTest {
         when(mailbox.getRole()).thenReturn(role);
 
         MailboxAdapter mailboxAdapter = new MailboxAdapter(mailbox);
-        MailboxBuilderPort builder = mailboxAdapter.getBuilder();
-        
+        MailboxBuilderPort builder = mailboxAdapter.toBuilder();
+
         verify(mailbox).getId();
         verify(mailbox).getIsSubscribed();
         verify(mailbox).getMyRights();
@@ -55,7 +54,7 @@ public class MailboxAdapterTest {
         verify(mailbox).getTotalThreads();
         verify(mailbox).getUnreadEmails();
         verify(mailbox).getRole();
-    
+
         assertNotNull(builder);
     }
 

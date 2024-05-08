@@ -1,9 +1,5 @@
 package it.qbsoftware.business.domain.methodcall.process.set.create;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
 import it.qbsoftware.business.domain.entity.changes.AccountState;
 import it.qbsoftware.business.domain.entity.changes.tracker.MailboxChangesTracker;
 import it.qbsoftware.business.domain.exception.AccountNotFoundException;
@@ -16,6 +12,9 @@ import it.qbsoftware.business.ports.in.jmap.method.call.set.SetMailboxMethodCall
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.business.ports.out.domain.MailboxChangesTrackerRepository;
 import it.qbsoftware.business.ports.out.jmap.MailboxRepository;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class StandardCreateMailbox implements CreateMailbox {
     private final AccountStateRepository accountStateRepository;
@@ -23,7 +22,8 @@ public class StandardCreateMailbox implements CreateMailbox {
     private final MailboxRepository mailboxRepository;
     private final SetErrorEnumPort setErrorEnumPort;
 
-    public StandardCreateMailbox(final AccountStateRepository accountStateRepository,
+    public StandardCreateMailbox(
+            final AccountStateRepository accountStateRepository,
             final MailboxChangesTrackerRepository mailboxChangesTrackerRepository,
             final MailboxRepository mailboxRepository,
             final SetErrorEnumPort setErrorEnumPort) {
@@ -34,7 +34,8 @@ public class StandardCreateMailbox implements CreateMailbox {
     }
 
     @Override
-    public CreatedResult<MailboxPort> create(final SetMailboxMethodCallPort setMailboxMethodCallPort)
+    public CreatedResult<MailboxPort> create(
+            final SetMailboxMethodCallPort setMailboxMethodCallPort)
             throws AccountNotFoundException {
         final HashMap<String, MailboxPort> created = new HashMap<>();
         final HashMap<String, SetErrorPort> notCreated = new HashMap<>();
@@ -43,8 +44,9 @@ public class StandardCreateMailbox implements CreateMailbox {
         if (x != null) {
             for (final Map.Entry<String, MailboxPort> mailboxEntry : x.entrySet()) {
                 try {
-                    MailboxPort mailboxDiff = createMailbox(mailboxEntry.getValue(),
-                            setMailboxMethodCallPort.accountId());
+                    MailboxPort mailboxDiff =
+                            createMailbox(
+                                    mailboxEntry.getValue(), setMailboxMethodCallPort.accountId());
                     created.put(mailboxEntry.getKey(), mailboxDiff);
                 } catch (final SetSingletonException setSingletonException) {
                     notCreated.put(mailboxEntry.getKey(), setErrorEnumPort.singleton());
@@ -61,21 +63,23 @@ public class StandardCreateMailbox implements CreateMailbox {
             throws AccountNotFoundException, SetSingletonException, InvalidArgumentsException {
         final String mailboxId = accountId + "/" + UUID.randomUUID().toString();
 
-        if(mailbox.getName()=="") {
+        if (mailbox.getName().equals("")) {
             throw new InvalidArgumentsException();
         }
 
-        final MailboxPort mailboxToSave = mailbox.getBuilder().id(mailboxId).build();
-        final MailboxPort mailboxDiff = mailbox.getBuilder().reset().id(mailboxId).build();
+        final MailboxPort mailboxToSave = mailbox.toBuilder().id(mailboxId).build();
+        final MailboxPort mailboxDiff = mailbox.toBuilder().reset().id(mailboxId).build();
         mailboxRepository.save(mailboxToSave);
         mailboxUpdateChanges(mailboxId, accountId);
 
         return mailboxDiff;
     }
 
-    private void mailboxUpdateChanges(final String mailboxId, final String accountId) throws AccountNotFoundException {
+    private void mailboxUpdateChanges(final String mailboxId, final String accountId)
+            throws AccountNotFoundException {
         AccountState accountState = accountStateRepository.retrive(accountId);
-        final MailboxChangesTracker mailboxChangesTracker = mailboxChangesTrackerRepository.retrive(accountId);
+        final MailboxChangesTracker mailboxChangesTracker =
+                mailboxChangesTrackerRepository.retrive(accountId);
 
         accountState = accountState.increaseState();
         mailboxChangesTracker.mailboxHasBeenCreated(accountState.state(), mailboxId);

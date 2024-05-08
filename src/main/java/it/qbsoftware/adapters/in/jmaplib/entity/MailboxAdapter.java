@@ -74,7 +74,7 @@ public class MailboxAdapter implements MailboxPort {
     }
 
     @Override
-    public MailboxBuilderPort getBuilder() {
+    public MailboxBuilderPort toBuilder() {
         return new MailboxBuilderAdapter(
                 Mailbox.builder()
                         .id(mailbox.getId())
@@ -89,5 +89,4 @@ public class MailboxAdapter implements MailboxPort {
                         .myRights(mailbox.getMyRights())
                         .isSubscribed(mailbox.getIsSubscribed()));
     }
-
 }

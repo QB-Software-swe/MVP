@@ -6,7 +6,8 @@ import rs.ltt.jmap.common.method.response.email.QueryEmailMethodResponse;
 import rs.ltt.jmap.common.method.response.email.QueryEmailMethodResponse.QueryEmailMethodResponseBuilder;
 
 public class QueryEmailMethodResponseBuilderAdapter implements QueryEmailMethodResponseBuilderPort {
-    private QueryEmailMethodResponseBuilder queryEmailMethodResponseBuilder = QueryEmailMethodResponse.builder();
+    private QueryEmailMethodResponseBuilder queryEmailMethodResponseBuilder =
+            QueryEmailMethodResponse.builder();
 
     @Override
     public QueryEmailMethodResponseBuilderPort accountId(final String accountId) {
@@ -21,7 +22,8 @@ public class QueryEmailMethodResponseBuilderAdapter implements QueryEmailMethodR
     }
 
     @Override
-    public QueryEmailMethodResponseBuilderPort canCalculateChanges(final Boolean canCalculateChanges) {
+    public QueryEmailMethodResponseBuilderPort canCalculateChanges(
+            final Boolean canCalculateChanges) {
         queryEmailMethodResponseBuilder.canCalculateChanges(canCalculateChanges);
         return this;
     }
@@ -60,5 +62,4 @@ public class QueryEmailMethodResponseBuilderAdapter implements QueryEmailMethodR
         queryEmailMethodResponseBuilder = QueryEmailMethodResponse.builder();
         return this;
     }
-
 }

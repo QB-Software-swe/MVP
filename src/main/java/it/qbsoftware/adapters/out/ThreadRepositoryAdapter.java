@@ -1,24 +1,21 @@
 package it.qbsoftware.adapters.out;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-
-import org.bson.Document;
-import org.bson.conversions.Bson;
-
 import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.FindOneAndReplaceOptions;
-
 import it.qbsoftware.adapters.in.jmaplib.entity.ThreadAdapter;
 import it.qbsoftware.business.domain.util.get.RetrivedEntity;
 import it.qbsoftware.business.ports.in.jmap.entity.ThreadPort;
 import it.qbsoftware.business.ports.out.jmap.ThreadRepository;
 import it.qbsoftware.persistance.MongoConnection;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import org.bson.Document;
+import org.bson.conversions.Bson;
 import rs.ltt.jmap.common.entity.Thread;
 
 public class ThreadRepositoryAdapter implements ThreadRepository {
@@ -37,7 +34,8 @@ public class ThreadRepositoryAdapter implements ThreadRepository {
         final List<ThreadPort> found = new ArrayList<>();
 
         final Bson filter = Filters.regex("_id", "^" + accountId + "\\/.*$");
-        final FindIterable<Document> findIterable = connection.getDatabase().getCollection(COLLECTION).find(filter);
+        final FindIterable<Document> findIterable =
+                connection.getDatabase().getCollection(COLLECTION).find(filter);
 
         for (final Document document : findIterable) {
             found.add(new ThreadAdapter(gson.fromJson(document.toJson(), Thread.class)));
@@ -51,7 +49,8 @@ public class ThreadRepositoryAdapter implements ThreadRepository {
         final List<String> notFound = new ArrayList<>();
 
         final Bson filter = Filters.in("_id", Arrays.asList(ids));
-        final FindIterable<Document> findIterable = connection.getDatabase().getCollection(COLLECTION).find(filter);
+        final FindIterable<Document> findIterable =
+                connection.getDatabase().getCollection(COLLECTION).find(filter);
 
         final HashMap<String, ThreadPort> findThreadPort = new HashMap<>();
         for (final Document document : findIterable) {
@@ -65,7 +64,8 @@ public class ThreadRepositoryAdapter implements ThreadRepository {
             }
         }
 
-        return new RetrivedEntity<>(findThreadPort.values().toArray(ThreadPort[]::new),
+        return new RetrivedEntity<>(
+                findThreadPort.values().toArray(ThreadPort[]::new),
                 notFound.toArray(String[]::new));
     }
 
@@ -83,9 +83,15 @@ public class ThreadRepositoryAdapter implements ThreadRepository {
 
     @Override
     public void save(final ThreadPort threadPort) {
-        final Document threadDoc = Document.parse(gson.toJson(((ThreadAdapter) threadPort).adaptee()));
+        final Document threadDoc =
+                Document.parse(gson.toJson(((ThreadAdapter) threadPort).adaptee()));
         threadDoc.put("_id", threadPort.getId());
-        connection.getDatabase().getCollection(COLLECTION).findOneAndReplace(Filters.eq("_id", threadPort.getId()),
-                threadDoc, new FindOneAndReplaceOptions().upsert(true));
+        connection
+                .getDatabase()
+                .getCollection(COLLECTION)
+                .findOneAndReplace(
+                        Filters.eq("_id", threadPort.getId()),
+                        threadDoc,
+                        new FindOneAndReplaceOptions().upsert(true));
     }
 }

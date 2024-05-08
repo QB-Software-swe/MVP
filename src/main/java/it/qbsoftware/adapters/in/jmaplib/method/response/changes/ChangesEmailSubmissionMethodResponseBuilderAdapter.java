@@ -7,8 +7,9 @@ import rs.ltt.jmap.common.method.response.submission.ChangesEmailSubmissionMetho
 
 public class ChangesEmailSubmissionMethodResponseBuilderAdapter
         implements ChangesEmailSubmissionMethodResponseBuilderPort {
-    private ChangesEmailSubmissionMethodResponseBuilder changesEmailSubmissionMethodResponseBuilder = ChangesEmailSubmissionMethodResponse
-            .builder();
+    private ChangesEmailSubmissionMethodResponseBuilder
+            changesEmailSubmissionMethodResponseBuilder =
+                    ChangesEmailSubmissionMethodResponse.builder();
 
     @Override
     public ChangesEmailSubmissionMethodResponseBuilderPort accountId(final String accountId) {
@@ -29,7 +30,8 @@ public class ChangesEmailSubmissionMethodResponseBuilderAdapter
     }
 
     @Override
-    public ChangesEmailSubmissionMethodResponseBuilderPort hasMoreChanges(final Boolean hasMoreChanges) {
+    public ChangesEmailSubmissionMethodResponseBuilderPort hasMoreChanges(
+            final Boolean hasMoreChanges) {
         changesEmailSubmissionMethodResponseBuilder.hasMoreChanges(hasMoreChanges);
         return this;
     }
@@ -54,13 +56,14 @@ public class ChangesEmailSubmissionMethodResponseBuilderAdapter
 
     @Override
     public ChangesEmailSubmissionMethodResponsePort build() {
-        return new ChangesEmailSubmissionMethodResponseAdapter(changesEmailSubmissionMethodResponseBuilder.build());
+        return new ChangesEmailSubmissionMethodResponseAdapter(
+                changesEmailSubmissionMethodResponseBuilder.build());
     }
 
     @Override
     public ChangesEmailSubmissionMethodResponseBuilderPort reset() {
-        changesEmailSubmissionMethodResponseBuilder = ChangesEmailSubmissionMethodResponse.builder();
+        changesEmailSubmissionMethodResponseBuilder =
+                ChangesEmailSubmissionMethodResponse.builder();
         return this;
     }
-
 }

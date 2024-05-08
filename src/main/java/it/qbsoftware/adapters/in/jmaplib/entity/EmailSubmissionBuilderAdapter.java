@@ -1,14 +1,12 @@
 package it.qbsoftware.adapters.in.jmaplib.entity;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import it.qbsoftware.business.ports.in.jmap.entity.EmailSubmissionBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.entity.EmailSubmissionPort;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import it.qbsoftware.business.ports.in.jmap.entity.EmailSubmissionBuilderPort;
-import it.qbsoftware.business.ports.in.jmap.entity.EmailSubmissionPort;
 import rs.ltt.jmap.common.entity.Delivered;
 import rs.ltt.jmap.common.entity.DeliveryStatus;
 import rs.ltt.jmap.common.entity.EmailSubmission;
@@ -36,7 +34,8 @@ public class EmailSubmissionBuilderAdapter implements EmailSubmissionBuilderPort
 
     @Override
     public EmailSubmissionPort build() {
-        final EmailSubmission emailSubmission = GSON.fromJson("{\"id\":\"" + id + "\"}", EmailSubmission.class);
+        final EmailSubmission emailSubmission =
+                GSON.fromJson("{\"id\":\"" + id + "\"}", EmailSubmission.class);
         return new EmailSubmissionAdapter(emailSubmission);
     }
 
@@ -81,5 +80,4 @@ public class EmailSubmissionBuilderAdapter implements EmailSubmissionBuilderPort
     public EmailSubmissionPort build1() {
         return new EmailSubmissionAdapter(emailSubmissionBuilder.build());
     }
-
 }

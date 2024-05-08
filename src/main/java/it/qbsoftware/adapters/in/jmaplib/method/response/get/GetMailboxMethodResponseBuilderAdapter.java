@@ -1,13 +1,11 @@
 package it.qbsoftware.adapters.in.jmaplib.method.response.get;
 
-import java.util.stream.Stream;
-
 import com.google.inject.Inject;
-
 import it.qbsoftware.adapters.in.jmaplib.entity.MailboxAdapter;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetMailboxMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetMailboxMethodResponsePort;
+import java.util.stream.Stream;
 import rs.ltt.jmap.common.entity.Mailbox;
 import rs.ltt.jmap.common.method.response.mailbox.GetMailboxMethodResponse;
 import rs.ltt.jmap.common.method.response.mailbox.GetMailboxMethodResponse.GetMailboxMethodResponseBuilder;
@@ -24,7 +22,8 @@ public class GetMailboxMethodResponseBuilderAdapter implements GetMailboxMethodR
     public GetMailboxMethodResponseBuilderPort list(final MailboxPort[] mailboxs) {
         if (mailboxs != null) {
             getMailboxMethodResponseBuilder.list(
-                    Stream.of(mailboxs).map(mailboxPort -> ((MailboxAdapter) mailboxPort).adaptee())
+                    Stream.of(mailboxs)
+                            .map(mailboxPort -> ((MailboxAdapter) mailboxPort).adaptee())
                             .toArray(Mailbox[]::new));
         } else {
             getMailboxMethodResponseBuilder.list(null);
@@ -54,5 +53,4 @@ public class GetMailboxMethodResponseBuilderAdapter implements GetMailboxMethodR
         this.getMailboxMethodResponseBuilder = GetMailboxMethodResponse.builder();
         return this;
     }
-
 }

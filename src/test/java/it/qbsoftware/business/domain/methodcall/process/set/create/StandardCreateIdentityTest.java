@@ -10,14 +10,6 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-
 import it.qbsoftware.business.domain.entity.changes.AccountState;
 import it.qbsoftware.business.domain.entity.changes.tracker.IdentityChangesTracker;
 import it.qbsoftware.business.domain.exception.AccountNotFoundException;
@@ -31,56 +23,51 @@ import it.qbsoftware.business.ports.in.jmap.method.call.set.SetIdentityMethodCal
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.business.ports.out.domain.IdentityChangesTrackerRepository;
 import it.qbsoftware.business.ports.out.jmap.IdentityRepository;
-
+import java.util.HashMap;
+import java.util.Map;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 @RunWith(org.mockito.junit.MockitoJUnitRunner.class)
 public class StandardCreateIdentityTest {
-    @Mock
-    AccountStateRepository accountStateRepository;
+    @Mock AccountStateRepository accountStateRepository;
 
-    @Mock
-    IdentityChangesTrackerRepository identityChangesTrackerRepository;
+    @Mock IdentityChangesTrackerRepository identityChangesTrackerRepository;
 
-    @Mock
-    IdentityRepository identityRepository;
+    @Mock IdentityRepository identityRepository;
 
-    @Mock
-    IdentityBuilderPort identityBuilderPort;
+    @Mock IdentityBuilderPort identityBuilderPort;
 
-    @Mock
-    SetErrorEnumPort setErrorEnumPort;
+    @Mock SetErrorEnumPort setErrorEnumPort;
 
-    @Mock
-    SetErrorPort setErrorPort;
+    @Mock SetErrorPort setErrorPort;
 
-    @Mock
-    SetIdentityMethodCallPort setIdentityMethodCallPort;
+    @Mock SetIdentityMethodCallPort setIdentityMethodCallPort;
 
-    @Mock
-    AccountState accountState;
+    @Mock AccountState accountState;
 
-    @Mock
-    CreationIdResolverPort creationIdResolverPort;
+    @Mock CreationIdResolverPort creationIdResolverPort;
 
-    @Mock
-    IdentityChangesTracker identityChangesTracker;
+    @Mock IdentityChangesTracker identityChangesTracker;
 
-    @InjectMocks
-    StandardCreateIdentity standardCreateIdentity;
-    
+    @InjectMocks StandardCreateIdentity standardCreateIdentity;
+
     @Test
-    public void testCreateWithNullEntryIdentityToCreate() throws AccountNotFoundException {     
-        
+    public void testCreateWithNullEntryIdentityToCreate() throws AccountNotFoundException {
+
         when(setIdentityMethodCallPort.getCreate()).thenReturn(null);
 
-        CreatedResult<IdentityPort> result = standardCreateIdentity.create(setIdentityMethodCallPort);
+        CreatedResult<IdentityPort> result =
+                standardCreateIdentity.create(setIdentityMethodCallPort);
 
         assertNull(result.created());
         assertNull(result.notCreated());
     }
 
     @Test
-    public void testCreateWithNotNullMapIdentityToCreateAndNoExceptions() throws Exception {     
+    public void testCreateWithNotNullMapIdentityToCreateAndNoExceptions() throws Exception {
         IdentityPort identityPort = mock(IdentityPort.class);
         Map<String, IdentityPort> entryIdentityToCreate = new HashMap<>();
         entryIdentityToCreate.put("key", identityPort);
@@ -96,7 +83,8 @@ public class StandardCreateIdentityTest {
         when(accountState.increaseState()).thenReturn(accountState);
         when(accountState.state()).thenReturn("state");
 
-        CreatedResult<IdentityPort> result = standardCreateIdentity.create(setIdentityMethodCallPort);
+        CreatedResult<IdentityPort> result =
+                standardCreateIdentity.create(setIdentityMethodCallPort);
 
         assertNotNull(result);
         assertTrue(result.created().containsKey("key"));
@@ -104,9 +92,8 @@ public class StandardCreateIdentityTest {
         assertTrue(result.notCreated().isEmpty());
     }
 
-
     @Test
-    public void testCreateWithSingletonException() throws Exception {     
+    public void testCreateWithSingletonException() throws Exception {
         IdentityPort identityPort = mock(IdentityPort.class);
         Map<String, IdentityPort> entryIdentityToCreate = new HashMap<>();
         entryIdentityToCreate.put("key", identityPort);
@@ -121,16 +108,12 @@ public class StandardCreateIdentityTest {
 
         doThrow(SetSingletonException.class).doNothing().when(identityRepository).save(any());
 
-        CreatedResult<IdentityPort> result = standardCreateIdentity.create(setIdentityMethodCallPort);
+        CreatedResult<IdentityPort> result =
+                standardCreateIdentity.create(setIdentityMethodCallPort);
 
         assertNotNull(result);
         assertTrue(result.created().isEmpty());
         assertTrue(result.notCreated().containsKey("key"));
         assertEquals(1, result.notCreated().size());
     }
-
-
-
 }
-
-

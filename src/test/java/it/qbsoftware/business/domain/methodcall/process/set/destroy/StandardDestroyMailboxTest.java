@@ -7,14 +7,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-
 import it.qbsoftware.business.domain.entity.changes.AccountState;
 import it.qbsoftware.business.domain.entity.changes.tracker.MailboxChangesTracker;
 import it.qbsoftware.business.domain.exception.AccountNotFoundException;
@@ -24,50 +16,47 @@ import it.qbsoftware.business.ports.in.jmap.method.call.set.SetMailboxMethodCall
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.business.ports.out.domain.MailboxChangesTrackerRepository;
 import it.qbsoftware.business.ports.out.jmap.MailboxRepository;
+import java.util.HashMap;
+import java.util.Map;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 @RunWith(org.mockito.junit.MockitoJUnitRunner.class)
 public class StandardDestroyMailboxTest {
 
-    @Mock
-    AccountStateRepository accountStateRepository;
+    @Mock AccountStateRepository accountStateRepository;
 
-    @Mock
-    AccountState accountState;
+    @Mock AccountState accountState;
 
-    @Mock 
-    MailboxChangesTrackerRepository mailboxChangesTrackerRepository;
+    @Mock MailboxChangesTrackerRepository mailboxChangesTrackerRepository;
 
-    @Mock
-    MailboxChangesTracker mailboxChangesTracker;
+    @Mock MailboxChangesTracker mailboxChangesTracker;
 
-    @Mock
-    MailboxRepository mailboxRepository;
+    @Mock MailboxRepository mailboxRepository;
 
-    @Mock
-    SetErrorEnumPort setErrorEnumPort;
+    @Mock SetErrorEnumPort setErrorEnumPort;
 
-    @Mock
-    SetMailboxMethodCallPort setMailboxMethodCallPort;
+    @Mock SetMailboxMethodCallPort setMailboxMethodCallPort;
 
-    @InjectMocks
-    StandardDestroyMailbox standardDestroyMailbox;
-
+    @InjectMocks StandardDestroyMailbox standardDestroyMailbox;
 
     @Test
-    public void testDestroyWithNullIdsToDestroy() throws AccountNotFoundException {     
-        
+    public void testDestroyWithNullIdsToDestroy() throws AccountNotFoundException {
+
         when(setMailboxMethodCallPort.getDestroy()).thenReturn(null);
 
         DestroyedResult result = standardDestroyMailbox.destroy(setMailboxMethodCallPort);
 
-        assertTrue(result.destroyed().length==0);
+        assertTrue(result.destroyed().length == 0);
         assertTrue(result.notDestroyed().isEmpty());
         assertNotNull(result);
     }
 
-
     @Test
-    public void testDestroyWithNotNullIdsToDestroyAndNoExceptions() throws AccountNotFoundException { 
+    public void testDestroyWithNotNullIdsToDestroyAndNoExceptions()
+            throws AccountNotFoundException {
         String[] idsToDestroy = {"1", "2", "3"};
         Map<String, Boolean> mailboxIds = new HashMap<>();
         mailboxIds.put("key", false);
@@ -81,13 +70,13 @@ public class StandardDestroyMailboxTest {
 
         DestroyedResult result = standardDestroyMailbox.destroy(setMailboxMethodCallPort);
 
-        assertTrue(result.destroyed().length>0);
+        assertTrue(result.destroyed().length > 0);
         assertTrue(result.notDestroyed().isEmpty());
         assertNotNull(result);
     }
 
     @Test
-    public void testDestroyWithSetNotFoundException() throws Exception {  
+    public void testDestroyWithSetNotFoundException() throws Exception {
         String[] idsToDestroy = {"1", "2", "3"};
         Map<String, Boolean> mailboxIds = new HashMap<>();
         mailboxIds.put("key", false);
@@ -96,9 +85,8 @@ public class StandardDestroyMailboxTest {
         doThrow(SetNotFoundException.class).when(mailboxRepository).destroy(any());
 
         DestroyedResult result = standardDestroyMailbox.destroy(setMailboxMethodCallPort);
-        
-        assertTrue(result.destroyed().length==0);
+
+        assertTrue(result.destroyed().length == 0);
         assertNotNull(result);
     }
-
 }

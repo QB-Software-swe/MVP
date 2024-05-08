@@ -1,13 +1,13 @@
 package it.qbsoftware.business.domain.entity.changes.tracker;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 public class SimpleIdentityChangesTracker implements IdentityChangesTracker {
-    final private String id;
-    final private Map<String, String> created;
-    final private Map<String, String> updated;
-    final private Map<String, String> destroyed;
+    private final String id;
+    private final Map<String, String> created;
+    private final Map<String, String> updated;
+    private final Map<String, String> destroyed;
 
     public SimpleIdentityChangesTracker(final String id) {
         this.id = id;
@@ -16,7 +16,9 @@ public class SimpleIdentityChangesTracker implements IdentityChangesTracker {
         this.destroyed = new HashMap<String, String>();
     }
 
-    public SimpleIdentityChangesTracker(final String id, final Map<String, String> created,
+    public SimpleIdentityChangesTracker(
+            final String id,
+            final Map<String, String> created,
             final Map<String, String> updated,
             final Map<String, String> destroyed) {
         this.id = id;
@@ -46,26 +48,29 @@ public class SimpleIdentityChangesTracker implements IdentityChangesTracker {
     }
 
     @Override
-    public IdentityChangesTracker identityHasBeenCreated(final String newState,
-            final String identityId) {
+    public IdentityChangesTracker identityHasBeenCreated(
+            final String newState, final String identityId) {
         final Map<String, String> copyCreated = this.created;
         copyCreated.put(newState, identityId);
-        return new SimpleIdentityChangesTracker(identityId, copyCreated, this.updated, this.destroyed);
+        return new SimpleIdentityChangesTracker(
+                identityId, copyCreated, this.updated, this.destroyed);
     }
 
     @Override
-    public IdentityChangesTracker identityHasBeenUpdated(final String newState,
-            final String identityId) {
+    public IdentityChangesTracker identityHasBeenUpdated(
+            final String newState, final String identityId) {
         final Map<String, String> copyUpdated = this.updated;
         copyUpdated.put(newState, identityId);
-        return new SimpleIdentityChangesTracker(identityId, this.created, copyUpdated, this.destroyed);
+        return new SimpleIdentityChangesTracker(
+                identityId, this.created, copyUpdated, this.destroyed);
     }
 
     @Override
-    public IdentityChangesTracker identityHasBeenDestroyed(final String newState,
-            final String identityId) {
+    public IdentityChangesTracker identityHasBeenDestroyed(
+            final String newState, final String identityId) {
         final Map<String, String> copyDestroyed = this.destroyed;
         copyDestroyed.put(newState, identityId);
-        return new SimpleIdentityChangesTracker(identityId, this.created, this.updated, copyDestroyed);
+        return new SimpleIdentityChangesTracker(
+                identityId, this.created, this.updated, copyDestroyed);
     }
 }

@@ -5,12 +5,11 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.junit.Test;
 
 public class SimpleMailboxChangesTrackerTest {
 
-        @Test
+    @Test
     public void testConstructorWithIdOnly() {
         SimpleMailboxChangesTracker tracker = new SimpleMailboxChangesTracker("id");
 
@@ -29,7 +28,8 @@ public class SimpleMailboxChangesTrackerTest {
         Map<String, String> destroyed = new HashMap<>();
         destroyed.put("destroyedState", "destroyedMailboxId");
 
-        SimpleMailboxChangesTracker tracker = new SimpleMailboxChangesTracker("id", created, updated, destroyed);
+        SimpleMailboxChangesTracker tracker =
+                new SimpleMailboxChangesTracker("id", created, updated, destroyed);
 
         assertEquals("id", tracker.id());
         assertEquals(created, tracker.created());
@@ -41,7 +41,8 @@ public class SimpleMailboxChangesTrackerTest {
     public void testMailboxHasBeenCreated() {
         SimpleMailboxChangesTracker tracker = new SimpleMailboxChangesTracker("id");
 
-        MailboxChangesTracker updatedTracker = tracker.mailboxHasBeenCreated("newState", "newMailboxId");
+        MailboxChangesTracker updatedTracker =
+                tracker.mailboxHasBeenCreated("newState", "newMailboxId");
 
         assertEquals("newMailboxId", updatedTracker.id());
         assertEquals("newMailboxId", updatedTracker.created().get("newState"));
@@ -51,7 +52,8 @@ public class SimpleMailboxChangesTrackerTest {
     public void testMailboxHasBeenUpdated() {
         SimpleMailboxChangesTracker tracker = new SimpleMailboxChangesTracker("id");
 
-        MailboxChangesTracker updatedTracker = tracker.mailboxHasBeenUpdated("newState", "newMailboxId");
+        MailboxChangesTracker updatedTracker =
+                tracker.mailboxHasBeenUpdated("newState", "newMailboxId");
 
         assertEquals("newMailboxId", updatedTracker.id());
         assertEquals("newMailboxId", updatedTracker.updated().get("newState"));
@@ -61,7 +63,8 @@ public class SimpleMailboxChangesTrackerTest {
     public void testMailboxHasBeenDestroyed() {
         SimpleMailboxChangesTracker tracker = new SimpleMailboxChangesTracker("id");
 
-        MailboxChangesTracker updatedTracker = tracker.mailboxHasBeenDestroyed("newState", "newMailboxId");
+        MailboxChangesTracker updatedTracker =
+                tracker.mailboxHasBeenDestroyed("newState", "newMailboxId");
 
         assertEquals("newMailboxId", updatedTracker.id());
         assertEquals("newMailboxId", updatedTracker.destroyed().get("newState"));

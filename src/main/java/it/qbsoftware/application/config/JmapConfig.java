@@ -8,16 +8,15 @@ import rs.ltt.jmap.common.entity.capability.MailCapability;
 public class JmapConfig {
     public static CapabilityPort[] serverCapabilities() {
         return new CapabilityPort[] {
-                new CapabilityAdapter(CoreCapability.builder()
-                        .maxSizeUpload(50_000_000L)
-                        .maxConcurrentUpload(4L)
-                        .maxCallsInRequest(16L)
-                        .maxObjectsInGet(500L)
-                        .maxObjectsInSet(500L)
-                        .build()),
-
-                new CapabilityAdapter(MailCapability.builder()
-                        .build())
+            new CapabilityAdapter(
+                    CoreCapability.builder()
+                            .maxSizeUpload(50_000_000L)
+                            .maxConcurrentUpload(4L)
+                            .maxCallsInRequest(16L)
+                            .maxObjectsInGet(500L)
+                            .maxObjectsInSet(500L)
+                            .build()),
+            new CapabilityAdapter(MailCapability.builder().build())
         };
     }
 }

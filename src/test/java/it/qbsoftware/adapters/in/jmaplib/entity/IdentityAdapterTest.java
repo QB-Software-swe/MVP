@@ -6,13 +6,11 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.Test;
-
 import it.qbsoftware.business.ports.in.jmap.entity.EmailAddressPort;
 import it.qbsoftware.business.ports.in.jmap.entity.IdentityBuilderPort;
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.Test;
 import rs.ltt.jmap.common.entity.EmailAddress;
 import rs.ltt.jmap.common.entity.Identity;
 
@@ -29,10 +27,10 @@ public class IdentityAdapterTest {
     public void testGetBccNotNull() {
         Identity identity = mock(Identity.class);
 
-        List<EmailAddress> replyToList  = new ArrayList<>();
+        List<EmailAddress> replyToList = new ArrayList<>();
         IdentityAdapter identityAdapter = new IdentityAdapter(identity);
-        
-        when(identity.getBcc()).thenReturn(replyToList );
+
+        when(identity.getBcc()).thenReturn(replyToList);
 
         EmailAddressPort[] result = identityAdapter.getBcc();
 
@@ -53,8 +51,8 @@ public class IdentityAdapterTest {
     @Test
     public void testGetBuilder() {
         Identity identity = mock(Identity.class);
-        List<EmailAddress> replyToList  = new ArrayList<>();
-        List<EmailAddress> bccList  = new ArrayList<>();
+        List<EmailAddress> replyToList = new ArrayList<>();
+        List<EmailAddress> bccList = new ArrayList<>();
 
         when(identity.getId()).thenReturn("testId");
         when(identity.getName()).thenReturn("testName");
@@ -76,7 +74,7 @@ public class IdentityAdapterTest {
         verify(identity).getTextSignature();
         verify(identity).getHtmlSignature();
         verify(identity).getMayDelete();
-    
+
         assertNotNull(builder);
     }
 
@@ -98,7 +96,6 @@ public class IdentityAdapterTest {
 
         assertEquals("testHtmlSignature", identityAdapter.getHtmlSignature());
         verify(identity).getHtmlSignature();
-
     }
 
     @Test
@@ -144,10 +141,10 @@ public class IdentityAdapterTest {
     @Test
     public void testGetReplyToNotNull() {
         Identity identity = mock(Identity.class);
-        List<EmailAddress> replyToList  = new ArrayList<>();
+        List<EmailAddress> replyToList = new ArrayList<>();
         IdentityAdapter identityAdapter = new IdentityAdapter(identity);
-        
-        when(identity.getReplyTo()).thenReturn(replyToList );
+
+        when(identity.getReplyTo()).thenReturn(replyToList);
 
         EmailAddressPort[] result = identityAdapter.getReplyTo();
 

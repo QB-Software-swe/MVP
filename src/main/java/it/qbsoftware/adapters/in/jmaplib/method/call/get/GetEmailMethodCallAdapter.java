@@ -32,7 +32,6 @@ public class GetEmailMethodCallAdapter implements GetEmailMethodCallPort {
         return getEmailMethodCall.getIdsReference() != null
                 ? new InvocationResultReferenceAdapter(getEmailMethodCall.getIdsReference())
                 : null;
-
     }
 
     @Override
@@ -59,5 +58,4 @@ public class GetEmailMethodCallAdapter implements GetEmailMethodCallPort {
     public Long getMaxBodyValueBytes() {
         return this.getEmailMethodCall.getMaxBodyValueBytes();
     }
-
 }

@@ -5,10 +5,10 @@ import it.qbsoftware.business.ports.in.jmap.entity.InvocationResultReferencePort
 import it.qbsoftware.business.ports.in.jmap.method.call.get.GetIdentityMethodCallPort;
 import rs.ltt.jmap.common.method.call.identity.GetIdentityMethodCall;
 
-public class GetIdentityMethodCallAdapter implements GetIdentityMethodCallPort{
+public class GetIdentityMethodCallAdapter implements GetIdentityMethodCallPort {
     GetIdentityMethodCall getIdentityMethodCall;
-    
-    public GetIdentityMethodCallAdapter(GetIdentityMethodCall getIdentityMethodCall){
+
+    public GetIdentityMethodCallAdapter(GetIdentityMethodCall getIdentityMethodCall) {
         this.getIdentityMethodCall = getIdentityMethodCall;
     }
 
@@ -24,13 +24,13 @@ public class GetIdentityMethodCallAdapter implements GetIdentityMethodCallPort{
 
     @Override
     public InvocationResultReferencePort getIdsReference() {
-        return getIdentityMethodCall.getIdsReference() != null ? 
-            new InvocationResultReferenceAdapter(getIdentityMethodCall.getIdsReference()) : null;
+        return getIdentityMethodCall.getIdsReference() != null
+                ? new InvocationResultReferenceAdapter(getIdentityMethodCall.getIdsReference())
+                : null;
     }
 
     @Override
     public String[] getProperties() {
         return getIdentityMethodCall.getProperties();
     }
-
 }

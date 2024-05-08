@@ -5,7 +5,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import org.junit.Test;
-
 import rs.ltt.jmap.common.entity.EmailSubmission;
 
 public class EmailSubmissionAdapterTest {
@@ -13,7 +12,7 @@ public class EmailSubmissionAdapterTest {
     public void testAdaptee() {
         EmailSubmission emailSubmission = mock(EmailSubmission.class);
         EmailSubmissionAdapter emailSubmissionAdapter = new EmailSubmissionAdapter(emailSubmission);
-        
+
         assertEquals(emailSubmission, emailSubmissionAdapter.adaptee());
     }
 
@@ -24,5 +23,14 @@ public class EmailSubmissionAdapterTest {
 
         emailSubmissionAdapter.getId();
         verify(emailSubmission).getId();
+    }
+
+    @Test
+    public void testGetEmailId() {
+        EmailSubmission emailSubmission = mock(EmailSubmission.class);
+        EmailSubmissionAdapter emailSubmissionAdapter = new EmailSubmissionAdapter(emailSubmission);
+
+        emailSubmissionAdapter.getEmailId();
+        verify(emailSubmission).getEmailId();
     }
 }

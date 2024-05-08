@@ -12,5 +12,8 @@ public interface ChangesMailboxMethodCallUsecase {
 
     public ChangesMailboxMethodResponsePort call(
             final ChangesMailboxMethodCallPort changesMailboxMethodCallPort,
-            final ListMultimapPort<String, ResponseInvocationPort> previousresponses) throws InvalidArgumentsException, AccountNotFoundException, CannotCalculateChangesException;
+            final ListMultimapPort<String, ResponseInvocationPort> previousresponses)
+            throws InvalidArgumentsException,
+                    AccountNotFoundException,
+                    CannotCalculateChangesException;
 }

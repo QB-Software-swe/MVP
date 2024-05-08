@@ -4,6 +4,5 @@ import com.google.gson.JsonSyntaxException;
 
 public interface ApiRequestDispatch {
 
-    String Dispatch(String jmapRequest) throws JsonSyntaxException;
-
+    String dispatch(String jmapRequest) throws JsonSyntaxException;
 }

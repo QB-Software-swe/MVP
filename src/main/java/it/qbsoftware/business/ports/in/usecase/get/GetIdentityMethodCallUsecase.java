@@ -10,7 +10,10 @@ import it.qbsoftware.business.ports.in.jmap.method.response.get.GetIdentityMetho
 
 public interface GetIdentityMethodCallUsecase {
 
-    public GetIdentityMethodResponsePort call(final GetIdentityMethodCallPort getIdentityMethodCallPort,
-            final ListMultimapPort<String, ResponseInvocationPort> previousResponses) throws AccountNotFoundException, InvalidResultReferenceExecption, InvalidArgumentsException;
-
+    public GetIdentityMethodResponsePort call(
+            final GetIdentityMethodCallPort getIdentityMethodCallPort,
+            final ListMultimapPort<String, ResponseInvocationPort> previousResponses)
+            throws AccountNotFoundException,
+                    InvalidResultReferenceExecption,
+                    InvalidArgumentsException;
 }

@@ -1,11 +1,10 @@
 package it.qbsoftware.adapters.in.jmaplib.method.call.set;
 
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import it.qbsoftware.adapters.in.jmaplib.entity.EmailAdapter;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailPort;
 import it.qbsoftware.business.ports.in.jmap.method.call.set.SetEmailMethodCallPort;
+import java.util.Map;
+import java.util.stream.Collectors;
 import rs.ltt.jmap.common.entity.Email;
 import rs.ltt.jmap.common.method.call.email.SetEmailMethodCall;
 
@@ -34,8 +33,12 @@ public class SetEmailMethodCallAdapter implements SetEmailMethodCallPort {
     @Override
     public Map<String, EmailPort> getCreate() {
         Map<String, Email> emailMap = setEmailMethodCall.getCreate();
-        return emailMap != null ? emailMap.entrySet().stream()
-                .collect(Collectors.toMap(e -> e.getKey(), e -> new EmailAdapter(e.getValue()))) : null;
+        return emailMap != null
+                ? emailMap.entrySet().stream()
+                        .collect(
+                                Collectors.toMap(
+                                        e -> e.getKey(), e -> new EmailAdapter(e.getValue())))
+                : null;
     }
 
     @Override

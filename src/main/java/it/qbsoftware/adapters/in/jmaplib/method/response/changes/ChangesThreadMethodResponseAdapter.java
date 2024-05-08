@@ -6,7 +6,8 @@ import rs.ltt.jmap.common.method.response.thread.ChangesThreadMethodResponse;
 public class ChangesThreadMethodResponseAdapter implements ChangesThreadMethodResponsePort {
     private final ChangesThreadMethodResponse changesThreadMethodResponse;
 
-    public ChangesThreadMethodResponseAdapter(final ChangesThreadMethodResponse changesThreadMethodResponse) {
+    public ChangesThreadMethodResponseAdapter(
+            final ChangesThreadMethodResponse changesThreadMethodResponse) {
         this.changesThreadMethodResponse = changesThreadMethodResponse;
     }
 

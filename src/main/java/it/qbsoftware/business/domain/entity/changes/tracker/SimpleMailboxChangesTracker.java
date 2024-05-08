@@ -1,14 +1,13 @@
 package it.qbsoftware.business.domain.entity.changes.tracker;
 
+import java.util.HashMap;
 import java.util.Map;
 
-import java.util.HashMap;
-
 public class SimpleMailboxChangesTracker implements MailboxChangesTracker {
-    final private String id;
-    final private Map<String, String> created;
-    final private Map<String, String> updated;
-    final private Map<String, String> destroyed;
+    private final String id;
+    private final Map<String, String> created;
+    private final Map<String, String> updated;
+    private final Map<String, String> destroyed;
 
     public SimpleMailboxChangesTracker(final String id) {
         this.id = id;
@@ -17,7 +16,9 @@ public class SimpleMailboxChangesTracker implements MailboxChangesTracker {
         this.destroyed = new HashMap<String, String>();
     }
 
-    public SimpleMailboxChangesTracker(final String id, final Map<String, String> created,
+    public SimpleMailboxChangesTracker(
+            final String id,
+            final Map<String, String> created,
             final Map<String, String> updated,
             final Map<String, String> destroyed) {
         this.id = id;
@@ -47,24 +48,29 @@ public class SimpleMailboxChangesTracker implements MailboxChangesTracker {
     }
 
     @Override
-    public SimpleMailboxChangesTracker mailboxHasBeenCreated(final String newState, final String mailboxId) {
+    public SimpleMailboxChangesTracker mailboxHasBeenCreated(
+            final String newState, final String mailboxId) {
         final Map<String, String> copyCreated = this.created;
         copyCreated.put(newState, mailboxId);
-        return new SimpleMailboxChangesTracker(mailboxId, copyCreated, this.updated, this.destroyed);
+        return new SimpleMailboxChangesTracker(
+                mailboxId, copyCreated, this.updated, this.destroyed);
     }
 
     @Override
-    public SimpleMailboxChangesTracker mailboxHasBeenUpdated(final String newState, final String mailboxId) {
+    public SimpleMailboxChangesTracker mailboxHasBeenUpdated(
+            final String newState, final String mailboxId) {
         final Map<String, String> copyUpdated = this.updated;
         copyUpdated.put(newState, mailboxId);
-        return new SimpleMailboxChangesTracker(mailboxId, this.created, copyUpdated, this.destroyed);
+        return new SimpleMailboxChangesTracker(
+                mailboxId, this.created, copyUpdated, this.destroyed);
     }
 
     @Override
-    public SimpleMailboxChangesTracker mailboxHasBeenDestroyed(final String newState, final String mailboxId) {
+    public SimpleMailboxChangesTracker mailboxHasBeenDestroyed(
+            final String newState, final String mailboxId) {
         final Map<String, String> copyDestroyed = this.destroyed;
         copyDestroyed.put(newState, mailboxId);
-        return new SimpleMailboxChangesTracker(mailboxId, this.created, this.updated, copyDestroyed);
+        return new SimpleMailboxChangesTracker(
+                mailboxId, this.created, this.updated, copyDestroyed);
     }
-
 }

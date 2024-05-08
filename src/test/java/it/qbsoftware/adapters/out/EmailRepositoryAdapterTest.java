@@ -1,25 +1,23 @@
 package it.qbsoftware.adapters.out;
 
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-
-import java.util.Arrays;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.testcontainers.containers.MongoDBContainer;
-import org.testcontainers.junit.jupiter.Container;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mongodb.client.MongoClients;
-
 import it.qbsoftware.adapters.in.jmaplib.entity.EmailAdapter;
 import it.qbsoftware.business.domain.exception.set.SetNotFoundException;
 import it.qbsoftware.business.domain.exception.set.SetSingletonException;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailPort;
 import it.qbsoftware.persistance.MongoConnection;
+import java.util.Arrays;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.testcontainers.containers.MongoDBContainer;
+import org.testcontainers.junit.jupiter.Container;
 import rs.ltt.jmap.common.entity.Email;
 import rs.ltt.jmap.gson.JmapAdapters;
 
@@ -41,8 +39,11 @@ public class EmailRepositoryAdapterTest {
         JmapAdapters.register(gsonBuilder);
         gson = gsonBuilder.create();
 
-        underTest = new EmailRepositoryAdapter(
-                new MongoConnection(MongoClients.create(mongoDBContainer.getConnectionString())), gson);
+        underTest =
+                new EmailRepositoryAdapter(
+                        new MongoConnection(
+                                MongoClients.create(mongoDBContainer.getConnectionString())),
+                        gson);
     }
 
     @Test
@@ -61,12 +62,11 @@ public class EmailRepositoryAdapterTest {
         }
 
         assertTrue(x.getId().equals("x"));
+        assertThrows(SetNotFoundException.class, () -> underTest.destroy(null));
     }
 
     @Test
-    void testOverwrite() {
-
-    }
+    void testOverwrite() {}
 
     @Test
     void testRetrive() {
@@ -76,11 +76,12 @@ public class EmailRepositoryAdapterTest {
             fail();
         }
 
-        var r = underTest.retrive(new String[] { "x", "y" });
+        var r = underTest.retrive(new String[] {"x", "y"});
 
-        assertArrayEquals(Arrays.asList(r.found()).stream().map(e -> e.getId()).toArray(String[]::new),
-                new String[] { "x" });
-        assertArrayEquals(r.notFound(), new String[] { "y" });
+        assertArrayEquals(
+                Arrays.asList(r.found()).stream().map(e -> e.getId()).toArray(String[]::new),
+                new String[] {"x"});
+        assertArrayEquals(r.notFound(), new String[] {"y"});
     }
 
     @Test
@@ -93,8 +94,9 @@ public class EmailRepositoryAdapterTest {
 
         var r = underTest.retriveAll("x");
 
-        assertArrayEquals(Arrays.asList(r.found()).stream().map(e -> e.getId()).toArray(String[]::new),
-                new String[] { "x/" });
+        assertArrayEquals(
+                Arrays.asList(r.found()).stream().map(e -> e.getId()).toArray(String[]::new),
+                new String[] {"x/"});
     }
 
     @Test()
@@ -114,11 +116,9 @@ public class EmailRepositoryAdapterTest {
 
         assertTrue(r.getId().equals("x"));
 
-        //assertThrows(SetNotFoundException.class, () -> underTest.retriveOne("x"));
+        assertThrows(SetNotFoundException.class, () -> underTest.retriveOne(null));
     }
 
     @Test
-    void testSave() {
-
-    }
+    void testSave() {}
 }

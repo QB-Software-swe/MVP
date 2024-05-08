@@ -1,5 +1,8 @@
 package it.qbsoftware.application.handlers;
 
+import com.google.gson.JsonSyntaxException;
+import com.google.inject.Inject;
+import it.qbsoftware.application.ApiRequestDispatch;
 import org.eclipse.jetty.http.HttpHeader;
 import org.eclipse.jetty.io.Content;
 import org.eclipse.jetty.server.Handler;
@@ -8,11 +11,6 @@ import org.eclipse.jetty.server.Response;
 import org.eclipse.jetty.util.Callback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.gson.JsonSyntaxException;
-import com.google.inject.Inject;
-
-import it.qbsoftware.application.ApiRequestDispatch;
 
 public class ApiHandler extends Handler.Abstract {
     public static String CONTEXT_PATH = "";
@@ -41,12 +39,14 @@ public class ApiHandler extends Handler.Abstract {
         String responsePayload = null;
         try {
             logger.info("MethodCalls sent to dispatcher");
-            responsePayload = apiRequestDispatch.Dispatch(requestPayload);
+            responsePayload = apiRequestDispatch.dispatch(requestPayload);
         } catch (final JsonSyntaxException jsonSyntaxException) {
-            logger.info("JsonRequest is invalid, error 400");
+            logger.info("JsonRequest is invalid, error 500");
             logger.debug(jsonSyntaxException.getMessage());
-            responsePayload = "{\"type\":\"urn:ietf:params:jmap:error:notJSON\",\"status\":400,\"detail\":\"See https://jmap.io/spec-core.html#errors\"}";
-            response.setStatus(400);
+            responsePayload =
+                    "{\"type\":\"urn:ietf:params:jmap:error:notJSON\",\"status\":500,\"detail\":\"See"
+                        + " https://jmap.io/spec-core.html#errors\"}";
+            response.setStatus(500);
             Content.Sink.write(response, true, responsePayload, callback);
             return true;
         }
@@ -57,5 +57,4 @@ public class ApiHandler extends Handler.Abstract {
         Content.Sink.write(response, true, responsePayload, callback);
         return true;
     }
-
 }

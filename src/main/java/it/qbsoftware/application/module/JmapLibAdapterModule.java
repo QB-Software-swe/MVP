@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
-
 import it.qbsoftware.adapters.in.jmaplib.entity.AccountBuilderAdapter;
 import it.qbsoftware.adapters.in.jmaplib.entity.CreationalIdResolverAdapter;
 import it.qbsoftware.adapters.in.jmaplib.entity.EmailBuilderAdapter;
@@ -77,24 +76,36 @@ public class JmapLibAdapterModule extends AbstractModule {
         // MethodResponse
         bind(EchoMethodResponseBuilderPort.class).to(EchoMethodResponseBuilderAdapter.class);
 
-        bind(GetEmailMethodResponseBuilderPort.class).to(GetEmailMethodResponseBuilderAdapter.class);
-        bind(GetIdentityMethodResponseBuilderPort.class).to(GetIdentityMethodResponseBuilderAdapter.class);
-        bind(GetMailboxMethodResponseBuilderPort.class).to(GetMailboxMethodResponseBuilderAdapter.class);
-        bind(GetThreadMethodResponseBuilderPort.class).to(GetThreadMethodResponseBuilderAdapter.class);
+        bind(GetEmailMethodResponseBuilderPort.class)
+                .to(GetEmailMethodResponseBuilderAdapter.class);
+        bind(GetIdentityMethodResponseBuilderPort.class)
+                .to(GetIdentityMethodResponseBuilderAdapter.class);
+        bind(GetMailboxMethodResponseBuilderPort.class)
+                .to(GetMailboxMethodResponseBuilderAdapter.class);
+        bind(GetThreadMethodResponseBuilderPort.class)
+                .to(GetThreadMethodResponseBuilderAdapter.class);
 
-        bind(SetEmailMethodResponseBuilderPort.class).to(SetEmailMethodResponseBuilderAdapter.class);
-        bind(SetMailboxMethodResponseBuilderPort.class).to(SetMailboxMethodResponseBuilderAdapter.class);
-        bind(SetIdentityMethodResponseBuilderPort.class).to(SetIdentityMethodResponseBuilderAdapter.class);
+        bind(SetEmailMethodResponseBuilderPort.class)
+                .to(SetEmailMethodResponseBuilderAdapter.class);
+        bind(SetMailboxMethodResponseBuilderPort.class)
+                .to(SetMailboxMethodResponseBuilderAdapter.class);
+        bind(SetIdentityMethodResponseBuilderPort.class)
+                .to(SetIdentityMethodResponseBuilderAdapter.class);
         bind(SetEmailSubmissionMethodResponseBuilderPort.class)
                 .to(SetEmailSubmissionMethodResponseBuilderAdapter.class);
 
-        bind(ChangesEmailMethodResponseBuilderPort.class).to(ChangesEmailMethodResponseBuilderAdapter.class);
+        bind(ChangesEmailMethodResponseBuilderPort.class)
+                .to(ChangesEmailMethodResponseBuilderAdapter.class);
         bind(ChangesEmailSubmissionMethodResponseBuilderPort.class)
                 .to(ChangesEmailSubmissionMethodResponseBuilderAdapter.class);
-        bind(ChangesIdentityMethodResponseBuilderPort.class).to(ChangesIdentityMethodResponseBuilderAdapter.class);
-        bind(ChangesMailboxMethodResponseBuilderPort.class).to(ChangesMailboxMethodResponseBuilderAdapter.class);
-        bind(ChangesThreadMethodResponseBuilderPort.class).to(ChangesThreadMethodResponseBuilderAdapter.class);
-        bind(QueryEmailMethodResponseBuilderPort.class).to(QueryEmailMethodResponseBuilderAdapter.class);
+        bind(ChangesIdentityMethodResponseBuilderPort.class)
+                .to(ChangesIdentityMethodResponseBuilderAdapter.class);
+        bind(ChangesMailboxMethodResponseBuilderPort.class)
+                .to(ChangesMailboxMethodResponseBuilderAdapter.class);
+        bind(ChangesThreadMethodResponseBuilderPort.class)
+                .to(ChangesThreadMethodResponseBuilderAdapter.class);
+        bind(QueryEmailMethodResponseBuilderPort.class)
+                .to(QueryEmailMethodResponseBuilderAdapter.class);
 
         // Util
         bind(ResultReferenceResolverPort.class).to(ResultReferenceResolverAdapter.class);

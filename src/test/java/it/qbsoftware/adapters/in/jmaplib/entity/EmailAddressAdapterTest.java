@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
-
 import rs.ltt.jmap.common.entity.EmailAddress;
 
 public class EmailAddressAdapterTest {
@@ -14,5 +13,14 @@ public class EmailAddressAdapterTest {
         EmailAddressAdapter emailAddressAdapter = new EmailAddressAdapter(emailAddress);
 
         assertEquals(emailAddress, emailAddressAdapter.adaptee());
+    }
+
+    @Test
+    public void testGetEmail() {
+        EmailAddress emailAddress = mock(EmailAddress.class);
+        EmailAddressAdapter emailAddressAdapter = new EmailAddressAdapter(emailAddress);
+
+        emailAddressAdapter.getEmail();
+        assertEquals(emailAddress.getEmail(), emailAddressAdapter.getEmail());
     }
 }

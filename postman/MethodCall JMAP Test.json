@@ -1,0 +1,429 @@
+{
+	"info": {
+		"_postman_id": "100ce0f5-0d02-479f-80ed-7ba7f320841e",
+		"name": "Mock Data Generation",
+		"description": "# About this collection\n\nPostman provides dynamic variables that use the [Faker library](https://www.npmjs.com/package/@faker-js/faker) to generate sample data, including random names, addresses, and email addresses.\n\nThis collection demonstrates the use of dynamic variables to create randomized mock data. The examples in this collection utilize various data types and showcase how dynamic variables can help simulate real-world data within your API testing environment.\n\n## Using this collection\n\n**Step 1: Send requests**\n\nSelect a request from the collection, review the request parameters and pre-request scripts, then hit \"Send\" to execute the request.\n\n**Step 2: Review the \"Body\" and \"Pre-request Script\"** **tabs**\n\nUnderstand how dynamic variables are used to generate mock data. Dynamic variables can be used in the request URL and Body, or even as part of a Pre-Request or Test script for more complex use cases (see \"Create mock blog post\" request).\n\n**Step 3: Customize (optional)**\n\nCustomize dynamic variables to better suit your specific use case. Save the changes, and execute the requests.\n\n**Step 4: Analyze responses**\n\nExamine the response body to see the generated mock data. Note that the responses will be different each time you send the request, as the dynamic variables ensure randomized data generation.\n\nEnjoy testing with diverse and dynamic data!\n\n## Resources\n\n[Dynamic variables](https://learning.postman.com/docs/writing-scripts/script-references/variables-list/)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33077683"
+	},
+	"item": [
+		{
+			"name": "Gen Example Dataset",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Fixed the responseJson call to responseJson()",
+							"var responseJson = pm.response.json();",
+							"",
+							"pm.environment.clear();",
+							"pm.environment.set(\"acountIdTarget\", \"team@qbsoftware.swe.it\");",
+							"pm.environment.set(\"mailboxIds\", getMailboxIds(responseJson));",
+							"pm.environment.set(\"emailsIds\", getEmailIds(responseJson));",
+							"pm.environment.set(\"threadIds\", getThreadIds(responseJson));",
+							"pm.environment.set(\"identityIds\", getIdentityIds(responseJson));",
+							"",
+							"// Funzione per ottenere gli ID delle email",
+							"function getEmailIds(responseJson) {",
+							"    var emailIds = [];",
+							"",
+							"    // Itera attraverso le risposte",
+							"    responseJson.methodResponses.forEach(function (response) {",
+							"        // Se la risposta riguarda l'impostazione delle email",
+							"        if (response[0] === \"Email/set\") {",
+							"            // Ottieni l'oggetto contenente le email create",
+							"            var createdEmails = response[1].created;",
+							"",
+							"            // Itera attraverso le email create",
+							"            for (var emailKey in createdEmails) {",
+							"                if (createdEmails.hasOwnProperty(emailKey)) {",
+							"                    // Ottieni l'ID di ogni email e aggiungilo all'array",
+							"                    var emailId = createdEmails[emailKey].id;",
+							"                    emailIds.push(emailId);",
+							"                }",
+							"            }",
+							"        }",
+							"    });",
+							"",
+							"    return emailIds;",
+							"}",
+							"",
+							"function getThreadIds(responseJson) {",
+							"    var emailIds = [];",
+							"",
+							"    // Itera attraverso le risposte",
+							"    responseJson.methodResponses.forEach(function (response) {",
+							"        // Se la risposta riguarda l'impostazione delle email",
+							"        if (response[0] === \"Email/set\") {",
+							"            // Ottieni l'oggetto contenente le email create",
+							"            var createdEmails = response[1].created;",
+							"",
+							"            // Itera attraverso le email create",
+							"            for (var emailKey in createdEmails) {",
+							"                if (createdEmails.hasOwnProperty(emailKey)) {",
+							"                    // Ottieni l'ID di ogni email e aggiungilo all'array",
+							"                    var emailId = createdEmails[emailKey].threadId;",
+							"                    emailIds.push(emailId);",
+							"                }",
+							"            }",
+							"        }",
+							"    });",
+							"",
+							"    return emailIds;",
+							"}",
+							"",
+							"function getMailboxIds(responseJson) {",
+							"    var mailboxIds = [];",
+							"",
+							"    // Itera attraverso le risposte",
+							"    responseJson.methodResponses.forEach(function (response) {",
+							"        // Se la risposta riguarda l'impostazione delle email",
+							"        if (response[0] === \"Mailbox/set\") {",
+							"            // Ottieni l'oggetto contenente le email create",
+							"            var createdMailboxs = response[1].created;",
+							"",
+							"            // Itera attraverso le email create",
+							"            for (var mailboxKey in createdMailboxs) {",
+							"                if (createdMailboxs.hasOwnProperty(mailboxKey)) {",
+							"                    // Ottieni l'ID di ogni email e aggiungilo all'array",
+							"                    var mailboxId = createdMailboxs[mailboxKey].id;",
+							"                    mailboxIds.push(mailboxId);",
+							"                }",
+							"            }",
+							"        }",
+							"    });",
+							"",
+							"    return mailboxIds;",
+							"}",
+							"",
+							"function getIdentityIds(responseJson) {",
+							"    var mailboxIds = [];",
+							"",
+							"    // Itera attraverso le risposte",
+							"    responseJson.methodResponses.forEach(function (response) {",
+							"        // Se la risposta riguarda l'impostazione delle email",
+							"        if (response[0] === \"Identity/set\") {",
+							"            // Ottieni l'oggetto contenente le email create",
+							"            var createdMailboxs = response[1].created;",
+							"",
+							"            // Itera attraverso le email create",
+							"            for (var mailboxKey in createdMailboxs) {",
+							"                if (createdMailboxs.hasOwnProperty(mailboxKey)) {",
+							"                    // Ottieni l'ID di ogni email e aggiungilo all'array",
+							"                    var mailboxId = createdMailboxs[mailboxKey].id;",
+							"                    mailboxIds.push(mailboxId);",
+							"                }",
+							"            }",
+							"        }",
+							"    });",
+							"",
+							"    return mailboxIds;",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"methodCalls\": [\n        [\n            \"Mailbox/set\",\n            {\n                \"accountId\": \"team@qbsoftware.swe.it\",\n                \"create\": {\n                    \"mailboxPrincipale\": {\n                        \"name\": \"Arrivate\",\n                        \"role\": \"inbox\"\n                    },\n                    \"mailboxInviati\": {\n                        \"name\": \"Inviati\",\n                        \"role\": \"sent\"\n                    },\n                    \"mailboxBozze\": {\n                        \"name\": \"Bozze\",\n                        \"role\": \"drafts\"\n                    },\n                    \"mailboxArchivio\": {\n                        \"name\": \"Archivio\",\n                        \"role\": \"archive\"\n                    }\n                }\n            },\n            \"0\"\n        ],\n        [\n            \"Email/set\",\n            {\n                \"accountId\": \"team@qbsoftware.swe.it\",\n                \"create\": {\n                    \"mail0\": {\n                        \"bodyValues\": {\n                            \"0\": {\n                                \"value\": \"Gentile prof X, con la presente ...\"\n                            }\n                        },\n                        \"from\": [\n                            {\n                                \"email\": \"gruppo@studenti.swe.com\",\n                                \"name\": \"Gruppo X\"\n                            }\n                        ],\n                        \"keywords\": {},\n                        \"mailboxIds\": {\n                            \"#mailboxPrincipale\": true\n                        },\n                        \"subject\": \"Canidatura PB\",\n                        \"textBody\": [\n                            {\n                                \"partId\": \"0\",\n                                \"type\": \"text/plain\"\n                            }\n                        ],\n                        \"bodyStructure\": {\n                            \"type\": \"text/plain\",\n                            \"partId\": \"0\",\n                            \"header:Content-Language\": \"en\"\n                        },\n                        \"to\": [\n                            {\n                                \"email\": \"team@qbsoftware.swe.it\"\n                            }\n                        ]\n                    },\n                    \"mail1\": {\n                        \"bodyValues\": {\n                            \"0\": {\n                                \"value\": \"Gentile cliente, la prego di firmare il questionario di gradimento che puo trovare al seguente link: www.google.it.\"\n                            }\n                        },\n                        \"from\": [\n                            {\n                                \"email\": \"assistenza@computer.x.com\",\n                                \"name\": \"Computer X\"\n                            }\n                        ],\n                        \"keywords\": {},\n                        \"mailboxIds\": {\n                            \"#mailboxPrincipale\": true\n                        },\n                        \"subject\": \"Re: Assistenza Computer\",\n                        \"textBody\": [\n                            {\n                                \"partId\": \"0\",\n                                \"type\": \"text/plain\"\n                            }\n                        ],\n                        \"bodyStructure\": {\n                            \"type\": \"text/plain\",\n                            \"partId\": \"0\",\n                            \"header:Content-Language\": \"en\"\n                        },\n                        \"to\": [\n                            {\n                                \"email\": \"team@qbsoftware.swe.it\"\n                            }\n                        ]\n                    },\n                    \"mail2\": {\n                        \"bodyValues\": {\n                            \"0\": {\n                                \"value\": \"Gentile cliente, il nostro tecnico sarà da lei il giorno 11/10/2023 alle 13:30\"\n                            }\n                        },\n                        \"from\": [\n                            {\n                                \"email\": \"assistenza@computer.x.com\",\n                                \"name\": \"Computer X\"\n                            }\n                        ],\n                        \"keywords\": {},\n                        \"mailboxIds\": {\n                            \"#mailboxPrincipale\": true\n                        },\n                        \"subject\": \"Assistenza Computer\",\n                        \"textBody\": [\n                            {\n                                \"partId\": \"0\",\n                                \"type\": \"text/plain\"\n                            }\n                        ],\n                        \"bodyStructure\": {\n                            \"type\": \"text/plain\",\n                            \"partId\": \"0\",\n                            \"header:Content-Language\": \"en\"\n                        },\n                        \"to\": [\n                            {\n                                \"email\": \"team@qbsoftware.swe.it\"\n                            }\n                        ]\n                    },\n                    \"mail3\": {\n                        \"bodyValues\": {\n                            \"0\": {\n                                \"value\": \"The \\\"computable\\\" numbers may be described briefly as the realnumbers whose expressions as a decimal are calculable by finite means.Although the subject of this paper is ostensibly the computable numbers.it is almost equally easy to define and investigate computable functionsof an integral variable or a real or computable variable, computablepredicates, and so forth. The fundamental problems involved are,however, the same in each case, and I have chosen the computable numbersfor explicit treatment as involving the least cumbrous technique. I hopeshortly to give an account of the relations of the computable numbers,functions, and so forth to one another. This will include a developmentof the theory of functions of a real variable expressed in terms of com-putable numbers. According to my definition, a number is computableif its decimal can be written down by a machine.\"\n                            }\n                        },\n                        \"keywords\": {\n                            \"$seen\": true\n                        },\n                        \"from\": [\n                            {\n                                \"email\": \"alan.turing@computer.science.net\",\n                                \"name\": \"Alan Turing\"\n                            }\n                        ],\n                        \"mailboxIds\": {\n                            \"#mailboxArchivio\": true\n                        },\n                        \"subject\": \"ON COMPUTABLE NUMBERS, WITH AN APPLICATION TO THE ENTSCHEIDUNGSPROBLEM\",\n                        \"textBody\": [\n                            {\n                                \"partId\": \"0\",\n                                \"type\": \"text/plain\"\n                            }\n                        ],\n                        \"bodyStructure\": {\n                            \"type\": \"text/plain\",\n                            \"partId\": \"0\",\n                            \"header:Content-Language\": \"en\"\n                        },\n                        \"to\": [\n                            {\n                                \"email\": \"team@qbsoftware.swe.it\"\n                            }\n                        ]\n                    },\n                    \"mail4\": {\n                        \"bodyValues\": {\n                            \"0\": {\n                                \"value\": \"Il lambda calcolo o λ-calcolo è un sistema formale definito nel 1936 dal matematico Alonzo Church, sviluppato per analizzare formalmente le funzioni e il loro calcolo. Le prime sono espresse per mezzo di un linguaggio formale, che stabilisce quali siano le regole per formare un termine, il secondo con un sistema di riscrittura, che definisce come i termini possano essere ridotti e semplificati. \"\n                            }\n                        },\n                        \"from\": [\n                            {\n                                \"email\": \"alonzo.church@lambda.dev\",\n                                \"name\": \"Alonzo Church\"\n                            }\n                        ],\n                        \"keywords\": {},\n                        \"mailboxIds\": {\n                            \"#mailboxPrincipale\": true\n                        },\n                        \"subject\": \"λ-calcolo\",\n                        \"textBody\": [\n                            {\n                                \"partId\": \"0\",\n                                \"type\": \"text/plain\"\n                            }\n                        ],\n                        \"bodyStructure\": {\n                            \"type\": \"text/plain\",\n                            \"partId\": \"0\",\n                            \"header:Content-Language\": \"en\"\n                        },\n                        \"to\": [\n                            {\n                                \"email\": \"team@qbsoftware.swe.it\"\n                            }\n                        ]\n                    },\n                    \"mail5\": {\n                        \"bodyValues\": {\n                            \"0\": {\n                                \"value\": \"Buongiorno, le scrivo in merito a [continuare] \"\n                            }\n                        },\n                        \"from\": [\n                            {\n                                \"email\": \"team@qbsoftware.swe.it\",\n                                \"name\": \"Team QB Software SWE\"\n                            }\n                        ],\n                        \"keywords\": {\n                            \"$draft\": true\n                        },\n                        \"mailboxIds\": {\n                            \"#mailboxBozze\": true\n                        },\n                        \"subject\": \"OOP\",\n                        \"textBody\": [\n                            {\n                                \"partId\": \"0\",\n                                \"type\": \"text/plain\"\n                            }\n                        ],\n                        \"bodyStructure\": {\n                            \"type\": \"text/plain\",\n                            \"partId\": \"0\",\n                            \"header:Content-Language\": \"it\"\n                        },\n                        \"to\": [\n                            {\n                                \"email\": \"email@example.net\"\n                            }\n                        ]\n                    }\n                },\n                \"destroy\": []\n            },\n            \"1\"\n        ],\n        [\n            \"Identity/set\",\n            {\n                \"accountId\": \"team@qbsoftware.swe.it\",\n                \"create\": {\n                    \"identity1\": {\n                        \"name\": \"Team QB Software SWE\",\n                        \"email\": \"team@qbsoftware.swe.it\"\n                    }\n                }\n            },\n            \"2\"\n        ]\n    ],\n    \"using\": [\n        \"urn:ietf:params:jmap:core\",\n        \"urn:ietf:params:jmap:mail\"\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9999/api",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9999",
+					"path": [
+						"api"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Gen Example Dataset",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"methodCalls\": [\n        [\n            \"Mailbox/set\",\n            {\n                \"accountId\": \"team@qbsoftware.swe.it\",\n                \"create\": {\n                    \"mailboxPrincipale\": {\n                        \"name\": \"Arrivate\",\n                        \"role\": \"inbox\"\n                    },\n                    \"mailboxInviati\": {\n                        \"name\": \"Inviati\",\n                        \"role\": \"sent\"\n                    },\n                    \"mailboxBozze\": {\n                        \"name\": \"Bozze\",\n                        \"role\": \"drafts\"\n                    },\n                    \"mailboxArchivio\": {\n                        \"name\": \"Archivio\",\n                        \"role\": \"archive\"\n                    }\n                }\n            },\n            \"0\"\n        ],\n        [\n            \"Email/set\",\n            {\n                \"accountId\": \"team@qbsoftware.swe.it\",\n                \"create\": {\n                    \"mail0\": {\n                        \"bodyValues\": {\n                            \"0\": {\n                                \"value\": \"Gentile prof X, con la presente ...\"\n                            }\n                        },\n                        \"from\": [\n                            {\n                                \"email\": \"gruppo@studenti.swe.com\",\n                                \"name\": \"Gruppo X\"\n                            }\n                        ],\n                        \"keywords\": {},\n                        \"mailboxIds\": {\n                            \"#mailboxPrincipale\": true\n                        },\n                        \"subject\": \"Canidatura PB\",\n                        \"textBody\": [\n                            {\n                                \"partId\": \"0\",\n                                \"type\": \"text/plain\"\n                            }\n                        ],\n                        \"bodyStructure\": {\n                            \"type\": \"text/plain\",\n                            \"partId\": \"0\",\n                            \"header:Content-Language\": \"en\"\n                        },\n                        \"to\": [\n                            {\n                                \"email\": \"team@qbsoftware.swe.it\"\n                            }\n                        ]\n                    },\n                    \"mail1\": {\n                        \"bodyValues\": {\n                            \"0\": {\n                                \"value\": \"Gentile cliente, la prego di firmare il questionario di gradimento che puo trovare al seguente link: www.google.it.\"\n                            }\n                        },\n                        \"from\": [\n                            {\n                                \"email\": \"assistenza@computer.x.com\",\n                                \"name\": \"Computer X\"\n                            }\n                        ],\n                        \"keywords\": {},\n                        \"mailboxIds\": {\n                            \"#mailboxPrincipale\": true\n                        },\n                        \"subject\": \"Re: Assistenza Computer\",\n                        \"textBody\": [\n                            {\n                                \"partId\": \"0\",\n                                \"type\": \"text/plain\"\n                            }\n                        ],\n                        \"bodyStructure\": {\n                            \"type\": \"text/plain\",\n                            \"partId\": \"0\",\n                            \"header:Content-Language\": \"en\"\n                        },\n                        \"to\": [\n                            {\n                                \"email\": \"team@qbsoftware.swe.it\"\n                            }\n                        ]\n                    },\n                    \"mail2\": {\n                        \"bodyValues\": {\n                            \"0\": {\n                                \"value\": \"Gentile cliente, il nostro tecnico sarà da lei il giorno 11/10/2023 alle 13:30\"\n                            }\n                        },\n                        \"from\": [\n                            {\n                                \"email\": \"assistenza@computer.x.com\",\n                                \"name\": \"Computer X\"\n                            }\n                        ],\n                        \"keywords\": {},\n                        \"mailboxIds\": {\n                            \"#mailboxPrincipale\": true\n                        },\n                        \"subject\": \"Assistenza Computer\",\n                        \"textBody\": [\n                            {\n                                \"partId\": \"0\",\n                                \"type\": \"text/plain\"\n                            }\n                        ],\n                        \"bodyStructure\": {\n                            \"type\": \"text/plain\",\n                            \"partId\": \"0\",\n                            \"header:Content-Language\": \"en\"\n                        },\n                        \"to\": [\n                            {\n                                \"email\": \"team@qbsoftware.swe.it\"\n                            }\n                        ]\n                    },\n                    \"mail3\": {\n                        \"bodyValues\": {\n                            \"0\": {\n                                \"value\": \"The \\\"computable\\\" numbers may be described briefly as the realnumbers whose expressions as a decimal are calculable by finite means.Although the subject of this paper is ostensibly the computable numbers.it is almost equally easy to define and investigate computable functionsof an integral variable or a real or computable variable, computablepredicates, and so forth. The fundamental problems involved are,however, the same in each case, and I have chosen the computable numbersfor explicit treatment as involving the least cumbrous technique. I hopeshortly to give an account of the relations of the computable numbers,functions, and so forth to one another. This will include a developmentof the theory of functions of a real variable expressed in terms of com-putable numbers. According to my definition, a number is computableif its decimal can be written down by a machine.\"\n                            }\n                        },\n                        \"keywords\": {\n                            \"$seen\": true\n                        },\n                        \"from\": [\n                            {\n                                \"email\": \"alan.turing@computer.science.net\",\n                                \"name\": \"Alan Turing\"\n                            }\n                        ],\n                        \"mailboxIds\": {\n                            \"#mailboxArchivio\": true\n                        },\n                        \"subject\": \"ON COMPUTABLE NUMBERS, WITH AN APPLICATION TO THE ENTSCHEIDUNGSPROBLEM\",\n                        \"textBody\": [\n                            {\n                                \"partId\": \"0\",\n                                \"type\": \"text/plain\"\n                            }\n                        ],\n                        \"bodyStructure\": {\n                            \"type\": \"text/plain\",\n                            \"partId\": \"0\",\n                            \"header:Content-Language\": \"en\"\n                        },\n                        \"to\": [\n                            {\n                                \"email\": \"team@qbsoftware.swe.it\"\n                            }\n                        ]\n                    },\n                    \"mail4\": {\n                        \"bodyValues\": {\n                            \"0\": {\n                                \"value\": \"Il lambda calcolo o λ-calcolo è un sistema formale definito nel 1936 dal matematico Alonzo Church, sviluppato per analizzare formalmente le funzioni e il loro calcolo. Le prime sono espresse per mezzo di un linguaggio formale, che stabilisce quali siano le regole per formare un termine, il secondo con un sistema di riscrittura, che definisce come i termini possano essere ridotti e semplificati. \"\n                            }\n                        },\n                        \"from\": [\n                            {\n                                \"email\": \"alonzo.church@lambda.dev\",\n                                \"name\": \"Alonzo Church\"\n                            }\n                        ],\n                        \"keywords\": {},\n                        \"mailboxIds\": {\n                            \"#mailboxPrincipale\": true\n                        },\n                        \"subject\": \"λ-calcolo\",\n                        \"textBody\": [\n                            {\n                                \"partId\": \"0\",\n                                \"type\": \"text/plain\"\n                            }\n                        ],\n                        \"bodyStructure\": {\n                            \"type\": \"text/plain\",\n                            \"partId\": \"0\",\n                            \"header:Content-Language\": \"en\"\n                        },\n                        \"to\": [\n                            {\n                                \"email\": \"team@qbsoftware.swe.it\"\n                            }\n                        ]\n                    },\n                    \"mail5\": {\n                        \"bodyValues\": {\n                            \"0\": {\n                                \"value\": \"Buongiorno, le scrivo in merito a [continuare] \"\n                            }\n                        },\n                        \"from\": [\n                            {\n                                \"email\": \"team@qbsoftware.swe.it\",\n                                \"name\": \"Team QB Software SWE\"\n                            }\n                        ],\n                        \"keywords\": {\n                            \"$draft\": true\n                        },\n                        \"mailboxIds\": {\n                            \"#mailboxBozze\": true\n                        },\n                        \"subject\": \"OOP\",\n                        \"textBody\": [\n                            {\n                                \"partId\": \"0\",\n                                \"type\": \"text/plain\"\n                            }\n                        ],\n                        \"bodyStructure\": {\n                            \"type\": \"text/plain\",\n                            \"partId\": \"0\",\n                            \"header:Content-Language\": \"it\"\n                        },\n                        \"to\": [\n                            {\n                                \"email\": \"email@example.net\"\n                            }\n                        ]\n                    }\n                },\n                \"destroy\": []\n            },\n            \"1\"\n        ],\n        [\n            \"Identity/set\",\n            {\n                \"accountId\": \"team@qbsoftware.swe.it\",\n                \"create\": {\n                    \"identity1\": {\n                        \"name\": \"Team QB Software SWE\",\n                        \"email\": \"team@qbsoftware.swe.it\"\n                    }\n                }\n            },\n            \"2\"\n        ]\n    ],\n    \"using\": [\n        \"urn:ietf:params:jmap:core\",\n        \"urn:ietf:params:jmap:mail\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9999/api",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9999",
+							"path": [
+								"api"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Server",
+							"value": "Jetty(12.0.5)"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 02 May 2024 09:29:01 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "3020"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"methodResponses\": [\n        [\n            \"Mailbox/set\",\n            {\n                \"oldState\": \"0\",\n                \"newState\": \"4\",\n                \"created\": {\n                    \"mailboxInviati\": {\n                        \"id\": \"team@qbsoftware.swe.it/e7d3d697-77b3-4724-bc92-cb4794166cf6\"\n                    },\n                    \"mailboxArchivio\": {\n                        \"id\": \"team@qbsoftware.swe.it/14b34c1b-d87e-4082-bab9-13ac1d56bf2f\"\n                    },\n                    \"mailboxPrincipale\": {\n                        \"id\": \"team@qbsoftware.swe.it/88ee0124-250d-4091-9866-85880ef158f5\"\n                    },\n                    \"mailboxBozze\": {\n                        \"id\": \"team@qbsoftware.swe.it/7b54b690-6c5c-4ec5-8003-0b43be3f449a\"\n                    }\n                },\n                \"updated\": {},\n                \"destroyed\": [],\n                \"notCreated\": {},\n                \"notUpdated\": {},\n                \"notDestroyed\": {}\n            },\n            \"0\"\n        ],\n        [\n            \"Email/set\",\n            {\n                \"oldState\": \"4\",\n                \"newState\": \"28\",\n                \"created\": {\n                    \"mail4\": {\n                        \"blobId\": \"team@qbsoftware.swe.it/4347f0d0-8828-420b-908d-dd72e6ddff25\",\n                        \"threadId\": \"team@qbsoftware.swe.it/e9124e93-30b2-416b-8298-f63cebfd50a9\",\n                        \"mailboxIds\": {\n                            \"team@qbsoftware.swe.it/88ee0124-250d-4091-9866-85880ef158f5\": true\n                        },\n                        \"size\": 10,\n                        \"receivedAt\": \"2024-05-02T09:29:01.919284669Z\",\n                        \"id\": \"team@qbsoftware.swe.it/a78f9537-3b95-433a-927e-95c825b24081\"\n                    },\n                    \"mail3\": {\n                        \"blobId\": \"team@qbsoftware.swe.it/3afedf68-b79e-45ac-a058-3c2601a532cf\",\n                        \"threadId\": \"team@qbsoftware.swe.it/e56b8d22-9e77-47fe-b325-c29d993f4d26\",\n                        \"mailboxIds\": {\n                            \"team@qbsoftware.swe.it/14b34c1b-d87e-4082-bab9-13ac1d56bf2f\": true\n                        },\n                        \"size\": 10,\n                        \"receivedAt\": \"2024-05-02T09:29:02.114660200Z\",\n                        \"id\": \"team@qbsoftware.swe.it/99ecc352-51fb-4be2-ba76-3ea3433839e9\"\n                    },\n                    \"mail5\": {\n                        \"blobId\": \"team@qbsoftware.swe.it/64778218-a8e7-42b2-bc24-3a402f342348\",\n                        \"threadId\": \"team@qbsoftware.swe.it/a2e26fe5-14d2-4064-b609-c010387bbe9e\",\n                        \"mailboxIds\": {\n                            \"team@qbsoftware.swe.it/7b54b690-6c5c-4ec5-8003-0b43be3f449a\": true\n                        },\n                        \"size\": 10,\n                        \"receivedAt\": \"2024-05-02T09:29:02.169599574Z\",\n                        \"id\": \"team@qbsoftware.swe.it/067351fa-9559-4d96-84c0-4b43e62631c0\"\n                    },\n                    \"mail0\": {\n                        \"blobId\": \"team@qbsoftware.swe.it/cb8db735-b70b-4f0d-a584-668cccdb723b\",\n                        \"threadId\": \"team@qbsoftware.swe.it/bbd35263-c6a1-4e8f-9d22-8d8261d0108a\",\n                        \"mailboxIds\": {\n                            \"team@qbsoftware.swe.it/88ee0124-250d-4091-9866-85880ef158f5\": true\n                        },\n                        \"size\": 10,\n                        \"receivedAt\": \"2024-05-02T09:29:02.228540238Z\",\n                        \"id\": \"team@qbsoftware.swe.it/a5a56637-b9b5-4f7f-8ae2-2cc1797f7576\"\n                    },\n                    \"mail2\": {\n                        \"blobId\": \"team@qbsoftware.swe.it/afaf13b4-634a-499d-bab6-c5143c069275\",\n                        \"threadId\": \"team@qbsoftware.swe.it/a63f65b9-025f-4c3c-a631-0300753f55bc\",\n                        \"mailboxIds\": {\n                            \"team@qbsoftware.swe.it/88ee0124-250d-4091-9866-85880ef158f5\": true\n                        },\n                        \"size\": 10,\n                        \"receivedAt\": \"2024-05-02T09:29:02.261190442Z\",\n                        \"id\": \"team@qbsoftware.swe.it/c3d49234-95ed-4cef-9775-be8f8b525b1f\"\n                    },\n                    \"mail1\": {\n                        \"blobId\": \"team@qbsoftware.swe.it/99a5c4c5-3365-462e-84ea-96e82bfcd420\",\n                        \"threadId\": \"team@qbsoftware.swe.it/a63f65b9-025f-4c3c-a631-0300753f55bc\",\n                        \"mailboxIds\": {\n                            \"team@qbsoftware.swe.it/88ee0124-250d-4091-9866-85880ef158f5\": true\n                        },\n                        \"size\": 10,\n                        \"receivedAt\": \"2024-05-02T09:29:02.318242562Z\",\n                        \"id\": \"team@qbsoftware.swe.it/97f9a0c0-4a90-4ecb-988f-151e54cde64c\"\n                    }\n                },\n                \"updated\": {},\n                \"destroyed\": [],\n                \"notCreated\": {},\n                \"notUpdated\": {},\n                \"notDestroyed\": {}\n            },\n            \"1\"\n        ],\n        [\n            \"Identity/set\",\n            {\n                \"oldState\": \"28\",\n                \"newState\": \"29\",\n                \"created\": {\n                    \"identity1\": {\n                        \"id\": \"team@qbsoftware.swe.it/9bc5a8d8-f2c1-4197-8c9d-24b314a4acd1\"\n                    }\n                },\n                \"destroyed\": [],\n                \"notCreated\": {},\n                \"notDestroyed\": {}\n            },\n            \"2\"\n        ]\n    ],\n    \"sessionState\": \"0\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Gen Example Dataset (send)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Fixed the responseJson call to responseJson()",
+							"var responseJson = pm.response.json();",
+							"",
+							"pm.environment.clear();",
+							"pm.environment.set(\"acountIdTarget\", \"team@qbsoftware.swe.it\");",
+							"pm.environment.set(\"mailboxIds\", getMailboxIds(responseJson));",
+							"pm.environment.set(\"emailsIds\", getEmailIds(responseJson));",
+							"pm.environment.set(\"threadIds\", getThreadIds(responseJson));",
+							"pm.environment.set(\"identityIds\", getIdentityIds(responseJson));",
+							"",
+							"// Funzione per ottenere gli ID delle email",
+							"function getEmailIds(responseJson) {",
+							"    var emailIds = [];",
+							"",
+							"    // Itera attraverso le risposte",
+							"    responseJson.methodResponses.forEach(function (response) {",
+							"        // Se la risposta riguarda l'impostazione delle email",
+							"        if (response[0] === \"Email/set\") {",
+							"            // Ottieni l'oggetto contenente le email create",
+							"            var createdEmails = response[1].created;",
+							"",
+							"            // Itera attraverso le email create",
+							"            for (var emailKey in createdEmails) {",
+							"                if (createdEmails.hasOwnProperty(emailKey)) {",
+							"                    // Ottieni l'ID di ogni email e aggiungilo all'array",
+							"                    var emailId = createdEmails[emailKey].id;",
+							"                    emailIds.push(emailId);",
+							"                }",
+							"            }",
+							"        }",
+							"    });",
+							"",
+							"    return emailIds;",
+							"}",
+							"",
+							"function getThreadIds(responseJson) {",
+							"    var emailIds = [];",
+							"",
+							"    // Itera attraverso le risposte",
+							"    responseJson.methodResponses.forEach(function (response) {",
+							"        // Se la risposta riguarda l'impostazione delle email",
+							"        if (response[0] === \"Email/set\") {",
+							"            // Ottieni l'oggetto contenente le email create",
+							"            var createdEmails = response[1].created;",
+							"",
+							"            // Itera attraverso le email create",
+							"            for (var emailKey in createdEmails) {",
+							"                if (createdEmails.hasOwnProperty(emailKey)) {",
+							"                    // Ottieni l'ID di ogni email e aggiungilo all'array",
+							"                    var emailId = createdEmails[emailKey].threadId;",
+							"                    emailIds.push(emailId);",
+							"                }",
+							"            }",
+							"        }",
+							"    });",
+							"",
+							"    return emailIds;",
+							"}",
+							"",
+							"function getMailboxIds(responseJson) {",
+							"    var mailboxIds = [];",
+							"",
+							"    // Itera attraverso le risposte",
+							"    responseJson.methodResponses.forEach(function (response) {",
+							"        // Se la risposta riguarda l'impostazione delle email",
+							"        if (response[0] === \"Mailbox/set\") {",
+							"            // Ottieni l'oggetto contenente le email create",
+							"            var createdMailboxs = response[1].created;",
+							"",
+							"            // Itera attraverso le email create",
+							"            for (var mailboxKey in createdMailboxs) {",
+							"                if (createdMailboxs.hasOwnProperty(mailboxKey)) {",
+							"                    // Ottieni l'ID di ogni email e aggiungilo all'array",
+							"                    var mailboxId = createdMailboxs[mailboxKey].id;",
+							"                    mailboxIds.push(mailboxId);",
+							"                }",
+							"            }",
+							"        }",
+							"    });",
+							"",
+							"    return mailboxIds;",
+							"}",
+							"",
+							"function getIdentityIds(responseJson) {",
+							"    var mailboxIds = [];",
+							"",
+							"    // Itera attraverso le risposte",
+							"    responseJson.methodResponses.forEach(function (response) {",
+							"        // Se la risposta riguarda l'impostazione delle email",
+							"        if (response[0] === \"Identity/set\") {",
+							"            // Ottieni l'oggetto contenente le email create",
+							"            var createdMailboxs = response[1].created;",
+							"",
+							"            // Itera attraverso le email create",
+							"            for (var mailboxKey in createdMailboxs) {",
+							"                if (createdMailboxs.hasOwnProperty(mailboxKey)) {",
+							"                    // Ottieni l'ID di ogni email e aggiungilo all'array",
+							"                    var mailboxId = createdMailboxs[mailboxKey].id;",
+							"                    mailboxIds.push(mailboxId);",
+							"                }",
+							"            }",
+							"        }",
+							"    });",
+							"",
+							"    return mailboxIds;",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"methodCalls\": [\n        [\n            \"Mailbox/set\",\n            {\n                \"accountId\": \"team@qbsoftware.swe.it\",\n                \"create\": {\n                    \"mailboxPrincipale\": {\n                        \"name\": \"Arrivate\",\n                        \"role\": \"inbox\"\n                    },\n                    \"mailboxArchivio\": {\n                        \"name\": \"Archivio\",\n                        \"role\": \"archive\"\n                    }\n                }\n            },\n            \"0\"\n        ],\n        [\n            \"Email/set\",\n            {\n                \"accountId\": \"team@qbsoftware.swe.it\",\n                \"create\": {\n                    \"mail0\": {\n                        \"bodyValues\": {\n                            \"0\": {\n                                \"value\": \"Gentile prof X, con la presente ...\"\n                            }\n                        },\n                        \"from\": [\n                            {\n                                \"email\": \"gruppo@studenti.swe.com\",\n                                \"name\": \"Gruppo X\"\n                            }\n                        ],\n                        \"keywords\": {},\n                        \"mailboxIds\": {\n                            \"#mailboxPrincipale\": true\n                        },\n                        \"subject\": \"Canidatura PB\",\n                        \"textBody\": [\n                            {\n                                \"partId\": \"0\",\n                                \"type\": \"text/plain\"\n                            }\n                        ],\n                        \"bodyStructure\": {\n                            \"type\": \"text/plain\",\n                            \"partId\": \"0\",\n                            \"header:Content-Language\": \"en\"\n                        },\n                        \"to\": [\n                            {\n                                \"email\": \"team@qbsoftware.swe.it\"\n                            }\n                        ]\n                    },\n                    \"mail1\": {\n                        \"bodyValues\": {\n                            \"0\": {\n                                \"value\": \"Gentile cliente, la prego di firmare il questionario di gradimento che puo trovare al seguente link: www.google.it.\"\n                            }\n                        },\n                        \"from\": [\n                            {\n                                \"email\": \"assistenza@computer.x.com\",\n                                \"name\": \"Computer X\"\n                            }\n                        ],\n                        \"keywords\": {},\n                        \"mailboxIds\": {\n                            \"#mailboxPrincipale\": true\n                        },\n                        \"subject\": \"Re: Assistenza Computer\",\n                        \"textBody\": [\n                            {\n                                \"partId\": \"0\",\n                                \"type\": \"text/plain\"\n                            }\n                        ],\n                        \"bodyStructure\": {\n                            \"type\": \"text/plain\",\n                            \"partId\": \"0\",\n                            \"header:Content-Language\": \"en\"\n                        },\n                        \"to\": [\n                            {\n                                \"email\": \"team@qbsoftware.swe.it\"\n                            }\n                        ]\n                    },\n                    \"mail2\": {\n                        \"bodyValues\": {\n                            \"0\": {\n                                \"value\": \"Gentile cliente, il nostro tecnico sarà da lei il giorno 11/10/2023 alle 13:30\"\n                            }\n                        },\n                        \"from\": [\n                            {\n                                \"email\": \"assistenza@computer.x.com\",\n                                \"name\": \"Computer X\"\n                            }\n                        ],\n                        \"keywords\": {},\n                        \"mailboxIds\": {\n                            \"#mailboxPrincipale\": true\n                        },\n                        \"subject\": \"Assistenza Computer\",\n                        \"textBody\": [\n                            {\n                                \"partId\": \"0\",\n                                \"type\": \"text/plain\"\n                            }\n                        ],\n                        \"bodyStructure\": {\n                            \"type\": \"text/plain\",\n                            \"partId\": \"0\",\n                            \"header:Content-Language\": \"en\"\n                        },\n                        \"to\": [\n                            {\n                                \"email\": \"team@qbsoftware.swe.it\"\n                            }\n                        ]\n                    },\n                    \"mail3\": {\n                        \"bodyValues\": {\n                            \"0\": {\n                                \"value\": \"The \\\"computable\\\" numbers may be described briefly as the realnumbers whose expressions as a decimal are calculable by finite means.Although the subject of this paper is ostensibly the computable numbers.it is almost equally easy to define and investigate computable functionsof an integral variable or a real or computable variable, computablepredicates, and so forth. The fundamental problems involved are,however, the same in each case, and I have chosen the computable numbersfor explicit treatment as involving the least cumbrous technique. I hopeshortly to give an account of the relations of the computable numbers,functions, and so forth to one another. This will include a developmentof the theory of functions of a real variable expressed in terms of com-putable numbers. According to my definition, a number is computableif its decimal can be written down by a machine.\"\n                            }\n                        },\n                        \"keywords\": {\n                            \"$seen\": true\n                        },\n                        \"from\": [\n                            {\n                                \"email\": \"alan.turing@computer.science.net\",\n                                \"name\": \"Alan Turing\"\n                            }\n                        ],\n                        \"mailboxIds\": {\n                            \"#mailboxArchivio\": true\n                        },\n                        \"subject\": \"ON COMPUTABLE NUMBERS, WITH AN APPLICATION TO THE ENTSCHEIDUNGSPROBLEM\",\n                        \"textBody\": [\n                            {\n                                \"partId\": \"0\",\n                                \"type\": \"text/plain\"\n                            }\n                        ],\n                        \"bodyStructure\": {\n                            \"type\": \"text/plain\",\n                            \"partId\": \"0\",\n                            \"header:Content-Language\": \"en\"\n                        },\n                        \"to\": [\n                            {\n                                \"email\": \"team@qbsoftware.swe.it\"\n                            }\n                        ]\n                    },\n                    \"mail4\": {\n                        \"bodyValues\": {\n                            \"0\": {\n                                \"value\": \"Il lambda calcolo o λ-calcolo è un sistema formale definito nel 1936 dal matematico Alonzo Church, sviluppato per analizzare formalmente le funzioni e il loro calcolo. Le prime sono espresse per mezzo di un linguaggio formale, che stabilisce quali siano le regole per formare un termine, il secondo con un sistema di riscrittura, che definisce come i termini possano essere ridotti e semplificati. \"\n                            }\n                        },\n                        \"from\": [\n                            {\n                                \"email\": \"alonzo.church@lambda.dev\",\n                                \"name\": \"Alonzo Church\"\n                            }\n                        ],\n                        \"keywords\": {},\n                        \"mailboxIds\": {\n                            \"#mailboxPrincipale\": true\n                        },\n                        \"subject\": \"λ-calcolo\",\n                        \"textBody\": [\n                            {\n                                \"partId\": \"0\",\n                                \"type\": \"text/plain\"\n                            }\n                        ],\n                        \"bodyStructure\": {\n                            \"type\": \"text/plain\",\n                            \"partId\": \"0\",\n                            \"header:Content-Language\": \"en\"\n                        },\n                        \"to\": [\n                            {\n                                \"email\": \"team@qbsoftware.swe.it\"\n                            }\n                        ]\n                    },\n                    \"mail5\": {\n                        \"bodyValues\": {\n                            \"0\": {\n                                \"value\": \"Buongiorno, le scrivo in merito a [continuare] \"\n                            }\n                        },\n                        \"from\": [\n                            {\n                                \"email\": \"team@qbsoftware.swe.it\",\n                                \"name\": \"Team QB Software SWE\"\n                            }\n                        ],\n                        \"keywords\": {\n                            \"$draft\": true\n                        },\n                        \"mailboxIds\": {\n                            \"#mailboxBozze\": true\n                        },\n                        \"subject\": \"OOP\",\n                        \"textBody\": [\n                            {\n                                \"partId\": \"0\",\n                                \"type\": \"text/plain\"\n                            }\n                        ],\n                        \"bodyStructure\": {\n                            \"type\": \"text/plain\",\n                            \"partId\": \"0\",\n                            \"header:Content-Language\": \"it\"\n                        },\n                        \"to\": [\n                            {\n                                \"email\": \"email@example.net\"\n                            }\n                        ]\n                    }\n                },\n                \"destroy\": []\n            },\n            \"1\"\n        ],\n        [\n            \"Identity/set\",\n            {\n                \"accountId\": \"team@qbsoftware.swe.it\",\n                \"create\": {\n                    \"identity1\": {\n                        \"name\": \"Team QB Software SWE\",\n                        \"email\": \"team@qbsoftware.swe.it\"\n                    }\n                }\n            },\n            \"2\"\n        ]\n    ],\n    \"using\": [\n        \"urn:ietf:params:jmap:core\",\n        \"urn:ietf:params:jmap:mail\"\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9999/api",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9999",
+					"path": [
+						"api"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Gen Example Dataset",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"methodCalls\": [\n        [\n            \"Mailbox/set\",\n            {\n                \"accountId\": \"team@qbsoftware.swe.it\",\n                \"create\": {\n                    \"mailboxPrincipale\": {\n                        \"name\": \"Arrivate\",\n                        \"role\": \"inbox\"\n                    },\n                    \"mailboxInviati\": {\n                        \"name\": \"Inviati\",\n                        \"role\": \"sent\"\n                    },\n                    \"mailboxBozze\": {\n                        \"name\": \"Bozze\",\n                        \"role\": \"drafts\"\n                    },\n                    \"mailboxArchivio\": {\n                        \"name\": \"Archivio\",\n                        \"role\": \"archive\"\n                    }\n                }\n            },\n            \"0\"\n        ],\n        [\n            \"Email/set\",\n            {\n                \"accountId\": \"team@qbsoftware.swe.it\",\n                \"create\": {\n                    \"mail0\": {\n                        \"bodyValues\": {\n                            \"0\": {\n                                \"value\": \"Gentile prof X, con la presente ...\"\n                            }\n                        },\n                        \"from\": [\n                            {\n                                \"email\": \"gruppo@studenti.swe.com\",\n                                \"name\": \"Gruppo X\"\n                            }\n                        ],\n                        \"keywords\": {},\n                        \"mailboxIds\": {\n                            \"#mailboxPrincipale\": true\n                        },\n                        \"subject\": \"Canidatura PB\",\n                        \"textBody\": [\n                            {\n                                \"partId\": \"0\",\n                                \"type\": \"text/plain\"\n                            }\n                        ],\n                        \"bodyStructure\": {\n                            \"type\": \"text/plain\",\n                            \"partId\": \"0\",\n                            \"header:Content-Language\": \"en\"\n                        },\n                        \"to\": [\n                            {\n                                \"email\": \"team@qbsoftware.swe.it\"\n                            }\n                        ]\n                    },\n                    \"mail1\": {\n                        \"bodyValues\": {\n                            \"0\": {\n                                \"value\": \"Gentile cliente, la prego di firmare il questionario di gradimento che puo trovare al seguente link: www.google.it.\"\n                            }\n                        },\n                        \"from\": [\n                            {\n                                \"email\": \"assistenza@computer.x.com\",\n                                \"name\": \"Computer X\"\n                            }\n                        ],\n                        \"keywords\": {},\n                        \"mailboxIds\": {\n                            \"#mailboxPrincipale\": true\n                        },\n                        \"subject\": \"Re: Assistenza Computer\",\n                        \"textBody\": [\n                            {\n                                \"partId\": \"0\",\n                                \"type\": \"text/plain\"\n                            }\n                        ],\n                        \"bodyStructure\": {\n                            \"type\": \"text/plain\",\n                            \"partId\": \"0\",\n                            \"header:Content-Language\": \"en\"\n                        },\n                        \"to\": [\n                            {\n                                \"email\": \"team@qbsoftware.swe.it\"\n                            }\n                        ]\n                    },\n                    \"mail2\": {\n                        \"bodyValues\": {\n                            \"0\": {\n                                \"value\": \"Gentile cliente, il nostro tecnico sarà da lei il giorno 11/10/2023 alle 13:30\"\n                            }\n                        },\n                        \"from\": [\n                            {\n                                \"email\": \"assistenza@computer.x.com\",\n                                \"name\": \"Computer X\"\n                            }\n                        ],\n                        \"keywords\": {},\n                        \"mailboxIds\": {\n                            \"#mailboxPrincipale\": true\n                        },\n                        \"subject\": \"Assistenza Computer\",\n                        \"textBody\": [\n                            {\n                                \"partId\": \"0\",\n                                \"type\": \"text/plain\"\n                            }\n                        ],\n                        \"bodyStructure\": {\n                            \"type\": \"text/plain\",\n                            \"partId\": \"0\",\n                            \"header:Content-Language\": \"en\"\n                        },\n                        \"to\": [\n                            {\n                                \"email\": \"team@qbsoftware.swe.it\"\n                            }\n                        ]\n                    },\n                    \"mail3\": {\n                        \"bodyValues\": {\n                            \"0\": {\n                                \"value\": \"The \\\"computable\\\" numbers may be described briefly as the realnumbers whose expressions as a decimal are calculable by finite means.Although the subject of this paper is ostensibly the computable numbers.it is almost equally easy to define and investigate computable functionsof an integral variable or a real or computable variable, computablepredicates, and so forth. The fundamental problems involved are,however, the same in each case, and I have chosen the computable numbersfor explicit treatment as involving the least cumbrous technique. I hopeshortly to give an account of the relations of the computable numbers,functions, and so forth to one another. This will include a developmentof the theory of functions of a real variable expressed in terms of com-putable numbers. According to my definition, a number is computableif its decimal can be written down by a machine.\"\n                            }\n                        },\n                        \"keywords\": {\n                            \"$seen\": true\n                        },\n                        \"from\": [\n                            {\n                                \"email\": \"alan.turing@computer.science.net\",\n                                \"name\": \"Alan Turing\"\n                            }\n                        ],\n                        \"mailboxIds\": {\n                            \"#mailboxArchivio\": true\n                        },\n                        \"subject\": \"ON COMPUTABLE NUMBERS, WITH AN APPLICATION TO THE ENTSCHEIDUNGSPROBLEM\",\n                        \"textBody\": [\n                            {\n                                \"partId\": \"0\",\n                                \"type\": \"text/plain\"\n                            }\n                        ],\n                        \"bodyStructure\": {\n                            \"type\": \"text/plain\",\n                            \"partId\": \"0\",\n                            \"header:Content-Language\": \"en\"\n                        },\n                        \"to\": [\n                            {\n                                \"email\": \"team@qbsoftware.swe.it\"\n                            }\n                        ]\n                    },\n                    \"mail4\": {\n                        \"bodyValues\": {\n                            \"0\": {\n                                \"value\": \"Il lambda calcolo o λ-calcolo è un sistema formale definito nel 1936 dal matematico Alonzo Church, sviluppato per analizzare formalmente le funzioni e il loro calcolo. Le prime sono espresse per mezzo di un linguaggio formale, che stabilisce quali siano le regole per formare un termine, il secondo con un sistema di riscrittura, che definisce come i termini possano essere ridotti e semplificati. \"\n                            }\n                        },\n                        \"from\": [\n                            {\n                                \"email\": \"alonzo.church@lambda.dev\",\n                                \"name\": \"Alonzo Church\"\n                            }\n                        ],\n                        \"keywords\": {},\n                        \"mailboxIds\": {\n                            \"#mailboxPrincipale\": true\n                        },\n                        \"subject\": \"λ-calcolo\",\n                        \"textBody\": [\n                            {\n                                \"partId\": \"0\",\n                                \"type\": \"text/plain\"\n                            }\n                        ],\n                        \"bodyStructure\": {\n                            \"type\": \"text/plain\",\n                            \"partId\": \"0\",\n                            \"header:Content-Language\": \"en\"\n                        },\n                        \"to\": [\n                            {\n                                \"email\": \"team@qbsoftware.swe.it\"\n                            }\n                        ]\n                    },\n                    \"mail5\": {\n                        \"bodyValues\": {\n                            \"0\": {\n                                \"value\": \"Buongiorno, le scrivo in merito a [continuare] \"\n                            }\n                        },\n                        \"from\": [\n                            {\n                                \"email\": \"team@qbsoftware.swe.it\",\n                                \"name\": \"Team QB Software SWE\"\n                            }\n                        ],\n                        \"keywords\": {\n                            \"$draft\": true\n                        },\n                        \"mailboxIds\": {\n                            \"#mailboxBozze\": true\n                        },\n                        \"subject\": \"OOP\",\n                        \"textBody\": [\n                            {\n                                \"partId\": \"0\",\n                                \"type\": \"text/plain\"\n                            }\n                        ],\n                        \"bodyStructure\": {\n                            \"type\": \"text/plain\",\n                            \"partId\": \"0\",\n                            \"header:Content-Language\": \"it\"\n                        },\n                        \"to\": [\n                            {\n                                \"email\": \"email@example.net\"\n                            }\n                        ]\n                    }\n                },\n                \"destroy\": []\n            },\n            \"1\"\n        ],\n        [\n            \"Identity/set\",\n            {\n                \"accountId\": \"team@qbsoftware.swe.it\",\n                \"create\": {\n                    \"identity1\": {\n                        \"name\": \"Team QB Software SWE\",\n                        \"email\": \"team@qbsoftware.swe.it\"\n                    }\n                }\n            },\n            \"2\"\n        ]\n    ],\n    \"using\": [\n        \"urn:ietf:params:jmap:core\",\n        \"urn:ietf:params:jmap:mail\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9999/api",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9999",
+							"path": [
+								"api"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Server",
+							"value": "Jetty(12.0.5)"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 02 May 2024 09:29:01 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "3020"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"methodResponses\": [\n        [\n            \"Mailbox/set\",\n            {\n                \"oldState\": \"0\",\n                \"newState\": \"4\",\n                \"created\": {\n                    \"mailboxInviati\": {\n                        \"id\": \"team@qbsoftware.swe.it/e7d3d697-77b3-4724-bc92-cb4794166cf6\"\n                    },\n                    \"mailboxArchivio\": {\n                        \"id\": \"team@qbsoftware.swe.it/14b34c1b-d87e-4082-bab9-13ac1d56bf2f\"\n                    },\n                    \"mailboxPrincipale\": {\n                        \"id\": \"team@qbsoftware.swe.it/88ee0124-250d-4091-9866-85880ef158f5\"\n                    },\n                    \"mailboxBozze\": {\n                        \"id\": \"team@qbsoftware.swe.it/7b54b690-6c5c-4ec5-8003-0b43be3f449a\"\n                    }\n                },\n                \"updated\": {},\n                \"destroyed\": [],\n                \"notCreated\": {},\n                \"notUpdated\": {},\n                \"notDestroyed\": {}\n            },\n            \"0\"\n        ],\n        [\n            \"Email/set\",\n            {\n                \"oldState\": \"4\",\n                \"newState\": \"28\",\n                \"created\": {\n                    \"mail4\": {\n                        \"blobId\": \"team@qbsoftware.swe.it/4347f0d0-8828-420b-908d-dd72e6ddff25\",\n                        \"threadId\": \"team@qbsoftware.swe.it/e9124e93-30b2-416b-8298-f63cebfd50a9\",\n                        \"mailboxIds\": {\n                            \"team@qbsoftware.swe.it/88ee0124-250d-4091-9866-85880ef158f5\": true\n                        },\n                        \"size\": 10,\n                        \"receivedAt\": \"2024-05-02T09:29:01.919284669Z\",\n                        \"id\": \"team@qbsoftware.swe.it/a78f9537-3b95-433a-927e-95c825b24081\"\n                    },\n                    \"mail3\": {\n                        \"blobId\": \"team@qbsoftware.swe.it/3afedf68-b79e-45ac-a058-3c2601a532cf\",\n                        \"threadId\": \"team@qbsoftware.swe.it/e56b8d22-9e77-47fe-b325-c29d993f4d26\",\n                        \"mailboxIds\": {\n                            \"team@qbsoftware.swe.it/14b34c1b-d87e-4082-bab9-13ac1d56bf2f\": true\n                        },\n                        \"size\": 10,\n                        \"receivedAt\": \"2024-05-02T09:29:02.114660200Z\",\n                        \"id\": \"team@qbsoftware.swe.it/99ecc352-51fb-4be2-ba76-3ea3433839e9\"\n                    },\n                    \"mail5\": {\n                        \"blobId\": \"team@qbsoftware.swe.it/64778218-a8e7-42b2-bc24-3a402f342348\",\n                        \"threadId\": \"team@qbsoftware.swe.it/a2e26fe5-14d2-4064-b609-c010387bbe9e\",\n                        \"mailboxIds\": {\n                            \"team@qbsoftware.swe.it/7b54b690-6c5c-4ec5-8003-0b43be3f449a\": true\n                        },\n                        \"size\": 10,\n                        \"receivedAt\": \"2024-05-02T09:29:02.169599574Z\",\n                        \"id\": \"team@qbsoftware.swe.it/067351fa-9559-4d96-84c0-4b43e62631c0\"\n                    },\n                    \"mail0\": {\n                        \"blobId\": \"team@qbsoftware.swe.it/cb8db735-b70b-4f0d-a584-668cccdb723b\",\n                        \"threadId\": \"team@qbsoftware.swe.it/bbd35263-c6a1-4e8f-9d22-8d8261d0108a\",\n                        \"mailboxIds\": {\n                            \"team@qbsoftware.swe.it/88ee0124-250d-4091-9866-85880ef158f5\": true\n                        },\n                        \"size\": 10,\n                        \"receivedAt\": \"2024-05-02T09:29:02.228540238Z\",\n                        \"id\": \"team@qbsoftware.swe.it/a5a56637-b9b5-4f7f-8ae2-2cc1797f7576\"\n                    },\n                    \"mail2\": {\n                        \"blobId\": \"team@qbsoftware.swe.it/afaf13b4-634a-499d-bab6-c5143c069275\",\n                        \"threadId\": \"team@qbsoftware.swe.it/a63f65b9-025f-4c3c-a631-0300753f55bc\",\n                        \"mailboxIds\": {\n                            \"team@qbsoftware.swe.it/88ee0124-250d-4091-9866-85880ef158f5\": true\n                        },\n                        \"size\": 10,\n                        \"receivedAt\": \"2024-05-02T09:29:02.261190442Z\",\n                        \"id\": \"team@qbsoftware.swe.it/c3d49234-95ed-4cef-9775-be8f8b525b1f\"\n                    },\n                    \"mail1\": {\n                        \"blobId\": \"team@qbsoftware.swe.it/99a5c4c5-3365-462e-84ea-96e82bfcd420\",\n                        \"threadId\": \"team@qbsoftware.swe.it/a63f65b9-025f-4c3c-a631-0300753f55bc\",\n                        \"mailboxIds\": {\n                            \"team@qbsoftware.swe.it/88ee0124-250d-4091-9866-85880ef158f5\": true\n                        },\n                        \"size\": 10,\n                        \"receivedAt\": \"2024-05-02T09:29:02.318242562Z\",\n                        \"id\": \"team@qbsoftware.swe.it/97f9a0c0-4a90-4ecb-988f-151e54cde64c\"\n                    }\n                },\n                \"updated\": {},\n                \"destroyed\": [],\n                \"notCreated\": {},\n                \"notUpdated\": {},\n                \"notDestroyed\": {}\n            },\n            \"1\"\n        ],\n        [\n            \"Identity/set\",\n            {\n                \"oldState\": \"28\",\n                \"newState\": \"29\",\n                \"created\": {\n                    \"identity1\": {\n                        \"id\": \"team@qbsoftware.swe.it/9bc5a8d8-f2c1-4197-8c9d-24b314a4acd1\"\n                    }\n                },\n                \"destroyed\": [],\n                \"notCreated\": {},\n                \"notDestroyed\": {}\n            },\n            \"2\"\n        ]\n    ],\n    \"sessionState\": \"0\"\n}"
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://postman-echo.com"
+		}
+	]
+}

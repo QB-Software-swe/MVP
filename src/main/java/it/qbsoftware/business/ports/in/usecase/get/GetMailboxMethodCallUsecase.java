@@ -9,6 +9,10 @@ import it.qbsoftware.business.ports.in.jmap.method.call.get.GetMailboxMethodCall
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetMailboxMethodResponsePort;
 
 public interface GetMailboxMethodCallUsecase {
-    public GetMailboxMethodResponsePort call(final GetMailboxMethodCallPort getMailboxMethodCallPort,
-            final ListMultimapPort<String, ResponseInvocationPort> previousResponses) throws InvalidArgumentsException, AccountNotFoundException, InvalidResultReferenceExecption;
+    public GetMailboxMethodResponsePort call(
+            final GetMailboxMethodCallPort getMailboxMethodCallPort,
+            final ListMultimapPort<String, ResponseInvocationPort> previousResponses)
+            throws InvalidArgumentsException,
+                    AccountNotFoundException,
+                    InvalidResultReferenceExecption;
 }

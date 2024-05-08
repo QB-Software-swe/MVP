@@ -24,6 +24,20 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=rootpass
     logging:
       driver: none
+  
+  mongo-express: 
+    image: mongo-express
+    container_name: mongo-express
+    restart: always
+    ports: 
+      - 8081:8081
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=rootuser 
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=rootpass 
+      - ME_CONFIG_MONGODB_SERVER=dbhost 
+    links:
+      - mongodb
+
 
 volumes:
   data: {}

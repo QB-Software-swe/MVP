@@ -22,5 +22,4 @@ public class EchoMethodResponseBuilderAdapter implements EchoMethodResponseBuild
         echoMethodResponseBuilder.libraryName(payload);
         return this;
     }
-
 }

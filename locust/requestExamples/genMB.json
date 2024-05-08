@@ -1,0 +1,21 @@
+{
+    "methodCalls": [
+        [
+            "Mailbox/set",
+            {
+                "accountId": "Id_here",
+                "create": {
+                    "mb_Id_here": {
+                        "name": "name_here",
+                        "role": "archive"
+                    }
+                }
+            },
+            "0"
+        ]
+    ],
+    "using": [
+        "urn:ietf:params:jmap:core",
+        "urn:ietf:params:jmap:mail"
+    ]
+}

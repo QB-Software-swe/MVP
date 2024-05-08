@@ -95,5 +95,4 @@ public class MailboxBuilderAdapter implements MailboxBuilderPort {
         this.mailboxBuilder = Mailbox.builder();
         return this;
     }
-
 }

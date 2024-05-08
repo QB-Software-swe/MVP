@@ -10,14 +10,6 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-
 import it.qbsoftware.business.domain.entity.changes.AccountState;
 import it.qbsoftware.business.domain.entity.changes.tracker.MailboxChangesTracker;
 import it.qbsoftware.business.domain.exception.AccountNotFoundException;
@@ -30,44 +22,39 @@ import it.qbsoftware.business.ports.in.jmap.method.call.set.SetMailboxMethodCall
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.business.ports.out.domain.MailboxChangesTrackerRepository;
 import it.qbsoftware.business.ports.out.jmap.MailboxRepository;
+import java.util.HashMap;
+import java.util.Map;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 @RunWith(org.mockito.junit.MockitoJUnitRunner.class)
 public class StandardCreateMailboxTest {
 
-    @Mock
-    AccountStateRepository accountStateRepository;
+    @Mock AccountStateRepository accountStateRepository;
 
-    @Mock
-    MailboxChangesTrackerRepository mailboxChangesTrackerRepository;    
+    @Mock MailboxChangesTrackerRepository mailboxChangesTrackerRepository;
 
-    @Mock
-    MailboxRepository mailboxRepository;
+    @Mock MailboxRepository mailboxRepository;
 
-    @Mock
-    SetErrorEnumPort setErrorEnumPort;
+    @Mock SetErrorEnumPort setErrorEnumPort;
 
-    @Mock
-    SetErrorPort setErrorPort;
+    @Mock SetErrorPort setErrorPort;
 
-    @Mock
-    SetMailboxMethodCallPort setMailboxMethodCallPort;
+    @Mock SetMailboxMethodCallPort setMailboxMethodCallPort;
 
-    @Mock
-    AccountState accountState;
+    @Mock AccountState accountState;
 
-    @Mock
-    MailboxChangesTracker mailboxChangesTracker;
+    @Mock MailboxChangesTracker mailboxChangesTracker;
 
-    @Mock
-    MailboxBuilderPort mailboxBuilderPort;
+    @Mock MailboxBuilderPort mailboxBuilderPort;
 
-    @InjectMocks
-    StandardCreateMailbox standardCreateMailbox;
+    @InjectMocks StandardCreateMailbox standardCreateMailbox;
 
-    
     @Test
-    public void testCreateWithNullMapMailboxToCreate() throws AccountNotFoundException {     
-        
+    public void testCreateWithNullMapMailboxToCreate() throws AccountNotFoundException {
+
         when(setMailboxMethodCallPort.getCreate()).thenReturn(null);
 
         CreatedResult<MailboxPort> result = standardCreateMailbox.create(setMailboxMethodCallPort);
@@ -77,7 +64,7 @@ public class StandardCreateMailboxTest {
     }
 
     @Test
-    public void testCreateWithNotNullMapMailboxToCreateAndNoExceptions() throws Exception {     
+    public void testCreateWithNotNullMapMailboxToCreateAndNoExceptions() throws Exception {
         MailboxPort mailboxPort = mock(MailboxPort.class);
         Map<String, MailboxPort> mapMailboxToCreate = new HashMap<>();
         mapMailboxToCreate.put("key", mailboxPort);
@@ -90,7 +77,8 @@ public class StandardCreateMailboxTest {
         when(accountStateRepository.retrive(anyString())).thenReturn(accountState);
         when(accountState.increaseState()).thenReturn(accountState);
         when(accountState.state()).thenReturn("state");
-        when(mailboxPort.getBuilder()).thenReturn(mailboxBuilderPort);
+        when(mailboxPort.toBuilder()).thenReturn(mailboxBuilderPort);
+        when(mailboxPort.getName()).thenReturn("name");
 
         doNothing().when(mailboxRepository).save(any());
         doNothing().when(accountStateRepository).save(any());
@@ -104,7 +92,7 @@ public class StandardCreateMailboxTest {
     }
 
     @Test
-    public void testCreateWithSingletonException() throws Exception {     
+    public void testCreateWithSingletonException() throws Exception {
         MailboxPort mailboxPort = mock(MailboxPort.class);
         Map<String, MailboxPort> entryMailboxToCreate = new HashMap<>();
         entryMailboxToCreate.put("key", mailboxPort);
@@ -114,8 +102,9 @@ public class StandardCreateMailboxTest {
         when(mailboxBuilderPort.id(anyString())).thenReturn(mailboxBuilderPort);
         when(mailboxBuilderPort.build()).thenReturn(mailboxPort);
         when(mailboxBuilderPort.reset()).thenReturn(mailboxBuilderPort);
-        when(mailboxPort.getBuilder()).thenReturn(mailboxBuilderPort);
+        when(mailboxPort.toBuilder()).thenReturn(mailboxBuilderPort);
         when(setErrorEnumPort.singleton()).thenReturn(setErrorPort);
+        when(mailboxPort.getName()).thenReturn("name");
 
         doThrow(SetSingletonException.class).doNothing().when(mailboxRepository).save(any());
 
@@ -127,5 +116,21 @@ public class StandardCreateMailboxTest {
         assertEquals(1, result.notCreated().size());
     }
 
+    @Test
+    public void testCreateWithInvalidArgumentsException() throws Exception {
+        MailboxPort mailboxPort = mock(MailboxPort.class);
+        Map<String, MailboxPort> entryMailboxToCreate = new HashMap<>();
+        entryMailboxToCreate.put("key", mailboxPort);
 
+        when(setMailboxMethodCallPort.getCreate()).thenReturn(entryMailboxToCreate);
+        when(setMailboxMethodCallPort.accountId()).thenReturn("accountId");
+        when(mailboxPort.getName()).thenReturn("");
+
+        CreatedResult<MailboxPort> result = standardCreateMailbox.create(setMailboxMethodCallPort);
+
+        assertNotNull(result);
+        assertTrue(result.created().isEmpty());
+        assertTrue(result.notCreated().containsKey("key"));
+        assertEquals(1, result.notCreated().size());
+    }
 }

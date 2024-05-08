@@ -1,13 +1,12 @@
 package it.qbsoftware.adapters.in.jmaplib.entity;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
-
 import it.qbsoftware.business.ports.in.jmap.entity.AccountPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ClassAccountCapabilityPort;
 import it.qbsoftware.business.ports.in.jmap.entity.SessionResourcePort;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 import rs.ltt.jmap.common.SessionResource;
 import rs.ltt.jmap.common.entity.capability.MailAccountCapability;
 
@@ -31,9 +30,11 @@ public class SessionResourceAdapter implements SessionResourcePort {
 
     @Override
     public Map<ClassAccountCapabilityPort, String> primaryAccounts() {
-        Map<ClassAccountCapabilityPort, String> returnMap = new HashMap<ClassAccountCapabilityPort, String>();
+        Map<ClassAccountCapabilityPort, String> returnMap =
+                new HashMap<ClassAccountCapabilityPort, String>();
 
-        returnMap.put(new ClassAccountCapabilityAdapter(MailAccountCapability.class),
+        returnMap.put(
+                new ClassAccountCapabilityAdapter(MailAccountCapability.class),
                 sessionResource.getPrimaryAccount(MailAccountCapability.class));
 
         return returnMap;

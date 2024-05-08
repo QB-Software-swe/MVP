@@ -44,5 +44,4 @@ public class EmailBodyPartAdapter implements EmailBodyPartPort {
     public EmailBodyPartBuilderPort toBuilder() {
         return new EmailBodyPartBuilderAdapter();
     }
-
 }

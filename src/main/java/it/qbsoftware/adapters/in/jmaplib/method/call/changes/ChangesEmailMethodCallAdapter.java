@@ -24,5 +24,4 @@ public class ChangesEmailMethodCallAdapter implements ChangesEmailMethodCallPort
     public Long getMaxChanges() {
         return changesEmailMethodCall.getMaxChanges();
     }
-
 }

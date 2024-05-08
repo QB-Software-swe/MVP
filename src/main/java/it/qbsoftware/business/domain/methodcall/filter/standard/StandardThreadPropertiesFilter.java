@@ -1,12 +1,11 @@
 package it.qbsoftware.business.domain.methodcall.filter.standard;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
 import it.qbsoftware.business.domain.methodcall.filter.ThreadPropertiesFilter;
 import it.qbsoftware.business.ports.in.jmap.entity.ThreadBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ThreadPort;
+import java.util.ArrayList;
+import java.util.List;
 
 public class StandardThreadPropertiesFilter implements ThreadPropertiesFilter {
     final ThreadBuilderPort threadBuilderPort;
@@ -24,15 +23,16 @@ public class StandardThreadPropertiesFilter implements ThreadPropertiesFilter {
 
         final List<ThreadPort> filtredMailboxes = new ArrayList<ThreadPort>();
         for (final ThreadPort threadPort : threadPorts) {
-            filtredMailboxes.add(threadFilter(threadPort, properties));
+            filtredMailboxes.add(filterThread(threadPort, properties));
         }
 
         return filtredMailboxes.toArray(ThreadPort[]::new);
     }
 
-    private ThreadPort threadFilter(final ThreadPort threadPort, final String[] properties)
+    private ThreadPort filterThread(final ThreadPort threadPort, final String[] properties)
             throws InvalidArgumentsException {
-        final ThreadBuilderPort threadBuilderPort = threadPort.toBuilder().reset().id(threadPort.getId());
+        final ThreadBuilderPort threadBuilderPort =
+                threadPort.toBuilder().reset().id(threadPort.getId());
 
         for (final String property : properties) {
             switch (property) {

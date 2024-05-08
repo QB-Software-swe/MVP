@@ -5,7 +5,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -30,7 +29,8 @@ public class SimpleEmailChangesTrackerTest {
         Map<String, String> destroyed = new HashMap<>();
         destroyed.put("destroyedState", "destroyedEmailId");
 
-        SimpleEmailChangesTracker tracker = new SimpleEmailChangesTracker("id", created, updated, destroyed);
+        SimpleEmailChangesTracker tracker =
+                new SimpleEmailChangesTracker("id", created, updated, destroyed);
 
         assertEquals("id", tracker.id());
         assertEquals(created, tracker.created());
@@ -42,7 +42,8 @@ public class SimpleEmailChangesTrackerTest {
     public void testEmailHasBeenCreated() {
         SimpleEmailChangesTracker tracker = new SimpleEmailChangesTracker("id");
 
-        SimpleEmailChangesTracker updatedTracker = tracker.emailHasBeenCreated("newState", "newEmailId");
+        SimpleEmailChangesTracker updatedTracker =
+                tracker.emailHasBeenCreated("newState", "newEmailId");
 
         assertEquals("newEmailId", updatedTracker.id());
         assertEquals("newEmailId", updatedTracker.created().get("newState"));
@@ -52,7 +53,8 @@ public class SimpleEmailChangesTrackerTest {
     public void testEmailHasBeenUpdated() {
         SimpleEmailChangesTracker tracker = new SimpleEmailChangesTracker("id");
 
-        SimpleEmailChangesTracker updatedTracker = tracker.emailHasBeenUpdated("newState", "newEmailId");
+        SimpleEmailChangesTracker updatedTracker =
+                tracker.emailHasBeenUpdated("newState", "newEmailId");
 
         assertEquals("newEmailId", updatedTracker.id());
         assertEquals("newEmailId", updatedTracker.updated().get("newState"));
@@ -62,7 +64,8 @@ public class SimpleEmailChangesTrackerTest {
     public void testEmailHasBeenDestroyed() {
         SimpleEmailChangesTracker tracker = new SimpleEmailChangesTracker("id");
 
-        SimpleEmailChangesTracker updatedTracker = tracker.emailHasBeenDestroyed("newState", "newEmailId");
+        SimpleEmailChangesTracker updatedTracker =
+                tracker.emailHasBeenDestroyed("newState", "newEmailId");
 
         assertEquals("newEmailId", updatedTracker.id());
         assertEquals("newEmailId", updatedTracker.destroyed().get("newState"));

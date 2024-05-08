@@ -5,9 +5,10 @@ import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesIdent
 import rs.ltt.jmap.common.method.response.identity.ChangesIdentityMethodResponse;
 import rs.ltt.jmap.common.method.response.identity.ChangesIdentityMethodResponse.ChangesIdentityMethodResponseBuilder;
 
-public class ChangesIdentityMethodResponseBuilderAdapter implements ChangesIdentityMethodResponseBuilderPort {
-    private ChangesIdentityMethodResponseBuilder changesIdentityMethodResponseBuilder = ChangesIdentityMethodResponse
-            .builder();
+public class ChangesIdentityMethodResponseBuilderAdapter
+        implements ChangesIdentityMethodResponseBuilderPort {
+    private ChangesIdentityMethodResponseBuilder changesIdentityMethodResponseBuilder =
+            ChangesIdentityMethodResponse.builder();
 
     @Override
     public ChangesIdentityMethodResponseBuilderPort accountId(final String accountId) {
@@ -53,7 +54,8 @@ public class ChangesIdentityMethodResponseBuilderAdapter implements ChangesIdent
 
     @Override
     public ChangesIdentityMethodResponsePort build() {
-        return new ChangesIdentityMethodResponseAdapter(changesIdentityMethodResponseBuilder.build());
+        return new ChangesIdentityMethodResponseAdapter(
+                changesIdentityMethodResponseBuilder.build());
     }
 
     @Override

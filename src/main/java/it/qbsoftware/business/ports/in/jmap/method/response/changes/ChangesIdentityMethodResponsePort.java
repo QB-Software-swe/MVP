@@ -2,5 +2,4 @@ package it.qbsoftware.business.ports.in.jmap.method.response.changes;
 
 import it.qbsoftware.business.ports.in.jmap.method.response.MethodResponsePort;
 
-public interface ChangesIdentityMethodResponsePort extends MethodResponsePort {
-}
+public interface ChangesIdentityMethodResponsePort extends MethodResponsePort {}

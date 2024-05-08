@@ -1,7 +1,5 @@
 package it.qbsoftware.business.services.changes;
 
-import java.util.Map;
-
 import it.qbsoftware.business.domain.entity.changes.AccountState;
 import it.qbsoftware.business.domain.entity.changes.tracker.MailboxChangesTracker;
 import it.qbsoftware.business.domain.exception.AccountNotFoundException;
@@ -15,6 +13,7 @@ import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesMailb
 import it.qbsoftware.business.ports.in.usecase.changes.ChangesMailboxMethodCallUsecase;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.business.ports.out.domain.MailboxChangesTrackerRepository;
+import java.util.Map;
 
 public class ChangesMailboxMethodCallService implements ChangesMailboxMethodCallUsecase {
     private final AccountStateRepository accountStateRepository;
@@ -31,9 +30,12 @@ public class ChangesMailboxMethodCallService implements ChangesMailboxMethodCall
     }
 
     @Override
-    public ChangesMailboxMethodResponsePort call(final ChangesMailboxMethodCallPort changesMailboxMethodCallPort,
+    public ChangesMailboxMethodResponsePort call(
+            final ChangesMailboxMethodCallPort changesMailboxMethodCallPort,
             final ListMultimapPort<String, ResponseInvocationPort> previousresponses)
-            throws InvalidArgumentsException, AccountNotFoundException, CannotCalculateChangesException {
+            throws InvalidArgumentsException,
+                    AccountNotFoundException,
+                    CannotCalculateChangesException {
 
         final String accountId = changesMailboxMethodCallPort.accountId();
         final Long maxChanges = changesMailboxMethodCallPort.getMaxChanges();
@@ -60,14 +62,19 @@ public class ChangesMailboxMethodCallService implements ChangesMailboxMethodCall
                     .build();
         }
 
-        final MailboxChangesTracker mailboxChangesTracker = mailboxChangesTrackerRepository.retrive(accountId);
+        final MailboxChangesTracker mailboxChangesTracker =
+                mailboxChangesTrackerRepository.retrive(accountId);
 
         final Map<String, String> created = mailboxChangesTracker.created();
         final Map<String, String> updated = mailboxChangesTracker.updated();
         final Map<String, String> destroyed = mailboxChangesTracker.destroyed();
 
-        if (maxChanges == null || maxChanges == 0 || created.entrySet().stream().count()
-                + updated.entrySet().stream().count() + destroyed.entrySet().stream().count() <= maxChanges) {
+        if (maxChanges == null
+                || maxChanges == 0
+                || created.entrySet().stream().count()
+                                + updated.entrySet().stream().count()
+                                + destroyed.entrySet().stream().count()
+                        <= maxChanges) {
 
             return changesMailboxMethodResponseBuilderPort
                     .reset()
@@ -83,5 +90,4 @@ public class ChangesMailboxMethodCallService implements ChangesMailboxMethodCall
             throw new CannotCalculateChangesException();
         }
     }
-
 }

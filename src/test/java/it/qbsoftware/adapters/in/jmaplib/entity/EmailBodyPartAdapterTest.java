@@ -1,11 +1,11 @@
 package it.qbsoftware.adapters.in.jmaplib.entity;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import org.junit.Test;
-
 import rs.ltt.jmap.common.entity.EmailBodyPart;
 
 public class EmailBodyPartAdapterTest {
@@ -25,7 +25,7 @@ public class EmailBodyPartAdapterTest {
         EmailBodyPart emailBodyPart = mock(EmailBodyPart.class);
         EmailBodyPartAdapter emailBodyPartAdapter = new EmailBodyPartAdapter(emailBodyPart);
         when(emailBodyPart.getName()).thenReturn(name);
-        
+
         assertEquals(name, emailBodyPartAdapter.getName());
     }
 
@@ -57,5 +57,21 @@ public class EmailBodyPartAdapterTest {
         when(emailBodyPart.getType()).thenReturn(type);
 
         assertEquals(type, emailBodyPartAdapter.getType());
+    }
+
+    @Test
+    public void testToBuilder() {
+        EmailBodyPart emailBodyPart = mock(EmailBodyPart.class);
+        EmailBodyPartAdapter emailBodyPartAdapter = new EmailBodyPartAdapter(emailBodyPart);
+
+        assertNotNull(emailBodyPartAdapter.toBuilder());
+    }
+
+    @Test
+    public void testAdaptee() {
+        EmailBodyPart emailBodyPart = mock(EmailBodyPart.class);
+        EmailBodyPartAdapter emailBodyPartAdapter = new EmailBodyPartAdapter(emailBodyPart);
+
+        assertEquals(emailBodyPart, emailBodyPartAdapter.adaptee());
     }
 }

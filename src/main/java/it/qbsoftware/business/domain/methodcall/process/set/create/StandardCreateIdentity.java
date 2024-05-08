@@ -1,9 +1,5 @@
 package it.qbsoftware.business.domain.methodcall.process.set.create;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
 import it.qbsoftware.business.domain.entity.changes.AccountState;
 import it.qbsoftware.business.domain.entity.changes.tracker.IdentityChangesTracker;
 import it.qbsoftware.business.domain.exception.AccountNotFoundException;
@@ -15,6 +11,9 @@ import it.qbsoftware.business.ports.in.jmap.method.call.set.SetIdentityMethodCal
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.business.ports.out.domain.IdentityChangesTrackerRepository;
 import it.qbsoftware.business.ports.out.jmap.IdentityRepository;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class StandardCreateIdentity implements CreateIdentity {
     private final AccountStateRepository accountStateRepository;
@@ -22,7 +21,8 @@ public class StandardCreateIdentity implements CreateIdentity {
     private final IdentityRepository identityRepository;
     private final SetErrorEnumPort setErrorEnumPort;
 
-    public StandardCreateIdentity(final AccountStateRepository accountStateRepository,
+    public StandardCreateIdentity(
+            final AccountStateRepository accountStateRepository,
             final IdentityChangesTrackerRepository identityChangesTrackerRepository,
             final IdentityRepository identityRepository,
             final SetErrorEnumPort setErrorEnumPort) {
@@ -33,20 +33,23 @@ public class StandardCreateIdentity implements CreateIdentity {
     }
 
     @Override
-    public CreatedResult<IdentityPort> create(final SetIdentityMethodCallPort setIdentityMethodCallPort)
+    public CreatedResult<IdentityPort> create(
+            final SetIdentityMethodCallPort setIdentityMethodCallPort)
             throws AccountNotFoundException {
         final Map<String, IdentityPort> created = new HashMap<>();
         final Map<String, SetErrorPort> notCreated = new HashMap<>();
 
         final var x = setIdentityMethodCallPort.getCreate();
-        if(x==null) {
+        if (x == null) {
             return new CreatedResult<>(null, null);
         }
 
         for (final Map.Entry<String, IdentityPort> entryIdentityToCreate : x.entrySet()) {
             try {
-                IdentityPort createdIdentityPort = createIdentity(entryIdentityToCreate.getValue(),
-                        setIdentityMethodCallPort.accountId());
+                IdentityPort createdIdentityPort =
+                        createIdentity(
+                                entryIdentityToCreate.getValue(),
+                                setIdentityMethodCallPort.accountId());
                 created.put(entryIdentityToCreate.getKey(), createdIdentityPort);
             } catch (final SetSingletonException setSingletonException) {
                 notCreated.put(entryIdentityToCreate.getKey(), setErrorEnumPort.singleton());
@@ -58,10 +61,12 @@ public class StandardCreateIdentity implements CreateIdentity {
 
     private IdentityPort createIdentity(final IdentityPort identityToCreate, final String accountId)
             throws AccountNotFoundException, SetSingletonException {
-        final String identityId = accountId + "/" + UUID.randomUUID().toString(); // NOTA: no singletono ma duplicati
+        final String identityId =
+                accountId + "/" + UUID.randomUUID().toString(); // NOTA: no singletono ma duplicati
 
         final IdentityPort identityToSave = identityToCreate.getBuilder().id(identityId).build();
-        final IdentityPort identityDiff = identityToCreate.getBuilder().reset().id(identityId).build();
+        final IdentityPort identityDiff =
+                identityToCreate.getBuilder().reset().id(identityId).build();
 
         identityRepository.save(identityToSave);
         updateIdentityChanges(identityId, accountId);
@@ -72,7 +77,8 @@ public class StandardCreateIdentity implements CreateIdentity {
     private void updateIdentityChanges(final String identityId, final String accountId)
             throws AccountNotFoundException {
         AccountState accountState = accountStateRepository.retrive(accountId);
-        final IdentityChangesTracker identityChangesTracker = identityChangesTrackerRepository.retrive(accountId);
+        final IdentityChangesTracker identityChangesTracker =
+                identityChangesTrackerRepository.retrive(accountId);
 
         accountState = accountState.increaseState();
         identityChangesTracker.identityHasBeenCreated(accountState.state(), identityId);

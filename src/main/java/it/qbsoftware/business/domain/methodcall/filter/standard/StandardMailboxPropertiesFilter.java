@@ -1,12 +1,11 @@
 package it.qbsoftware.business.domain.methodcall.filter.standard;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
 import it.qbsoftware.business.domain.methodcall.filter.MailboxPropertiesFilter;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxPort;
+import java.util.ArrayList;
+import java.util.List;
 
 public class StandardMailboxPropertiesFilter implements MailboxPropertiesFilter {
     final MailboxBuilderPort mailboxBuilderPort;
@@ -16,7 +15,8 @@ public class StandardMailboxPropertiesFilter implements MailboxPropertiesFilter 
     }
 
     @Override
-    public MailboxPort[] filter(MailboxPort[] mailboxPorts, String[] properties) throws InvalidArgumentsException {
+    public MailboxPort[] filter(MailboxPort[] mailboxPorts, String[] properties)
+            throws InvalidArgumentsException {
         if (properties == null) {
             return mailboxPorts;
         }
@@ -34,43 +34,43 @@ public class StandardMailboxPropertiesFilter implements MailboxPropertiesFilter 
         MailboxBuilderPort mailboxBuilder = mailboxBuilderPort.reset().id(mailboxPort.getId());
 
         for (final String property : properties) {
-            mailboxBuilder = switch (property) {
-                case "name":
-                    yield mailboxBuilder.name(mailboxPort.getName());
+            mailboxBuilder =
+                    switch (property) {
+                        case "name":
+                            yield mailboxBuilder.name(mailboxPort.getName());
 
-                case "parentId":
-                    yield mailboxBuilder.parentId(mailboxPort.getParentId());
+                        case "parentId":
+                            yield mailboxBuilder.parentId(mailboxPort.getParentId());
 
-                case "role":
-                    yield mailboxBuilder.role(mailboxPort.getRole());
+                        case "role":
+                            yield mailboxBuilder.role(mailboxPort.getRole());
 
-                case "sortOrder":
-                    yield mailboxBuilder.sortOrder(mailboxPort.getSortOrder());
+                        case "sortOrder":
+                            yield mailboxBuilder.sortOrder(mailboxPort.getSortOrder());
 
-                case "totalEmails":
-                    yield mailboxBuilder.totalEmails(mailboxPort.getTotalEmails());
+                        case "totalEmails":
+                            yield mailboxBuilder.totalEmails(mailboxPort.getTotalEmails());
 
-                case "unreadEmails":
-                    yield mailboxBuilder.unreadEmails(mailboxPort.getUnreadEmails());
+                        case "unreadEmails":
+                            yield mailboxBuilder.unreadEmails(mailboxPort.getUnreadEmails());
 
-                case "totalThreads":
-                    yield mailboxBuilder.totalThreads(mailboxPort.getTotalThreads());
+                        case "totalThreads":
+                            yield mailboxBuilder.totalThreads(mailboxPort.getTotalThreads());
 
-                case "unreadThreads":
-                    yield mailboxBuilder.unreadThreads(mailboxPort.getUnreadThreads());
+                        case "unreadThreads":
+                            yield mailboxBuilder.unreadThreads(mailboxPort.getUnreadThreads());
 
-                case "myRights":
-                    yield mailboxBuilder.myRights(mailboxPort.getMyRights());
+                        case "myRights":
+                            yield mailboxBuilder.myRights(mailboxPort.getMyRights());
 
-                case "isSubscribed":
-                    yield mailboxBuilder.isSubscribed(mailboxPort.getIsSubscribed());
+                        case "isSubscribed":
+                            yield mailboxBuilder.isSubscribed(mailboxPort.getIsSubscribed());
 
-                default:
-                    throw new InvalidArgumentsException();
-            };
+                        default:
+                            throw new InvalidArgumentsException();
+                    };
         }
 
         return mailboxBuilder.build();
     }
-
 }

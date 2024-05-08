@@ -4,44 +4,37 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.when;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-
 import it.qbsoftware.business.domain.exception.InvalidResultReferenceExecption;
 import it.qbsoftware.business.ports.in.guava.ListMultimapPort;
 import it.qbsoftware.business.ports.in.jmap.entity.InvocationResultReferencePort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
 import it.qbsoftware.business.ports.in.jmap.method.call.get.GetMethodCallPort;
 import it.qbsoftware.business.ports.in.jmap.util.ResultReferenceResolverPort;
-
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 @RunWith(org.mockito.junit.MockitoJUnitRunner.class)
 public class JmapReferenceIdsResolverTest {
 
-    @Mock
-    private ResultReferenceResolverPort resultReferenceResolverPort;
+    @Mock private ResultReferenceResolverPort resultReferenceResolverPort;
 
-    @Mock
-    private GetMethodCallPort getMethodCallPort;
+    @Mock private GetMethodCallPort getMethodCallPort;
 
-    @Mock
-    private ListMultimapPort<String, ResponseInvocationPort> previousResponses;
+    @Mock private ListMultimapPort<String, ResponseInvocationPort> previousResponses;
 
-    @Mock
-    private InvocationResultReferencePort invocationResultReferencePort;
+    @Mock private InvocationResultReferencePort invocationResultReferencePort;
 
-    @InjectMocks
-    private JmapReferenceIdsResolver jmapReferenceIdsResolver;
-
+    @InjectMocks private JmapReferenceIdsResolver jmapReferenceIdsResolver;
 
     @Test
     public void testResolveWithIdsReference() throws InvalidResultReferenceExecption {
         String[] expectedIds = new String[] {"id1", "id2"};
 
         when(getMethodCallPort.getIdsReference()).thenReturn(invocationResultReferencePort);
-        when(resultReferenceResolverPort.resolve(invocationResultReferencePort, previousResponses)).thenReturn(expectedIds);
+        when(resultReferenceResolverPort.resolve(invocationResultReferencePort, previousResponses))
+                .thenReturn(expectedIds);
 
         String[] result = jmapReferenceIdsResolver.resolve(getMethodCallPort, previousResponses);
 
@@ -64,8 +57,11 @@ public class JmapReferenceIdsResolverTest {
     public void testResolveWithInvalidResultReferenceException() {
 
         when(getMethodCallPort.getIdsReference()).thenReturn(invocationResultReferencePort);
-        when(resultReferenceResolverPort.resolve(invocationResultReferencePort, previousResponses)).thenThrow(new RuntimeException());
+        when(resultReferenceResolverPort.resolve(invocationResultReferencePort, previousResponses))
+                .thenThrow(new RuntimeException());
 
-        assertThrows(InvalidResultReferenceExecption.class, () -> jmapReferenceIdsResolver.resolve(getMethodCallPort, previousResponses));
+        assertThrows(
+                InvalidResultReferenceExecption.class,
+                () -> jmapReferenceIdsResolver.resolve(getMethodCallPort, previousResponses));
     }
 }

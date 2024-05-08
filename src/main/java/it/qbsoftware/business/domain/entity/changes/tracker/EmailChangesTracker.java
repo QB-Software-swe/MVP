@@ -17,5 +17,4 @@ public interface EmailChangesTracker {
     EmailChangesTracker emailHasBeenUpdated(String newState, String emailId);
 
     EmailChangesTracker emailHasBeenDestroyed(String newState, String emailId);
-
 }

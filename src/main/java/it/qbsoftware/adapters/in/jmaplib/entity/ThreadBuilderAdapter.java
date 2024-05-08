@@ -1,11 +1,9 @@
 package it.qbsoftware.adapters.in.jmaplib.entity;
 
-import java.util.Collection;
-
 import com.google.inject.Inject;
-
 import it.qbsoftware.business.ports.in.jmap.entity.ThreadBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ThreadPort;
+import java.util.Collection;
 import rs.ltt.jmap.common.entity.Thread;
 import rs.ltt.jmap.common.entity.Thread.ThreadBuilder;
 

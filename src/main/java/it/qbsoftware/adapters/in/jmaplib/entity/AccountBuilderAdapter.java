@@ -5,10 +5,10 @@ import it.qbsoftware.business.ports.in.jmap.entity.AccountPort;
 import rs.ltt.jmap.common.entity.Account;
 import rs.ltt.jmap.common.entity.Account.AccountBuilder;
 
-public class AccountBuilderAdapter implements AccountBuilderPort{
+public class AccountBuilderAdapter implements AccountBuilderPort {
     AccountBuilder accountBuilder;
 
-    public AccountBuilderAdapter(){
+    public AccountBuilderAdapter() {
         this.accountBuilder = Account.builder();
     }
 
@@ -16,5 +16,4 @@ public class AccountBuilderAdapter implements AccountBuilderPort{
     public AccountPort build() {
         return new AccountAdapter(accountBuilder.build());
     }
-    
 }

@@ -6,7 +6,8 @@ import rs.ltt.jmap.common.method.response.identity.GetIdentityMethodResponse;
 public class GetIdentityMethodResponseAdapter implements GetIdentityMethodResponsePort {
     private final GetIdentityMethodResponse getIdentityMethodResponse;
 
-    public GetIdentityMethodResponseAdapter(final GetIdentityMethodResponse getIdentityMethodResponse) {
+    public GetIdentityMethodResponseAdapter(
+            final GetIdentityMethodResponse getIdentityMethodResponse) {
         this.getIdentityMethodResponse = getIdentityMethodResponse;
     }
 

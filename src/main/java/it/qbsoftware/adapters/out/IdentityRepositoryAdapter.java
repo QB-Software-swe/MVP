@@ -1,19 +1,10 @@
 package it.qbsoftware.adapters.out;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-
-import org.bson.Document;
-import org.bson.conversions.Bson;
-
 import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.mongodb.MongoException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Filters;
-
 import it.qbsoftware.adapters.in.jmaplib.entity.IdentityAdapter;
 import it.qbsoftware.business.domain.exception.set.SetNotFoundException;
 import it.qbsoftware.business.domain.exception.set.SetSingletonException;
@@ -21,6 +12,12 @@ import it.qbsoftware.business.domain.util.get.RetrivedEntity;
 import it.qbsoftware.business.ports.in.jmap.entity.IdentityPort;
 import it.qbsoftware.business.ports.out.jmap.IdentityRepository;
 import it.qbsoftware.persistance.MongoConnection;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import org.bson.Document;
+import org.bson.conversions.Bson;
 import rs.ltt.jmap.common.entity.Identity;
 
 public class IdentityRepositoryAdapter implements IdentityRepository {
@@ -39,7 +36,8 @@ public class IdentityRepositoryAdapter implements IdentityRepository {
         final List<IdentityPort> found = new ArrayList<>();
 
         final Bson filter = Filters.regex("_id", "^" + accountId + "\\/.*$");
-        final FindIterable<Document> findIterable = connection.getDatabase().getCollection(COLLECTION).find(filter);
+        final FindIterable<Document> findIterable =
+                connection.getDatabase().getCollection(COLLECTION).find(filter);
 
         for (final Document document : findIterable) {
             found.add(new IdentityAdapter(gson.fromJson(document.toJson(), Identity.class)));
@@ -53,7 +51,8 @@ public class IdentityRepositoryAdapter implements IdentityRepository {
         final List<String> notFound = new ArrayList<>();
 
         final Bson filter = Filters.in("_id", Arrays.asList(ids));
-        final FindIterable<Document> findIterable = connection.getDatabase().getCollection(COLLECTION).find(filter);
+        final FindIterable<Document> findIterable =
+                connection.getDatabase().getCollection(COLLECTION).find(filter);
 
         final HashMap<String, IdentityPort> findIdentityPort = new HashMap<>();
         for (final Document document : findIterable) {
@@ -67,7 +66,8 @@ public class IdentityRepositoryAdapter implements IdentityRepository {
             }
         }
 
-        return new RetrivedEntity<>(findIdentityPort.values().toArray(IdentityPort[]::new),
+        return new RetrivedEntity<>(
+                findIdentityPort.values().toArray(IdentityPort[]::new),
                 notFound.toArray(String[]::new));
     }
 
@@ -83,7 +83,8 @@ public class IdentityRepositoryAdapter implements IdentityRepository {
 
     @Override
     public void save(final IdentityPort identityPort) throws SetSingletonException {
-        final Document emailDoc = Document.parse(gson.toJson(((IdentityAdapter) identityPort).adaptee()));
+        final Document emailDoc =
+                Document.parse(gson.toJson(((IdentityAdapter) identityPort).adaptee()));
         emailDoc.put("_id", identityPort.getId());
         try {
             connection.getDatabase().getCollection(COLLECTION).insertOne(emailDoc);
@@ -91,5 +92,4 @@ public class IdentityRepositoryAdapter implements IdentityRepository {
             throw new SetSingletonException();
         }
     }
-
 }

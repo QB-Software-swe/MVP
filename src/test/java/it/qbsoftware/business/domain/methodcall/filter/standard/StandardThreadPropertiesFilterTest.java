@@ -5,29 +5,24 @@ import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
+import it.qbsoftware.business.ports.in.jmap.entity.ThreadBuilderPort;
+import it.qbsoftware.business.ports.in.jmap.entity.ThreadPort;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
-import it.qbsoftware.business.ports.in.jmap.entity.ThreadBuilderPort;
-import it.qbsoftware.business.ports.in.jmap.entity.ThreadPort;
-
 @RunWith(org.mockito.junit.MockitoJUnitRunner.class)
 public class StandardThreadPropertiesFilterTest {
 
-    @Mock
-    private ThreadBuilderPort threadBuilderPort;
+    @Mock private ThreadBuilderPort threadBuilderPort;
 
-    @Mock
-    private ThreadPort threadPort;
+    @Mock private ThreadPort threadPort;
 
-    @InjectMocks
-    private StandardThreadPropertiesFilter standardThreadPropertiesFilter;
+    @InjectMocks private StandardThreadPropertiesFilter standardThreadPropertiesFilter;
 
     @Test
     public void testFilterWithNullProperties() throws InvalidArgumentsException {
@@ -35,7 +30,7 @@ public class StandardThreadPropertiesFilterTest {
 
         ThreadPort[] result = standardThreadPropertiesFilter.filter(threadPorts, null);
 
-        assertArrayEquals(threadPorts, result); 
+        assertArrayEquals(threadPorts, result);
     }
 
     @Test
@@ -72,8 +67,8 @@ public class StandardThreadPropertiesFilterTest {
         when(threadBuilderPort.emailIds(any())).thenReturn(threadBuilderPort);
         when(threadBuilderPort.reset()).thenReturn(threadBuilderPort);
 
-        assertThrows(InvalidArgumentsException.class, () -> standardThreadPropertiesFilter.filter(threadPorts, properties));
+        assertThrows(
+                InvalidArgumentsException.class,
+                () -> standardThreadPropertiesFilter.filter(threadPorts, properties));
     }
-
-
 }

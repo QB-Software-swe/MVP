@@ -1,10 +1,9 @@
 package it.qbsoftware.adapters.in.jmaplib.entity;
 
-import java.util.Arrays;
-
 import it.qbsoftware.business.ports.in.jmap.entity.EmailAddressPort;
 import it.qbsoftware.business.ports.in.jmap.entity.IdentityBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.IdentityPort;
+import java.util.Arrays;
 import rs.ltt.jmap.common.entity.Identity;
 import rs.ltt.jmap.common.entity.Identity.IdentityBuilder;
 
@@ -40,8 +39,9 @@ public class IdentityBuilderAdapter implements IdentityBuilderPort {
     @Override
     public IdentityBuilderPort replyTo(final EmailAddressPort[] emailAddressPorts) {
         if (emailAddressPorts != null) {
-            identityBuilder
-                    .replyTo(Arrays.asList(emailAddressPorts).stream().map(e -> ((EmailAddressAdapter) e).adaptee())
+            identityBuilder.replyTo(
+                    Arrays.asList(emailAddressPorts).stream()
+                            .map(e -> ((EmailAddressAdapter) e).adaptee())
                             .toList());
         } else {
             identityBuilder.replyTo(null);
@@ -52,8 +52,10 @@ public class IdentityBuilderAdapter implements IdentityBuilderPort {
     @Override
     public IdentityBuilderPort bcc(final EmailAddressPort[] emailAddressPorts) {
         if (emailAddressPorts != null) {
-            identityBuilder.bcc(Arrays.asList(emailAddressPorts).stream().map(e -> ((EmailAddressAdapter) e).adaptee())
-                    .toList());
+            identityBuilder.bcc(
+                    Arrays.asList(emailAddressPorts).stream()
+                            .map(e -> ((EmailAddressAdapter) e).adaptee())
+                            .toList());
         } else {
             identityBuilder.bcc(null);
         }
@@ -88,5 +90,4 @@ public class IdentityBuilderAdapter implements IdentityBuilderPort {
         identityBuilder = Identity.builder();
         return this;
     }
-
 }

@@ -9,7 +9,7 @@ public class MongoConnection {
 
     @Inject
     public MongoConnection(final MongoClient mongoClient) {
-        this.jmapDatabase = mongoClient.getDatabase("jmap"); // FIXME: envs
+        this.jmapDatabase = mongoClient.getDatabase("jmap");
     }
 
     public MongoDatabase getDatabase() {

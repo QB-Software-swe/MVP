@@ -9,6 +9,10 @@ import it.qbsoftware.business.ports.in.jmap.method.call.changes.ChangesThreadMet
 import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesThreadMethodResponsePort;
 
 public interface ChangesThreadMethodCallUsecase {
-    public ChangesThreadMethodResponsePort call(ChangesThreadMethodCallPort changesThreadMethodCallPort,
-            ListMultimapPort<String, ResponseInvocationPort> previousresponses) throws CannotCalculateChangesException, AccountNotFoundException, InvalidArgumentsException;
+    public ChangesThreadMethodResponsePort call(
+            ChangesThreadMethodCallPort changesThreadMethodCallPort,
+            ListMultimapPort<String, ResponseInvocationPort> previousresponses)
+            throws CannotCalculateChangesException,
+                    AccountNotFoundException,
+                    InvalidArgumentsException;
 }

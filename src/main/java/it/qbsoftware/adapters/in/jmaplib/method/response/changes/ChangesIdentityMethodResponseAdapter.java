@@ -6,7 +6,8 @@ import rs.ltt.jmap.common.method.response.identity.ChangesIdentityMethodResponse
 public class ChangesIdentityMethodResponseAdapter implements ChangesIdentityMethodResponsePort {
     private final ChangesIdentityMethodResponse changesIdentityMethodResponse;
 
-    public ChangesIdentityMethodResponseAdapter(final ChangesIdentityMethodResponse changesIdentityMethodResponse) {
+    public ChangesIdentityMethodResponseAdapter(
+            final ChangesIdentityMethodResponse changesIdentityMethodResponse) {
         this.changesIdentityMethodResponse = changesIdentityMethodResponse;
     }
 

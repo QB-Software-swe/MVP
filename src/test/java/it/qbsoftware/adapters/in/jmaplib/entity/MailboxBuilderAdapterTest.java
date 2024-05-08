@@ -5,10 +5,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import it.qbsoftware.business.ports.in.jmap.entity.MailboxPort;
 import org.junit.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import it.qbsoftware.business.ports.in.jmap.entity.MailboxPort;
 import rs.ltt.jmap.common.entity.Mailbox;
 import rs.ltt.jmap.common.entity.Mailbox.MailboxBuilder;
 
@@ -33,7 +33,7 @@ public class MailboxBuilderAdapterTest {
         MailboxBuilder mailboxBuilder = mock(MailboxBuilder.class);
         MailboxBuilderAdapter MailboxBuilderAdapter = new MailboxBuilderAdapter();
 
-        try(MockedStatic<Mailbox> mailboxSatic = Mockito.mockStatic(Mailbox.class)){
+        try (MockedStatic<Mailbox> mailboxSatic = Mockito.mockStatic(Mailbox.class)) {
             mailboxSatic.when(Mailbox::builder).thenReturn(mailboxBuilder);
             assertEquals(MailboxBuilderAdapter.reset(), MailboxBuilderAdapter);
             mailboxSatic.verify(Mailbox::builder);
@@ -95,14 +95,12 @@ public class MailboxBuilderAdapterTest {
         MailboxBuilder mailboxBuilder = mock(MailboxBuilder.class);
         MailboxBuilderAdapter MailboxBuilderAdapter = new MailboxBuilderAdapter(mailboxBuilder);
 
-        try(MockedStatic<Mailbox> mailboxSatic = Mockito.mockStatic(Mailbox.class)){
+        try (MockedStatic<Mailbox> mailboxSatic = Mockito.mockStatic(Mailbox.class)) {
             mailboxSatic.when(Mailbox::builder).thenReturn(mailboxBuilder);
             assertEquals(MailboxBuilderAdapter.reset(), MailboxBuilderAdapter);
             mailboxSatic.verify(Mailbox::builder);
         }
     }
-
-    
 
     @Test
     public void testRole() {

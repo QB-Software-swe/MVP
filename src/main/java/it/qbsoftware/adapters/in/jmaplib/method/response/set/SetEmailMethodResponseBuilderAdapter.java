@@ -1,19 +1,19 @@
 package it.qbsoftware.adapters.in.jmaplib.method.response.set;
 
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import it.qbsoftware.adapters.in.jmaplib.entity.EmailAdapter;
 import it.qbsoftware.adapters.in.jmaplib.entity.SetErrorAdapter;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailPort;
 import it.qbsoftware.business.ports.in.jmap.entity.SetErrorPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.set.SetEmailMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.set.SetEmailMethodResponsePort;
+import java.util.Map;
+import java.util.stream.Collectors;
 import rs.ltt.jmap.common.method.response.email.SetEmailMethodResponse;
 import rs.ltt.jmap.common.method.response.email.SetEmailMethodResponse.SetEmailMethodResponseBuilder;
 
 public class SetEmailMethodResponseBuilderAdapter implements SetEmailMethodResponseBuilderPort {
-    private SetEmailMethodResponseBuilder setEmailMethodResponseBuilder = SetEmailMethodResponse.builder();
+    private SetEmailMethodResponseBuilder setEmailMethodResponseBuilder =
+            SetEmailMethodResponse.builder();
 
     @Override
     public SetEmailMethodResponseBuilderPort accountId(final String id) {
@@ -36,8 +36,12 @@ public class SetEmailMethodResponseBuilderAdapter implements SetEmailMethodRespo
     @Override
     public SetEmailMethodResponseBuilderPort created(final Map<String, EmailPort> created) {
         if (created != null) {
-            setEmailMethodResponseBuilder.created(created.entrySet().stream()
-                    .collect(Collectors.toMap(e -> e.getKey(), e -> ((EmailAdapter) e.getValue()).adaptee())));
+            setEmailMethodResponseBuilder.created(
+                    created.entrySet().stream()
+                            .collect(
+                                    Collectors.toMap(
+                                            e -> e.getKey(),
+                                            e -> ((EmailAdapter) e.getValue()).adaptee())));
         } else {
             setEmailMethodResponseBuilder.created(null);
         }
@@ -47,8 +51,12 @@ public class SetEmailMethodResponseBuilderAdapter implements SetEmailMethodRespo
     @Override
     public SetEmailMethodResponseBuilderPort updated(final Map<String, EmailPort> updated) {
         if (updated != null) {
-            setEmailMethodResponseBuilder.updated(updated.entrySet().stream()
-                    .collect(Collectors.toMap(e -> e.getKey(), e -> ((EmailAdapter) e.getValue()).adaptee())));
+            setEmailMethodResponseBuilder.updated(
+                    updated.entrySet().stream()
+                            .collect(
+                                    Collectors.toMap(
+                                            e -> e.getKey(),
+                                            e -> ((EmailAdapter) e.getValue()).adaptee())));
         } else {
             setEmailMethodResponseBuilder.updated(null);
         }
@@ -62,10 +70,15 @@ public class SetEmailMethodResponseBuilderAdapter implements SetEmailMethodRespo
     }
 
     @Override
-    public SetEmailMethodResponseBuilderPort notCreated(final Map<String, SetErrorPort> notCreated) {
+    public SetEmailMethodResponseBuilderPort notCreated(
+            final Map<String, SetErrorPort> notCreated) {
         if (notCreated != null) {
-            setEmailMethodResponseBuilder.notCreated(notCreated.entrySet().stream()
-                    .collect(Collectors.toMap(e -> e.getKey(), e -> ((SetErrorAdapter) e.getValue()).adaptee())));
+            setEmailMethodResponseBuilder.notCreated(
+                    notCreated.entrySet().stream()
+                            .collect(
+                                    Collectors.toMap(
+                                            e -> e.getKey(),
+                                            e -> ((SetErrorAdapter) e.getValue()).adaptee())));
         } else {
             setEmailMethodResponseBuilder.notCreated(null);
         }
@@ -73,10 +86,15 @@ public class SetEmailMethodResponseBuilderAdapter implements SetEmailMethodRespo
     }
 
     @Override
-    public SetEmailMethodResponseBuilderPort notUpdated(final Map<String, SetErrorPort> notUpdated) {
+    public SetEmailMethodResponseBuilderPort notUpdated(
+            final Map<String, SetErrorPort> notUpdated) {
         if (notUpdated != null) {
-            setEmailMethodResponseBuilder.notUpdated(notUpdated.entrySet().stream()
-                    .collect(Collectors.toMap(e -> e.getKey(), e -> ((SetErrorAdapter) e.getValue()).adaptee())));
+            setEmailMethodResponseBuilder.notUpdated(
+                    notUpdated.entrySet().stream()
+                            .collect(
+                                    Collectors.toMap(
+                                            e -> e.getKey(),
+                                            e -> ((SetErrorAdapter) e.getValue()).adaptee())));
         } else {
             setEmailMethodResponseBuilder.notUpdated(null);
         }
@@ -84,10 +102,15 @@ public class SetEmailMethodResponseBuilderAdapter implements SetEmailMethodRespo
     }
 
     @Override
-    public SetEmailMethodResponseBuilderPort notDestroyed(final Map<String, SetErrorPort> notDestroyed) {
+    public SetEmailMethodResponseBuilderPort notDestroyed(
+            final Map<String, SetErrorPort> notDestroyed) {
         if (notDestroyed != null) {
-            setEmailMethodResponseBuilder.notDestroyed(notDestroyed.entrySet().stream()
-                    .collect(Collectors.toMap(e -> e.getKey(), e -> ((SetErrorAdapter) e.getValue()).adaptee())));
+            setEmailMethodResponseBuilder.notDestroyed(
+                    notDestroyed.entrySet().stream()
+                            .collect(
+                                    Collectors.toMap(
+                                            e -> e.getKey(),
+                                            e -> ((SetErrorAdapter) e.getValue()).adaptee())));
         } else {
             setEmailMethodResponseBuilder.notDestroyed(null);
         }
@@ -104,5 +127,4 @@ public class SetEmailMethodResponseBuilderAdapter implements SetEmailMethodRespo
         setEmailMethodResponseBuilder = SetEmailMethodResponse.builder();
         return this;
     }
-
 }

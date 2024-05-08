@@ -1,7 +1,5 @@
 package it.qbsoftware.business.services.changes;
 
-import java.util.Map;
-
 import it.qbsoftware.business.domain.entity.changes.AccountState;
 import it.qbsoftware.business.domain.exception.AccountNotFoundException;
 import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
@@ -14,6 +12,7 @@ import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesIdent
 import it.qbsoftware.business.ports.in.usecase.changes.ChangesIdentityMethodCallUsecase;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.business.ports.out.domain.IdentityChangesTrackerRepository;
+import java.util.Map;
 
 public class ChangesIdentityMethodCallService implements ChangesIdentityMethodCallUsecase {
     private final AccountStateRepository accountStateRepository;
@@ -31,9 +30,12 @@ public class ChangesIdentityMethodCallService implements ChangesIdentityMethodCa
     }
 
     @Override
-    public ChangesIdentityMethodResponsePort call(final ChangesIdentityMethodCallPort changesIdentityMethodCallPort,
+    public ChangesIdentityMethodResponsePort call(
+            final ChangesIdentityMethodCallPort changesIdentityMethodCallPort,
             final ListMultimapPort<String, ResponseInvocationPort> previousresponses)
-            throws AccountNotFoundException, InvalidArgumentsException, CannotCalculateChangesException {
+            throws AccountNotFoundException,
+                    InvalidArgumentsException,
+                    CannotCalculateChangesException {
 
         final String accountId = changesIdentityMethodCallPort.accountId();
         final Long maxChanges = changesIdentityMethodCallPort.getMaxChanges();
@@ -65,8 +67,12 @@ public class ChangesIdentityMethodCallService implements ChangesIdentityMethodCa
         final Map<String, String> updated = identityChangesTracker.updated();
         final Map<String, String> destroyed = identityChangesTracker.destroyed();
 
-        if (maxChanges == null || maxChanges == 0 || created.entrySet().stream().count()
-                + updated.entrySet().stream().count() + destroyed.entrySet().stream().count() <= maxChanges) {
+        if (maxChanges == null
+                || maxChanges == 0
+                || created.entrySet().stream().count()
+                                + updated.entrySet().stream().count()
+                                + destroyed.entrySet().stream().count()
+                        <= maxChanges) {
 
             return changesIdentityMethodResponseBuilderPort
                     .reset()

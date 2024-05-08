@@ -6,7 +6,8 @@ import rs.ltt.jmap.common.method.response.identity.SetIdentityMethodResponse;
 public class SetIdentityMethodResponseAdapter implements SetIdentityMethodResponsePort {
     private final SetIdentityMethodResponse setIdentityMethodResponse;
 
-    public SetIdentityMethodResponseAdapter(final SetIdentityMethodResponse setIdentityMethodResponse) {
+    public SetIdentityMethodResponseAdapter(
+            final SetIdentityMethodResponse setIdentityMethodResponse) {
         this.setIdentityMethodResponse = setIdentityMethodResponse;
     }
 

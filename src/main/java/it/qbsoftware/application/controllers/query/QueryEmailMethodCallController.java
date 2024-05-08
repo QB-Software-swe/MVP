@@ -1,18 +1,15 @@
 package it.qbsoftware.application.controllers.query;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.inject.Inject;
-
 import it.qbsoftware.adapters.in.jmaplib.method.call.query.QueryEmailMethodCallAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.query.QueryEmailMethodResponseAdapter;
 import it.qbsoftware.application.controllers.ControllerHandlerBase;
 import it.qbsoftware.application.controllers.HandlerRequest;
-import it.qbsoftware.application.controllers.changes.ChangesEmailSubmissionMethodCallController;
 import it.qbsoftware.business.domain.exception.AccountNotFoundException;
 import it.qbsoftware.business.domain.exception.query.QueryAnchorNotFoundException;
 import it.qbsoftware.business.ports.in.usecase.query.QueryEmailMethodCallUsecase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import rs.ltt.jmap.common.method.MethodResponse;
 import rs.ltt.jmap.common.method.call.email.QueryEmailMethodCall;
 import rs.ltt.jmap.common.method.error.AnchorNotFoundMethodErrorResponse;
@@ -23,25 +20,29 @@ public class QueryEmailMethodCallController extends ControllerHandlerBase {
     private final QueryEmailMethodCallUsecase queryEmailMethodCallUsecase;
 
     @Inject
-    public QueryEmailMethodCallController(final QueryEmailMethodCallUsecase queryEmailMethodCallUsecase) {
+    public QueryEmailMethodCallController(
+            final QueryEmailMethodCallUsecase queryEmailMethodCallUsecase) {
         this.queryEmailMethodCallUsecase = queryEmailMethodCallUsecase;
     }
 
     @Override
     public MethodResponse[] handle(final HandlerRequest handlerRequest) {
         if (handlerRequest.methodCall() instanceof QueryEmailMethodCall queryEmailMethodCall) {
-            final QueryEmailMethodCallAdapter queryEmailMethodCallAdapter = new QueryEmailMethodCallAdapter(
-                    queryEmailMethodCall);
+            final QueryEmailMethodCallAdapter queryEmailMethodCallAdapter =
+                    new QueryEmailMethodCallAdapter(queryEmailMethodCall);
             logger.info("Match and handle method call recived");
             try {
-                final QueryEmailMethodResponseAdapter queryEmailMethodResponseAdapter = (QueryEmailMethodResponseAdapter) queryEmailMethodCallUsecase
-                        .call(queryEmailMethodCallAdapter, handlerRequest.previousResponses());
+                final QueryEmailMethodResponseAdapter queryEmailMethodResponseAdapter =
+                        (QueryEmailMethodResponseAdapter)
+                                queryEmailMethodCallUsecase.call(
+                                        queryEmailMethodCallAdapter,
+                                        handlerRequest.previousResponses());
 
-                return new MethodResponse[] { queryEmailMethodResponseAdapter.adaptee() };
+                return new MethodResponse[] {queryEmailMethodResponseAdapter.adaptee()};
             } catch (final QueryAnchorNotFoundException queryAnchorNotFoundException) {
-                return new MethodResponse[] { new AnchorNotFoundMethodErrorResponse() };
+                return new MethodResponse[] {new AnchorNotFoundMethodErrorResponse()};
             } catch (final AccountNotFoundException accountNotFoundException) {
-                return new MethodResponse[] { new InvalidArgumentsMethodErrorResponse() };
+                return new MethodResponse[] {new InvalidArgumentsMethodErrorResponse()};
             }
         }
 

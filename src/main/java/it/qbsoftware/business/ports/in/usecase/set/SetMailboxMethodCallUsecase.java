@@ -9,6 +9,8 @@ import it.qbsoftware.business.ports.in.jmap.method.response.set.SetMailboxMethod
 
 public interface SetMailboxMethodCallUsecase {
 
-    public SetMailboxMethodResponsePort call(SetMailboxMethodCallPort setMailboxMethodCallPort,
-            ListMultimapPort<String, ResponseInvocationPort> previousResponse) throws StateMismatchException, AccountNotFoundException;
+    public SetMailboxMethodResponsePort call(
+            SetMailboxMethodCallPort setMailboxMethodCallPort,
+            ListMultimapPort<String, ResponseInvocationPort> previousResponse)
+            throws StateMismatchException, AccountNotFoundException;
 }

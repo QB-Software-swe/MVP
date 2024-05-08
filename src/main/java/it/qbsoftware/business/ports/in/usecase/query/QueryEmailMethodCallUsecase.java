@@ -8,6 +8,8 @@ import it.qbsoftware.business.ports.in.jmap.method.call.query.QueryEmailMethodCa
 import it.qbsoftware.business.ports.in.jmap.method.response.query.QueryEmailMethodResponsePort;
 
 public interface QueryEmailMethodCallUsecase {
-    public QueryEmailMethodResponsePort call(QueryEmailMethodCallPort queryEmailMethodCallPort,
-            final ListMultimapPort<String, ResponseInvocationPort> previousResponses) throws QueryAnchorNotFoundException, AccountNotFoundException;
+    public QueryEmailMethodResponsePort call(
+            QueryEmailMethodCallPort queryEmailMethodCallPort,
+            final ListMultimapPort<String, ResponseInvocationPort> previousResponses)
+            throws QueryAnchorNotFoundException, AccountNotFoundException;
 }

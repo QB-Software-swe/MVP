@@ -5,6 +5,4 @@ import it.qbsoftware.business.ports.in.jmap.method.response.set.SetEmailSubmissi
 
 public record SetEmailSubmissionMethodResponse(
         SetEmailSubmissionMethodResponsePort setEmailSubmissionMethodResponsePort,
-        SetEmailMethodResponsePort setEmailMethodResponsePort) {
-
-}
+        SetEmailMethodResponsePort setEmailMethodResponsePort) {}

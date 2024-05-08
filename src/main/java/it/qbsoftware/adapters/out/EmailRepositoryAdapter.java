@@ -1,19 +1,10 @@
 package it.qbsoftware.adapters.out;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-
-import org.bson.Document;
-import org.bson.conversions.Bson;
-
 import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.mongodb.MongoException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Filters;
-
 import it.qbsoftware.adapters.in.jmaplib.entity.EmailAdapter;
 import it.qbsoftware.business.domain.exception.set.SetNotFoundException;
 import it.qbsoftware.business.domain.exception.set.SetSingletonException;
@@ -21,10 +12,16 @@ import it.qbsoftware.business.domain.util.get.RetrivedEntity;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailPort;
 import it.qbsoftware.business.ports.out.jmap.EmailRepository;
 import it.qbsoftware.persistance.MongoConnection;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import org.bson.Document;
+import org.bson.conversions.Bson;
 import rs.ltt.jmap.common.entity.Email;
 
 public class EmailRepositoryAdapter implements EmailRepository {
-    private final static String COLLECTION = "email";
+    private static final String COLLECTION = "email";
 
     private final MongoConnection connection;
     private final Gson gson;
@@ -40,7 +37,8 @@ public class EmailRepositoryAdapter implements EmailRepository {
         final List<EmailPort> found = new ArrayList<>();
 
         final Bson filter = Filters.regex("_id", "^" + accountId + "\\/.*$");
-        final FindIterable<Document> findIterable = connection.getDatabase().getCollection(COLLECTION).find(filter);
+        final FindIterable<Document> findIterable =
+                connection.getDatabase().getCollection(COLLECTION).find(filter);
 
         for (final Document document : findIterable) {
             found.add(new EmailAdapter(gson.fromJson(document.toJson(), Email.class)));
@@ -54,7 +52,8 @@ public class EmailRepositoryAdapter implements EmailRepository {
         final List<String> notFound = new ArrayList<>();
 
         final Bson filter = Filters.in("_id", Arrays.asList(ids));
-        final FindIterable<Document> findIterable = connection.getDatabase().getCollection(COLLECTION).find(filter);
+        final FindIterable<Document> findIterable =
+                connection.getDatabase().getCollection(COLLECTION).find(filter);
 
         final HashMap<String, EmailPort> findEmailPort = new HashMap<>();
         for (final Document document : findIterable) {
@@ -68,13 +67,15 @@ public class EmailRepositoryAdapter implements EmailRepository {
             }
         }
 
-        return new RetrivedEntity<>(findEmailPort.values().toArray(EmailPort[]::new), notFound.toArray(String[]::new));
+        return new RetrivedEntity<>(
+                findEmailPort.values().toArray(EmailPort[]::new), notFound.toArray(String[]::new));
     }
 
     @Override
     public EmailPort retriveOne(final String emailId) throws SetNotFoundException {
         final Bson filter = Filters.eq("_id", emailId);
-        final FindIterable<Document> findIterable = connection.getDatabase().getCollection(COLLECTION).find(filter);
+        final FindIterable<Document> findIterable =
+                connection.getDatabase().getCollection(COLLECTION).find(filter);
 
         final Document emailDocRetrived = findIterable.first();
         if (emailDocRetrived == null) {
@@ -87,8 +88,8 @@ public class EmailRepositoryAdapter implements EmailRepository {
     @Override
     public EmailPort destroy(final String emailId) throws SetNotFoundException {
         final Bson filter = Filters.eq("_id", emailId);
-        final Document emailDeleteResult = connection.getDatabase().getCollection(COLLECTION)
-                .findOneAndDelete(filter);
+        final Document emailDeleteResult =
+                connection.getDatabase().getCollection(COLLECTION).findOneAndDelete(filter);
 
         if (emailDeleteResult == null) {
             throw new SetNotFoundException();
@@ -114,7 +115,6 @@ public class EmailRepositoryAdapter implements EmailRepository {
         final Document emailDoc = Document.parse(gson.toJson(((EmailAdapter) emailPort).adaptee()));
         emailDoc.put("_id", emailPort.getId());
 
-        connection.getDatabase().getCollection(COLLECTION).findOneAndReplace(filter,
-                emailDoc);
+        connection.getDatabase().getCollection(COLLECTION).findOneAndReplace(filter, emailDoc);
     }
 }

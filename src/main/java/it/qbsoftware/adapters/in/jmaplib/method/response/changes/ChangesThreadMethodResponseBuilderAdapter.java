@@ -5,9 +5,10 @@ import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesThrea
 import rs.ltt.jmap.common.method.response.thread.ChangesThreadMethodResponse;
 import rs.ltt.jmap.common.method.response.thread.ChangesThreadMethodResponse.ChangesThreadMethodResponseBuilder;
 
-public class ChangesThreadMethodResponseBuilderAdapter implements ChangesThreadMethodResponseBuilderPort {
-    private ChangesThreadMethodResponseBuilder changesThreadMethodResponseBuilder = ChangesThreadMethodResponse
-            .builder();
+public class ChangesThreadMethodResponseBuilderAdapter
+        implements ChangesThreadMethodResponseBuilderPort {
+    private ChangesThreadMethodResponseBuilder changesThreadMethodResponseBuilder =
+            ChangesThreadMethodResponse.builder();
 
     @Override
     public ChangesThreadMethodResponseBuilderPort accountId(final String accountId) {

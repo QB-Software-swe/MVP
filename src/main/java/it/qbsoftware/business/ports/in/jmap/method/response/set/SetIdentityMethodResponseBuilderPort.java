@@ -1,9 +1,8 @@
 package it.qbsoftware.business.ports.in.jmap.method.response.set;
 
-import java.util.Map;
-
 import it.qbsoftware.business.ports.in.jmap.entity.IdentityPort;
 import it.qbsoftware.business.ports.in.jmap.entity.SetErrorPort;
+import java.util.Map;
 
 public interface SetIdentityMethodResponseBuilderPort {
     public SetIdentityMethodResponseBuilderPort accountId(final String state);
@@ -18,11 +17,14 @@ public interface SetIdentityMethodResponseBuilderPort {
 
     public SetIdentityMethodResponseBuilderPort destroyed(final String[] idDestroyed);
 
-    public SetIdentityMethodResponseBuilderPort notCreated(final Map<String, SetErrorPort> notCreated);
+    public SetIdentityMethodResponseBuilderPort notCreated(
+            final Map<String, SetErrorPort> notCreated);
 
-    public SetIdentityMethodResponseBuilderPort notUpdated(final Map<String, SetErrorPort> notUpdated);
+    public SetIdentityMethodResponseBuilderPort notUpdated(
+            final Map<String, SetErrorPort> notUpdated);
 
-    public SetIdentityMethodResponseBuilderPort notDestroyed(final Map<String, SetErrorPort> notDestroyed);
+    public SetIdentityMethodResponseBuilderPort notDestroyed(
+            final Map<String, SetErrorPort> notDestroyed);
 
     public SetIdentityMethodResponsePort build();
 

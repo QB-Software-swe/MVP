@@ -8,5 +8,4 @@ public interface CreateIdentity {
 
     CreatedResult<IdentityPort> create(SetIdentityMethodCallPort setIdentityMethodCallPort)
             throws AccountNotFoundException;
-
 }

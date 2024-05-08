@@ -1,10 +1,8 @@
 package it.qbsoftware.adapters.in.guava;
 
-import java.util.List;
-
 import com.google.common.base.Splitter;
-
 import it.qbsoftware.business.ports.in.guava.SplitterPort;
+import java.util.List;
 
 public class SplitterAdapter implements SplitterPort {
     private Splitter splitter = null;
@@ -19,5 +17,4 @@ public class SplitterAdapter implements SplitterPort {
     public List<String> splitToList(CharSequence sequence) {
         return splitter.splitToList(sequence);
     }
-
 }

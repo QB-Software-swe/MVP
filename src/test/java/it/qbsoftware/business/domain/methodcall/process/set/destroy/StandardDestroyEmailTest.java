@@ -9,14 +9,6 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-
 import it.qbsoftware.business.domain.entity.changes.AccountState;
 import it.qbsoftware.business.domain.entity.changes.tracker.EmailChangesTracker;
 import it.qbsoftware.business.domain.entity.changes.tracker.MailboxChangesTracker;
@@ -31,60 +23,54 @@ import it.qbsoftware.business.ports.out.domain.EmailChangesTrackerRepository;
 import it.qbsoftware.business.ports.out.domain.MailboxChangesTrackerRepository;
 import it.qbsoftware.business.ports.out.domain.ThreadChangesTrackerRepository;
 import it.qbsoftware.business.ports.out.jmap.EmailRepository;
+import java.util.HashMap;
+import java.util.Map;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 @RunWith(org.mockito.junit.MockitoJUnitRunner.class)
 public class StandardDestroyEmailTest {
 
-    @Mock
-    EmailRepository emailRepository;
+    @Mock EmailRepository emailRepository;
 
-    @Mock
-    MailboxChangesTrackerRepository mailboxChangesTrackerRepository;
+    @Mock MailboxChangesTrackerRepository mailboxChangesTrackerRepository;
 
-    @Mock
-    EmailChangesTrackerRepository emailChangesTrackerRepository;
+    @Mock EmailChangesTrackerRepository emailChangesTrackerRepository;
 
-    @Mock
-    ThreadChangesTrackerRepository threadChangesTrackerRepository;
+    @Mock ThreadChangesTrackerRepository threadChangesTrackerRepository;
 
-    @Mock
-    SetErrorEnumPort setErrorEnumPort;
+    @Mock SetErrorEnumPort setErrorEnumPort;
 
-    @Mock
-    SetEmailMethodCallPort setEmailMethodCallPort;
+    @Mock SetEmailMethodCallPort setEmailMethodCallPort;
 
-    @Mock
-    EmailChangesTracker emailChangesTracker;
+    @Mock EmailChangesTracker emailChangesTracker;
 
-    @Mock
-    ThreadChangesTracker threadChangesTracker;
+    @Mock ThreadChangesTracker threadChangesTracker;
 
-    @Mock
-    MailboxChangesTracker mailboxChangesTracker;
+    @Mock MailboxChangesTracker mailboxChangesTracker;
 
-    @Mock
-    AccountState accountState;
+    @Mock AccountState accountState;
 
-    @Mock
-    AccountStateRepository accountStateRepository;
+    @Mock AccountStateRepository accountStateRepository;
 
-    @InjectMocks
-    StandardDestroyEmail standardDestroyEmail;
+    @InjectMocks StandardDestroyEmail standardDestroyEmail;
 
     @Test
-    public void testDestroyWithNullIdsToDestroy() throws AccountNotFoundException {     
-        
+    public void testDestroyWithNullIdsToDestroy() throws AccountNotFoundException {
+
         when(setEmailMethodCallPort.getDestroy()).thenReturn(null);
 
         DestroyedResult result = standardDestroyEmail.destroy(setEmailMethodCallPort);
 
-        assertTrue(result.destroyed().length==0);
+        assertTrue(result.destroyed().length == 0);
         assertTrue(result.notDestroyed().isEmpty());
         assertNotNull(result);
     }
 
     @Test
-    public void testDestroyWithNotNullIdsToDestroyAndNoExceptions() throws Exception {     
+    public void testDestroyWithNotNullIdsToDestroyAndNoExceptions() throws Exception {
         EmailPort emailPort = mock(EmailPort.class);
         String[] idsToDestroy = {"1", "2", "3"};
         Map<String, Boolean> mailboxIds = new HashMap<>();
@@ -105,15 +91,14 @@ public class StandardDestroyEmailTest {
         doNothing().when(accountStateRepository).save(any());
 
         DestroyedResult result = standardDestroyEmail.destroy(setEmailMethodCallPort);
-        
-        assertTrue(result.destroyed().length>0);
+
+        assertTrue(result.destroyed().length > 0);
         assertTrue(result.notDestroyed().isEmpty());
         assertNotNull(result);
-
     }
 
     @Test
-    public void testDestroyWithSetNotFoundException() throws Exception {    
+    public void testDestroyWithSetNotFoundException() throws Exception {
         String[] idsToDestroy = {"1", "2", "3"};
         Map<String, Boolean> mailboxIds = new HashMap<>();
         mailboxIds.put("key", false);
@@ -123,9 +108,8 @@ public class StandardDestroyEmailTest {
         doThrow(SetNotFoundException.class).when(emailRepository).destroy(any());
 
         DestroyedResult result = standardDestroyEmail.destroy(setEmailMethodCallPort);
-        
-        assertTrue(result.destroyed().length==0);
+
+        assertTrue(result.destroyed().length == 0);
         assertNotNull(result);
     }
-
 }

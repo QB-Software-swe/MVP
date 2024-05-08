@@ -12,19 +12,6 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
-
 import it.qbsoftware.business.domain.entity.changes.AccountState;
 import it.qbsoftware.business.domain.entity.changes.tracker.EmailChangesTracker;
 import it.qbsoftware.business.domain.entity.changes.tracker.MailboxChangesTracker;
@@ -32,7 +19,6 @@ import it.qbsoftware.business.domain.entity.changes.tracker.ThreadChangesTracker
 import it.qbsoftware.business.domain.exception.AccountNotFoundException;
 import it.qbsoftware.business.domain.exception.set.SetSingletonException;
 import it.qbsoftware.business.domain.util.get.CreationIdResolverPort;
-import it.qbsoftware.business.domain.util.get.RetrivedEntity;
 import it.qbsoftware.business.ports.in.guava.ListMultimapPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailBodyPartBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailBodyPartPort;
@@ -50,85 +36,75 @@ import it.qbsoftware.business.ports.out.domain.MailboxChangesTrackerRepository;
 import it.qbsoftware.business.ports.out.domain.ThreadChangesTrackerRepository;
 import it.qbsoftware.business.ports.out.jmap.EmailRepository;
 import it.qbsoftware.business.ports.out.jmap.ThreadRepository;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 
 @RunWith(org.mockito.junit.MockitoJUnitRunner.class)
 public class StandardCreateEmailTest {
 
-    @Mock
-    SetEmailMethodCallPort setEmailMethodCallPort;
+    @Mock SetEmailMethodCallPort setEmailMethodCallPort;
 
-    @Mock
-    ListMultimapPort<String, ResponseInvocationPort> previousResponses;
-    
-    @Mock
-    EmailBuilderPort emailBuilderPort;
+    @Mock ListMultimapPort<String, ResponseInvocationPort> previousResponses;
 
-    @Mock
-    EmailRepository emailRepository;
+    @Mock EmailBuilderPort emailBuilderPort;
 
-    @Mock
-    AccountStateRepository accountStateRepository;
+    @Mock EmailRepository emailRepository;
 
-    @Mock 
-    EmailChangesTrackerRepository emailChangesTrackerRepository;
+    @Mock AccountStateRepository accountStateRepository;
 
-    @Mock
-    MailboxChangesTrackerRepository mailboxChangesTrackerRepository;
+    @Mock EmailChangesTrackerRepository emailChangesTrackerRepository;
 
-    @Mock 
-    ThreadChangesTrackerRepository threadChangesTrackerRepository;
+    @Mock MailboxChangesTrackerRepository mailboxChangesTrackerRepository;
 
-    @Mock
-    SetErrorEnumPort setErrorEnumPort;
+    @Mock ThreadChangesTrackerRepository threadChangesTrackerRepository;
 
-    @Mock
-    ThreadRepository threadRepository;
+    @Mock SetErrorEnumPort setErrorEnumPort;
 
-    @Mock
-    EmailChangesTracker emailChangesTracker;
+    @Mock ThreadRepository threadRepository;
 
-    @Mock
-    ThreadChangesTracker threadChangesTracker;
+    @Mock EmailChangesTracker emailChangesTracker;
 
-    @Mock
-    MailboxChangesTracker mailboxChangesTracker;
+    @Mock ThreadChangesTracker threadChangesTracker;
 
-    @Mock
-    EmailPort emailPort;
+    @Mock MailboxChangesTracker mailboxChangesTracker;
 
-    @Mock
-    ThreadPort threadPort;
+    @Mock EmailPort emailPort;
 
-    @Mock
-    ThreadBuilderPort threadBuilderPort;
+    @Mock ThreadPort threadPort;
 
-    @Mock
-    AccountState accountState;
+    @Mock ThreadBuilderPort threadBuilderPort;
 
-    @Mock
-    EmailBodyPartBuilderPort emailBodyPartBuilderPort;
+    @Mock AccountState accountState;
 
-    @Mock
-    CreationIdResolverPort creationIdResolverPort;
-    
-    @InjectMocks
-    StandardCreateEmail standardCreateEmail;
+    @Mock EmailBodyPartBuilderPort emailBodyPartBuilderPort;
 
+    @Mock CreationIdResolverPort creationIdResolverPort;
 
+    @InjectMocks StandardCreateEmail standardCreateEmail;
 
     @Test
-    public void testCreateWithNullMapEmailToCreate() throws AccountNotFoundException {     
-        
+    public void testCreateWithNullMapEmailToCreate() throws AccountNotFoundException {
+
         when(setEmailMethodCallPort.getCreate()).thenReturn(null);
 
-        CreatedResult<EmailPort> result = standardCreateEmail.create(setEmailMethodCallPort, previousResponses);
+        CreatedResult<EmailPort> result =
+                standardCreateEmail.create(setEmailMethodCallPort, previousResponses);
 
         assertTrue(result.created().isEmpty());
         assertTrue(result.notCreated().isEmpty());
     }
 
     @Test
-    public void testCreateWithNotNullMapEmailToCreateAndNoExceptions() throws Exception {     
+    public void testCreateWithNotNullMapEmailToCreateAndNoExceptions() throws Exception {
         EmailPort emailPort = mock(EmailPort.class);
         Map<String, EmailPort> mapEmailToCreate = new HashMap<>();
         mapEmailToCreate.put("key", emailPort);
@@ -157,7 +133,7 @@ public class StandardCreateEmailTest {
         when(emailPort.toBuilder()).thenReturn(emailBuilderPort);
         when(emailPort.getSubject()).thenReturn("subject");
         when(emailPort.getBodyStructure()).thenReturn(emailBodyPartPort);
-        
+
         when(threadRepository.retriveOne(any())).thenReturn(threadPort);
         when(threadPort.getEmailIds()).thenReturn(emailIds);
         when(threadPort.toBuilder()).thenReturn(threadBuilderPort);
@@ -165,7 +141,7 @@ public class StandardCreateEmailTest {
         when(threadBuilderPort.build()).thenReturn(threadPort);
         when(threadBuilderPort.emailIds(any())).thenReturn(threadBuilderPort);
         when(threadBuilderPort.clearEmailIds()).thenReturn(threadBuilderPort);
-        
+
         when(emailChangesTrackerRepository.retrive(any())).thenReturn(emailChangesTracker);
         when(threadChangesTrackerRepository.retrive(any())).thenReturn(threadChangesTracker);
         when(accountStateRepository.retrive(anyString())).thenReturn(accountState);
@@ -176,18 +152,17 @@ public class StandardCreateEmailTest {
         doNothing().when(accountStateRepository).save(any());
         doNothing().when(threadRepository).save(any());
 
-        CreatedResult<EmailPort> result = standardCreateEmail.create(setEmailMethodCallPort, previousResponses);
+        CreatedResult<EmailPort> result =
+                standardCreateEmail.create(setEmailMethodCallPort, previousResponses);
 
         assertNotNull(result);
         assertTrue(result.created().containsKey("key"));
         assertEquals(1, result.created().size());
         assertTrue(result.notCreated().isEmpty());
-
     }
 
-
     @Test
-    public void testCreateWithNullAttachments() throws Exception {     
+    public void testCreateWithNullAttachments() throws Exception {
         EmailPort emailPort = mock(EmailPort.class);
         Map<String, EmailPort> mapEmailToCreate = new HashMap<>();
         mapEmailToCreate.put("key", emailPort);
@@ -232,23 +207,23 @@ public class StandardCreateEmailTest {
         doNothing().when(accountStateRepository).save(any());
         doNothing().when(threadRepository).save(any());
 
-        CreatedResult<EmailPort> result = standardCreateEmail.create(setEmailMethodCallPort, previousResponses);
+        CreatedResult<EmailPort> result =
+                standardCreateEmail.create(setEmailMethodCallPort, previousResponses);
 
         assertNotNull(result);
         assertTrue(result.created().containsKey("key"));
         assertEquals(1, result.created().size());
         assertTrue(result.notCreated().isEmpty());
-
     }
 
     @Test
-    public void testCreateWithNullEmailIds() throws Exception {     
+    public void testCreateWithNullEmailIds() throws Exception {
         UUID uuid = UUID.randomUUID();
         EmailPort emailPort = mock(EmailPort.class);
         Map<String, EmailPort> mapEmailToCreate = new HashMap<>();
         mapEmailToCreate.put("key", emailPort);
         List<String> emailIds = new ArrayList<>();
-        emailIds.add("accountId/"+uuid.toString());
+        emailIds.add("accountId/" + uuid.toString());
         EmailBodyPartPort emailBodyPartPort = mock(EmailBodyPartPort.class);
         List<EmailBodyPartPort> attachments = new ArrayList<>();
         attachments.add(emailBodyPartPort);
@@ -288,9 +263,10 @@ public class StandardCreateEmailTest {
         doNothing().when(emailRepository).save(any());
         doNothing().when(accountStateRepository).save(any());
 
-        try(MockedStatic<UUID> UUIDStatic = Mockito.mockStatic(UUID.class)){
+        try (MockedStatic<UUID> UUIDStatic = Mockito.mockStatic(UUID.class)) {
             UUIDStatic.when(UUID::randomUUID).thenReturn(uuid);
-            CreatedResult<EmailPort> result = standardCreateEmail.create(setEmailMethodCallPort, previousResponses);
+            CreatedResult<EmailPort> result =
+                    standardCreateEmail.create(setEmailMethodCallPort, previousResponses);
 
             assertNotNull(result);
             assertTrue(result.created().containsKey("key"));
@@ -300,7 +276,8 @@ public class StandardCreateEmailTest {
     }
 
     @Test
-    public void testCreateWithNotNullMapEmailToCreateAndNoExceptionsAndNotNullValue() throws Exception {     
+    public void testCreateWithNotNullMapEmailToCreateAndNoExceptionsAndNotNullValue()
+            throws Exception {
         EmailPort emailPort = mock(EmailPort.class);
         Map<String, EmailPort> mapEmailToCreate = new HashMap<>();
         mapEmailToCreate.put("key", emailPort);
@@ -345,18 +322,17 @@ public class StandardCreateEmailTest {
         doNothing().when(accountStateRepository).save(any());
         doNothing().when(threadRepository).save(any());
 
-        CreatedResult<EmailPort> result = standardCreateEmail.create(setEmailMethodCallPort, previousResponses);
+        CreatedResult<EmailPort> result =
+                standardCreateEmail.create(setEmailMethodCallPort, previousResponses);
 
         assertNotNull(result);
         assertTrue(result.created().containsKey("key"));
         assertEquals(1, result.created().size());
         assertTrue(result.notCreated().isEmpty());
-
     }
 
-
     @Test
-    public void testCreateWithInvalidArgumentsException() throws Exception {     
+    public void testCreateWithInvalidArgumentsException() throws Exception {
         EmailPort emailPort = mock(EmailPort.class);
         Map<String, EmailPort> mapEmailToCreate = new HashMap<>();
         mapEmailToCreate.put("key", emailPort);
@@ -365,7 +341,8 @@ public class StandardCreateEmailTest {
         when(emailPort.getMailboxIds()).thenReturn(null);
         when(emailPort.getSubject()).thenReturn("subject");
 
-        CreatedResult<EmailPort> result = standardCreateEmail.create(setEmailMethodCallPort, previousResponses);
+        CreatedResult<EmailPort> result =
+                standardCreateEmail.create(setEmailMethodCallPort, previousResponses);
 
         assertTrue(result.created().isEmpty());
         assertTrue(result.notCreated().containsKey("key"));
@@ -373,7 +350,7 @@ public class StandardCreateEmailTest {
     }
 
     @Test
-    public void testCreateWithNullThreadId() throws Exception {     
+    public void testCreateWithNullThreadId() throws Exception {
         EmailPort emailPort = mock(EmailPort.class);
         Map<String, EmailPort> mapEmailToCreate = new HashMap<>();
         mapEmailToCreate.put("key", emailPort);
@@ -382,7 +359,8 @@ public class StandardCreateEmailTest {
         when(emailPort.getMailboxIds()).thenReturn(null);
         when(emailPort.getSubject()).thenReturn("subject");
 
-        CreatedResult<EmailPort> result = standardCreateEmail.create(setEmailMethodCallPort, previousResponses);
+        CreatedResult<EmailPort> result =
+                standardCreateEmail.create(setEmailMethodCallPort, previousResponses);
 
         assertTrue(result.created().isEmpty());
         assertTrue(result.notCreated().containsKey("key"));
@@ -390,7 +368,7 @@ public class StandardCreateEmailTest {
     }
 
     @Test
-    public void testCreateWithSingletonException() throws Exception {     
+    public void testCreateWithSingletonException() throws Exception {
         EmailPort emailPort = mock(EmailPort.class);
         Map<String, EmailPort> mapEmailToCreate = new HashMap<>();
         mapEmailToCreate.put("key", emailPort);
@@ -432,22 +410,22 @@ public class StandardCreateEmailTest {
         when(emailPort.toBuilder()).thenReturn(emailBuilderPort);
         when(emailPort.getSubject()).thenReturn("subject");
         when(emailPort.getBodyStructure()).thenReturn(emailBodyPartPort);
-        
+
         doThrow(singletonException).doNothing().when(emailRepository).save(any());
         doNothing().when(accountStateRepository).save(any());
         doNothing().when(threadRepository).save(any());
 
-        CreatedResult<EmailPort> result = standardCreateEmail.create(setEmailMethodCallPort, previousResponses);
+        CreatedResult<EmailPort> result =
+                standardCreateEmail.create(setEmailMethodCallPort, previousResponses);
 
         assertNotNull(result);
         assertTrue(result.created().containsKey("key"));
         assertEquals(1, result.created().size());
         assertTrue(result.notCreated().isEmpty());
-
     }
 
     @Test
-    public void testCreateWithNotEmptyMap() throws Exception {     
+    public void testCreateWithNotEmptyMap() throws Exception {
         EmailPort emailPort = mock(EmailPort.class);
         Map<String, EmailPort> mapEmailToCreate = new HashMap<>();
         mapEmailToCreate.put("key", emailPort);
@@ -460,7 +438,8 @@ public class StandardCreateEmailTest {
         bodyValue.put("partId", emailBodyValuePort);
 
         when(setEmailMethodCallPort.getCreate()).thenReturn(mapEmailToCreate);
-        when(creationIdResolverPort.resolveIfNecessary(anyString(), any())).thenReturn("resolvedThreadId");
+        when(creationIdResolverPort.resolveIfNecessary(anyString(), any()))
+                .thenReturn("resolvedThreadId");
         when(emailPort.getSubject()).thenReturn("subject");
         when(emailBuilderPort.clearMailboxIds()).thenReturn(emailBuilderPort);
         when(emailBuilderPort.reset()).thenReturn(emailBuilderPort);
@@ -469,7 +448,7 @@ public class StandardCreateEmailTest {
         when(emailBuilderPort.threadId(anyString())).thenReturn(emailBuilderPort);
         when(emailBuilderPort.size(anyLong())).thenReturn(emailBuilderPort);
         when(emailBuilderPort.mailboxIds(anyMap())).thenReturn(emailBuilderPort);
-        when(emailPort.getMailboxIds()).thenReturn(Map.of("key",true));
+        when(emailPort.getMailboxIds()).thenReturn(Map.of("key", true));
         when(emailBuilderPort.receivedAt(any())).thenReturn(emailBuilderPort);
         when(emailPort.toBuilder()).thenReturn(emailBuilderPort);
         when(setEmailMethodCallPort.accountId()).thenReturn("accountId");
@@ -496,17 +475,17 @@ public class StandardCreateEmailTest {
         doNothing().when(accountStateRepository).save(any());
         doNothing().when(threadRepository).save(any());
 
-        CreatedResult<EmailPort> result = standardCreateEmail.create(setEmailMethodCallPort, previousResponses);
+        CreatedResult<EmailPort> result =
+                standardCreateEmail.create(setEmailMethodCallPort, previousResponses);
 
         assertNotNull(result);
         assertTrue(result.created().containsKey("key"));
         assertEquals(1, result.created().size());
         assertTrue(result.notCreated().isEmpty());
-
     }
 
     @Test
-    public void testCreateWithSameId() throws Exception {     
+    public void testCreateWithSameId() throws Exception {
         EmailPort emailPort = mock(EmailPort.class);
         Map<String, EmailPort> mapEmailToCreate = new HashMap<>();
         mapEmailToCreate.put("key", emailPort);
@@ -555,17 +534,17 @@ public class StandardCreateEmailTest {
         doNothing().when(accountStateRepository).save(any());
         doNothing().when(threadRepository).save(any());
 
-        CreatedResult<EmailPort> result = standardCreateEmail.create(setEmailMethodCallPort, previousResponses);
+        CreatedResult<EmailPort> result =
+                standardCreateEmail.create(setEmailMethodCallPort, previousResponses);
 
         assertNotNull(result);
         assertTrue(result.created().containsKey("key"));
         assertEquals(1, result.created().size());
         assertTrue(result.notCreated().isEmpty());
-
     }
 
     @Test
-    public void testCreateWithNullIdResolver() throws Exception {     
+    public void testCreateWithNullIdResolver() throws Exception {
         EmailPort emailPort = mock(EmailPort.class);
         Map<String, EmailPort> mapEmailToCreate = new HashMap<>();
         mapEmailToCreate.put("key", emailPort);
@@ -611,23 +590,21 @@ public class StandardCreateEmailTest {
         doNothing().when(accountStateRepository).save(any());
         doNothing().when(threadRepository).save(any());
 
-        CreatedResult<EmailPort> result = standardCreateEmail.create(setEmailMethodCallPort, previousResponses);
+        CreatedResult<EmailPort> result =
+                standardCreateEmail.create(setEmailMethodCallPort, previousResponses);
 
         assertNotNull(result);
         assertTrue(result.created().containsKey("key"));
         assertEquals(1, result.created().size());
         assertTrue(result.notCreated().isEmpty());
-
     }
 
     @Test
-    public void testCreateWithSubjectRe() throws Exception {     
+    public void testCreateWithSubjectRe() throws Exception {
         Map<String, EmailPort> mapEmailToCreate = new HashMap<>();
         mapEmailToCreate.put("key", emailPort);
         List<String> emailIds = new ArrayList<>();
         String accountId = "accountId";
-        EmailPort emailPort2 = mock(EmailPort.class);
-        EmailPort[] emails = new EmailPort[] {emailPort2};
         EmailBodyPartPort emailBodyPartPort = mock(EmailBodyPartPort.class);
         List<EmailBodyPartPort> attachments = new ArrayList<>();
         attachments.add(emailBodyPartPort);
@@ -635,9 +612,8 @@ public class StandardCreateEmailTest {
         Map<String, EmailBodyValuePort> bodyValue = new HashMap<>();
         bodyValue.put("partId", emailBodyValuePort);
 
-
         when(setEmailMethodCallPort.getCreate()).thenReturn(mapEmailToCreate);
-        when(emailPort.getSubject()).thenReturn("Re:qualcosa");
+        when(emailPort.getSubject()).thenReturn("Re:risposta");
         when(emailPort.toBuilder()).thenReturn(emailBuilderPort);
         when(emailBuilderPort.clearMailboxIds()).thenReturn(emailBuilderPort);
         when(emailBuilderPort.reset()).thenReturn(emailBuilderPort);
@@ -668,18 +644,17 @@ public class StandardCreateEmailTest {
         when(emailPort.toBuilder()).thenReturn(emailBuilderPort);
         when(emailPort.getSubject()).thenReturn("subject");
         when(emailPort.getBodyStructure()).thenReturn(emailBodyPartPort);
-        
+
         doNothing().when(emailRepository).save(any());
         doNothing().when(accountStateRepository).save(any());
         doNothing().when(threadRepository).save(any());
 
-        CreatedResult<EmailPort> result = standardCreateEmail.create(setEmailMethodCallPort, previousResponses);
+        CreatedResult<EmailPort> result =
+                standardCreateEmail.create(setEmailMethodCallPort, previousResponses);
 
         assertNotNull(result);
         assertTrue(result.created().containsKey("key"));
         assertEquals(1, result.created().size());
         assertTrue(result.notCreated().isEmpty());
     }
-
-    
 }

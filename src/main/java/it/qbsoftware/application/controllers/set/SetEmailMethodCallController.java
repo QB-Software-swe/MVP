@@ -1,18 +1,15 @@
 package it.qbsoftware.application.controllers.set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.inject.Inject;
-
 import it.qbsoftware.adapters.in.jmaplib.method.call.set.SetEmailMethodCallAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.set.SetEmailMethodResponseAdapter;
 import it.qbsoftware.application.controllers.ControllerHandlerBase;
 import it.qbsoftware.application.controllers.HandlerRequest;
-import it.qbsoftware.application.controllers.changes.ChangesEmailSubmissionMethodCallController;
 import it.qbsoftware.business.domain.exception.AccountNotFoundException;
 import it.qbsoftware.business.domain.exception.StateMismatchException;
 import it.qbsoftware.business.ports.in.usecase.set.SetEmailMethodCallUsecase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import rs.ltt.jmap.common.method.MethodResponse;
 import rs.ltt.jmap.common.method.call.email.SetEmailMethodCall;
 import rs.ltt.jmap.common.method.error.InvalidArgumentsMethodErrorResponse;
@@ -30,18 +27,21 @@ public class SetEmailMethodCallController extends ControllerHandlerBase {
     @Override
     public MethodResponse[] handle(final HandlerRequest handlerRequest) {
         if (handlerRequest.methodCall() instanceof SetEmailMethodCall setEmailMethodCall) {
-            final SetEmailMethodCallAdapter setEmailMethodCallAdapter = new SetEmailMethodCallAdapter(
-                    setEmailMethodCall);
-                    logger.info("Match and handle method call recived");
+            final SetEmailMethodCallAdapter setEmailMethodCallAdapter =
+                    new SetEmailMethodCallAdapter(setEmailMethodCall);
+            logger.info("Match and handle method call recived");
             try {
-                final SetEmailMethodResponseAdapter setEmailMethodResponseAdapter = (SetEmailMethodResponseAdapter) setEmailMethodCallUsecase
-                        .call(setEmailMethodCallAdapter, handlerRequest.previousResponses());
+                final SetEmailMethodResponseAdapter setEmailMethodResponseAdapter =
+                        (SetEmailMethodResponseAdapter)
+                                setEmailMethodCallUsecase.call(
+                                        setEmailMethodCallAdapter,
+                                        handlerRequest.previousResponses());
 
-                return new MethodResponse[] { setEmailMethodResponseAdapter.adaptee() };
+                return new MethodResponse[] {setEmailMethodResponseAdapter.adaptee()};
             } catch (final AccountNotFoundException accountNotFoundException) {
-                return new MethodResponse[] { new InvalidArgumentsMethodErrorResponse() };
+                return new MethodResponse[] {new InvalidArgumentsMethodErrorResponse()};
             } catch (final StateMismatchException stateMismatchException) {
-                return new MethodResponse[] { new StateMismatchMethodErrorResponse() };
+                return new MethodResponse[] {new StateMismatchMethodErrorResponse()};
             }
         }
         return super.handle(handlerRequest);

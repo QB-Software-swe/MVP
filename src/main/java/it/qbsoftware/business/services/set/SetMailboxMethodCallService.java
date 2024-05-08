@@ -27,7 +27,8 @@ public class SetMailboxMethodCallService implements SetMailboxMethodCallUsecase 
     private final UpdateMailbox updateMailbox;
     private final DestroyMailbox destroyMailbox;
 
-    public SetMailboxMethodCallService(final AccountStateRepository accountStateRepository,
+    public SetMailboxMethodCallService(
+            final AccountStateRepository accountStateRepository,
             final IfInStateMatch ifInStateMatch,
             final SetMailboxMethodResponseBuilderPort setMailboxMethodResponseBuilderPort,
             final CreateMailbox createMailbox,
@@ -42,19 +43,23 @@ public class SetMailboxMethodCallService implements SetMailboxMethodCallUsecase 
     }
 
     @Override
-    public SetMailboxMethodResponsePort call(final SetMailboxMethodCallPort setMailboxMethodCallPort,
+    public SetMailboxMethodResponsePort call(
+            final SetMailboxMethodCallPort setMailboxMethodCallPort,
             final ListMultimapPort<String, ResponseInvocationPort> previousResponse)
             throws StateMismatchException, AccountNotFoundException {
 
         final String accountId = setMailboxMethodCallPort.accountId();
         final AccountState preSetAccountState = accountStateRepository.retrive(accountId);
 
-        ifInStateMatch.methodStateMatchCurrent(setMailboxMethodCallPort.ifInState(),
-                preSetAccountState.state());
+        ifInStateMatch.methodStateMatchCurrent(
+                setMailboxMethodCallPort.ifInState(), preSetAccountState.state());
 
-        final CreatedResult<MailboxPort> createdMailboxResult = createMailbox.create(setMailboxMethodCallPort);
-        final UpdatedResult<MailboxPort> updatedMailboxResult = updateMailbox.update(setMailboxMethodCallPort);
-        final DestroyedResult destroyedMailboxResult = destroyMailbox.destroy(setMailboxMethodCallPort);
+        final CreatedResult<MailboxPort> createdMailboxResult =
+                createMailbox.create(setMailboxMethodCallPort);
+        final UpdatedResult<MailboxPort> updatedMailboxResult =
+                updateMailbox.update(setMailboxMethodCallPort, previousResponse);
+        final DestroyedResult destroyedMailboxResult =
+                destroyMailbox.destroy(setMailboxMethodCallPort);
 
         final AccountState postSetAccountState = accountStateRepository.retrive(accountId);
 
@@ -70,5 +75,4 @@ public class SetMailboxMethodCallService implements SetMailboxMethodCallUsecase 
                 .notDestroyed(destroyedMailboxResult.notDestroyed())
                 .build();
     }
-
 }

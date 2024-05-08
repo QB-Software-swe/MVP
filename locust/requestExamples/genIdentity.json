@@ -1,0 +1,21 @@
+{
+    "methodCalls": [
+        [
+            "Identity/set",
+            {
+                "accountId": "Id_here",
+                "create": {
+                    "counter_here": {
+                        "name": "name_here",
+                        "email": "email_here"
+                    }
+                }
+            },
+            "2"
+        ]
+    ],
+    "using": [
+        "urn:ietf:params:jmap:core",
+        "urn:ietf:params:jmap:mail"
+    ]
+}

@@ -6,5 +6,4 @@ public interface IfInStateMatch {
 
     void methodStateMatchCurrent(String methodCallState, String currentObjectState)
             throws StateMismatchException;
-
 }

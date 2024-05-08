@@ -33,5 +33,4 @@ public class GetThreadMethodCallAdapter implements GetThreadMethodCallPort {
     public String[] getProperties() {
         return getThreadMethodCall.getProperties();
     }
-
 }

@@ -1,8 +1,7 @@
 package it.qbsoftware.business.ports.in.jmap.method.call.set;
 
-import java.util.Map;
-
 import it.qbsoftware.business.ports.in.jmap.entity.EmailSubmissionPort;
+import java.util.Map;
 
 public interface SetEmailSubmissionMethodCallPort {
     public String accountId();

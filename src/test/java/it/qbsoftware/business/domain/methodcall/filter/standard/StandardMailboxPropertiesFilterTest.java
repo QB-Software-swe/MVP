@@ -6,32 +6,26 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-
 import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailAddressPort;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxPort;
 import it.qbsoftware.business.ports.in.jmap.entity.RolePort;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 @RunWith(org.mockito.junit.MockitoJUnitRunner.class)
 public class StandardMailboxPropertiesFilterTest {
 
-    @Mock
-    private MailboxBuilderPort mailboxBuilderPort;
+    @Mock private MailboxBuilderPort mailboxBuilderPort;
 
-    @Mock
-    private MailboxPort mailboxPort;
+    @Mock private MailboxPort mailboxPort;
 
-    @Mock
-    private EmailAddressPort EmailAddressPort;
+    @Mock private EmailAddressPort EmailAddressPort;
 
-    @InjectMocks
-    private StandardMailboxPropertiesFilter standardMailboxPropertiesFilter;
-
+    @InjectMocks private StandardMailboxPropertiesFilter standardMailboxPropertiesFilter;
 
     @Test
     public void testFilterWithNullProperties() throws InvalidArgumentsException {
@@ -46,7 +40,19 @@ public class StandardMailboxPropertiesFilterTest {
     public void testFilterWithValidProperties() throws InvalidArgumentsException {
         MailboxPort[] mailboxs = new MailboxPort[] {mailboxPort};
         RolePort rolePort = mock(RolePort.class);
-        String[] properties = new String[] {"name", "parentId", "role", "sortOrder", "totalEmails", "unreadEmails", "totalThreads", "unreadThreads", "myRights", "isSubscribed"};
+        String[] properties =
+                new String[] {
+                    "name",
+                    "parentId",
+                    "role",
+                    "sortOrder",
+                    "totalEmails",
+                    "unreadEmails",
+                    "totalThreads",
+                    "unreadThreads",
+                    "myRights",
+                    "isSubscribed"
+                };
 
         when(mailboxPort.getId()).thenReturn("id");
         when(mailboxPort.getName()).thenReturn("name");
@@ -73,7 +79,8 @@ public class StandardMailboxPropertiesFilterTest {
         when(mailboxBuilderPort.isSubscribed(any())).thenReturn(mailboxBuilderPort);
         when(mailboxBuilderPort.build()).thenReturn(mailboxPort);
 
-        StandardMailboxPropertiesFilter standardMailboxPropertiesFilter = new StandardMailboxPropertiesFilter(mailboxBuilderPort);
+        StandardMailboxPropertiesFilter standardMailboxPropertiesFilter =
+                new StandardMailboxPropertiesFilter(mailboxBuilderPort);
         MailboxPort[] result = standardMailboxPropertiesFilter.filter(mailboxs, properties);
 
         assertArrayEquals(mailboxs, result);
@@ -82,7 +89,16 @@ public class StandardMailboxPropertiesFilterTest {
     @Test
     public void testFilterWithInvalidArgumentsException() throws InvalidArgumentsException {
         MailboxPort[] mailboxs = new MailboxPort[] {mailboxPort};
-        String[] properties = new String[] {"name", "invalidSignature", "replyTo", "bcc", "textSignature", "htmlSignature", "mayDelete"};
+        String[] properties =
+                new String[] {
+                    "name",
+                    "invalidSignature",
+                    "replyTo",
+                    "bcc",
+                    "textSignature",
+                    "htmlSignature",
+                    "mayDelete"
+                };
 
         when(mailboxPort.getId()).thenReturn("id");
         when(mailboxPort.getName()).thenReturn("name");
@@ -90,9 +106,11 @@ public class StandardMailboxPropertiesFilterTest {
         when(mailboxBuilderPort.id(any())).thenReturn(mailboxBuilderPort);
         when(mailboxBuilderPort.name(any())).thenReturn(mailboxBuilderPort);
 
-        StandardMailboxPropertiesFilter standardMailboxPropertiesFilter = new StandardMailboxPropertiesFilter(mailboxBuilderPort);
+        StandardMailboxPropertiesFilter standardMailboxPropertiesFilter =
+                new StandardMailboxPropertiesFilter(mailboxBuilderPort);
 
-        assertThrows(InvalidArgumentsException.class, () -> standardMailboxPropertiesFilter.filter(mailboxs, properties));
+        assertThrows(
+                InvalidArgumentsException.class,
+                () -> standardMailboxPropertiesFilter.filter(mailboxs, properties));
     }
-
 }

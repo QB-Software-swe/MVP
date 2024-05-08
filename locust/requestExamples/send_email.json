@@ -1,0 +1,40 @@
+{
+    "methodCalls": [
+        ["Email/set", {
+            "accountId": "Id_here",
+            "create": {
+                "Id_mail_here": {
+                    "mailboxIds": {
+                        "mb_Id_here": true
+                    },
+                    "from": [{
+                        "name": "Bobr the tester",
+                        "email": "email_here"
+                    }],
+                    "to": [{
+                        "name": "QB Software team",
+                        "email": "team@qbsoftware.swe.it"
+                    }],
+                    "keywords": {
+                        "$seen": true
+                    },
+                    "subject": "This is subject counter_here",
+                    "sentAt": "2024-03-29T11:03:11+10:00",
+                    "bodyStructure": {
+                        "type": "text/plain",
+                        "partId": "0",
+                        "header:Content-Language": "en"
+                    },
+                    "preview": "Testing server",
+                    "bodyValues": {
+                        "0": {
+                            "value": "This is body :)",
+                            "isTruncated": false
+                        }
+                    }
+                }
+            }
+        }, "0"]
+    ],
+    "using": ["urn:ietf:params:jmap:core", "urn:ietf:params:jmap:mail", "urn:ietf:params:jmap:submission"]
+}

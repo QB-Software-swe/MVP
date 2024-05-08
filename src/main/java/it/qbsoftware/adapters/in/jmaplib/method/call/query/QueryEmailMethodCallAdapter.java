@@ -1,13 +1,12 @@
 package it.qbsoftware.adapters.in.jmaplib.method.call.query;
 
-import java.util.Arrays;
-
 import it.qbsoftware.adapters.in.jmaplib.entity.JmapComparatorAdapter;
 import it.qbsoftware.adapters.in.jmaplib.entity.JmapFilterAdapter;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailPort;
 import it.qbsoftware.business.ports.in.jmap.entity.JmapComparatorPort;
 import it.qbsoftware.business.ports.in.jmap.entity.JmapFilterPort;
 import it.qbsoftware.business.ports.in.jmap.method.call.query.QueryEmailMethodCallPort;
+import java.util.Arrays;
 import rs.ltt.jmap.common.method.call.email.QueryEmailMethodCall;
 
 public class QueryEmailMethodCallAdapter implements QueryEmailMethodCallPort {
@@ -30,7 +29,8 @@ public class QueryEmailMethodCallAdapter implements QueryEmailMethodCallPort {
     @Override
     public JmapComparatorPort[] getSort() {
         if (queryEmailMethodCall.getSort() != null) {
-            return Arrays.asList(queryEmailMethodCall.getSort()).stream().map(c -> new JmapComparatorAdapter(c))
+            return Arrays.asList(queryEmailMethodCall.getSort()).stream()
+                    .map(c -> new JmapComparatorAdapter(c))
                     .toArray(JmapComparatorAdapter[]::new);
         }
         return null;
@@ -65,5 +65,4 @@ public class QueryEmailMethodCallAdapter implements QueryEmailMethodCallPort {
     public Boolean getCollapseThreads() {
         return queryEmailMethodCall.getCollapseThreads();
     }
-
 }

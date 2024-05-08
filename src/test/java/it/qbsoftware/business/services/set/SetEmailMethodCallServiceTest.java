@@ -5,11 +5,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-
 import it.qbsoftware.business.domain.entity.changes.AccountState;
 import it.qbsoftware.business.domain.exception.AccountNotFoundException;
 import it.qbsoftware.business.domain.exception.StateMismatchException;
@@ -27,73 +22,75 @@ import it.qbsoftware.business.ports.in.jmap.method.call.set.SetEmailMethodCallPo
 import it.qbsoftware.business.ports.in.jmap.method.response.set.SetEmailMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.set.SetEmailMethodResponsePort;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 @RunWith(org.mockito.junit.MockitoJUnitRunner.class)
 public class SetEmailMethodCallServiceTest {
-    
-    @Mock
-    private AccountStateRepository accountStateRepository;
 
-    @Mock
-    IfInStateMatch ifInStateMatch;
+    @Mock private AccountStateRepository accountStateRepository;
 
-    @Mock
-    CreateEmail createEmail;
+    @Mock IfInStateMatch ifInStateMatch;
 
-    @Mock
-    UpdateEmail updateEmail;
+    @Mock CreateEmail createEmail;
 
-    @Mock
-    DestroyEmail destroyEmail;
+    @Mock UpdateEmail updateEmail;
 
-    @Mock
-    SetEmailMethodResponseBuilderPort setEmailMethodResponseBuilderPort;
+    @Mock DestroyEmail destroyEmail;
 
-    @Mock
-    AccountState accountState;
+    @Mock SetEmailMethodResponseBuilderPort setEmailMethodResponseBuilderPort;
 
-    @Mock
-    CreatedResult<EmailPort> createdResult;
+    @Mock AccountState accountState;
 
-    @Mock
-    UpdatedResult<EmailPort> updatedResult;
+    @Mock CreatedResult<EmailPort> createdResult;
 
-    @Mock
-    DestroyedResult destroyedResult;
+    @Mock UpdatedResult<EmailPort> updatedResult;
 
-    @Mock
-    private SetEmailMethodCallPort setEmailMethodCallPort;
+    @Mock DestroyedResult destroyedResult;
 
-    @Mock
-    private SetEmailMethodResponsePort setEmailMethodResponsePort;
+    @Mock private SetEmailMethodCallPort setEmailMethodCallPort;
 
-    @Mock
-    private ListMultimapPort<String, ResponseInvocationPort> previousResponses;
+    @Mock private SetEmailMethodResponsePort setEmailMethodResponsePort;
 
-    @InjectMocks
-    private SetEmailMethodCallService setEmailMethodCallService;
+    @Mock private ListMultimapPort<String, ResponseInvocationPort> previousResponses;
+
+    @InjectMocks private SetEmailMethodCallService setEmailMethodCallService;
 
     @Test
     public void testCall() throws AccountNotFoundException, StateMismatchException {
         String accountId = "accountId";
-       
+
         when(setEmailMethodCallPort.accountId()).thenReturn(accountId);
         when(accountStateRepository.retrive(accountId)).thenReturn(accountState, accountState);
-        when(createEmail.create(setEmailMethodCallPort, previousResponses)).thenReturn(createdResult);
-        when(updateEmail.update(setEmailMethodCallPort, previousResponses)).thenReturn(updatedResult);
+        when(createEmail.create(setEmailMethodCallPort, previousResponses))
+                .thenReturn(createdResult);
+        when(updateEmail.update(setEmailMethodCallPort, previousResponses))
+                .thenReturn(updatedResult);
         when(destroyEmail.destroy(setEmailMethodCallPort)).thenReturn(destroyedResult);
-        when(setEmailMethodResponseBuilderPort.reset()).thenReturn(setEmailMethodResponseBuilderPort);
-        when(setEmailMethodResponseBuilderPort.oldState(any())).thenReturn(setEmailMethodResponseBuilderPort);
-        when(setEmailMethodResponseBuilderPort.newState(any())).thenReturn(setEmailMethodResponseBuilderPort);
-        when(setEmailMethodResponseBuilderPort.created(any())).thenReturn(setEmailMethodResponseBuilderPort);
-        when(setEmailMethodResponseBuilderPort.notCreated(any())).thenReturn(setEmailMethodResponseBuilderPort);
-        when(setEmailMethodResponseBuilderPort.updated(any())).thenReturn(setEmailMethodResponseBuilderPort);
-        when(setEmailMethodResponseBuilderPort.notUpdated(any())).thenReturn(setEmailMethodResponseBuilderPort);
-        when(setEmailMethodResponseBuilderPort.destroyed(any())).thenReturn(setEmailMethodResponseBuilderPort);
-        when(setEmailMethodResponseBuilderPort.notDestroyed(any())).thenReturn(setEmailMethodResponseBuilderPort);
+        when(setEmailMethodResponseBuilderPort.reset())
+                .thenReturn(setEmailMethodResponseBuilderPort);
+        when(setEmailMethodResponseBuilderPort.oldState(any()))
+                .thenReturn(setEmailMethodResponseBuilderPort);
+        when(setEmailMethodResponseBuilderPort.newState(any()))
+                .thenReturn(setEmailMethodResponseBuilderPort);
+        when(setEmailMethodResponseBuilderPort.created(any()))
+                .thenReturn(setEmailMethodResponseBuilderPort);
+        when(setEmailMethodResponseBuilderPort.notCreated(any()))
+                .thenReturn(setEmailMethodResponseBuilderPort);
+        when(setEmailMethodResponseBuilderPort.updated(any()))
+                .thenReturn(setEmailMethodResponseBuilderPort);
+        when(setEmailMethodResponseBuilderPort.notUpdated(any()))
+                .thenReturn(setEmailMethodResponseBuilderPort);
+        when(setEmailMethodResponseBuilderPort.destroyed(any()))
+                .thenReturn(setEmailMethodResponseBuilderPort);
+        when(setEmailMethodResponseBuilderPort.notDestroyed(any()))
+                .thenReturn(setEmailMethodResponseBuilderPort);
         when(setEmailMethodResponseBuilderPort.build()).thenReturn(setEmailMethodResponsePort);
 
-        SetEmailMethodResponsePort result = setEmailMethodCallService.call(setEmailMethodCallPort, previousResponses);
+        SetEmailMethodResponsePort result =
+                setEmailMethodCallService.call(setEmailMethodCallPort, previousResponses);
 
         verify(setEmailMethodResponseBuilderPort).reset();
         verify(setEmailMethodResponseBuilderPort).oldState(accountState.state());

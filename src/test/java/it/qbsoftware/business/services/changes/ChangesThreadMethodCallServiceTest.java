@@ -10,14 +10,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-
 import it.qbsoftware.business.domain.entity.changes.AccountState;
 import it.qbsoftware.business.domain.entity.changes.tracker.ThreadChangesTracker;
 import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
@@ -29,38 +21,33 @@ import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesThrea
 import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesThreadMethodResponsePort;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.business.ports.out.domain.ThreadChangesTrackerRepository;
-
+import java.util.HashMap;
+import java.util.Map;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 @RunWith(org.mockito.junit.MockitoJUnitRunner.class)
 public class ChangesThreadMethodCallServiceTest {
 
-    @Mock
-    private ThreadChangesTrackerRepository threadChangesTrackerRepository;
+    @Mock private ThreadChangesTrackerRepository threadChangesTrackerRepository;
 
-    @Mock
-    private ChangesThreadMethodResponseBuilderPort changesThreadMethodResponseBuilderPort;
+    @Mock private ChangesThreadMethodResponseBuilderPort changesThreadMethodResponseBuilderPort;
 
-    @Mock
-    private AccountStateRepository accountStateRepository;
+    @Mock private AccountStateRepository accountStateRepository;
 
-    @Mock
-    private ChangesThreadMethodCallPort changesThreadMethodCallPort;
+    @Mock private ChangesThreadMethodCallPort changesThreadMethodCallPort;
 
-    @Mock
-    private ListMultimapPort<String, ResponseInvocationPort> previousResponses;
+    @Mock private ListMultimapPort<String, ResponseInvocationPort> previousResponses;
 
-    @Mock
-    private AccountState accountState;
+    @Mock private AccountState accountState;
 
-    @Mock
-    private ThreadChangesTracker threadChangesTracker;
+    @Mock private ThreadChangesTracker threadChangesTracker;
 
-    @Mock
-    private ChangesThreadMethodResponsePort changesThreadMethodResponsePort;
+    @Mock private ChangesThreadMethodResponsePort changesThreadMethodResponsePort;
 
-    @InjectMocks
-    private ChangesThreadMethodCallService changesThreadMethodCallService;
-
+    @InjectMocks private ChangesThreadMethodCallService changesThreadMethodCallService;
 
     @Test
     public void testValidCall() throws Exception {
@@ -75,17 +62,27 @@ public class ChangesThreadMethodCallServiceTest {
         when(threadChangesTracker.created()).thenReturn(changesMap);
         when(threadChangesTracker.updated()).thenReturn(changesMap);
         when(threadChangesTracker.destroyed()).thenReturn(changesMap);
-        when(changesThreadMethodResponseBuilderPort.reset()).thenReturn(changesThreadMethodResponseBuilderPort);
-        when(changesThreadMethodResponseBuilderPort.accountId(accountId)).thenReturn(changesThreadMethodResponseBuilderPort);
-        when(changesThreadMethodResponseBuilderPort.oldState(any())).thenReturn(changesThreadMethodResponseBuilderPort);
-        when(changesThreadMethodResponseBuilderPort.newState(any())).thenReturn(changesThreadMethodResponseBuilderPort);
-        when(changesThreadMethodResponseBuilderPort.created(any())).thenReturn(changesThreadMethodResponseBuilderPort);
-        when(changesThreadMethodResponseBuilderPort.updated(any())).thenReturn(changesThreadMethodResponseBuilderPort);
-        when(changesThreadMethodResponseBuilderPort.destroyed(any())).thenReturn(changesThreadMethodResponseBuilderPort);
-        when(changesThreadMethodResponseBuilderPort.hasMoreChanges(false)).thenReturn(changesThreadMethodResponseBuilderPort);
-        when(changesThreadMethodResponseBuilderPort.build()).thenReturn(changesThreadMethodResponsePort);
+        when(changesThreadMethodResponseBuilderPort.reset())
+                .thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.accountId(accountId))
+                .thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.oldState(any()))
+                .thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.newState(any()))
+                .thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.created(any()))
+                .thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.updated(any()))
+                .thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.destroyed(any()))
+                .thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.hasMoreChanges(false))
+                .thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.build())
+                .thenReturn(changesThreadMethodResponsePort);
 
-        ChangesThreadMethodResponsePort result = changesThreadMethodCallService.call(changesThreadMethodCallPort, previousResponses);
+        ChangesThreadMethodResponsePort result =
+                changesThreadMethodCallService.call(changesThreadMethodCallPort, previousResponses);
 
         verify(threadChangesTrackerRepository).retrive(accountId);
         verify(accountStateRepository).retrive(accountId);
@@ -106,15 +103,17 @@ public class ChangesThreadMethodCallServiceTest {
         Long maxChanges = -10L;
         when(changesThreadMethodCallPort.getMaxChanges()).thenReturn(maxChanges);
 
-        assertThrows(InvalidArgumentsException.class, () -> changesThreadMethodCallService.call(changesThreadMethodCallPort, null));
+        assertThrows(
+                InvalidArgumentsException.class,
+                () -> changesThreadMethodCallService.call(changesThreadMethodCallPort, null));
     }
 
     @Test
-    public void testCallWithZeroMaxChanges() throws Exception{
+    public void testCallWithZeroMaxChanges() throws Exception {
         String accountId = "testAccountId";
         Map<String, String> changesMap = new HashMap<>();
         Long maxChanges = 0L;
-        
+
         when(changesThreadMethodCallPort.getMaxChanges()).thenReturn(maxChanges);
         when(changesThreadMethodCallPort.accountId()).thenReturn(accountId);
         when(accountStateRepository.retrive(accountId)).thenReturn(accountState);
@@ -122,17 +121,27 @@ public class ChangesThreadMethodCallServiceTest {
         when(threadChangesTracker.created()).thenReturn(changesMap);
         when(threadChangesTracker.updated()).thenReturn(changesMap);
         when(threadChangesTracker.destroyed()).thenReturn(changesMap);
-        when(changesThreadMethodResponseBuilderPort.reset()).thenReturn(changesThreadMethodResponseBuilderPort);
-        when(changesThreadMethodResponseBuilderPort.accountId(accountId)).thenReturn(changesThreadMethodResponseBuilderPort);
-        when(changesThreadMethodResponseBuilderPort.oldState(any())).thenReturn(changesThreadMethodResponseBuilderPort);
-        when(changesThreadMethodResponseBuilderPort.newState(any())).thenReturn(changesThreadMethodResponseBuilderPort);
-        when(changesThreadMethodResponseBuilderPort.created(any())).thenReturn(changesThreadMethodResponseBuilderPort);
-        when(changesThreadMethodResponseBuilderPort.updated(any())).thenReturn(changesThreadMethodResponseBuilderPort);
-        when(changesThreadMethodResponseBuilderPort.destroyed(any())).thenReturn(changesThreadMethodResponseBuilderPort);
-        when(changesThreadMethodResponseBuilderPort.hasMoreChanges(false)).thenReturn(changesThreadMethodResponseBuilderPort);
-        when(changesThreadMethodResponseBuilderPort.build()).thenReturn(changesThreadMethodResponsePort);
+        when(changesThreadMethodResponseBuilderPort.reset())
+                .thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.accountId(accountId))
+                .thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.oldState(any()))
+                .thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.newState(any()))
+                .thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.created(any()))
+                .thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.updated(any()))
+                .thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.destroyed(any()))
+                .thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.hasMoreChanges(false))
+                .thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.build())
+                .thenReturn(changesThreadMethodResponsePort);
 
-        ChangesThreadMethodResponsePort result = changesThreadMethodCallService.call(changesThreadMethodCallPort, previousResponses);
+        ChangesThreadMethodResponsePort result =
+                changesThreadMethodCallService.call(changesThreadMethodCallPort, previousResponses);
 
         assertEquals(changesThreadMethodResponsePort, result);
     }
@@ -149,30 +158,40 @@ public class ChangesThreadMethodCallServiceTest {
         when(threadChangesTracker.created()).thenReturn(changesMap);
         when(threadChangesTracker.updated()).thenReturn(changesMap);
         when(threadChangesTracker.destroyed()).thenReturn(changesMap);
-        when(changesThreadMethodResponseBuilderPort.reset()).thenReturn(changesThreadMethodResponseBuilderPort);
-        when(changesThreadMethodResponseBuilderPort.accountId(accountId)).thenReturn(changesThreadMethodResponseBuilderPort);
-        when(changesThreadMethodResponseBuilderPort.oldState(any())).thenReturn(changesThreadMethodResponseBuilderPort);
-        when(changesThreadMethodResponseBuilderPort.newState(any())).thenReturn(changesThreadMethodResponseBuilderPort);
-        when(changesThreadMethodResponseBuilderPort.created(any())).thenReturn(changesThreadMethodResponseBuilderPort);
-        when(changesThreadMethodResponseBuilderPort.updated(any())).thenReturn(changesThreadMethodResponseBuilderPort);
-        when(changesThreadMethodResponseBuilderPort.destroyed(any())).thenReturn(changesThreadMethodResponseBuilderPort);
-        when(changesThreadMethodResponseBuilderPort.hasMoreChanges(false)).thenReturn(changesThreadMethodResponseBuilderPort);
-        when(changesThreadMethodResponseBuilderPort.build()).thenReturn(changesThreadMethodResponsePort);
+        when(changesThreadMethodResponseBuilderPort.reset())
+                .thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.accountId(accountId))
+                .thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.oldState(any()))
+                .thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.newState(any()))
+                .thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.created(any()))
+                .thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.updated(any()))
+                .thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.destroyed(any()))
+                .thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.hasMoreChanges(false))
+                .thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.build())
+                .thenReturn(changesThreadMethodResponsePort);
 
-        ChangesThreadMethodResponsePort result = changesThreadMethodCallService.call(changesThreadMethodCallPort, previousResponses);
+        ChangesThreadMethodResponsePort result =
+                changesThreadMethodCallService.call(changesThreadMethodCallPort, previousResponses);
 
         assertEquals(changesThreadMethodResponsePort, result);
     }
 
     @Test
-    public void testCallWithOneMaxChanges() throws Exception{
+    public void testCallWithOneMaxChanges() throws Exception {
         String accountId = "testAccountId";
         Map<String, String> changesMap = new HashMap<>();
         Map<String, String> changesMap2 = new HashMap<>();
         changesMap2.put("chiave1", "valore1b");
         changesMap2.put("chiave2", "valore2a");
         Long maxChanges = 1L;
-        
+
         when(changesThreadMethodCallPort.getMaxChanges()).thenReturn(maxChanges);
         when(changesThreadMethodCallPort.accountId()).thenReturn(accountId);
         when(accountStateRepository.retrive(accountId)).thenReturn(accountState);
@@ -181,7 +200,9 @@ public class ChangesThreadMethodCallServiceTest {
         when(threadChangesTracker.updated()).thenReturn(changesMap2);
         when(threadChangesTracker.destroyed()).thenReturn(changesMap);
 
-        assertThrows(CannotCalculateChangesException.class, () -> changesThreadMethodCallService.call(changesThreadMethodCallPort, null));
+        assertThrows(
+                CannotCalculateChangesException.class,
+                () -> changesThreadMethodCallService.call(changesThreadMethodCallPort, null));
     }
 
     @Test
@@ -195,17 +216,27 @@ public class ChangesThreadMethodCallServiceTest {
         when(changesThreadMethodCallPort.accountId()).thenReturn(accountId);
         when(accountState.state()).thenReturn(sinceState);
         when(accountStateRepository.retrive(anyString())).thenReturn(accountState);
-        when(changesThreadMethodResponseBuilderPort.reset()).thenReturn(changesThreadMethodResponseBuilderPort);
-        when(changesThreadMethodResponseBuilderPort.accountId(accountId)).thenReturn(changesThreadMethodResponseBuilderPort);
-        when(changesThreadMethodResponseBuilderPort.oldState(any())).thenReturn(changesThreadMethodResponseBuilderPort);
-        when(changesThreadMethodResponseBuilderPort.newState(any())).thenReturn(changesThreadMethodResponseBuilderPort);
-        when(changesThreadMethodResponseBuilderPort.created(any())).thenReturn(changesThreadMethodResponseBuilderPort);
-        when(changesThreadMethodResponseBuilderPort.updated(any())).thenReturn(changesThreadMethodResponseBuilderPort);
-        when(changesThreadMethodResponseBuilderPort.destroyed(any())).thenReturn(changesThreadMethodResponseBuilderPort);
-        when(changesThreadMethodResponseBuilderPort.hasMoreChanges(anyBoolean())).thenReturn(changesThreadMethodResponseBuilderPort);
-        when(changesThreadMethodResponseBuilderPort.build()).thenReturn(mock(ChangesThreadMethodResponsePort.class));
+        when(changesThreadMethodResponseBuilderPort.reset())
+                .thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.accountId(accountId))
+                .thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.oldState(any()))
+                .thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.newState(any()))
+                .thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.created(any()))
+                .thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.updated(any()))
+                .thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.destroyed(any()))
+                .thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.hasMoreChanges(anyBoolean()))
+                .thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.build())
+                .thenReturn(mock(ChangesThreadMethodResponsePort.class));
 
-        ChangesThreadMethodResponsePort result = changesThreadMethodCallService.call(changesThreadMethodCallPort, null);
+        ChangesThreadMethodResponsePort result =
+                changesThreadMethodCallService.call(changesThreadMethodCallPort, null);
 
         assertNotNull(result);
     }
@@ -222,24 +253,32 @@ public class ChangesThreadMethodCallServiceTest {
         when(changesThreadMethodCallPort.accountId()).thenReturn(accountId);
         when(accountState.state()).thenReturn("notSinceState");
         when(accountStateRepository.retrive(anyString())).thenReturn(accountState);
-        when(changesThreadMethodResponseBuilderPort.reset()).thenReturn(changesThreadMethodResponseBuilderPort);
-        when(changesThreadMethodResponseBuilderPort.accountId(accountId)).thenReturn(changesThreadMethodResponseBuilderPort);
-        when(changesThreadMethodResponseBuilderPort.oldState(any())).thenReturn(changesThreadMethodResponseBuilderPort);
-        when(changesThreadMethodResponseBuilderPort.newState(any())).thenReturn(changesThreadMethodResponseBuilderPort);
-        when(changesThreadMethodResponseBuilderPort.created(any())).thenReturn(changesThreadMethodResponseBuilderPort);
-        when(changesThreadMethodResponseBuilderPort.updated(any())).thenReturn(changesThreadMethodResponseBuilderPort);
-        when(changesThreadMethodResponseBuilderPort.destroyed(any())).thenReturn(changesThreadMethodResponseBuilderPort);
-        when(changesThreadMethodResponseBuilderPort.hasMoreChanges(anyBoolean())).thenReturn(changesThreadMethodResponseBuilderPort);
-        when(changesThreadMethodResponseBuilderPort.build()).thenReturn(mock(ChangesThreadMethodResponsePort.class));
+        when(changesThreadMethodResponseBuilderPort.reset())
+                .thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.accountId(accountId))
+                .thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.oldState(any()))
+                .thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.newState(any()))
+                .thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.created(any()))
+                .thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.updated(any()))
+                .thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.destroyed(any()))
+                .thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.hasMoreChanges(anyBoolean()))
+                .thenReturn(changesThreadMethodResponseBuilderPort);
+        when(changesThreadMethodResponseBuilderPort.build())
+                .thenReturn(mock(ChangesThreadMethodResponsePort.class));
         when(threadChangesTrackerRepository.retrive(accountId)).thenReturn(threadChangesTracker);
         when(threadChangesTracker.created()).thenReturn(changesMap);
         when(threadChangesTracker.updated()).thenReturn(changesMap);
         when(threadChangesTracker.destroyed()).thenReturn(changesMap);
 
-        ChangesThreadMethodResponsePort result = changesThreadMethodCallService.call(changesThreadMethodCallPort, null);
+        ChangesThreadMethodResponsePort result =
+                changesThreadMethodCallService.call(changesThreadMethodCallPort, null);
 
         assertNotNull(result);
     }
-
-
 }

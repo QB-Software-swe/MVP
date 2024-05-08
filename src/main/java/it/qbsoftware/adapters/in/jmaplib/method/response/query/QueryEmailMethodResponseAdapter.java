@@ -6,7 +6,8 @@ import rs.ltt.jmap.common.method.response.email.QueryEmailMethodResponse;
 public class QueryEmailMethodResponseAdapter implements QueryEmailMethodResponsePort {
     private final QueryEmailMethodResponse queryEmailMethodResponse;
 
-    public QueryEmailMethodResponseAdapter(final QueryEmailMethodResponse queryEmailMethodResponse) {
+    public QueryEmailMethodResponseAdapter(
+            final QueryEmailMethodResponse queryEmailMethodResponse) {
         this.queryEmailMethodResponse = queryEmailMethodResponse;
     }
 

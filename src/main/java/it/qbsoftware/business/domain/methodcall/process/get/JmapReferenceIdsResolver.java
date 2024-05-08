@@ -7,7 +7,7 @@ import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
 import it.qbsoftware.business.ports.in.jmap.method.call.get.GetMethodCallPort;
 import it.qbsoftware.business.ports.in.jmap.util.ResultReferenceResolverPort;
 
-public class JmapReferenceIdsResolver implements GetReferenceIdsResolver {
+public class JmapReferenceIdsResolver implements ReferenceIdsResolver {
     private final ResultReferenceResolverPort resultReferenceResolverPort;
 
     public JmapReferenceIdsResolver(final ResultReferenceResolverPort resultReferenceResolverPort) {
@@ -15,15 +15,18 @@ public class JmapReferenceIdsResolver implements GetReferenceIdsResolver {
     }
 
     @Override
-    public String[] resolve(final GetMethodCallPort getMethodCallPort,
+    public String[] resolve(
+            final GetMethodCallPort getMethodCallPort,
             final ListMultimapPort<String, ResponseInvocationPort> previousResponses)
             throws InvalidResultReferenceExecption {
 
-        final InvocationResultReferencePort invocationResultReferencePort = getMethodCallPort.getIdsReference();
+        final InvocationResultReferencePort invocationResultReferencePort =
+                getMethodCallPort.getIdsReference();
 
         if (invocationResultReferencePort != null) {
             try {
-                return resultReferenceResolverPort.resolve(getMethodCallPort.getIdsReference(), previousResponses);
+                return resultReferenceResolverPort.resolve(
+                        getMethodCallPort.getIdsReference(), previousResponses);
             } catch (final Exception exception) {
                 throw new InvalidResultReferenceExecption();
             }
@@ -31,5 +34,4 @@ public class JmapReferenceIdsResolver implements GetReferenceIdsResolver {
 
         return getMethodCallPort.getIds();
     }
-
 }

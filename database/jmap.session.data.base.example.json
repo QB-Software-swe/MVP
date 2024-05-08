@@ -1,0 +1,114 @@
+[{
+  "_id": "team@qbsoftware.swe.it",
+  "username": "qbsoftware",
+  "apiUrl": "/api",
+  "downloadUrl": "/download",
+  "uploadUrl": "/upload",
+  "eventSourceUrl": "/eventsource",
+  "accounts": {
+    "team@qbsoftware.swe.it": {
+      "name": "QB Software",
+      "isPersonal": true,
+      "isReadOnly": false,
+      "accountCapabilities": {
+        "urn:ietf:params:jmap:mail": {
+          "maxMailboxesPerEmail": 100,
+          "maxMailboxDepth": 100,
+          "maxSizeMailboxName": 10000,
+          "maxSizeAttachmentsPerEmail": 10000,
+          "mayCreateTopLevelMailbox": true
+        }
+      }
+    }
+  },
+  "primaryAccounts": {
+    "urn:ietf:params:jmap:mail": "team@qbsoftware.swe.it"
+  },
+  "capabilities": {
+    "urn:ietf:params:jmap:core": {
+      "maxSizeUpload": 50000000,
+      "maxConcurrentUpload": 4,
+      "maxCallsInRequest": 16,
+      "maxObjectsInGet": 500,
+      "maxObjectsInSet": 500
+    },
+    "urn:ietf:params:jmap:mail": {}
+  },
+  "state": "0"
+},
+{
+  "_id": "example.email@example.net",
+  "username": "qbsoftware",
+  "apiUrl": "/api",
+  "downloadUrl": "/download",
+  "uploadUrl": "/upload",
+  "eventSourceUrl": "/eventsource",
+  "accounts": {
+    "example.email@example.net": {
+      "name": "QB Software",
+      "isPersonal": true,
+      "isReadOnly": false,
+      "accountCapabilities": {
+        "urn:ietf:params:jmap:mail": {
+          "maxMailboxesPerEmail": 100,
+          "maxMailboxDepth": 100,
+          "maxSizeMailboxName": 10000,
+          "maxSizeAttachmentsPerEmail": 10000,
+          "mayCreateTopLevelMailbox": true
+        }
+      }
+    }
+  },
+  "primaryAccounts": {
+    "urn:ietf:params:jmap:mail": "example.email@example.net"
+  },
+  "capabilities": {
+    "urn:ietf:params:jmap:core": {
+      "maxSizeUpload": 50000000,
+      "maxConcurrentUpload": 4,
+      "maxCallsInRequest": 16,
+      "maxObjectsInGet": 500,
+      "maxObjectsInSet": 500
+    },
+    "urn:ietf:params:jmap:mail": {}
+  },
+  "state": "0"
+},
+{
+  "_id": "alphabravo@delta.a3x",
+  "username": "qbsoftware",
+  "apiUrl": "/api",
+  "downloadUrl": "/download",
+  "uploadUrl": "/upload",
+  "eventSourceUrl": "/eventsource",
+  "accounts": {
+    "alphabravo@delta.a3x": {
+      "name": "QB Software",
+      "isPersonal": true,
+      "isReadOnly": false,
+      "accountCapabilities": {
+        "urn:ietf:params:jmap:mail": {
+          "maxMailboxesPerEmail": 100,
+          "maxMailboxDepth": 100,
+          "maxSizeMailboxName": 10000,
+          "maxSizeAttachmentsPerEmail": 10000,
+          "mayCreateTopLevelMailbox": true
+        }
+      }
+    }
+  },
+  "primaryAccounts": {
+    "urn:ietf:params:jmap:mail": "alphabravo@delta.a3x"
+  },
+  "capabilities": {
+    "urn:ietf:params:jmap:core": {
+      "maxSizeUpload": 50000000,
+      "maxConcurrentUpload": 4,
+      "maxCallsInRequest": 16,
+      "maxObjectsInGet": 500,
+      "maxObjectsInSet": 500
+    },
+    "urn:ietf:params:jmap:mail": {}
+  },
+  "state": "0"
+}]

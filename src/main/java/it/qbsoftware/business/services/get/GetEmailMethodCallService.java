@@ -6,7 +6,7 @@ import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
 import it.qbsoftware.business.domain.exception.InvalidResultReferenceExecption;
 import it.qbsoftware.business.domain.methodcall.filter.EmailFilterBodyPartSettings;
 import it.qbsoftware.business.domain.methodcall.filter.EmailPropertiesFilter;
-import it.qbsoftware.business.domain.methodcall.process.get.GetReferenceIdsResolver;
+import it.qbsoftware.business.domain.methodcall.process.get.ReferenceIdsResolver;
 import it.qbsoftware.business.domain.util.get.RetrivedEntity;
 import it.qbsoftware.business.ports.in.guava.ListMultimapPort;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailPort;
@@ -22,14 +22,15 @@ public class GetEmailMethodCallService implements GetEmailMethodCallUsecase {
     private final GetEmailMethodResponseBuilderPort getEmailMethodResponseBuilderPort;
     private final AccountStateRepository accountStateRepository;
     private final EmailRepository emailRepository;
-    private final GetReferenceIdsResolver getReferenceIdsResolver;
+    private final ReferenceIdsResolver getReferenceIdsResolver;
     private final EmailPropertiesFilter emailPropertiesFilter;
 
-    public GetEmailMethodCallService(final AccountStateRepository accountStateRepository,
+    public GetEmailMethodCallService(
+            final AccountStateRepository accountStateRepository,
             final EmailPropertiesFilter emailPropertiesFilter,
             final EmailRepository emailRepository,
             final GetEmailMethodResponseBuilderPort getEmailMethodResponseBuilderPort,
-            final GetReferenceIdsResolver getReferenceIdsResolver) {
+            final ReferenceIdsResolver getReferenceIdsResolver) {
         this.getEmailMethodResponseBuilderPort = getEmailMethodResponseBuilderPort;
         this.accountStateRepository = accountStateRepository;
         this.emailRepository = emailRepository;
@@ -38,26 +39,37 @@ public class GetEmailMethodCallService implements GetEmailMethodCallUsecase {
     }
 
     @Override
-    public GetEmailMethodResponsePort call(final GetEmailMethodCallPort getEmailMethodCallPort,
+    public GetEmailMethodResponsePort call(
+            final GetEmailMethodCallPort getEmailMethodCallPort,
             final ListMultimapPort<String, ResponseInvocationPort> previousResponses)
-            throws AccountNotFoundException, InvalidArgumentsException, InvalidResultReferenceExecption {
+            throws AccountNotFoundException,
+                    InvalidArgumentsException,
+                    InvalidResultReferenceExecption {
 
         final String accountId = getEmailMethodCallPort.accountId();
         final AccountState accountState = accountStateRepository.retrive(accountId);
 
-        final String[] emailIds = getReferenceIdsResolver.resolve(getEmailMethodCallPort, previousResponses);
+        final String[] emailIds =
+                getReferenceIdsResolver.resolve(getEmailMethodCallPort, previousResponses);
 
-        final RetrivedEntity<EmailPort> retrivedEmailsResult = emailIds != null
-                ? emailRepository.retrive(emailIds)
-                : emailRepository.retriveAll(accountId);
+        final RetrivedEntity<EmailPort> retrivedEmailsResult =
+                emailIds != null
+                        ? emailRepository.retrive(emailIds)
+                        : emailRepository.retriveAll(accountId);
 
-        final EmailFilterBodyPartSettings emailFilterBodyPartSettings = new EmailFilterBodyPartSettings(
-                getEmailMethodCallPort.getBodyProperties(), getEmailMethodCallPort.getFetchTextBodyValues(),
-                getEmailMethodCallPort.getFetchHtmlBodyValues(), getEmailMethodCallPort.getFetchAllBodyValues(),
-                getEmailMethodCallPort.getMaxBodyValueBytes());
+        final EmailFilterBodyPartSettings emailFilterBodyPartSettings =
+                new EmailFilterBodyPartSettings(
+                        getEmailMethodCallPort.getBodyProperties(),
+                        getEmailMethodCallPort.getFetchTextBodyValues(),
+                        getEmailMethodCallPort.getFetchHtmlBodyValues(),
+                        getEmailMethodCallPort.getFetchAllBodyValues(),
+                        getEmailMethodCallPort.getMaxBodyValueBytes());
 
-        final EmailPort[] emailsFiltred = emailPropertiesFilter.filter(retrivedEmailsResult.found(),
-                getEmailMethodCallPort.getProperties(), emailFilterBodyPartSettings);
+        final EmailPort[] emailsFiltred =
+                emailPropertiesFilter.filter(
+                        retrivedEmailsResult.found(),
+                        getEmailMethodCallPort.getProperties(),
+                        emailFilterBodyPartSettings);
 
         return getEmailMethodResponseBuilderPort
                 .reset()

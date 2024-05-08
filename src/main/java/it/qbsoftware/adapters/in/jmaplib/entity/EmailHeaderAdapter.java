@@ -12,5 +12,6 @@ public class EmailHeaderAdapter implements EmailHeaderPort {
 
     public EmailHeader adaptee() {
         return emailHeader;
-    };
+    }
+    ;
 }

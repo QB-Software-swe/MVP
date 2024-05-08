@@ -9,6 +9,10 @@ import it.qbsoftware.business.ports.in.jmap.method.call.get.GetThreadMethodCallP
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetThreadMethodResponsePort;
 
 public interface GetThreadMethodCallUsecase {
-    public GetThreadMethodResponsePort call(final GetThreadMethodCallPort getThreadMethodCallPort,
-            final ListMultimapPort<String, ResponseInvocationPort> previouseResponses) throws AccountNotFoundException, InvalidResultReferenceExecption, InvalidArgumentsException;
+    public GetThreadMethodResponsePort call(
+            final GetThreadMethodCallPort getThreadMethodCallPort,
+            final ListMultimapPort<String, ResponseInvocationPort> previouseResponses)
+            throws AccountNotFoundException,
+                    InvalidResultReferenceExecption,
+                    InvalidArgumentsException;
 }

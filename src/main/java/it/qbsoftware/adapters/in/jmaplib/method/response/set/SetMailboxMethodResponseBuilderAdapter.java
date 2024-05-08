@@ -1,18 +1,18 @@
 package it.qbsoftware.adapters.in.jmaplib.method.response.set;
 
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import it.qbsoftware.adapters.in.jmaplib.entity.MailboxAdapter;
 import it.qbsoftware.adapters.in.jmaplib.entity.SetErrorAdapter;
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxPort;
 import it.qbsoftware.business.ports.in.jmap.entity.SetErrorPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.set.SetMailboxMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.set.SetMailboxMethodResponsePort;
+import java.util.Map;
+import java.util.stream.Collectors;
 import rs.ltt.jmap.common.method.response.mailbox.SetMailboxMethodResponse;
 
 public class SetMailboxMethodResponseBuilderAdapter implements SetMailboxMethodResponseBuilderPort {
-    private SetMailboxMethodResponse.SetMailboxMethodResponseBuilder setMailboxMethodResponseBuilder;
+    private SetMailboxMethodResponse.SetMailboxMethodResponseBuilder
+            setMailboxMethodResponseBuilder;
 
     public SetMailboxMethodResponseBuilderAdapter() {
         this.setMailboxMethodResponseBuilder = SetMailboxMethodResponse.builder();
@@ -38,15 +38,23 @@ public class SetMailboxMethodResponseBuilderAdapter implements SetMailboxMethodR
 
     @Override
     public SetMailboxMethodResponseBuilderPort created(final Map<String, MailboxPort> created) {
-        setMailboxMethodResponseBuilder.created(created.entrySet().stream()
-                .collect(Collectors.toMap(e -> e.getKey(), e -> ((MailboxAdapter) e.getValue()).adaptee())));
+        setMailboxMethodResponseBuilder.created(
+                created.entrySet().stream()
+                        .collect(
+                                Collectors.toMap(
+                                        e -> e.getKey(),
+                                        e -> ((MailboxAdapter) e.getValue()).adaptee())));
         return this;
     }
 
     @Override
     public SetMailboxMethodResponseBuilderPort updated(final Map<String, MailboxPort> updated) {
-        setMailboxMethodResponseBuilder.updated(updated.entrySet().stream()
-                .collect(Collectors.toMap(e -> e.getKey(), e -> ((MailboxAdapter) e.getValue()).adaptee())));
+        setMailboxMethodResponseBuilder.updated(
+                updated.entrySet().stream()
+                        .collect(
+                                Collectors.toMap(
+                                        e -> e.getKey(),
+                                        e -> ((MailboxAdapter) e.getValue()).adaptee())));
         return this;
     }
 
@@ -57,10 +65,15 @@ public class SetMailboxMethodResponseBuilderAdapter implements SetMailboxMethodR
     }
 
     @Override
-    public SetMailboxMethodResponseBuilderPort notCreated(final Map<String, SetErrorPort> notCreated) {
+    public SetMailboxMethodResponseBuilderPort notCreated(
+            final Map<String, SetErrorPort> notCreated) {
         if (notCreated != null) {
-            setMailboxMethodResponseBuilder.notCreated(notCreated.entrySet().stream()
-                    .collect(Collectors.toMap(e -> e.getKey(), e -> ((SetErrorAdapter) e.getValue()).adaptee())));
+            setMailboxMethodResponseBuilder.notCreated(
+                    notCreated.entrySet().stream()
+                            .collect(
+                                    Collectors.toMap(
+                                            e -> e.getKey(),
+                                            e -> ((SetErrorAdapter) e.getValue()).adaptee())));
         } else {
             setMailboxMethodResponseBuilder.notCreated(null);
         }
@@ -68,10 +81,15 @@ public class SetMailboxMethodResponseBuilderAdapter implements SetMailboxMethodR
     }
 
     @Override
-    public SetMailboxMethodResponseBuilderPort notUpdated(final Map<String, SetErrorPort> notUpdated) {
+    public SetMailboxMethodResponseBuilderPort notUpdated(
+            final Map<String, SetErrorPort> notUpdated) {
         if (notUpdated != null) {
-            setMailboxMethodResponseBuilder.notUpdated(notUpdated.entrySet().stream()
-                    .collect(Collectors.toMap(e -> e.getKey(), e -> ((SetErrorAdapter) e.getValue()).adaptee())));
+            setMailboxMethodResponseBuilder.notUpdated(
+                    notUpdated.entrySet().stream()
+                            .collect(
+                                    Collectors.toMap(
+                                            e -> e.getKey(),
+                                            e -> ((SetErrorAdapter) e.getValue()).adaptee())));
         } else {
             setMailboxMethodResponseBuilder.notUpdated(null);
         }
@@ -79,10 +97,15 @@ public class SetMailboxMethodResponseBuilderAdapter implements SetMailboxMethodR
     }
 
     @Override
-    public SetMailboxMethodResponseBuilderPort notDestroyed(final Map<String, SetErrorPort> notDestroyed) {
+    public SetMailboxMethodResponseBuilderPort notDestroyed(
+            final Map<String, SetErrorPort> notDestroyed) {
         if (notDestroyed != null) {
-            setMailboxMethodResponseBuilder.notDestroyed(notDestroyed.entrySet().stream()
-                    .collect(Collectors.toMap(e -> e.getKey(), e -> ((SetErrorAdapter) e.getValue()).adaptee())));
+            setMailboxMethodResponseBuilder.notDestroyed(
+                    notDestroyed.entrySet().stream()
+                            .collect(
+                                    Collectors.toMap(
+                                            e -> e.getKey(),
+                                            e -> ((SetErrorAdapter) e.getValue()).adaptee())));
         } else {
             setMailboxMethodResponseBuilder.notDestroyed(null);
         }
@@ -99,5 +122,4 @@ public class SetMailboxMethodResponseBuilderAdapter implements SetMailboxMethodR
         setMailboxMethodResponseBuilder = SetMailboxMethodResponse.builder();
         return this;
     }
-
 }

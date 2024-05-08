@@ -1,9 +1,5 @@
 package it.qbsoftware.business.domain.methodcall.process.set.destroy;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import it.qbsoftware.business.domain.entity.changes.AccountState;
 import it.qbsoftware.business.domain.entity.changes.tracker.MailboxChangesTracker;
 import it.qbsoftware.business.domain.exception.AccountNotFoundException;
@@ -14,6 +10,9 @@ import it.qbsoftware.business.ports.in.jmap.method.call.set.SetMailboxMethodCall
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.business.ports.out.domain.MailboxChangesTrackerRepository;
 import it.qbsoftware.business.ports.out.jmap.MailboxRepository;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class StandardDestroyMailbox implements DestroyMailbox {
     private final AccountStateRepository accountStateRepository;
@@ -21,14 +20,15 @@ public class StandardDestroyMailbox implements DestroyMailbox {
     private final MailboxRepository mailboxRepository;
     private final SetErrorEnumPort setErrorEnumPort;
 
-    public StandardDestroyMailbox(final AccountStateRepository accountStateRepository,
+    public StandardDestroyMailbox(
+            final AccountStateRepository accountStateRepository,
             final MailboxChangesTrackerRepository mailboxChangesTrackerRepository,
-            final MailboxRepository mailboxRepository, final SetErrorEnumPort setErrorEnumPort) {
+            final MailboxRepository mailboxRepository,
+            final SetErrorEnumPort setErrorEnumPort) {
         this.accountStateRepository = accountStateRepository;
         this.mailboxChangesTrackerRepository = mailboxChangesTrackerRepository;
         this.mailboxRepository = mailboxRepository;
         this.setErrorEnumPort = setErrorEnumPort;
-
     }
 
     @Override
@@ -57,9 +57,11 @@ public class StandardDestroyMailbox implements DestroyMailbox {
         updateMailboxChanges(idMailbox, accountId);
     }
 
-    private void updateMailboxChanges(final String idMailbox, final String accountId) throws AccountNotFoundException {
+    private void updateMailboxChanges(final String idMailbox, final String accountId)
+            throws AccountNotFoundException {
         AccountState accountState = accountStateRepository.retrive(accountId);
-        final MailboxChangesTracker mailboxChangesTracker = mailboxChangesTrackerRepository.retrive(accountId);
+        final MailboxChangesTracker mailboxChangesTracker =
+                mailboxChangesTrackerRepository.retrive(accountId);
 
         accountState = accountState.increaseState();
         mailboxChangesTracker.mailboxHasBeenCreated(accountState.state(), idMailbox);

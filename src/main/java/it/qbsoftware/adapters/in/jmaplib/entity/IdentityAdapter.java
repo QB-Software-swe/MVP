@@ -1,10 +1,9 @@
 package it.qbsoftware.adapters.in.jmaplib.entity;
 
-import java.util.stream.Collectors;
-
 import it.qbsoftware.business.ports.in.jmap.entity.EmailAddressPort;
 import it.qbsoftware.business.ports.in.jmap.entity.IdentityBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.IdentityPort;
+import java.util.stream.Collectors;
 import rs.ltt.jmap.common.entity.Identity;
 
 public class IdentityAdapter implements IdentityPort {
@@ -32,16 +31,20 @@ public class IdentityAdapter implements IdentityPort {
     @Override
     public EmailAddressPort[] getReplyTo() {
         return this.identity.getReplyTo() != null
-                ? this.identity.getReplyTo().stream().map(emailAddress -> new EmailAddressAdapter(emailAddress))
-                        .collect(Collectors.toList()).toArray(EmailAddressAdapter[]::new)
+                ? this.identity.getReplyTo().stream()
+                        .map(emailAddress -> new EmailAddressAdapter(emailAddress))
+                        .collect(Collectors.toList())
+                        .toArray(EmailAddressAdapter[]::new)
                 : null;
     }
 
     @Override
     public EmailAddressPort[] getBcc() {
         return this.identity.getBcc() != null
-                ? this.identity.getBcc().stream().map(emailAddress -> new EmailAddressAdapter(emailAddress))
-                        .collect(Collectors.toList()).toArray(EmailAddressAdapter[]::new)
+                ? this.identity.getBcc().stream()
+                        .map(emailAddress -> new EmailAddressAdapter(emailAddress))
+                        .collect(Collectors.toList())
+                        .toArray(EmailAddressAdapter[]::new)
                 : null;
     }
 

@@ -26,5 +26,4 @@ public class SetErrorEnumAdapter implements SetErrorEnumPort {
     public SetErrorPort invalidPatch() {
         return new SetErrorAdapter(new SetError(SetErrorType.INVALID_PATCH, ""));
     }
-
 }

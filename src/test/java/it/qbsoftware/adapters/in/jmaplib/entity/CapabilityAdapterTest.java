@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
-
 import rs.ltt.jmap.common.entity.Capability;
 
 public class CapabilityAdapterTest {
@@ -14,5 +13,4 @@ public class CapabilityAdapterTest {
         CapabilityAdapter capabilityAdapter = new CapabilityAdapter(capability);
         assertEquals(capability, capabilityAdapter.adaptee());
     }
-    
 }

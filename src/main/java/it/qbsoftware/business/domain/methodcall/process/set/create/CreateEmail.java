@@ -8,8 +8,8 @@ import it.qbsoftware.business.ports.in.jmap.method.call.set.SetEmailMethodCallPo
 
 public interface CreateEmail {
 
-    CreatedResult<EmailPort> create(final SetEmailMethodCallPort setEmailMethodCallPort,
+    CreatedResult<EmailPort> create(
+            final SetEmailMethodCallPort setEmailMethodCallPort,
             final ListMultimapPort<String, ResponseInvocationPort> previousResponses)
             throws AccountNotFoundException;
-
 }

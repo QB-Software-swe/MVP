@@ -5,9 +5,10 @@ import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesMailb
 import rs.ltt.jmap.common.method.response.mailbox.ChangesMailboxMethodResponse;
 import rs.ltt.jmap.common.method.response.mailbox.ChangesMailboxMethodResponse.ChangesMailboxMethodResponseBuilder;
 
-public class ChangesMailboxMethodResponseBuilderAdapter implements ChangesMailboxMethodResponseBuilderPort {
-    private ChangesMailboxMethodResponseBuilder changesMailboxMethodResponseBuilder = ChangesMailboxMethodResponse
-            .builder();
+public class ChangesMailboxMethodResponseBuilderAdapter
+        implements ChangesMailboxMethodResponseBuilderPort {
+    private ChangesMailboxMethodResponseBuilder changesMailboxMethodResponseBuilder =
+            ChangesMailboxMethodResponse.builder();
 
     @Override
     public ChangesMailboxMethodResponseBuilderPort accountId(final String accountId) {
@@ -52,7 +53,8 @@ public class ChangesMailboxMethodResponseBuilderAdapter implements ChangesMailbo
     }
 
     @Override
-    public ChangesMailboxMethodResponseBuilderPort updatedProperties(final String[] updateProperties) {
+    public ChangesMailboxMethodResponseBuilderPort updatedProperties(
+            final String[] updateProperties) {
         changesMailboxMethodResponseBuilder.updated(updateProperties);
         return this;
     }
@@ -67,5 +69,4 @@ public class ChangesMailboxMethodResponseBuilderAdapter implements ChangesMailbo
         changesMailboxMethodResponseBuilder = ChangesMailboxMethodResponse.builder();
         return this;
     }
-
 }

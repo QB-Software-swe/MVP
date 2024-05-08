@@ -10,14 +10,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-
 import it.qbsoftware.business.domain.entity.changes.AccountState;
 import it.qbsoftware.business.domain.entity.changes.tracker.MailboxChangesTracker;
 import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
@@ -29,38 +21,33 @@ import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesMailb
 import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesMailboxMethodResponsePort;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.business.ports.out.domain.MailboxChangesTrackerRepository;
-
+import java.util.HashMap;
+import java.util.Map;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 @RunWith(org.mockito.junit.MockitoJUnitRunner.class)
 public class ChangesMailboxMethodCallServiceTest {
 
-    @Mock
-    private MailboxChangesTrackerRepository mailboxChangesTrackerRepository;
+    @Mock private MailboxChangesTrackerRepository mailboxChangesTrackerRepository;
 
-    @Mock
-    private ChangesMailboxMethodResponseBuilderPort changesMailboxMethodResponseBuilderPort;
+    @Mock private ChangesMailboxMethodResponseBuilderPort changesMailboxMethodResponseBuilderPort;
 
-    @Mock
-    private AccountStateRepository accountStateRepository;
+    @Mock private AccountStateRepository accountStateRepository;
 
-    @Mock
-    private ChangesMailboxMethodCallPort changesMailboxMethodCallPort;
+    @Mock private ChangesMailboxMethodCallPort changesMailboxMethodCallPort;
 
-    @Mock
-    private ListMultimapPort<String, ResponseInvocationPort> previousResponses;
+    @Mock private ListMultimapPort<String, ResponseInvocationPort> previousResponses;
 
-    @Mock
-    private AccountState accountState;
+    @Mock private AccountState accountState;
 
-    @Mock
-    private MailboxChangesTracker mailboxChangesTracker;
+    @Mock private MailboxChangesTracker mailboxChangesTracker;
 
-    @Mock
-    private ChangesMailboxMethodResponsePort changesMailboxMethodResponsePort;
+    @Mock private ChangesMailboxMethodResponsePort changesMailboxMethodResponsePort;
 
-    @InjectMocks
-    private ChangesMailboxMethodCallService changesMailboxMethodCallService;
-
+    @InjectMocks private ChangesMailboxMethodCallService changesMailboxMethodCallService;
 
     @Test
     public void testValidCall() throws Exception {
@@ -75,17 +62,28 @@ public class ChangesMailboxMethodCallServiceTest {
         when(mailboxChangesTracker.created()).thenReturn(changesMap);
         when(mailboxChangesTracker.updated()).thenReturn(changesMap);
         when(mailboxChangesTracker.destroyed()).thenReturn(changesMap);
-        when(changesMailboxMethodResponseBuilderPort.reset()).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.accountId(accountId)).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.oldState(any())).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.newState(any())).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.created(any())).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.updated(any())).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.destroyed(any())).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.hasMoreChanges(false)).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.build()).thenReturn(changesMailboxMethodResponsePort);
+        when(changesMailboxMethodResponseBuilderPort.reset())
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.accountId(accountId))
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.oldState(any()))
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.newState(any()))
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.created(any()))
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.updated(any()))
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.destroyed(any()))
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.hasMoreChanges(false))
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.build())
+                .thenReturn(changesMailboxMethodResponsePort);
 
-        ChangesMailboxMethodResponsePort result = changesMailboxMethodCallService.call(changesMailboxMethodCallPort, previousResponses);
+        ChangesMailboxMethodResponsePort result =
+                changesMailboxMethodCallService.call(
+                        changesMailboxMethodCallPort, previousResponses);
 
         verify(mailboxChangesTrackerRepository).retrive(accountId);
         verify(accountStateRepository).retrive(accountId);
@@ -106,15 +104,17 @@ public class ChangesMailboxMethodCallServiceTest {
         Long maxChanges = -10L;
         when(changesMailboxMethodCallPort.getMaxChanges()).thenReturn(maxChanges);
 
-        assertThrows(InvalidArgumentsException.class, () -> changesMailboxMethodCallService.call(changesMailboxMethodCallPort, null));
+        assertThrows(
+                InvalidArgumentsException.class,
+                () -> changesMailboxMethodCallService.call(changesMailboxMethodCallPort, null));
     }
 
     @Test
-    public void testCallWithZeroMaxChanges() throws Exception{
+    public void testCallWithZeroMaxChanges() throws Exception {
         String accountId = "testAccountId";
         Map<String, String> changesMap = new HashMap<>();
         Long maxChanges = 0L;
-        
+
         when(changesMailboxMethodCallPort.getMaxChanges()).thenReturn(maxChanges);
         when(changesMailboxMethodCallPort.accountId()).thenReturn(accountId);
         when(accountStateRepository.retrive(accountId)).thenReturn(accountState);
@@ -122,17 +122,28 @@ public class ChangesMailboxMethodCallServiceTest {
         when(mailboxChangesTracker.created()).thenReturn(changesMap);
         when(mailboxChangesTracker.updated()).thenReturn(changesMap);
         when(mailboxChangesTracker.destroyed()).thenReturn(changesMap);
-        when(changesMailboxMethodResponseBuilderPort.reset()).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.accountId(accountId)).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.oldState(any())).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.newState(any())).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.created(any())).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.updated(any())).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.destroyed(any())).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.hasMoreChanges(false)).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.build()).thenReturn(changesMailboxMethodResponsePort);
+        when(changesMailboxMethodResponseBuilderPort.reset())
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.accountId(accountId))
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.oldState(any()))
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.newState(any()))
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.created(any()))
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.updated(any()))
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.destroyed(any()))
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.hasMoreChanges(false))
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.build())
+                .thenReturn(changesMailboxMethodResponsePort);
 
-        ChangesMailboxMethodResponsePort result = changesMailboxMethodCallService.call(changesMailboxMethodCallPort, previousResponses);
+        ChangesMailboxMethodResponsePort result =
+                changesMailboxMethodCallService.call(
+                        changesMailboxMethodCallPort, previousResponses);
 
         assertEquals(changesMailboxMethodResponsePort, result);
     }
@@ -149,30 +160,41 @@ public class ChangesMailboxMethodCallServiceTest {
         when(mailboxChangesTracker.created()).thenReturn(changesMap);
         when(mailboxChangesTracker.updated()).thenReturn(changesMap);
         when(mailboxChangesTracker.destroyed()).thenReturn(changesMap);
-        when(changesMailboxMethodResponseBuilderPort.reset()).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.accountId(accountId)).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.oldState(any())).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.newState(any())).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.created(any())).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.updated(any())).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.destroyed(any())).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.hasMoreChanges(false)).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.build()).thenReturn(changesMailboxMethodResponsePort);
+        when(changesMailboxMethodResponseBuilderPort.reset())
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.accountId(accountId))
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.oldState(any()))
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.newState(any()))
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.created(any()))
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.updated(any()))
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.destroyed(any()))
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.hasMoreChanges(false))
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.build())
+                .thenReturn(changesMailboxMethodResponsePort);
 
-        ChangesMailboxMethodResponsePort result = changesMailboxMethodCallService.call(changesMailboxMethodCallPort, previousResponses);
+        ChangesMailboxMethodResponsePort result =
+                changesMailboxMethodCallService.call(
+                        changesMailboxMethodCallPort, previousResponses);
 
         assertEquals(changesMailboxMethodResponsePort, result);
     }
 
     @Test
-    public void testCallWithOneMaxChanges() throws Exception{
+    public void testCallWithOneMaxChanges() throws Exception {
         String accountId = "testAccountId";
         Map<String, String> changesMap = new HashMap<>();
         Map<String, String> changesMap2 = new HashMap<>();
         changesMap2.put("chiave1", "valore1b");
         changesMap2.put("chiave2", "valore2a");
         Long maxChanges = 1L;
-        
+
         when(changesMailboxMethodCallPort.getMaxChanges()).thenReturn(maxChanges);
         when(changesMailboxMethodCallPort.accountId()).thenReturn(accountId);
         when(accountStateRepository.retrive(accountId)).thenReturn(accountState);
@@ -181,7 +203,9 @@ public class ChangesMailboxMethodCallServiceTest {
         when(mailboxChangesTracker.updated()).thenReturn(changesMap2);
         when(mailboxChangesTracker.destroyed()).thenReturn(changesMap);
 
-        assertThrows(CannotCalculateChangesException.class, () -> changesMailboxMethodCallService.call(changesMailboxMethodCallPort, null));
+        assertThrows(
+                CannotCalculateChangesException.class,
+                () -> changesMailboxMethodCallService.call(changesMailboxMethodCallPort, null));
     }
 
     @Test
@@ -195,18 +219,30 @@ public class ChangesMailboxMethodCallServiceTest {
         when(changesMailboxMethodCallPort.getMaxChanges()).thenReturn(maxChanges);
         when(changesMailboxMethodCallPort.accountId()).thenReturn(accountId);
         when(accountStateRepository.retrive(accountId)).thenReturn(accountState);
-        when(changesMailboxMethodResponseBuilderPort.reset()).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.accountId(accountId)).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.oldState(any())).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.newState(any())).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.created(any())).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.updated(any())).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.destroyed(any())).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.hasMoreChanges(false)).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.updatedProperties(any())).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.build()).thenReturn(changesMailboxMethodResponsePort);
+        when(changesMailboxMethodResponseBuilderPort.reset())
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.accountId(accountId))
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.oldState(any()))
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.newState(any()))
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.created(any()))
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.updated(any()))
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.destroyed(any()))
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.hasMoreChanges(false))
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.updatedProperties(any()))
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.build())
+                .thenReturn(changesMailboxMethodResponsePort);
 
-        ChangesMailboxMethodResponsePort result = changesMailboxMethodCallService.call(changesMailboxMethodCallPort, previousResponses);
+        ChangesMailboxMethodResponsePort result =
+                changesMailboxMethodCallService.call(
+                        changesMailboxMethodCallPort, previousResponses);
 
         assertNotNull(result);
     }
@@ -223,23 +259,32 @@ public class ChangesMailboxMethodCallServiceTest {
         when(changesMailboxMethodCallPort.accountId()).thenReturn(accountId);
         when(accountState.state()).thenReturn("notSinceState");
         when(accountStateRepository.retrive(anyString())).thenReturn(accountState);
-        when(changesMailboxMethodResponseBuilderPort.reset()).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.accountId(accountId)).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.oldState(any())).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.newState(any())).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.created(any())).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.updated(any())).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.destroyed(any())).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.hasMoreChanges(anyBoolean())).thenReturn(changesMailboxMethodResponseBuilderPort);
-        when(changesMailboxMethodResponseBuilderPort.build()).thenReturn(mock(ChangesMailboxMethodResponsePort.class));
+        when(changesMailboxMethodResponseBuilderPort.reset())
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.accountId(accountId))
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.oldState(any()))
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.newState(any()))
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.created(any()))
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.updated(any()))
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.destroyed(any()))
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.hasMoreChanges(anyBoolean()))
+                .thenReturn(changesMailboxMethodResponseBuilderPort);
+        when(changesMailboxMethodResponseBuilderPort.build())
+                .thenReturn(mock(ChangesMailboxMethodResponsePort.class));
         when(mailboxChangesTrackerRepository.retrive(accountId)).thenReturn(mailboxChangesTracker);
         when(mailboxChangesTracker.created()).thenReturn(changesMap);
         when(mailboxChangesTracker.updated()).thenReturn(changesMap);
         when(mailboxChangesTracker.destroyed()).thenReturn(changesMap);
 
-        ChangesMailboxMethodResponsePort result = changesMailboxMethodCallService.call(changesMailboxMethodCallPort, null);
+        ChangesMailboxMethodResponsePort result =
+                changesMailboxMethodCallService.call(changesMailboxMethodCallPort, null);
 
         assertNotNull(result);
     }
-
 }

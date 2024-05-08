@@ -1,5 +1,3 @@
 package it.qbsoftware.business.domain.exception.set;
 
-public class SetInvalidPatchException extends Exception{
-
-}
+public class SetInvalidPatchException extends Exception {}

@@ -5,7 +5,7 @@ import it.qbsoftware.business.domain.exception.AccountNotFoundException;
 import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
 import it.qbsoftware.business.domain.exception.InvalidResultReferenceExecption;
 import it.qbsoftware.business.domain.methodcall.filter.IdentityPropertiesFilter;
-import it.qbsoftware.business.domain.methodcall.process.get.GetReferenceIdsResolver;
+import it.qbsoftware.business.domain.methodcall.process.get.ReferenceIdsResolver;
 import it.qbsoftware.business.domain.util.get.RetrivedEntity;
 import it.qbsoftware.business.ports.in.guava.ListMultimapPort;
 import it.qbsoftware.business.ports.in.jmap.entity.IdentityPort;
@@ -20,14 +20,16 @@ import it.qbsoftware.business.ports.out.jmap.IdentityRepository;
 public class GetIdentityMethodCallService implements GetIdentityMethodCallUsecase {
     private final GetIdentityMethodResponseBuilderPort getIdentityMethodResponseBuilderPort;
     private final AccountStateRepository accountStateRepository;
-    private final GetReferenceIdsResolver getReferenceIdsResolver;
+    private final ReferenceIdsResolver getReferenceIdsResolver;
     private final IdentityRepository identityRepository;
     private final IdentityPropertiesFilter identityPropertiesFilter;
 
-    public GetIdentityMethodCallService(final AccountStateRepository accountStateRepository,
+    public GetIdentityMethodCallService(
+            final AccountStateRepository accountStateRepository,
             final GetIdentityMethodResponseBuilderPort getIdentityMethodResponseBuilderPort,
-            final GetReferenceIdsResolver getReferenceIdsResolver,
-            final IdentityPropertiesFilter identityPropertiesFilter, final IdentityRepository identityRepository) {
+            final ReferenceIdsResolver getReferenceIdsResolver,
+            final IdentityPropertiesFilter identityPropertiesFilter,
+            final IdentityRepository identityRepository) {
         this.getIdentityMethodResponseBuilderPort = getIdentityMethodResponseBuilderPort;
         this.accountStateRepository = accountStateRepository;
         this.getReferenceIdsResolver = getReferenceIdsResolver;
@@ -36,21 +38,27 @@ public class GetIdentityMethodCallService implements GetIdentityMethodCallUsecas
     }
 
     @Override
-    public GetIdentityMethodResponsePort call(final GetIdentityMethodCallPort getIdentityMethodCallPort,
+    public GetIdentityMethodResponsePort call(
+            final GetIdentityMethodCallPort getIdentityMethodCallPort,
             final ListMultimapPort<String, ResponseInvocationPort> previousResponses)
-            throws AccountNotFoundException, InvalidResultReferenceExecption, InvalidArgumentsException {
+            throws AccountNotFoundException,
+                    InvalidResultReferenceExecption,
+                    InvalidArgumentsException {
 
         final String accountId = getIdentityMethodCallPort.accountId();
         final AccountState accountState = accountStateRepository.retrive(accountId);
 
-        final String[] identityIds = getReferenceIdsResolver.resolve(getIdentityMethodCallPort, previousResponses);
+        final String[] identityIds =
+                getReferenceIdsResolver.resolve(getIdentityMethodCallPort, previousResponses);
 
-        final RetrivedEntity<IdentityPort> retrivedIdentities = identityIds != null
-                ? identityRepository.retrive(identityIds)
-                : identityRepository.retriveAll(accountId);
+        final RetrivedEntity<IdentityPort> retrivedIdentities =
+                identityIds != null
+                        ? identityRepository.retrive(identityIds)
+                        : identityRepository.retriveAll(accountId);
 
-        final IdentityPort[] identityFiltred = identityPropertiesFilter.filter(retrivedIdentities.found(),
-                getIdentityMethodCallPort.getProperties());
+        final IdentityPort[] identityFiltred =
+                identityPropertiesFilter.filter(
+                        retrivedIdentities.found(), getIdentityMethodCallPort.getProperties());
 
         return getIdentityMethodResponseBuilderPort
                 .reset()

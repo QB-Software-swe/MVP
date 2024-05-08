@@ -1,0 +1,9 @@
+{
+    "methodCalls": [
+        ["Mailbox/set", {
+            "accountId": "Id_here",
+            "destroy": ["mb_Id_here"]
+        }, "0"]
+    ],
+    "using": ["urn:ietf:params:jmap:core", "urn:ietf:params:jmap:mail", "urn:ietf:params:jmap:submission"]
+}

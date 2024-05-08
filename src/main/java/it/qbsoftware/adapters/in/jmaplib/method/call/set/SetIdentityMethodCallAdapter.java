@@ -1,11 +1,10 @@
 package it.qbsoftware.adapters.in.jmaplib.method.call.set;
 
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import it.qbsoftware.adapters.in.jmaplib.entity.IdentityAdapter;
 import it.qbsoftware.business.ports.in.jmap.entity.IdentityPort;
 import it.qbsoftware.business.ports.in.jmap.method.call.set.SetIdentityMethodCallPort;
+import java.util.Map;
+import java.util.stream.Collectors;
 import rs.ltt.jmap.common.method.call.identity.SetIdentityMethodCall;
 
 public class SetIdentityMethodCallAdapter implements SetIdentityMethodCallPort {
@@ -40,5 +39,4 @@ public class SetIdentityMethodCallAdapter implements SetIdentityMethodCallPort {
     public String[] getDestroy() {
         return setIdentityMethodCall.getDestroy();
     }
-
 }

@@ -4,20 +4,23 @@ import it.qbsoftware.adapters.in.jmaplib.entity.EmailSubmissionAdapter;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailSubmissionPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetEmailSubmissionMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetEmailSubmissionMethodResponsePort;
+import java.util.Arrays;
 import rs.ltt.jmap.common.entity.EmailSubmission;
 import rs.ltt.jmap.common.method.response.submission.GetEmailSubmissionMethodResponse;
 import rs.ltt.jmap.common.method.response.submission.GetEmailSubmissionMethodResponse.GetEmailSubmissionMethodResponseBuilder;
-import java.util.Arrays;
 
-public class GetEmailSubmissionMethodResponseBuilderAdapter implements GetEmailSubmissionMethodResponseBuilderPort {
-    private GetEmailSubmissionMethodResponseBuilder getEmailSubmissionMethodResponseBuilder = GetEmailSubmissionMethodResponse
-            .builder();
+public class GetEmailSubmissionMethodResponseBuilderAdapter
+        implements GetEmailSubmissionMethodResponseBuilderPort {
+    private GetEmailSubmissionMethodResponseBuilder getEmailSubmissionMethodResponseBuilder =
+            GetEmailSubmissionMethodResponse.builder();
 
     @Override
-    public GetEmailSubmissionMethodResponseBuilderPort list(final EmailSubmissionPort[] emailSubmissionPort) {
+    public GetEmailSubmissionMethodResponseBuilderPort list(
+            final EmailSubmissionPort[] emailSubmissionPort) {
         if (emailSubmissionPort != null) {
             getEmailSubmissionMethodResponseBuilder.list(
-                    Arrays.asList(emailSubmissionPort).stream().map(e -> ((EmailSubmissionAdapter) e).adaptee())
+                    Arrays.asList(emailSubmissionPort).stream()
+                            .map(e -> ((EmailSubmissionAdapter) e).adaptee())
                             .toArray(EmailSubmission[]::new));
         } else {
             getEmailSubmissionMethodResponseBuilder.list(null);
@@ -39,7 +42,8 @@ public class GetEmailSubmissionMethodResponseBuilderAdapter implements GetEmailS
 
     @Override
     public GetEmailSubmissionMethodResponsePort build() {
-        return new GetEmailSubmissionMethodResponseAdapter(getEmailSubmissionMethodResponseBuilder.build());
+        return new GetEmailSubmissionMethodResponseAdapter(
+                getEmailSubmissionMethodResponseBuilder.build());
     }
 
     @Override
@@ -47,5 +51,4 @@ public class GetEmailSubmissionMethodResponseBuilderAdapter implements GetEmailS
         getEmailSubmissionMethodResponseBuilder = GetEmailSubmissionMethodResponse.builder();
         return this;
     }
-
 }

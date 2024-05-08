@@ -8,6 +8,8 @@ import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
 import it.qbsoftware.business.ports.in.jmap.method.call.set.SetEmailSubmissionMethodCallPort;
 
 public interface SetEmailSubmissionMethodCallUsecase {
-    public SetEmailSubmissionMethodResponse call(final SetEmailSubmissionMethodCallPort setEmailSubmissionMethodCallPort,
-            final ListMultimapPort<String, ResponseInvocationPort> previousResponse) throws AccountNotFoundException, SetNotFoundException;
+    public SetEmailSubmissionMethodResponse call(
+            final SetEmailSubmissionMethodCallPort setEmailSubmissionMethodCallPort,
+            final ListMultimapPort<String, ResponseInvocationPort> previousResponse)
+            throws AccountNotFoundException, SetNotFoundException;
 }

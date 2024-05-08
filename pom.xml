@@ -30,6 +30,12 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.junit.vintage</groupId>
+      <artifactId>junit-vintage-engine</artifactId>
+      <version>5.9.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
       <version>5.11.0</version>
@@ -109,7 +115,7 @@
       <artifactId>mongodb</artifactId>
       <version>1.19.7</version>
       <scope>test</scope>
-  </dependency>
+    </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
@@ -170,6 +176,37 @@
     </pluginManagement>
     <plugins>
       <plugin>
+        <groupId>com.diffplug.spotless</groupId>
+        <artifactId>spotless-maven-plugin</artifactId>
+        <version>2.43.0</version>
+        <configuration>
+          <java>
+            <googleJavaFormat>
+              <version>1.19.2</version>
+              <style>AOSP</style>
+              <reflowLongStrings>true</reflowLongStrings>
+              <formatJavadoc>false</formatJavadoc>
+            </googleJavaFormat>
+          </java>
+        </configuration>
+        <executions>
+          <execution>
+            <id>spotless-check</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>spotless-apply</id>
+            <phase>process-sources</phase>
+            <goals>
+              <goal>apply</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <version>3.6.0</version>
         <configuration>
@@ -204,6 +241,17 @@
             <groupId>org.jacoco</groupId>
             <artifactId>jacoco-maven-plugin</artifactId>
             <version>0.8.11</version>
+            <configuration>
+              <excludes>
+                <exclude>**/*it/qbsoftware/application/module/GuavaLibAdapterModule*</exclude>
+                <exclude>**/*it/qbsoftware/application/module/JettyHandlerModule*</exclude>
+                <exclude>**/*it/qbsoftware/application/module/JmapLibAdapterModule*</exclude>
+                <exclude>**/*it/qbsoftware/application/module/MongoRepositoryAdapterModule*</exclude>
+                <exclude>**/*it/qbsoftware/application/JettyServer*</exclude>
+                <exclude>**/*it/qbsoftware/application/GenData*</exclude>
+                <exclude>**/*it/qbsoftware/application/JmapSession*</exclude>
+              </excludes>
+            </configuration>
             <executions>
               <execution>
                 <id>prepare-agent</id>

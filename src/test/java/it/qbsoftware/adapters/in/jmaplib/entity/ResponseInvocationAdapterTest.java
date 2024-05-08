@@ -10,7 +10,8 @@ public class ResponseInvocationAdapterTest {
     @Test
     public void testAdaptee() {
         Response.Invocation invocation = mock(Response.Invocation.class);
-        ResponseInvocationAdapter responseInvocationAdapter = new ResponseInvocationAdapter(invocation);
+        ResponseInvocationAdapter responseInvocationAdapter =
+                new ResponseInvocationAdapter(invocation);
 
         assertEquals(invocation, responseInvocationAdapter.adaptee());
     }

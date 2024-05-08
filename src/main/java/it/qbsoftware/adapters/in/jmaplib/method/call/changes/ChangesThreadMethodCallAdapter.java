@@ -24,5 +24,4 @@ public class ChangesThreadMethodCallAdapter implements ChangesThreadMethodCallPo
     public Long getMaxChanges() {
         return changesThreadMethodCall.getMaxChanges();
     }
-
 }

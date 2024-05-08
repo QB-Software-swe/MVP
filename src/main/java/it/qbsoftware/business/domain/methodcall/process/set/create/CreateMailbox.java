@@ -8,5 +8,4 @@ public interface CreateMailbox {
 
     CreatedResult<MailboxPort> create(SetMailboxMethodCallPort setMailboxMethodCallPort)
             throws AccountNotFoundException;
-
 }

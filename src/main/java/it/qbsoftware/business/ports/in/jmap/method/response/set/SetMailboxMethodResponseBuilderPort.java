@@ -2,7 +2,6 @@ package it.qbsoftware.business.ports.in.jmap.method.response.set;
 
 import it.qbsoftware.business.ports.in.jmap.entity.MailboxPort;
 import it.qbsoftware.business.ports.in.jmap.entity.SetErrorPort;
-
 import java.util.Map;
 
 public interface SetMailboxMethodResponseBuilderPort {
@@ -18,11 +17,14 @@ public interface SetMailboxMethodResponseBuilderPort {
 
     public SetMailboxMethodResponseBuilderPort destroyed(final String[] idDestroyed);
 
-    public SetMailboxMethodResponseBuilderPort notCreated(final Map<String, SetErrorPort> notCreated);
+    public SetMailboxMethodResponseBuilderPort notCreated(
+            final Map<String, SetErrorPort> notCreated);
 
-    public SetMailboxMethodResponseBuilderPort notUpdated(final Map<String, SetErrorPort> notUpdated);
+    public SetMailboxMethodResponseBuilderPort notUpdated(
+            final Map<String, SetErrorPort> notUpdated);
 
-    public SetMailboxMethodResponseBuilderPort notDestroyed(final Map<String, SetErrorPort> notDestroyed);
+    public SetMailboxMethodResponseBuilderPort notDestroyed(
+            final Map<String, SetErrorPort> notDestroyed);
 
     public SetMailboxMethodResponsePort build();
 

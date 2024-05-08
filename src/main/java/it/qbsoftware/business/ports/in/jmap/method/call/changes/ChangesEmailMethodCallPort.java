@@ -1,5 +1,3 @@
 package it.qbsoftware.business.ports.in.jmap.method.call.changes;
 
-public interface ChangesEmailMethodCallPort extends ChangesMethodCallPort {
-
-}
+public interface ChangesEmailMethodCallPort extends ChangesMethodCallPort {}

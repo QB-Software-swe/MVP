@@ -24,5 +24,5 @@ public interface MailboxPort {
 
     public Boolean getIsSubscribed();
 
-    public MailboxBuilderPort getBuilder();
+    public MailboxBuilderPort toBuilder();
 }

@@ -12,13 +12,9 @@ public interface IdentityChangesTracker {
 
     Map<String, String> destroyed();
 
-    IdentityChangesTracker identityHasBeenCreated(String newState,
-            String identityId);
+    IdentityChangesTracker identityHasBeenCreated(String newState, String identityId);
 
-    IdentityChangesTracker identityHasBeenUpdated(String newState,
-            String identityId);
+    IdentityChangesTracker identityHasBeenUpdated(String newState, String identityId);
 
-    IdentityChangesTracker identityHasBeenDestroyed(String newState,
-            String identityId);
-
+    IdentityChangesTracker identityHasBeenDestroyed(String newState, String identityId);
 }

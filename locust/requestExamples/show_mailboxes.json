@@ -1,0 +1,8 @@
+{
+    "methodCalls": [
+        ["Mailbox/get", {
+            "accountId": "Id_here"
+        }, "0"]
+    ],
+    "using": ["urn:ietf:params:jmap:core", "urn:ietf:params:jmap:mail"]
+}

@@ -1,9 +1,5 @@
 package it.qbsoftware.business.services.set;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
 import it.qbsoftware.business.domain.entity.changes.AccountState;
 import it.qbsoftware.business.domain.exception.AccountNotFoundException;
 import it.qbsoftware.business.domain.exception.set.SetNotFoundException;
@@ -20,68 +16,76 @@ import it.qbsoftware.business.ports.in.jmap.method.response.set.SetEmailMethodRe
 import it.qbsoftware.business.ports.in.jmap.method.response.set.SetEmailSubmissionMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.usecase.set.SetEmailSubmissionMethodCallUsecase;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class SetEmailSubmissionMethodCallService implements SetEmailSubmissionMethodCallUsecase {
-        private final AccountStateRepository accountStateRepository;
-        private final EmailSubmissionBuilderPort emailSubmissionBuilderPort;
-        private final UpdateEmail updateEmail;
-        private final SetEmailSubmissionMethodResponseBuilderPort setEmailSubmissionMethodResponseBuilderPort;
-        private final SetEmailMethodResponseBuilderPort setEmailMethodResponseBuilderPort;
+    private final AccountStateRepository accountStateRepository;
+    private final EmailSubmissionBuilderPort emailSubmissionBuilderPort;
+    private final UpdateEmail updateEmail;
+    private final SetEmailSubmissionMethodResponseBuilderPort
+            setEmailSubmissionMethodResponseBuilderPort;
+    private final SetEmailMethodResponseBuilderPort setEmailMethodResponseBuilderPort;
 
-        public SetEmailSubmissionMethodCallService(
-                final AccountStateRepository accountStateRepository,
-                final   EmailSubmissionBuilderPort emailSubmissionBuilderPort,
-                final      SetEmailMethodResponseBuilderPort setEmailMethodResponseBuilderPort,
-                final     SetEmailSubmissionMethodResponseBuilderPort setEmailSubmissionMethodResponseBuilderPort,
-                final       UpdateEmail updateEmail) {
-                this.accountStateRepository = accountStateRepository;
-                this.emailSubmissionBuilderPort = emailSubmissionBuilderPort;
-                this.updateEmail = updateEmail;
-                this.setEmailSubmissionMethodResponseBuilderPort = setEmailSubmissionMethodResponseBuilderPort;
-                this.setEmailMethodResponseBuilderPort = setEmailMethodResponseBuilderPort;
+    public SetEmailSubmissionMethodCallService(
+            final AccountStateRepository accountStateRepository,
+            final EmailSubmissionBuilderPort emailSubmissionBuilderPort,
+            final SetEmailMethodResponseBuilderPort setEmailMethodResponseBuilderPort,
+            final SetEmailSubmissionMethodResponseBuilderPort
+                    setEmailSubmissionMethodResponseBuilderPort,
+            final UpdateEmail updateEmail) {
+        this.accountStateRepository = accountStateRepository;
+        this.emailSubmissionBuilderPort = emailSubmissionBuilderPort;
+        this.updateEmail = updateEmail;
+        this.setEmailSubmissionMethodResponseBuilderPort =
+                setEmailSubmissionMethodResponseBuilderPort;
+        this.setEmailMethodResponseBuilderPort = setEmailMethodResponseBuilderPort;
+    }
+
+    @Override
+    public SetEmailSubmissionMethodResponse call(
+            final SetEmailSubmissionMethodCallPort setEmailSubmissionMethodCallPort,
+            final ListMultimapPort<String, ResponseInvocationPort> previousResponse)
+            throws AccountNotFoundException, SetNotFoundException {
+        final String accountId = setEmailSubmissionMethodCallPort.accountId();
+        final AccountState preAccountState = accountStateRepository.retrive(accountId);
+        final HashMap<String, EmailSubmissionPort> emailSubmissionCreated =
+                new HashMap<String, EmailSubmissionPort>();
+
+        final HashMap<String, String> successSubmissionEmailIdResolve = new HashMap<>();
+        for (final Map.Entry<String, EmailSubmissionPort> target :
+                setEmailSubmissionMethodCallPort.getCreate().entrySet()) {
+            final String submissionId = accountId + "/" + UUID.randomUUID().toString();
+
+            final String emailSubmissionTargetId = target.getValue().getEmailId();
+            successSubmissionEmailIdResolve.put("#" + target.getKey(), emailSubmissionTargetId);
+
+            emailSubmissionCreated.put(
+                    target.getKey(), emailSubmissionBuilderPort.reset().id(submissionId).build());
         }
 
-        @Override
-        public SetEmailSubmissionMethodResponse call(
-                        final SetEmailSubmissionMethodCallPort setEmailSubmissionMethodCallPort,
-                        final ListMultimapPort<String, ResponseInvocationPort> previousResponse)
-                        throws AccountNotFoundException, SetNotFoundException {
-                final String accountId = setEmailSubmissionMethodCallPort.accountId();
-                final AccountState preAccountState = accountStateRepository.retrive(accountId);
-                final HashMap<String, EmailSubmissionPort> emailSubmissionCreated = new HashMap<String, EmailSubmissionPort>();
+        // OnSuccess
+        final UpdatedResult<EmailPort> updateEmailResultOnSuccess =
+                updateEmail.update(
+                        setEmailSubmissionMethodCallPort,
+                        previousResponse,
+                        successSubmissionEmailIdResolve);
 
-                final HashMap<String, String> successSubmissionEmailIdResolve = new HashMap<>();
-                for (final Map.Entry<String, EmailSubmissionPort> target : setEmailSubmissionMethodCallPort.getCreate()
-                                .entrySet()) {
-                        final String submissionId = accountId + "/" + UUID.randomUUID().toString();
-
-                        final String emailSubmissionTargetId = target.getValue().getEmailId();
-                        successSubmissionEmailIdResolve.put("#" + target.getKey(), emailSubmissionTargetId);
-
-                        emailSubmissionCreated.put(target.getKey(),
-                                        emailSubmissionBuilderPort.reset().id(submissionId).build());
-                }
-
-                // OnSuccess
-                final UpdatedResult<EmailPort> updateEmailResultOnSuccess = updateEmail.update(
-                                setEmailSubmissionMethodCallPort,
-                                previousResponse, successSubmissionEmailIdResolve);
-
-                final AccountState postAccountState = accountStateRepository.retrive(accountId);
-                return new SetEmailSubmissionMethodResponse(
-                                setEmailSubmissionMethodResponseBuilderPort
-                                                .reset()
-                                                .oldState(preAccountState.state())
-                                                .newState(postAccountState.state())
-                                                .created(emailSubmissionCreated)
-                                                .build(),
-                                setEmailMethodResponseBuilderPort
-                                                .reset()
-                                                .accountId(accountId)
-                                                .oldState(preAccountState.state())
-                                                .newState(postAccountState.state())
-                                                .updated(updateEmailResultOnSuccess.updated())
-                                                .build());
-        }
-
+        final AccountState postAccountState = accountStateRepository.retrive(accountId);
+        return new SetEmailSubmissionMethodResponse(
+                setEmailSubmissionMethodResponseBuilderPort
+                        .reset()
+                        .oldState(preAccountState.state())
+                        .newState(postAccountState.state())
+                        .created(emailSubmissionCreated)
+                        .build(),
+                setEmailMethodResponseBuilderPort
+                        .reset()
+                        .accountId(accountId)
+                        .oldState(preAccountState.state())
+                        .newState(postAccountState.state())
+                        .updated(updateEmailResultOnSuccess.updated())
+                        .build());
+    }
 }

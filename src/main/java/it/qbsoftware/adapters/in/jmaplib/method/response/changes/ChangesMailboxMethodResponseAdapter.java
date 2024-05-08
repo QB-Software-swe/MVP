@@ -6,7 +6,8 @@ import rs.ltt.jmap.common.method.response.mailbox.ChangesMailboxMethodResponse;
 public class ChangesMailboxMethodResponseAdapter implements ChangesMailboxMethodResponsePort {
     private final ChangesMailboxMethodResponse changesMailboxMethodResponse;
 
-    public ChangesMailboxMethodResponseAdapter(final ChangesMailboxMethodResponse changesMailboxMethodResponse) {
+    public ChangesMailboxMethodResponseAdapter(
+            final ChangesMailboxMethodResponse changesMailboxMethodResponse) {
         this.changesMailboxMethodResponse = changesMailboxMethodResponse;
     }
 

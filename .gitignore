@@ -9,6 +9,8 @@ buildNumber.properties
 .mvn/timing.properties
 .mvn/wrapper/maven-wrapper.jar
 *.prefs
+jmap/
+locust/__pycache__
 
 # Eclipse m2e generated files
 # Eclipse Core

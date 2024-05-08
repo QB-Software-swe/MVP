@@ -1,11 +1,10 @@
 package it.qbsoftware.adapters.in.jmaplib.method.response.get;
 
-import java.util.stream.Stream;
-
 import it.qbsoftware.adapters.in.jmaplib.entity.EmailAdapter;
 import it.qbsoftware.business.ports.in.jmap.entity.EmailPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetEmailMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.get.GetEmailMethodResponsePort;
+import java.util.stream.Stream;
 import rs.ltt.jmap.common.entity.Email;
 import rs.ltt.jmap.common.method.response.email.GetEmailMethodResponse;
 import rs.ltt.jmap.common.method.response.email.GetEmailMethodResponse.GetEmailMethodResponseBuilder;
@@ -20,8 +19,9 @@ public class GetEmailMethodResponseBuilderAdapter implements GetEmailMethodRespo
     @Override
     public GetEmailMethodResponseBuilderPort list(final EmailPort[] emailList) {
         if (emailList != null) {
-            getEmailMethodResponseBuilder
-                    .list(Stream.of(emailList).map(emailPort -> ((EmailAdapter) emailPort).adaptee())
+            getEmailMethodResponseBuilder.list(
+                    Stream.of(emailList)
+                            .map(emailPort -> ((EmailAdapter) emailPort).adaptee())
                             .toArray(Email[]::new));
         } else {
             getEmailMethodResponseBuilder.list(null);
@@ -51,5 +51,4 @@ public class GetEmailMethodResponseBuilderAdapter implements GetEmailMethodRespo
         this.getEmailMethodResponseBuilder.notFound(notFound);
         return this;
     }
-
 }

@@ -5,11 +5,6 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-
 import it.qbsoftware.adapters.in.jmaplib.method.response.changes.ChangesThreadMethodResponseAdapter;
 import it.qbsoftware.application.controllers.HandlerRequest;
 import it.qbsoftware.business.domain.exception.AccountNotFoundException;
@@ -18,6 +13,10 @@ import it.qbsoftware.business.domain.exception.changes.CannotCalculateChangesExc
 import it.qbsoftware.business.ports.in.guava.ListMultimapPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
 import it.qbsoftware.business.ports.in.usecase.changes.ChangesThreadMethodCallUsecase;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import rs.ltt.jmap.common.method.MethodCall;
 import rs.ltt.jmap.common.method.MethodResponse;
 import rs.ltt.jmap.common.method.call.thread.ChangesThreadMethodCall;
@@ -29,31 +28,27 @@ import rs.ltt.jmap.common.method.response.thread.ChangesThreadMethodResponse;
 @RunWith(org.mockito.junit.MockitoJUnitRunner.class)
 public class ChangesThreadMethodCallControllerTest {
 
-    @Mock
-    ChangesThreadMethodCallUsecase changesThreadMethodCallUsecase;
+    @Mock ChangesThreadMethodCallUsecase changesThreadMethodCallUsecase;
 
-    @Mock
-    ListMultimapPort<String,ResponseInvocationPort> previousResponses;
+    @Mock ListMultimapPort<String, ResponseInvocationPort> previousResponses;
 
-    @Mock
-    ChangesThreadMethodResponseAdapter changesThreadMethodResponseAdapter;
+    @Mock ChangesThreadMethodResponseAdapter changesThreadMethodResponseAdapter;
 
-    @Mock
-    MethodCall methodCall;
+    @Mock MethodCall methodCall;
 
-    @Mock
-    ChangesThreadMethodResponse changesThreadMethodResponse;
+    @Mock ChangesThreadMethodResponse changesThreadMethodResponse;
 
-    @InjectMocks
-    ChangesThreadMethodCallController changesThreadMethodCallController;
-
+    @InjectMocks ChangesThreadMethodCallController changesThreadMethodCallController;
 
     @Test
     public void testHandle() throws Exception {
-        ChangesThreadMethodCall changesThreadMethodCall = new ChangesThreadMethodCall("null", "null", 1L);
-        HandlerRequest handlerRequest = new HandlerRequest(changesThreadMethodCall, previousResponses);
+        ChangesThreadMethodCall changesThreadMethodCall =
+                new ChangesThreadMethodCall("null", "null", 1L);
+        HandlerRequest handlerRequest =
+                new HandlerRequest(changesThreadMethodCall, previousResponses);
 
-        when(changesThreadMethodCallUsecase.call(any(),any())).thenReturn(changesThreadMethodResponseAdapter);
+        when(changesThreadMethodCallUsecase.call(any(), any()))
+                .thenReturn(changesThreadMethodResponseAdapter);
         when(changesThreadMethodResponseAdapter.adaptee()).thenReturn(changesThreadMethodResponse);
 
         MethodResponse[] result = changesThreadMethodCallController.handle(handlerRequest);
@@ -61,13 +56,15 @@ public class ChangesThreadMethodCallControllerTest {
         assertEquals(changesThreadMethodResponse, result[0]);
     }
 
-    
     @Test
     public void testHandleWithAccountNotFoundException() throws Exception {
-        ChangesThreadMethodCall changesThreadMethodCall = new ChangesThreadMethodCall("null", "null", 1L);
-        HandlerRequest handlerRequest = new HandlerRequest(changesThreadMethodCall, previousResponses);
+        ChangesThreadMethodCall changesThreadMethodCall =
+                new ChangesThreadMethodCall("null", "null", 1L);
+        HandlerRequest handlerRequest =
+                new HandlerRequest(changesThreadMethodCall, previousResponses);
 
-        when(changesThreadMethodCallUsecase.call(any(),any())).thenThrow(AccountNotFoundException.class);
+        when(changesThreadMethodCallUsecase.call(any(), any()))
+                .thenThrow(AccountNotFoundException.class);
 
         MethodResponse[] result = changesThreadMethodCallController.handle(handlerRequest);
 
@@ -76,10 +73,13 @@ public class ChangesThreadMethodCallControllerTest {
 
     @Test
     public void testHandleWithCannotCalculateChangesException() throws Exception {
-        ChangesThreadMethodCall changesThreadMethodCall = new ChangesThreadMethodCall("null", "null", 1L);
-        HandlerRequest handlerRequest = new HandlerRequest(changesThreadMethodCall, previousResponses);
+        ChangesThreadMethodCall changesThreadMethodCall =
+                new ChangesThreadMethodCall("null", "null", 1L);
+        HandlerRequest handlerRequest =
+                new HandlerRequest(changesThreadMethodCall, previousResponses);
 
-        when(changesThreadMethodCallUsecase.call(any(),any())).thenThrow(CannotCalculateChangesException.class);
+        when(changesThreadMethodCallUsecase.call(any(), any()))
+                .thenThrow(CannotCalculateChangesException.class);
 
         MethodResponse[] result = changesThreadMethodCallController.handle(handlerRequest);
 
@@ -88,10 +88,13 @@ public class ChangesThreadMethodCallControllerTest {
 
     @Test
     public void testHandleWithInvalidArgumentsException() throws Exception {
-        ChangesThreadMethodCall changesThreadMethodCall = new ChangesThreadMethodCall("null", "null", 1L);
-        HandlerRequest handlerRequest = new HandlerRequest(changesThreadMethodCall, previousResponses);
+        ChangesThreadMethodCall changesThreadMethodCall =
+                new ChangesThreadMethodCall("null", "null", 1L);
+        HandlerRequest handlerRequest =
+                new HandlerRequest(changesThreadMethodCall, previousResponses);
 
-        when(changesThreadMethodCallUsecase.call(any(),any())).thenThrow(InvalidArgumentsException.class);
+        when(changesThreadMethodCallUsecase.call(any(), any()))
+                .thenThrow(InvalidArgumentsException.class);
 
         MethodResponse[] result = changesThreadMethodCallController.handle(handlerRequest);
 
@@ -107,6 +110,4 @@ public class ChangesThreadMethodCallControllerTest {
 
         assertTrue(result[0] instanceof UnknownMethodMethodErrorResponse);
     }
-
-
 }

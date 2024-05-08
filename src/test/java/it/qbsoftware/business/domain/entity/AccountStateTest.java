@@ -2,14 +2,12 @@ package it.qbsoftware.business.domain.entity;
 
 import static org.junit.Assert.assertEquals;
 
+import it.qbsoftware.business.domain.entity.changes.AccountState;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import it.qbsoftware.business.domain.entity.changes.AccountState;
-
 @RunWith(org.mockito.junit.MockitoJUnitRunner.class)
 public class AccountStateTest {
-        //FIXME: da sistemare
     @Test
     public void testId() {
         AccountState accountState = new AccountState("testId");
@@ -34,5 +32,4 @@ public class AccountStateTest {
         AccountState increasedAccountState = accountState.increaseState();
         assertEquals("6", increasedAccountState.state());
     }
-
 }

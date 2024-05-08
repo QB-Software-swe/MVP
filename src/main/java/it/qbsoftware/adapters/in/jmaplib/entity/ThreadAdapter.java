@@ -1,9 +1,8 @@
 package it.qbsoftware.adapters.in.jmaplib.entity;
 
-import java.util.Collection;
-
 import it.qbsoftware.business.ports.in.jmap.entity.ThreadBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ThreadPort;
+import java.util.Collection;
 import rs.ltt.jmap.common.entity.Thread;
 
 public class ThreadAdapter implements ThreadPort {
@@ -26,9 +25,7 @@ public class ThreadAdapter implements ThreadPort {
     @Override
     public ThreadBuilderPort toBuilder() {
         return new ThreadBuilderAdapter(
-                Thread.builder()
-                        .id(thread.getId())
-                        .emailIds(thread.getEmailIds()));
+                Thread.builder().id(thread.getId()).emailIds(thread.getEmailIds()));
     }
 
     public Thread adaptee() {

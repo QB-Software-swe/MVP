@@ -5,7 +5,7 @@ import it.qbsoftware.business.domain.exception.AccountNotFoundException;
 import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
 import it.qbsoftware.business.domain.exception.InvalidResultReferenceExecption;
 import it.qbsoftware.business.domain.methodcall.filter.ThreadPropertiesFilter;
-import it.qbsoftware.business.domain.methodcall.process.get.GetReferenceIdsResolver;
+import it.qbsoftware.business.domain.methodcall.process.get.ReferenceIdsResolver;
 import it.qbsoftware.business.domain.util.get.RetrivedEntity;
 import it.qbsoftware.business.ports.in.guava.ListMultimapPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ResponseInvocationPort;
@@ -19,13 +19,14 @@ import it.qbsoftware.business.ports.out.jmap.ThreadRepository;
 
 public class GetThreadMethodCallService implements GetThreadMethodCallUsecase {
     private final AccountStateRepository accountStateRepository;
-    private final GetReferenceIdsResolver getReferenceIdsResolver;
+    private final ReferenceIdsResolver getReferenceIdsResolver;
     private final ThreadRepository threadRepository;
     private final ThreadPropertiesFilter threadPropertiesFilter;
     private final GetThreadMethodResponseBuilderPort getThreadMethodResponseBuilderPort;
 
-    public GetThreadMethodCallService(final AccountStateRepository accountStateRepository,
-            final GetReferenceIdsResolver getReferenceIdsResolver,
+    public GetThreadMethodCallService(
+            final AccountStateRepository accountStateRepository,
+            final ReferenceIdsResolver getReferenceIdsResolver,
             final GetThreadMethodResponseBuilderPort getThreadMethodResponseBuilderPort,
             final ThreadPropertiesFilter threadPropertiesFilter,
             final ThreadRepository threadRepository) {
@@ -37,25 +38,33 @@ public class GetThreadMethodCallService implements GetThreadMethodCallUsecase {
     }
 
     @Override
-    public GetThreadMethodResponsePort call(final GetThreadMethodCallPort getThreadMethodCallPort,
+    public GetThreadMethodResponsePort call(
+            final GetThreadMethodCallPort getThreadMethodCallPort,
             final ListMultimapPort<String, ResponseInvocationPort> previouseResponses)
-            throws AccountNotFoundException, InvalidResultReferenceExecption, InvalidArgumentsException {
+            throws AccountNotFoundException,
+                    InvalidResultReferenceExecption,
+                    InvalidArgumentsException {
 
         final String accountId = getThreadMethodCallPort.accountId();
         AccountState accountState = accountStateRepository.retrive(accountId);
 
-        final String[] threadIds = getReferenceIdsResolver.resolve(getThreadMethodCallPort, previouseResponses);
+        final String[] threadIds =
+                getReferenceIdsResolver.resolve(getThreadMethodCallPort, previouseResponses);
 
-        final RetrivedEntity<ThreadPort> threadsRetrived = threadIds != null ? threadRepository.retrive(threadIds)
-                : threadRepository.retriveAll(accountId);
+        final RetrivedEntity<ThreadPort> threadsRetrived =
+                threadIds != null
+                        ? threadRepository.retrive(threadIds)
+                        : threadRepository.retriveAll(accountId);
 
-        final ThreadPort[] threadsFiltred = threadPropertiesFilter.filter(threadsRetrived.found(),
-                getThreadMethodCallPort.getProperties());
+        final ThreadPort[] threadsFiltred =
+                threadPropertiesFilter.filter(
+                        threadsRetrived.found(), getThreadMethodCallPort.getProperties());
 
         return getThreadMethodResponseBuilderPort
                 .reset()
                 .list(threadsFiltred)
                 .notFound(threadsRetrived.notFound())
-                .state(accountState.state()).build();
+                .state(accountState.state())
+                .build();
     }
 }

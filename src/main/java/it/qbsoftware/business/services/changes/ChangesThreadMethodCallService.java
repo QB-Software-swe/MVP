@@ -1,7 +1,5 @@
 package it.qbsoftware.business.services.changes;
 
-import java.util.Map;
-
 import it.qbsoftware.business.domain.entity.changes.AccountState;
 import it.qbsoftware.business.domain.entity.changes.tracker.ThreadChangesTracker;
 import it.qbsoftware.business.domain.exception.AccountNotFoundException;
@@ -15,6 +13,7 @@ import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesThrea
 import it.qbsoftware.business.ports.in.usecase.changes.ChangesThreadMethodCallUsecase;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.business.ports.out.domain.ThreadChangesTrackerRepository;
+import java.util.Map;
 
 public class ChangesThreadMethodCallService implements ChangesThreadMethodCallUsecase {
     private final AccountStateRepository accountStateRepository;
@@ -31,9 +30,12 @@ public class ChangesThreadMethodCallService implements ChangesThreadMethodCallUs
     }
 
     @Override
-    public ChangesThreadMethodResponsePort call(final ChangesThreadMethodCallPort changesThreadMethodCallPort,
+    public ChangesThreadMethodResponsePort call(
+            final ChangesThreadMethodCallPort changesThreadMethodCallPort,
             final ListMultimapPort<String, ResponseInvocationPort> previousresponses)
-            throws CannotCalculateChangesException, AccountNotFoundException, InvalidArgumentsException {
+            throws CannotCalculateChangesException,
+                    AccountNotFoundException,
+                    InvalidArgumentsException {
 
         final String accountId = changesThreadMethodCallPort.accountId();
         final Long maxChanges = changesThreadMethodCallPort.getMaxChanges();
@@ -59,14 +61,19 @@ public class ChangesThreadMethodCallService implements ChangesThreadMethodCallUs
                     .build();
         }
 
-        final ThreadChangesTracker threadChangesTracker = threadChangesTrackerRepository.retrive(accountId);
+        final ThreadChangesTracker threadChangesTracker =
+                threadChangesTrackerRepository.retrive(accountId);
 
         final Map<String, String> created = threadChangesTracker.created();
         final Map<String, String> updated = threadChangesTracker.updated();
         final Map<String, String> destroyed = threadChangesTracker.destroyed();
 
-        if (maxChanges == null || maxChanges == 0 || created.entrySet().stream().count()
-                + updated.entrySet().stream().count() + destroyed.entrySet().stream().count() <= maxChanges) {
+        if (maxChanges == null
+                || maxChanges == 0
+                || created.entrySet().stream().count()
+                                + updated.entrySet().stream().count()
+                                + destroyed.entrySet().stream().count()
+                        <= maxChanges) {
 
             return changesThreadMethodResponseBuilderPort
                     .reset()
@@ -81,7 +88,5 @@ public class ChangesThreadMethodCallService implements ChangesThreadMethodCallUs
         } else {
             throw new CannotCalculateChangesException();
         }
-
     }
-
 }

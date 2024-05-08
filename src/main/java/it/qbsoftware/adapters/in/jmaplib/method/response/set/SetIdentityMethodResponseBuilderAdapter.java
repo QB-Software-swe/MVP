@@ -1,19 +1,20 @@
 package it.qbsoftware.adapters.in.jmaplib.method.response.set;
 
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import it.qbsoftware.adapters.in.jmaplib.entity.IdentityAdapter;
 import it.qbsoftware.adapters.in.jmaplib.entity.SetErrorAdapter;
 import it.qbsoftware.business.ports.in.jmap.entity.IdentityPort;
 import it.qbsoftware.business.ports.in.jmap.entity.SetErrorPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.set.SetIdentityMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.set.SetIdentityMethodResponsePort;
+import java.util.Map;
+import java.util.stream.Collectors;
 import rs.ltt.jmap.common.method.response.identity.SetIdentityMethodResponse;
 import rs.ltt.jmap.common.method.response.identity.SetIdentityMethodResponse.SetIdentityMethodResponseBuilder;
 
-public class SetIdentityMethodResponseBuilderAdapter implements SetIdentityMethodResponseBuilderPort {
-    private SetIdentityMethodResponseBuilder setIdentityMethodResponseBuilder = SetIdentityMethodResponse.builder();
+public class SetIdentityMethodResponseBuilderAdapter
+        implements SetIdentityMethodResponseBuilderPort {
+    private SetIdentityMethodResponseBuilder setIdentityMethodResponseBuilder =
+            SetIdentityMethodResponse.builder();
 
     @Override
     public SetIdentityMethodResponseBuilderPort accountId(final String state) {
@@ -36,8 +37,12 @@ public class SetIdentityMethodResponseBuilderAdapter implements SetIdentityMetho
     @Override
     public SetIdentityMethodResponseBuilderPort created(final Map<String, IdentityPort> created) {
         if (created != null) {
-            setIdentityMethodResponseBuilder.created(created.entrySet().stream()
-                    .collect(Collectors.toMap(e -> e.getKey(), e -> ((IdentityAdapter) e.getValue()).adaptee())));
+            setIdentityMethodResponseBuilder.created(
+                    created.entrySet().stream()
+                            .collect(
+                                    Collectors.toMap(
+                                            e -> e.getKey(),
+                                            e -> ((IdentityAdapter) e.getValue()).adaptee())));
         } else {
             setIdentityMethodResponseBuilder.created(null);
         }
@@ -47,8 +52,12 @@ public class SetIdentityMethodResponseBuilderAdapter implements SetIdentityMetho
     @Override
     public SetIdentityMethodResponseBuilderPort updated(final Map<String, IdentityPort> updated) {
         if (updated != null) {
-            setIdentityMethodResponseBuilder.updated(updated.entrySet().stream()
-                    .collect(Collectors.toMap(e -> e.getKey(), e -> ((IdentityAdapter) e.getValue()).adaptee())));
+            setIdentityMethodResponseBuilder.updated(
+                    updated.entrySet().stream()
+                            .collect(
+                                    Collectors.toMap(
+                                            e -> e.getKey(),
+                                            e -> ((IdentityAdapter) e.getValue()).adaptee())));
         } else {
             setIdentityMethodResponseBuilder.updated(null);
         }
@@ -62,10 +71,15 @@ public class SetIdentityMethodResponseBuilderAdapter implements SetIdentityMetho
     }
 
     @Override
-    public SetIdentityMethodResponseBuilderPort notCreated(final Map<String, SetErrorPort> notCreated) {
+    public SetIdentityMethodResponseBuilderPort notCreated(
+            final Map<String, SetErrorPort> notCreated) {
         if (notCreated != null) {
-            setIdentityMethodResponseBuilder.notCreated(notCreated.entrySet().stream()
-                    .collect(Collectors.toMap(e -> e.getKey(), e -> ((SetErrorAdapter) e.getValue()).adaptee())));
+            setIdentityMethodResponseBuilder.notCreated(
+                    notCreated.entrySet().stream()
+                            .collect(
+                                    Collectors.toMap(
+                                            e -> e.getKey(),
+                                            e -> ((SetErrorAdapter) e.getValue()).adaptee())));
         } else {
             setIdentityMethodResponseBuilder.notCreated(null);
         }
@@ -73,10 +87,15 @@ public class SetIdentityMethodResponseBuilderAdapter implements SetIdentityMetho
     }
 
     @Override
-    public SetIdentityMethodResponseBuilderPort notUpdated(final Map<String, SetErrorPort> notUpdated) {
+    public SetIdentityMethodResponseBuilderPort notUpdated(
+            final Map<String, SetErrorPort> notUpdated) {
         if (notUpdated != null) {
-            setIdentityMethodResponseBuilder.notUpdated(notUpdated.entrySet().stream()
-                    .collect(Collectors.toMap(e -> e.getKey(), e -> ((SetErrorAdapter) e.getValue()).adaptee())));
+            setIdentityMethodResponseBuilder.notUpdated(
+                    notUpdated.entrySet().stream()
+                            .collect(
+                                    Collectors.toMap(
+                                            e -> e.getKey(),
+                                            e -> ((SetErrorAdapter) e.getValue()).adaptee())));
         } else {
             setIdentityMethodResponseBuilder.notUpdated(null);
         }
@@ -84,10 +103,15 @@ public class SetIdentityMethodResponseBuilderAdapter implements SetIdentityMetho
     }
 
     @Override
-    public SetIdentityMethodResponseBuilderPort notDestroyed(final Map<String, SetErrorPort> notDestroyed) {
+    public SetIdentityMethodResponseBuilderPort notDestroyed(
+            final Map<String, SetErrorPort> notDestroyed) {
         if (notDestroyed != null) {
-            setIdentityMethodResponseBuilder.notDestroyed(notDestroyed.entrySet().stream()
-                    .collect(Collectors.toMap(e -> e.getKey(), e -> ((SetErrorAdapter) e.getValue()).adaptee())));
+            setIdentityMethodResponseBuilder.notDestroyed(
+                    notDestroyed.entrySet().stream()
+                            .collect(
+                                    Collectors.toMap(
+                                            e -> e.getKey(),
+                                            e -> ((SetErrorAdapter) e.getValue()).adaptee())));
         } else {
             setIdentityMethodResponseBuilder.notDestroyed(null);
         }

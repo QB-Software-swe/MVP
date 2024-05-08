@@ -1,8 +1,9 @@
 package it.qbsoftware.application.handlers;
 
+import com.google.inject.Inject;
+import it.qbsoftware.application.controllers.other.SessionController;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
-
 import org.eclipse.jetty.http.HttpHeader;
 import org.eclipse.jetty.io.Content;
 import org.eclipse.jetty.server.Handler;
@@ -11,10 +12,6 @@ import org.eclipse.jetty.server.Response;
 import org.eclipse.jetty.util.Callback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.inject.Inject;
-
-import it.qbsoftware.application.controllers.other.SessionController;
 
 public class WellKnownHandler extends Handler.Abstract {
     final SessionController sessionController;
@@ -37,10 +34,9 @@ public class WellKnownHandler extends Handler.Abstract {
             return false;
         }
 
-
         logger.info("Request to /.well-known");
         String user = null;
-        //String password = null;
+        // String password = null;
         {
             final String auth = request.getHeaders().get(HttpHeader.AUTHORIZATION);
             if (auth != null && auth.toLowerCase().startsWith("basic")) {
@@ -49,7 +45,7 @@ public class WellKnownHandler extends Handler.Abstract {
                 String creds = new String(credDecod, StandardCharsets.UTF_8);
                 final String[] values = creds.split(":", 2);
                 user = values[0];
-                //password = values[1];
+                // password = values[1];
             }
         }
 
@@ -75,5 +71,4 @@ public class WellKnownHandler extends Handler.Abstract {
         Content.Sink.write(response, true, responsePayload, callback);
         return true;
     }
-
 }

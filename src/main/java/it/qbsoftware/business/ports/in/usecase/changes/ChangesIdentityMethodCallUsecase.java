@@ -9,6 +9,10 @@ import it.qbsoftware.business.ports.in.jmap.method.call.changes.ChangesIdentityM
 import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesIdentityMethodResponsePort;
 
 public interface ChangesIdentityMethodCallUsecase {
-    public ChangesIdentityMethodResponsePort call(ChangesIdentityMethodCallPort changesMailboxMethodCallPort,
-            ListMultimapPort<String, ResponseInvocationPort> previousresponses) throws AccountNotFoundException, InvalidArgumentsException, CannotCalculateChangesException;
+    public ChangesIdentityMethodResponsePort call(
+            ChangesIdentityMethodCallPort changesMailboxMethodCallPort,
+            ListMultimapPort<String, ResponseInvocationPort> previousresponses)
+            throws AccountNotFoundException,
+                    InvalidArgumentsException,
+                    CannotCalculateChangesException;
 }

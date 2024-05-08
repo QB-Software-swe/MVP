@@ -1,8 +1,7 @@
 package it.qbsoftware.business.ports.out.jmap;
 
-import java.util.Optional;
-
 import it.qbsoftware.business.ports.in.jmap.entity.SessionResourcePort;
+import java.util.Optional;
 
 public interface UserSessionResourceRepository {
 

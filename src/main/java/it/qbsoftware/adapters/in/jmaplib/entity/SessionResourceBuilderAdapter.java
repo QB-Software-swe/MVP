@@ -1,15 +1,14 @@
 package it.qbsoftware.adapters.in.jmaplib.entity;
 
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
-
 import it.qbsoftware.business.ports.in.jmap.capability.CapabilityPort;
 import it.qbsoftware.business.ports.in.jmap.entity.AccountPort;
 import it.qbsoftware.business.ports.in.jmap.entity.ClassAccountCapabilityPort;
 import it.qbsoftware.business.ports.in.jmap.entity.SessionResourceBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.entity.SessionResourcePort;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 import rs.ltt.jmap.common.SessionResource;
 import rs.ltt.jmap.common.SessionResource.SessionResourceBuilder;
 import rs.ltt.jmap.common.entity.Capability;
@@ -54,16 +53,19 @@ public class SessionResourceBuilderAdapter implements SessionResourceBuilderPort
     @Override
     public SessionResourceBuilderPort accounts(Map<String, AccountPort> accounts) {
         sessionResourceBuilder.accounts(
-                accounts.entrySet()
-                        .stream()
-                        .collect(Collectors.toMap(Entry::getKey, e -> ((AccountAdapter) e.getValue()).account)));
+                accounts.entrySet().stream()
+                        .collect(
+                                Collectors.toMap(
+                                        Entry::getKey,
+                                        e -> ((AccountAdapter) e.getValue()).account)));
         return this;
     }
 
     @Override
     public SessionResourceBuilderPort capabilities(CapabilityPort[] capabilities) {
         sessionResourceBuilder.capabilities(
-                Arrays.asList(capabilities).stream().map(c -> ((CapabilityAdapter) c).adaptee())
+                Arrays.asList(capabilities).stream()
+                        .map(c -> ((CapabilityAdapter) c).adaptee())
                         .collect(Collectors.toMap(Capability::getClass, c -> c)));
         return this;
     }
@@ -73,9 +75,13 @@ public class SessionResourceBuilderAdapter implements SessionResourceBuilderPort
             Map<ClassAccountCapabilityPort, String> primaryAccounts) {
 
         sessionResourceBuilder.primaryAccounts(
-                primaryAccounts.entrySet().stream().collect(Collectors.toMap(
-                        entrySet -> ((ClassAccountCapabilityAdapter) entrySet.getKey()).classAccountCapability(),
-                        entrySet -> entrySet.getValue())));
+                primaryAccounts.entrySet().stream()
+                        .collect(
+                                Collectors.toMap(
+                                        entrySet ->
+                                                ((ClassAccountCapabilityAdapter) entrySet.getKey())
+                                                        .classAccountCapability(),
+                                        entrySet -> entrySet.getValue())));
         return this;
     }
 
@@ -95,5 +101,4 @@ public class SessionResourceBuilderAdapter implements SessionResourceBuilderPort
         this.sessionResourceBuilder = SessionResource.builder();
         return this;
     }
-
 }

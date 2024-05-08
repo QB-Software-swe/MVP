@@ -1,26 +1,25 @@
 package it.qbsoftware.adapters.out;
 
-import org.bson.Document;
-import org.bson.conversions.Bson;
-
 import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.FindOneAndReplaceOptions;
-
 import it.qbsoftware.business.domain.entity.changes.tracker.EmailChangesTracker;
 import it.qbsoftware.business.domain.entity.changes.tracker.SimpleEmailChangesTracker;
 import it.qbsoftware.business.ports.out.domain.EmailChangesTrackerRepository;
 import it.qbsoftware.persistance.MongoConnection;
+import org.bson.Document;
+import org.bson.conversions.Bson;
 
 public class EmailChangesTrackerRepositoryAdapter implements EmailChangesTrackerRepository {
-    private final static String COLLECTION = "email_changes";
+    private static final String COLLECTION = "email_changes";
     private final MongoConnection mongoConnection;
     private final Gson gson;
 
     @Inject
-    public EmailChangesTrackerRepositoryAdapter(final MongoConnection mongoConnection, final Gson gson) {
+    public EmailChangesTrackerRepositoryAdapter(
+            final MongoConnection mongoConnection, final Gson gson) {
         this.mongoConnection = mongoConnection;
         this.gson = gson;
     }
@@ -28,8 +27,8 @@ public class EmailChangesTrackerRepositoryAdapter implements EmailChangesTracker
     @Override
     public EmailChangesTracker retrive(final String accountId) {
         final Bson filter = Filters.eq("_id", accountId + "/" + "EMAIL");
-        final FindIterable<Document> findIterable = mongoConnection.getDatabase().getCollection(COLLECTION)
-                .find(filter);
+        final FindIterable<Document> findIterable =
+                mongoConnection.getDatabase().getCollection(COLLECTION).find(filter);
 
         final var emailChangesTrackerDoc = findIterable.first();
 
@@ -45,8 +44,12 @@ public class EmailChangesTrackerRepositoryAdapter implements EmailChangesTracker
         final Document emailChangesTrackerDoc = Document.parse(gson.toJson(emailChangesTracker));
         emailChangesTrackerDoc.put("_id", emailChangesTracker.id());
         FindOneAndReplaceOptions options = new FindOneAndReplaceOptions().upsert(true);
-        mongoConnection.getDatabase().getCollection(COLLECTION)
-                .findOneAndReplace(Filters.eq("_id", emailChangesTracker.id()), emailChangesTrackerDoc, options);
+        mongoConnection
+                .getDatabase()
+                .getCollection(COLLECTION)
+                .findOneAndReplace(
+                        Filters.eq("_id", emailChangesTracker.id()),
+                        emailChangesTrackerDoc,
+                        options);
     }
-
 }

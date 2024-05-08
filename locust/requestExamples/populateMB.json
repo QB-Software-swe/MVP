@@ -1,0 +1,33 @@
+{
+    "methodCalls": [
+        [
+            "Mailbox/set",
+            {
+                "accountId": "Id_here",
+                "create": {
+                    "mailboxPrincipale": {
+                        "name": "Arrivate",
+                        "role": "inbox"
+                    },
+                    "mailboxInviati": {
+                        "name": "Inviati",
+                        "role": "sent"
+                    },
+                    "mailboxBozze": {
+                        "name": "Bozze",
+                        "role": "drafts"
+                    },
+                    "mailboxArchivio": {
+                        "name": "Archivio",
+                        "role": "archive"
+                    }
+                }
+            },
+            "0"
+        ]
+    ],
+    "using": [
+        "urn:ietf:params:jmap:core",
+        "urn:ietf:params:jmap:mail"
+    ]
+}

@@ -17,5 +17,4 @@ public interface MailboxChangesTracker {
     MailboxChangesTracker mailboxHasBeenUpdated(String newState, String mailboxId);
 
     MailboxChangesTracker mailboxHasBeenDestroyed(String newState, String mailboxId);
-
 }

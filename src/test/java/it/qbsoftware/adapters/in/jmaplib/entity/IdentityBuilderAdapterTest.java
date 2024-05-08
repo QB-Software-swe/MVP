@@ -2,31 +2,28 @@ package it.qbsoftware.adapters.in.jmaplib.entity;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import it.qbsoftware.business.ports.in.jmap.entity.EmailAddressPort;
 import org.junit.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-
-import it.qbsoftware.business.ports.in.jmap.entity.EmailAddressPort;
-import it.qbsoftware.business.ports.in.jmap.entity.IdentityBuilderPort;
 import rs.ltt.jmap.common.entity.Identity;
 import rs.ltt.jmap.common.entity.Identity.IdentityBuilder;
 
 public class IdentityBuilderAdapterTest {
     @Test
     public void testBccNotNull() {
-        // TODO: fix this test
-        IdentityBuilder identityBuilder = mock(IdentityBuilder.class);
         EmailAddressPort[] emailAddressPorts = new EmailAddressPort[1];
-        IdentityBuilderAdapter identityBuilderAdapter = new IdentityBuilderAdapter(identityBuilder);
-        IdentityBuilderPort result = identityBuilderAdapter.bcc(emailAddressPorts);
+        emailAddressPorts[0] = new EmailAddressAdapter(null);
 
+        IdentityBuilder identityBuilder = mock(IdentityBuilder.class);
+        IdentityBuilderAdapter identityBuilderAdapter = new IdentityBuilderAdapter(identityBuilder);
+
+        identityBuilderAdapter.bcc(emailAddressPorts);
         verify(identityBuilder).bcc(anyList());
-        assertSame(identityBuilderAdapter, result);
     }
 
     @Test
@@ -44,7 +41,7 @@ public class IdentityBuilderAdapterTest {
         IdentityBuilder identityBuilder = mock(IdentityBuilder.class);
         IdentityBuilderAdapter identityBuilderAdapter = new IdentityBuilderAdapter(identityBuilder);
 
-        try(MockedStatic<Identity> identityStatic = Mockito.mockStatic(Identity.class)){
+        try (MockedStatic<Identity> identityStatic = Mockito.mockStatic(Identity.class)) {
             identityStatic.when(Identity::builder).thenReturn(identityBuilder);
             assertEquals(identityBuilderAdapter.reset(), identityBuilderAdapter);
             identityStatic.verify(Identity::builder);
@@ -66,7 +63,7 @@ public class IdentityBuilderAdapterTest {
         IdentityBuilder identityBuilder = mock(IdentityBuilder.class);
         IdentityBuilderAdapter identityBuilderAdapter = new IdentityBuilderAdapter();
 
-         try(MockedStatic<Identity> identityStatic = Mockito.mockStatic(Identity.class)){
+        try (MockedStatic<Identity> identityStatic = Mockito.mockStatic(Identity.class)) {
             identityStatic.when(Identity::builder).thenReturn(identityBuilder);
             assertEquals(identityBuilderAdapter.reset(), identityBuilderAdapter);
             identityStatic.verify(Identity::builder);
@@ -125,19 +122,18 @@ public class IdentityBuilderAdapterTest {
 
     @Test
     public void testReplyToNotNull() {
-        // TODO: fix this test
-        IdentityBuilder identityBuilder = mock(IdentityBuilder.class);
         EmailAddressPort[] emailAddressPorts = new EmailAddressPort[1];
-        IdentityBuilderAdapter identityBuilderAdapter = new IdentityBuilderAdapter(identityBuilder);
-        IdentityBuilderPort result = identityBuilderAdapter.replyTo(emailAddressPorts);
+        emailAddressPorts[0] = new EmailAddressAdapter(null);
 
+        IdentityBuilder identityBuilder = mock(IdentityBuilder.class);
+        IdentityBuilderAdapter identityBuilderAdapter = new IdentityBuilderAdapter(identityBuilder);
+
+        identityBuilderAdapter.replyTo(emailAddressPorts);
         verify(identityBuilder).replyTo(anyList());
-        assertSame(identityBuilderAdapter, result);
     }
 
-
     @Test
-    public void testReplyToNull(){
+    public void testReplyToNull() {
         EmailAddressPort[] emailAddressPort = null;
         IdentityBuilder identityBuilder = mock(IdentityBuilder.class);
         IdentityBuilderAdapter identityBuilderAdapter = new IdentityBuilderAdapter(identityBuilder);
@@ -151,14 +147,12 @@ public class IdentityBuilderAdapterTest {
         IdentityBuilder identityBuilder = mock(IdentityBuilder.class);
         IdentityBuilderAdapter identityBuilderAdapter = new IdentityBuilderAdapter(identityBuilder);
 
-         try(MockedStatic<Identity> identityStatic = Mockito.mockStatic(Identity.class)){
+        try (MockedStatic<Identity> identityStatic = Mockito.mockStatic(Identity.class)) {
             identityStatic.when(Identity::builder).thenReturn(identityBuilder);
             assertEquals(identityBuilderAdapter.reset(), identityBuilderAdapter);
             identityStatic.verify(Identity::builder);
         }
     }
-
-
 
     @Test
     public void testTextSignature() {

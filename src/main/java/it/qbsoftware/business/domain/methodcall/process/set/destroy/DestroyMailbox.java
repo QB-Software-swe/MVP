@@ -7,5 +7,4 @@ public interface DestroyMailbox {
 
     DestroyedResult destroy(SetMailboxMethodCallPort setMailboxMethodCallPort)
             throws AccountNotFoundException;
-
 }

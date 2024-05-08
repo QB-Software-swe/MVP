@@ -4,7 +4,8 @@ import it.qbsoftware.business.domain.exception.StateMismatchException;
 
 public class StandardIfInStateMatch implements IfInStateMatch {
     @Override
-    public void methodStateMatchCurrent(final String methodCallState, final String currentObjectState)
+    public void methodStateMatchCurrent(
+            final String methodCallState, final String currentObjectState)
             throws StateMismatchException {
         if (methodCallState != null && !methodCallState.equals(currentObjectState)) {
             throw new StateMismatchException();

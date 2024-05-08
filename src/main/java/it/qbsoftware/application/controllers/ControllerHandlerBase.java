@@ -17,6 +17,6 @@ public abstract class ControllerHandlerBase implements ControllerHandler {
             return nextHandler.handle(handlerRequest);
         }
 
-        return new MethodResponse[] { new UnknownMethodMethodErrorResponse() };
+        return new MethodResponse[] {new UnknownMethodMethodErrorResponse()};
     }
 }

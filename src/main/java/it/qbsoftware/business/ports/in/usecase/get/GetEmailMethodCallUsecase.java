@@ -10,6 +10,10 @@ import it.qbsoftware.business.ports.in.jmap.method.response.get.GetEmailMethodRe
 
 public interface GetEmailMethodCallUsecase {
 
-    public GetEmailMethodResponsePort call(final GetEmailMethodCallPort getEmailMethodCallPort,
-            final ListMultimapPort<String, ResponseInvocationPort> previousResponses) throws AccountNotFoundException, InvalidArgumentsException, InvalidResultReferenceExecption;
+    public GetEmailMethodResponsePort call(
+            final GetEmailMethodCallPort getEmailMethodCallPort,
+            final ListMultimapPort<String, ResponseInvocationPort> previousResponses)
+            throws AccountNotFoundException,
+                    InvalidArgumentsException,
+                    InvalidResultReferenceExecption;
 }

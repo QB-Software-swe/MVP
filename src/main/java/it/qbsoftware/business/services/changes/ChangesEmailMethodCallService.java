@@ -1,7 +1,5 @@
 package it.qbsoftware.business.services.changes;
 
-import java.util.Map;
-
 import it.qbsoftware.business.domain.entity.changes.AccountState;
 import it.qbsoftware.business.domain.entity.changes.tracker.EmailChangesTracker;
 import it.qbsoftware.business.domain.exception.AccountNotFoundException;
@@ -15,6 +13,7 @@ import it.qbsoftware.business.ports.in.jmap.method.response.changes.ChangesEmail
 import it.qbsoftware.business.ports.in.usecase.changes.ChangesEmailMethodCallUsecase;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
 import it.qbsoftware.business.ports.out.domain.EmailChangesTrackerRepository;
+import java.util.Map;
 
 public class ChangesEmailMethodCallService implements ChangesEmailMethodCallUsecase {
     private final EmailChangesTrackerRepository emailChangesTrackerRepository;
@@ -31,9 +30,12 @@ public class ChangesEmailMethodCallService implements ChangesEmailMethodCallUsec
     }
 
     @Override
-    public ChangesEmailMethodResponsePort call(final ChangesEmailMethodCallPort changesEmailMethodCallPort,
+    public ChangesEmailMethodResponsePort call(
+            final ChangesEmailMethodCallPort changesEmailMethodCallPort,
             final ListMultimapPort<String, ResponseInvocationPort> previousresponses)
-            throws AccountNotFoundException, InvalidArgumentsException, CannotCalculateChangesException {
+            throws AccountNotFoundException,
+                    InvalidArgumentsException,
+                    CannotCalculateChangesException {
 
         final String accountId = changesEmailMethodCallPort.accountId();
         final Long maxChanges = changesEmailMethodCallPort.getMaxChanges();
@@ -59,14 +61,19 @@ public class ChangesEmailMethodCallService implements ChangesEmailMethodCallUsec
                     .build();
         }
 
-        final EmailChangesTracker emailChangesTracker = emailChangesTrackerRepository.retrive(accountId);
+        final EmailChangesTracker emailChangesTracker =
+                emailChangesTrackerRepository.retrive(accountId);
 
         final Map<String, String> created = emailChangesTracker.created();
         final Map<String, String> updated = emailChangesTracker.updated();
         final Map<String, String> destroyed = emailChangesTracker.destroyed();
 
-        if (maxChanges == null || maxChanges == 0 || created.entrySet().stream().count()
-                + updated.entrySet().stream().count() + destroyed.entrySet().stream().count() <= maxChanges) {
+        if (maxChanges == null
+                || maxChanges == 0
+                || created.entrySet().stream().count()
+                                + updated.entrySet().stream().count()
+                                + destroyed.entrySet().stream().count()
+                        <= maxChanges) {
 
             return changesEmailMethodResponseBuilderPort
                     .reset()

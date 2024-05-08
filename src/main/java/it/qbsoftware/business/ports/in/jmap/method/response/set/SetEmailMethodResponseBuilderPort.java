@@ -2,7 +2,6 @@ package it.qbsoftware.business.ports.in.jmap.method.response.set;
 
 import it.qbsoftware.business.ports.in.jmap.entity.EmailPort;
 import it.qbsoftware.business.ports.in.jmap.entity.SetErrorPort;
-
 import java.util.Map;
 
 public interface SetEmailMethodResponseBuilderPort {
@@ -22,7 +21,8 @@ public interface SetEmailMethodResponseBuilderPort {
 
     public SetEmailMethodResponseBuilderPort notUpdated(final Map<String, SetErrorPort> notUpdated);
 
-    public SetEmailMethodResponseBuilderPort notDestroyed(final Map<String, SetErrorPort> notDestroyed);
+    public SetEmailMethodResponseBuilderPort notDestroyed(
+            final Map<String, SetErrorPort> notDestroyed);
 
     public SetEmailMethodResponsePort build();
 

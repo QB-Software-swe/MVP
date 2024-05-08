@@ -6,7 +6,8 @@ import rs.ltt.jmap.common.Request.Invocation;
 public class InvocationResultReferenceAdapter implements InvocationResultReferencePort {
     Invocation.ResultReference invocationResultReference;
 
-    public InvocationResultReferenceAdapter(final Invocation.ResultReference invocationResultReference) {
+    public InvocationResultReferenceAdapter(
+            final Invocation.ResultReference invocationResultReference) {
         this.invocationResultReference = invocationResultReference;
     }
 

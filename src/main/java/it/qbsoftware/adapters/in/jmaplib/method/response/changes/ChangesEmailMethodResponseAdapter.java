@@ -6,7 +6,8 @@ import rs.ltt.jmap.common.method.response.email.ChangesEmailMethodResponse;
 public class ChangesEmailMethodResponseAdapter implements ChangesEmailMethodResponsePort {
     private final ChangesEmailMethodResponse changesEmailMethodResponse;
 
-    public ChangesEmailMethodResponseAdapter(final ChangesEmailMethodResponse changesEmailMethodResponse) {
+    public ChangesEmailMethodResponseAdapter(
+            final ChangesEmailMethodResponse changesEmailMethodResponse) {
         this.changesEmailMethodResponse = changesEmailMethodResponse;
     }
 

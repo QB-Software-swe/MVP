@@ -5,7 +5,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -30,7 +29,8 @@ public class SimpleIdentityChangesTrackerTest {
         Map<String, String> destroyed = new HashMap<>();
         destroyed.put("destroyedState", "destroyedIdentityId");
 
-        SimpleIdentityChangesTracker tracker = new SimpleIdentityChangesTracker("id", created, updated, destroyed);
+        SimpleIdentityChangesTracker tracker =
+                new SimpleIdentityChangesTracker("id", created, updated, destroyed);
 
         assertEquals("id", tracker.id());
         assertEquals(created, tracker.created());
@@ -42,7 +42,8 @@ public class SimpleIdentityChangesTrackerTest {
     public void testIdentityHasBeenCreated() {
         SimpleIdentityChangesTracker tracker = new SimpleIdentityChangesTracker("id");
 
-        IdentityChangesTracker updatedTracker = tracker.identityHasBeenCreated("newState", "newIdentityId");
+        IdentityChangesTracker updatedTracker =
+                tracker.identityHasBeenCreated("newState", "newIdentityId");
 
         assertEquals("newIdentityId", updatedTracker.id());
         assertEquals("newIdentityId", updatedTracker.created().get("newState"));
@@ -52,7 +53,8 @@ public class SimpleIdentityChangesTrackerTest {
     public void testIdentityHasBeenUpdated() {
         SimpleIdentityChangesTracker tracker = new SimpleIdentityChangesTracker("id");
 
-        IdentityChangesTracker updatedTracker = tracker.identityHasBeenUpdated("newState", "newIdentityId");
+        IdentityChangesTracker updatedTracker =
+                tracker.identityHasBeenUpdated("newState", "newIdentityId");
 
         assertEquals("newIdentityId", updatedTracker.id());
         assertEquals("newIdentityId", updatedTracker.updated().get("newState"));
@@ -62,7 +64,8 @@ public class SimpleIdentityChangesTrackerTest {
     public void testIdentityHasBeenDestroyed() {
         SimpleIdentityChangesTracker tracker = new SimpleIdentityChangesTracker("id");
 
-        IdentityChangesTracker updatedTracker = tracker.identityHasBeenDestroyed("newState", "newIdentityId");
+        IdentityChangesTracker updatedTracker =
+                tracker.identityHasBeenDestroyed("newState", "newIdentityId");
 
         assertEquals("newIdentityId", updatedTracker.id());
         assertEquals("newIdentityId", updatedTracker.destroyed().get("newState"));

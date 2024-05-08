@@ -8,6 +8,8 @@ import it.qbsoftware.business.ports.in.jmap.method.call.set.SetIdentityMethodCal
 import it.qbsoftware.business.ports.in.jmap.method.response.set.SetIdentityMethodResponsePort;
 
 public interface SetIdentityMethodCallUsecase {
-    public SetIdentityMethodResponsePort call(SetIdentityMethodCallPort setIdentityMethodCallPort,
-            ListMultimapPort<String, ResponseInvocationPort> previousResponse) throws AccountNotFoundException, StateMismatchException;
+    public SetIdentityMethodResponsePort call(
+            SetIdentityMethodCallPort setIdentityMethodCallPort,
+            ListMultimapPort<String, ResponseInvocationPort> previousResponse)
+            throws AccountNotFoundException, StateMismatchException;
 }

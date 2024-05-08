@@ -5,11 +5,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-
 import it.qbsoftware.business.domain.entity.changes.AccountState;
 import it.qbsoftware.business.domain.exception.AccountNotFoundException;
 import it.qbsoftware.business.domain.exception.StateMismatchException;
@@ -27,73 +22,74 @@ import it.qbsoftware.business.ports.in.jmap.method.call.set.SetMailboxMethodCall
 import it.qbsoftware.business.ports.in.jmap.method.response.set.SetMailboxMethodResponseBuilderPort;
 import it.qbsoftware.business.ports.in.jmap.method.response.set.SetMailboxMethodResponsePort;
 import it.qbsoftware.business.ports.out.domain.AccountStateRepository;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 @RunWith(org.mockito.junit.MockitoJUnitRunner.class)
 public class SetMailboxMethodCallServiceTest {
-    
-    @Mock
-    private AccountStateRepository accountStateRepository;
 
-    @Mock
-    IfInStateMatch ifInStateMatch;
+    @Mock private AccountStateRepository accountStateRepository;
 
-    @Mock
-    CreateMailbox createMailbox;
+    @Mock IfInStateMatch ifInStateMatch;
 
-    @Mock
-    UpdateMailbox updateMailbox;
+    @Mock CreateMailbox createMailbox;
 
-    @Mock
-    DestroyMailbox destroyMailbox;
+    @Mock UpdateMailbox updateMailbox;
 
-    @Mock
-    SetMailboxMethodResponseBuilderPort setMailboxMethodResponseBuilderPort;
+    @Mock DestroyMailbox destroyMailbox;
 
-    @Mock
-    AccountState accountState;
+    @Mock SetMailboxMethodResponseBuilderPort setMailboxMethodResponseBuilderPort;
 
-    @Mock
-    CreatedResult<MailboxPort> createdResult;
+    @Mock AccountState accountState;
 
-    @Mock
-    UpdatedResult<MailboxPort> updatedResult;
+    @Mock CreatedResult<MailboxPort> createdResult;
 
-    @Mock
-    DestroyedResult destroyedResult;
+    @Mock UpdatedResult<MailboxPort> updatedResult;
 
-    @Mock
-    private SetMailboxMethodCallPort setMailboxMethodCallPort;
+    @Mock DestroyedResult destroyedResult;
 
-    @Mock
-    private SetMailboxMethodResponsePort setMailboxMethodResponsePort;
+    @Mock private SetMailboxMethodCallPort setMailboxMethodCallPort;
 
-    @Mock
-    private ListMultimapPort<String, ResponseInvocationPort> previousResponses;
+    @Mock private SetMailboxMethodResponsePort setMailboxMethodResponsePort;
 
-    @InjectMocks
-    private SetMailboxMethodCallService setMailboxMethodCallService;
+    @Mock private ListMultimapPort<String, ResponseInvocationPort> previousResponses;
+
+    @InjectMocks private SetMailboxMethodCallService setMailboxMethodCallService;
 
     @Test
     public void testCall() throws AccountNotFoundException, StateMismatchException {
         String accountId = "accountId";
-       
+
         when(setMailboxMethodCallPort.accountId()).thenReturn(accountId);
         when(accountStateRepository.retrive(accountId)).thenReturn(accountState, accountState);
         when(createMailbox.create(setMailboxMethodCallPort)).thenReturn(createdResult);
-        when(updateMailbox.update(setMailboxMethodCallPort)).thenReturn(updatedResult);
+        when(updateMailbox.update(setMailboxMethodCallPort, previousResponses))
+                .thenReturn(updatedResult);
         when(destroyMailbox.destroy(setMailboxMethodCallPort)).thenReturn(destroyedResult);
-        when(setMailboxMethodResponseBuilderPort.reset()).thenReturn(setMailboxMethodResponseBuilderPort);
-        when(setMailboxMethodResponseBuilderPort.oldState(any())).thenReturn(setMailboxMethodResponseBuilderPort);
-        when(setMailboxMethodResponseBuilderPort.newState(any())).thenReturn(setMailboxMethodResponseBuilderPort);
-        when(setMailboxMethodResponseBuilderPort.created(any())).thenReturn(setMailboxMethodResponseBuilderPort);
-        when(setMailboxMethodResponseBuilderPort.notCreated(any())).thenReturn(setMailboxMethodResponseBuilderPort);
-        when(setMailboxMethodResponseBuilderPort.updated(any())).thenReturn(setMailboxMethodResponseBuilderPort);
-        when(setMailboxMethodResponseBuilderPort.notUpdated(any())).thenReturn(setMailboxMethodResponseBuilderPort);
-        when(setMailboxMethodResponseBuilderPort.destroyed(any())).thenReturn(setMailboxMethodResponseBuilderPort);
-        when(setMailboxMethodResponseBuilderPort.notDestroyed(any())).thenReturn(setMailboxMethodResponseBuilderPort);
+        when(setMailboxMethodResponseBuilderPort.reset())
+                .thenReturn(setMailboxMethodResponseBuilderPort);
+        when(setMailboxMethodResponseBuilderPort.oldState(any()))
+                .thenReturn(setMailboxMethodResponseBuilderPort);
+        when(setMailboxMethodResponseBuilderPort.newState(any()))
+                .thenReturn(setMailboxMethodResponseBuilderPort);
+        when(setMailboxMethodResponseBuilderPort.created(any()))
+                .thenReturn(setMailboxMethodResponseBuilderPort);
+        when(setMailboxMethodResponseBuilderPort.notCreated(any()))
+                .thenReturn(setMailboxMethodResponseBuilderPort);
+        when(setMailboxMethodResponseBuilderPort.updated(any()))
+                .thenReturn(setMailboxMethodResponseBuilderPort);
+        when(setMailboxMethodResponseBuilderPort.notUpdated(any()))
+                .thenReturn(setMailboxMethodResponseBuilderPort);
+        when(setMailboxMethodResponseBuilderPort.destroyed(any()))
+                .thenReturn(setMailboxMethodResponseBuilderPort);
+        when(setMailboxMethodResponseBuilderPort.notDestroyed(any()))
+                .thenReturn(setMailboxMethodResponseBuilderPort);
         when(setMailboxMethodResponseBuilderPort.build()).thenReturn(setMailboxMethodResponsePort);
 
-        SetMailboxMethodResponsePort result = setMailboxMethodCallService.call(setMailboxMethodCallPort, previousResponses);
+        SetMailboxMethodResponsePort result =
+                setMailboxMethodCallService.call(setMailboxMethodCallPort, previousResponses);
 
         verify(setMailboxMethodResponseBuilderPort).reset();
         verify(setMailboxMethodResponseBuilderPort).oldState(accountState.state());

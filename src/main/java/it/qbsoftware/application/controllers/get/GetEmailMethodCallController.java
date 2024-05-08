@@ -1,19 +1,16 @@
 package it.qbsoftware.application.controllers.get;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.inject.Inject;
-
 import it.qbsoftware.adapters.in.jmaplib.method.call.get.GetEmailMethodCallAdapter;
 import it.qbsoftware.adapters.in.jmaplib.method.response.get.GetEmailMethodResponseAdapter;
 import it.qbsoftware.application.controllers.ControllerHandlerBase;
 import it.qbsoftware.application.controllers.HandlerRequest;
-import it.qbsoftware.application.controllers.changes.ChangesEmailSubmissionMethodCallController;
 import it.qbsoftware.business.domain.exception.AccountNotFoundException;
 import it.qbsoftware.business.domain.exception.InvalidArgumentsException;
 import it.qbsoftware.business.domain.exception.InvalidResultReferenceExecption;
 import it.qbsoftware.business.ports.in.usecase.get.GetEmailMethodCallUsecase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import rs.ltt.jmap.common.method.MethodResponse;
 import rs.ltt.jmap.common.method.call.email.GetEmailMethodCall;
 import rs.ltt.jmap.common.method.error.InvalidArgumentsMethodErrorResponse;
@@ -32,20 +29,23 @@ public class GetEmailMethodCallController extends ControllerHandlerBase {
     public MethodResponse[] handle(final HandlerRequest handlerRequest) {
         if (handlerRequest.methodCall() instanceof GetEmailMethodCall getEmailMethodCall) {
 
-            final GetEmailMethodCallAdapter getEmailMethodCallAdapter = new GetEmailMethodCallAdapter(
-                    getEmailMethodCall);
-                    logger.info("Match and handle method call recived");
+            final GetEmailMethodCallAdapter getEmailMethodCallAdapter =
+                    new GetEmailMethodCallAdapter(getEmailMethodCall);
+            logger.info("Match and handle method call recived");
             try {
-                final GetEmailMethodResponseAdapter getEmailMethodResponseAdapter = (GetEmailMethodResponseAdapter) getEmailMethodCallUsecase
-                        .call(getEmailMethodCallAdapter, handlerRequest.previousResponses());
+                final GetEmailMethodResponseAdapter getEmailMethodResponseAdapter =
+                        (GetEmailMethodResponseAdapter)
+                                getEmailMethodCallUsecase.call(
+                                        getEmailMethodCallAdapter,
+                                        handlerRequest.previousResponses());
 
-                return new MethodResponse[] { getEmailMethodResponseAdapter.adaptee() };
+                return new MethodResponse[] {getEmailMethodResponseAdapter.adaptee()};
             } catch (final AccountNotFoundException accountNotFoundException) {
-                return new MethodResponse[] { new InvalidArgumentsMethodErrorResponse() };
+                return new MethodResponse[] {new InvalidArgumentsMethodErrorResponse()};
             } catch (final InvalidResultReferenceExecption invalidResultReferenceExecption) {
-                return new MethodResponse[] { new InvalidResultReferenceMethodErrorResponse() };
+                return new MethodResponse[] {new InvalidResultReferenceMethodErrorResponse()};
             } catch (final InvalidArgumentsException invalidArgumentsException) {
-                return new MethodResponse[] { new InvalidArgumentsMethodErrorResponse() };
+                return new MethodResponse[] {new InvalidArgumentsMethodErrorResponse()};
             }
         }
 

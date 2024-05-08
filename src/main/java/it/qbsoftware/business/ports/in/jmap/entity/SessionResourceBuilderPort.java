@@ -1,8 +1,7 @@
 package it.qbsoftware.business.ports.in.jmap.entity;
 
-import java.util.Map;
-
 import it.qbsoftware.business.ports.in.jmap.capability.CapabilityPort;
+import java.util.Map;
 
 public interface SessionResourceBuilderPort {
     public SessionResourceBuilderPort username(String name);

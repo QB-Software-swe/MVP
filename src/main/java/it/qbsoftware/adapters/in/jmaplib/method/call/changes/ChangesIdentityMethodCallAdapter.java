@@ -6,7 +6,8 @@ import rs.ltt.jmap.common.method.call.identity.ChangesIdentityMethodCall;
 public class ChangesIdentityMethodCallAdapter implements ChangesIdentityMethodCallPort {
     private ChangesIdentityMethodCall changesIdentityMethodCall;
 
-    public ChangesIdentityMethodCallAdapter(final ChangesIdentityMethodCall changesIdentityMethodCall) {
+    public ChangesIdentityMethodCallAdapter(
+            final ChangesIdentityMethodCall changesIdentityMethodCall) {
         this.changesIdentityMethodCall = changesIdentityMethodCall;
     }
 
@@ -24,5 +25,4 @@ public class ChangesIdentityMethodCallAdapter implements ChangesIdentityMethodCa
     public Long getMaxChanges() {
         return changesIdentityMethodCall.getMaxChanges();
     }
-
 }

@@ -5,6 +5,6 @@ import it.qbsoftware.business.ports.in.jmap.method.call.set.SetEmailMethodCallPo
 
 public interface DestroyEmail {
 
-    DestroyedResult destroy(SetEmailMethodCallPort setEmailMethodCallPort) throws AccountNotFoundException;
-
+    DestroyedResult destroy(SetEmailMethodCallPort setEmailMethodCallPort)
+            throws AccountNotFoundException;
 }
